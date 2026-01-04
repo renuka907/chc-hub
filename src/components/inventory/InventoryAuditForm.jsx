@@ -99,43 +99,28 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
-                {/* Print Styles */}
                 <style>
                     {`
                         @media print {
-                            @page {
-                                margin: 0.5cm;
-                            }
-                            body * {
+                            * {
                                 visibility: hidden;
                             }
                             .printable-audit,
                             .printable-audit * {
                                 visibility: visible !important;
+                                display: block !important;
                             }
                             .printable-audit {
-                                position: fixed !important;
+                                position: absolute !important;
                                 left: 0 !important;
                                 top: 0 !important;
                                 width: 100% !important;
-                                height: 100% !important;
-                                padding: 10px !important;
-                                overflow: visible !important;
-                            }
-                            .no-print {
-                                display: none !important;
-                            }
-                        }
-                        @media screen {
-                            .printable-audit {
-                                display: none;
                             }
                         }
                     `}
                 </style>
 
-                {/* Printable Version */}
-                <div className="printable-audit bg-white">
+                <div className="printable-audit absolute left-0 top-0 w-full bg-white pointer-events-none">
                     <div className="p-6">
                         <div className="border-b-2 border-gray-800 pb-4 mb-6">
                             <h1 className="text-2xl font-bold">Daily Inventory Audit Form</h1>
