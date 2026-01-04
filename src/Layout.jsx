@@ -3,19 +3,20 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "./utils";
 import { base44 } from "@/api/base44Client";
 import { 
-          BookOpen, 
-          FileText, 
-          Building2, 
-          DollarSign, 
-          Home,
-          Menu,
-          X,
-          Stethoscope,
-          Users,
-          Package,
-          Tag,
-          MessageSquare
-      } from "lucide-react";
+            BookOpen, 
+            FileText, 
+            Building2, 
+            DollarSign, 
+            Home,
+            Menu,
+            X,
+            Stethoscope,
+            Users,
+            Package,
+            Tag,
+            MessageSquare,
+            Layers
+        } from "lucide-react";
 
 export default function Layout({ children, currentPageName }) {
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
@@ -39,6 +40,7 @@ export default function Layout({ children, currentPageName }) {
         { name: "Messaging", path: "Messaging", icon: MessageSquare },
         { name: "Education Library", path: "EducationLibrary", icon: BookOpen },
         { name: "Aftercare & Forms", path: "AftercareLibrary", icon: FileText },
+        { name: "Form Templates", path: "FormTemplates", icon: Layers },
         { name: "Clinic Directory", path: "ClinicDirectory", icon: Building2 },
         { name: "Pricing", path: "PricingManagement", icon: DollarSign },
         { name: "Quotes", path: "QuotesManagement", icon: FileText },
