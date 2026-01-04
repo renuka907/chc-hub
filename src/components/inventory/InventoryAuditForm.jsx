@@ -101,90 +101,43 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
             <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
                 <style>
                     {`
+                        @page {
+                            size: letter;
+                            margin: 0.4in 0.5in;
+                        }
+                        
                         @media print {
-                            @page {
-                                size: letter;
-                                margin: 0.3in;
+                            html, body {
+                                height: auto;
+                                overflow: visible;
                             }
                             
-                            body {
-                                margin: 0;
-                                padding: 0;
+                            * {
+                                -webkit-print-color-adjust: exact;
+                                print-color-adjust: exact;
                             }
                             
-                            .no-print {
+                            .no-print, .no-print * {
                                 display: none !important;
+                                visibility: hidden !important;
                             }
                             
                             .printable-audit {
                                 display: block !important;
-                                position: fixed;
-                                top: 0;
-                                left: 0;
-                                width: 100%;
-                                background: white;
-                                font-size: 9pt;
-                                line-height: 1.2;
-                            }
-                            
-                            .print-header {
-                                border-bottom: 2px solid black;
-                                padding-bottom: 4pt;
-                                margin-bottom: 8pt;
-                            }
-                            
-                            .print-storage-section {
-                                page-break-inside: avoid;
-                                margin-bottom: 8pt;
-                            }
-                            
-                            .print-storage-header {
-                                background: black !important;
-                                color: white !important;
-                                -webkit-print-color-adjust: exact;
-                                print-color-adjust: exact;
-                                padding: 2pt 4pt;
-                                margin-bottom: 2pt;
-                                font-size: 8pt;
-                            }
-                            
-                            .print-table {
-                                width: 100%;
-                                border-collapse: collapse;
-                                font-size: 8pt;
-                            }
-                            
-                            .print-table th {
-                                background: #e5e7eb !important;
-                                -webkit-print-color-adjust: exact;
-                                print-color-adjust: exact;
-                                border: 1px solid black;
-                                padding: 2pt;
-                                font-weight: bold;
-                            }
-                            
-                            .print-table td {
-                                border: 1px solid #999;
-                                padding: 2pt;
-                            }
-                            
-                            .print-footer {
-                                margin-top: 12pt;
-                                padding-top: 6pt;
-                                border-top: 1px solid #999;
-                                font-size: 8pt;
+                                visibility: visible !important;
+                                position: static !important;
+                                margin: 0 !important;
+                                padding: 0 !important;
                             }
                         }
                         
-                        @media screen {
-                            .printable-audit {
-                                display: none;
-                            }
+                        .printable-audit {
+                            display: none;
                         }
                     `}
                 </style>
 
-                <div className="printable-audit">
+                <div className="printable-audit" style={{color: 'black', backgroundColor: 'white'}}>
                     <div className="print-header">
                         <div style={{fontSize: '14pt', fontWeight: 'bold'}}>Daily Inventory Audit Form</div>
                         <div style={{fontSize: '8pt', marginTop: '2pt'}}>
