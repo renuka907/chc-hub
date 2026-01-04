@@ -357,6 +357,9 @@ export default function PricingForm({ open, onOpenChange, onSuccess, editItem = 
                                                 <SelectItem value="sessions">Sessions</SelectItem>
                                                 <SelectItem value="shots">Shots</SelectItem>
                                                 <SelectItem value="infusions">Infusions</SelectItem>
+                                                <SelectItem value="syringes">Syringes</SelectItem>
+                                                <SelectItem value="vials">Vials</SelectItem>
+                                                <SelectItem value="treatments">Treatments</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
