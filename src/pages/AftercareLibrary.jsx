@@ -2,14 +2,18 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import SearchBar from "../components/SearchBar";
 import AftercareForm from "../components/AftercareForm";
 import ConsentFormForm from "../components/ConsentFormForm";
+import BulkActionsBar from "../components/BulkActionsBar";
+import TagManager from "../components/forms/TagManager";
 import { FileText, Printer, Plus, Star } from "lucide-react";
 
 export default function AftercareLibrary() {
@@ -19,6 +23,9 @@ export default function AftercareLibrary() {
     const [showConsentForm, setShowConsentForm] = useState(false);
     const [activeTab, setActiveTab] = useState("aftercare");
     const [showClinicForm, setShowClinicForm] = useState(false);
+    const [selectedItems, setSelectedItems] = useState(new Set());
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [showTagManager, setShowTagManager] = useState(false);
     const queryClient = useQueryClient();
 
     const { data: aftercareInstructions = [] } = useQuery({
@@ -44,6 +51,41 @@ export default function AftercareLibrary() {
     const toggleFormFavorite = async (id, currentValue) => {
         await base44.entities.ConsentForm.update(id, { is_favorite: !currentValue });
         queryClient.invalidateQueries({ queryKey: ['consentForms'] });
+    };
+
+    const toggleSelection = (id) => {
+        const newSelection = new Set(selectedItems);
+        if (newSelection.has(id)) {
+            newSelection.delete(id);
+        } else {
+            newSelection.add(id);
+        }
+        setSelectedItems(newSelection);
+    };
+
+    const bulkDeleteMutation = useMutation({
+        mutationFn: async () => {
+            const entityName = activeTab === "consent" ? "ConsentForm" : "AftercareInstruction";
+            for (const id of selectedItems) {
+                await base44.entities[entityName].delete(id);
+            }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['aftercareInstructions'] });
+            queryClient.invalidateQueries({ queryKey: ['consentForms'] });
+            setSelectedItems(new Set());
+            setShowDeleteDialog(false);
+        }
+    });
+
+    const handleBulkTag = async (tagsJson) => {
+        const entityName = activeTab === "consent" ? "ConsentForm" : "AftercareInstruction";
+        for (const id of selectedItems) {
+            await base44.entities[entityName].update(id, { tags: tagsJson });
+        }
+        queryClient.invalidateQueries({ queryKey: ['aftercareInstructions'] });
+        queryClient.invalidateQueries({ queryKey: ['consentForms'] });
+        setSelectedItems(new Set());
     };
 
     const filteredAftercare = aftercareInstructions.filter(item => {
@@ -149,6 +191,14 @@ export default function AftercareLibrary() {
                         <div className="grid md:grid-cols-2 gap-6">
                             {filteredAftercare.map(instruction => (
                                 <div key={instruction.id} className="relative">
+                                    <div className="absolute top-4 left-4 z-10">
+                                        <Checkbox
+                                            checked={selectedItems.has(instruction.id)}
+                                            onCheckedChange={() => toggleSelection(instruction.id)}
+                                            onClick={(e) => e.stopPropagation()}
+                                            className="bg-white border-2 border-gray-400"
+                                        />
+                                    </div>
                                     <button
                                         onClick={(e) => {
                                             e.preventDefault();
@@ -160,14 +210,19 @@ export default function AftercareLibrary() {
                                         <Star className={`w-4 h-4 ${instruction.is_favorite ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`} />
                                     </button>
                                     <Link to={createPageUrl(`AftercareDetail?id=${instruction.id}`)}>
-                                        <Card className="h-full hover:shadow-lg transition-all duration-300 border-2 hover:border-blue-200 cursor-pointer group">
+                                        <Card className={`h-full hover:shadow-lg transition-all duration-300 border-2 ${selectedItems.has(instruction.id) ? 'border-blue-500 bg-blue-50' : 'hover:border-blue-200'} cursor-pointer group`}>
                                             <CardHeader>
                                                 <div className="flex items-start justify-between mb-2">
-                                                    {instruction.category && (
-                                                        <Badge className={categoryColors[instruction.category]}>
-                                                            {instruction.category}
-                                                        </Badge>
-                                                    )}
+                                                    <div className="flex gap-2 flex-wrap">
+                                                        {instruction.category && (
+                                                            <Badge className={categoryColors[instruction.category] || "bg-gray-100 text-gray-800"}>
+                                                                {instruction.category}
+                                                            </Badge>
+                                                        )}
+                                                        {instruction.version && (
+                                                            <Badge variant="outline">v{instruction.version}</Badge>
+                                                        )}
+                                                    </div>
                                                     <Printer className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
                                                 </div>
                                                 <CardTitle className="group-hover:text-blue-600 transition-colors">
@@ -177,6 +232,15 @@ export default function AftercareLibrary() {
                                                     <CardDescription>
                                                         Recovery: {instruction.duration}
                                                     </CardDescription>
+                                                )}
+                                                {instruction.tags && JSON.parse(instruction.tags).length > 0 && (
+                                                    <div className="flex gap-1 flex-wrap mt-2">
+                                                        {JSON.parse(instruction.tags).slice(0, 3).map(tag => (
+                                                            <Badge key={tag} variant="secondary" className="text-xs">
+                                                                {tag}
+                                                            </Badge>
+                                                        ))}
+                                                    </div>
                                                 )}
                                             </CardHeader>
                                         </Card>
@@ -200,6 +264,14 @@ export default function AftercareLibrary() {
                         <div className="grid md:grid-cols-2 gap-6">
                             {filteredForms.map(form => (
                                 <div key={form.id} className="relative">
+                                    <div className="absolute top-4 left-4 z-10">
+                                        <Checkbox
+                                            checked={selectedItems.has(form.id)}
+                                            onCheckedChange={() => toggleSelection(form.id)}
+                                            onClick={(e) => e.stopPropagation()}
+                                            className="bg-white border-2 border-gray-400"
+                                        />
+                                    </div>
                                     <button
                                         onClick={(e) => {
                                             e.preventDefault();
@@ -211,21 +283,30 @@ export default function AftercareLibrary() {
                                         <Star className={`w-4 h-4 ${form.is_favorite ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`} />
                                     </button>
                                     <Link to={createPageUrl(`ConsentFormDetail?id=${form.id}`)}>
-                                        <Card className="h-full hover:shadow-lg transition-all duration-300 border-2 hover:border-blue-200 cursor-pointer group">
+                                        <Card className={`h-full hover:shadow-lg transition-all duration-300 border-2 ${selectedItems.has(form.id) ? 'border-blue-500 bg-blue-50' : 'hover:border-blue-200'} cursor-pointer group`}>
                                             <CardHeader>
                                                 <div className="flex items-start justify-between mb-2">
-                                                    <Badge className={formTypeColors[form.form_type]}>
-                                                        {form.form_type}
-                                                    </Badge>
+                                                    <div className="flex gap-2 flex-wrap">
+                                                        <Badge className={formTypeColors[form.form_type] || "bg-gray-100 text-gray-800"}>
+                                                            {form.form_type}
+                                                        </Badge>
+                                                        {form.version && (
+                                                            <Badge variant="outline">v{form.version}</Badge>
+                                                        )}
+                                                    </div>
                                                     <Printer className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
                                                 </div>
                                                 <CardTitle className="group-hover:text-blue-600 transition-colors">
                                                     {form.form_name}
                                                 </CardTitle>
-                                                {form.version && (
-                                                    <CardDescription>
-                                                        Version {form.version}
-                                                    </CardDescription>
+                                                {form.tags && JSON.parse(form.tags).length > 0 && (
+                                                    <div className="flex gap-1 flex-wrap mt-2">
+                                                        {JSON.parse(form.tags).slice(0, 3).map(tag => (
+                                                            <Badge key={tag} variant="secondary" className="text-xs">
+                                                                {tag}
+                                                            </Badge>
+                                                        ))}
+                                                    </div>
                                                 )}
                                             </CardHeader>
                                         </Card>
@@ -249,6 +330,14 @@ export default function AftercareLibrary() {
                         <div className="grid md:grid-cols-2 gap-6">
                             {filteredClinicForms.map(instruction => (
                                 <div key={instruction.id} className="relative">
+                                    <div className="absolute top-4 left-4 z-10">
+                                        <Checkbox
+                                            checked={selectedItems.has(instruction.id)}
+                                            onCheckedChange={() => toggleSelection(instruction.id)}
+                                            onClick={(e) => e.stopPropagation()}
+                                            className="bg-white border-2 border-gray-400"
+                                        />
+                                    </div>
                                     <button
                                         onClick={(e) => {
                                             e.preventDefault();
@@ -260,17 +349,31 @@ export default function AftercareLibrary() {
                                         <Star className={`w-4 h-4 ${instruction.is_favorite ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`} />
                                     </button>
                                     <Link to={createPageUrl(`AftercareDetail?id=${instruction.id}`)}>
-                                        <Card className="h-full hover:shadow-lg transition-all duration-300 border-2 hover:border-blue-200 cursor-pointer group">
+                                        <Card className={`h-full hover:shadow-lg transition-all duration-300 border-2 ${selectedItems.has(instruction.id) ? 'border-blue-500 bg-blue-50' : 'hover:border-blue-200'} cursor-pointer group`}>
                                             <CardHeader>
                                                 <div className="flex items-start justify-between mb-2">
-                                                    <Badge className="bg-orange-100 text-orange-800">
-                                                        Clinic Form
-                                                    </Badge>
+                                                    <div className="flex gap-2 flex-wrap">
+                                                        <Badge className="bg-orange-100 text-orange-800">
+                                                            Clinic Form
+                                                        </Badge>
+                                                        {instruction.version && (
+                                                            <Badge variant="outline">v{instruction.version}</Badge>
+                                                        )}
+                                                    </div>
                                                     <Printer className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
                                                 </div>
                                                 <CardTitle className="group-hover:text-blue-600 transition-colors">
                                                     {instruction.procedure_name}
                                                 </CardTitle>
+                                                {instruction.tags && JSON.parse(instruction.tags).length > 0 && (
+                                                    <div className="flex gap-1 flex-wrap mt-2">
+                                                        {JSON.parse(instruction.tags).slice(0, 3).map(tag => (
+                                                            <Badge key={tag} variant="secondary" className="text-xs">
+                                                                {tag}
+                                                            </Badge>
+                                                        ))}
+                                                    </div>
+                                                )}
                                             </CardHeader>
                                         </Card>
                                     </Link>
@@ -298,6 +401,40 @@ export default function AftercareLibrary() {
                 onOpenChange={setShowClinicForm}
                 onSuccess={handleSuccess}
             />
+
+            <BulkActionsBar
+                selectedCount={selectedItems.size}
+                onDelete={() => setShowDeleteDialog(true)}
+                onTag={() => setShowTagManager(true)}
+                onClear={() => setSelectedItems(new Set())}
+            />
+
+            <TagManager
+                open={showTagManager}
+                onOpenChange={setShowTagManager}
+                currentTags={[]}
+                onSave={handleBulkTag}
+            />
+
+            <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Selected Items?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Are you sure you want to delete {selectedItems.size} item{selectedItems.size !== 1 ? 's' : ''}? This action cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction 
+                            onClick={() => bulkDeleteMutation.mutate()} 
+                            className="bg-red-600 hover:bg-red-700"
+                        >
+                            Delete
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }
