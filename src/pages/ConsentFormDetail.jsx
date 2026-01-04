@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import PrintableDocument from "../components/PrintableDocument";
 import ConsentFormForm from "../components/ConsentFormForm";
+import VersionHistory from "../components/forms/VersionHistory";
+import TagManager from "../components/forms/TagManager";
 import { openPrintWindow } from "../components/PrintHelper";
-import { Printer, ArrowLeft, Pencil, Star, FileText, Trash2 } from "lucide-react";
+import { Printer, ArrowLeft, Pencil, Star, FileText, Trash2, History, Tag, Copy } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,6 +19,9 @@ export default function ConsentFormDetail() {
     const formId = urlParams.get('id');
     const [showEditForm, setShowEditForm] = useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [showVersionHistory, setShowVersionHistory] = useState(false);
+    const [showTagManager, setShowTagManager] = useState(false);
+    const [showNewVersionDialog, setShowNewVersionDialog] = useState(false);
     const queryClient = useQueryClient();
     const navigate = useNavigate();
 
@@ -48,6 +53,30 @@ export default function ConsentFormDetail() {
     const handleDelete = () => {
         deleteMutation.mutate(form.id);
         setShowDeleteDialog(false);
+    };
+
+    const createNewVersion = async () => {
+        const newVersionNum = form.version ? `${parseFloat(form.version) + 0.1}` : "1.0";
+        const newForm = {
+            ...form,
+            id: undefined,
+            version: newVersionNum,
+            parent_id: form.id,
+            effective_date: new Date().toISOString().split('T')[0]
+        };
+        const created = await base44.entities.ConsentForm.create(newForm);
+        queryClient.invalidateQueries({ queryKey: ['consentForms'] });
+        navigate(createPageUrl(`ConsentFormDetail?id=${created.id}`));
+        setShowNewVersionDialog(false);
+    };
+
+    const handleSaveTags = async (tagsJson) => {
+        await base44.entities.ConsentForm.update(form.id, { tags: tagsJson });
+        queryClient.invalidateQueries({ queryKey: ['consentForms'] });
+    };
+
+    const viewVersion = (version) => {
+        navigate(createPageUrl(`ConsentFormDetail?id=${version.id}`));
     };
 
     const formTypeColors = {
@@ -85,6 +114,18 @@ export default function ConsentFormDetail() {
                         <Star className={`w-4 h-4 mr-2 ${form.is_favorite ? 'fill-yellow-500' : ''}`} />
                         {form.is_favorite ? 'Unfavorite' : 'Favorite'}
                     </Button>
+                    <Button variant="outline" onClick={() => setShowTagManager(true)}>
+                        <Tag className="w-4 h-4 mr-2" />
+                        Tags
+                    </Button>
+                    <Button variant="outline" onClick={() => setShowVersionHistory(true)}>
+                        <History className="w-4 h-4 mr-2" />
+                        Version History
+                    </Button>
+                    <Button variant="outline" onClick={() => setShowNewVersionDialog(true)}>
+                        <Copy className="w-4 h-4 mr-2" />
+                        New Version
+                    </Button>
                     <Button variant="outline" onClick={() => setShowEditForm(true)}>
                         <Pencil className="w-4 h-4 mr-2" />
                         Edit
@@ -99,6 +140,37 @@ export default function ConsentFormDetail() {
                     </Button>
                 </div>
             </div>
+
+            {/* Form Info */}
+            <Card className="no-print mb-6">
+                <CardContent className="pt-6">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h2 className="text-xl font-semibold mb-2">{form.form_name}</h2>
+                            <div className="flex gap-2 flex-wrap">
+                                <Badge className={formTypeColors[form.form_type] || "bg-gray-100 text-gray-800"}>
+                                    {form.form_type}
+                                </Badge>
+                                {form.version && (
+                                    <Badge variant="outline">Version {form.version}</Badge>
+                                )}
+                                {form.effective_date && (
+                                    <Badge variant="secondary">Effective: {new Date(form.effective_date).toLocaleDateString()}</Badge>
+                                )}
+                            </div>
+                            {form.tags && JSON.parse(form.tags).length > 0 && (
+                                <div className="flex gap-1 flex-wrap mt-3">
+                                    {JSON.parse(form.tags).map(tag => (
+                                        <Badge key={tag} variant="secondary">
+                                            {tag}
+                                        </Badge>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
 
             {/* Printable Content */}
             <PrintableDocument title="" showLogo={false}>
@@ -154,6 +226,38 @@ export default function ConsentFormDetail() {
                     editForm={form}
                 />
             )}
+
+            <VersionHistory
+                open={showVersionHistory}
+                onOpenChange={setShowVersionHistory}
+                currentItem={form}
+                entityName="ConsentForm"
+                onViewVersion={viewVersion}
+            />
+
+            <TagManager
+                open={showTagManager}
+                onOpenChange={setShowTagManager}
+                currentTags={form.tags || "[]"}
+                onSave={handleSaveTags}
+            />
+
+            <AlertDialog open={showNewVersionDialog} onOpenChange={setShowNewVersionDialog}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Create New Version</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This will create a new version based on the current form. The new version will be editable while preserving this version in history.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={createNewVersion} className="bg-blue-600 hover:bg-blue-700">
+                            Create Version
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
 
             <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
                 <AlertDialogContent>
