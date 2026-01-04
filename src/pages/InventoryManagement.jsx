@@ -399,15 +399,15 @@ export default function InventoryManagement() {
                                                                 <span className="text-gray-600">Alert at:</span>
                                                                 <span className="font-medium">{item.low_stock_threshold} {item.unit}</span>
                                                             </div>
+                                                            {item.storage_location && (
+                                                                <div className="flex justify-between text-xs mt-1 pt-1 border-t border-gray-200">
+                                                                    <span className="text-gray-600">Location:</span>
+                                                                    <span className="font-semibold text-orange-600">{item.storage_location}</span>
+                                                                </div>
+                                                            )}
                                                         </div>
 
                                                         <div className="text-xs space-y-1">
-                                                            {item.storage_location && (
-                                                                <div className="flex justify-between">
-                                                                    <span className="text-gray-600">Location:</span>
-                                                                    <span className="font-medium">{item.storage_location}</span>
-                                                                </div>
-                                                            )}
                                                             {item.cost_per_unit && (
                                                                 <div className="flex justify-between">
                                                                     <span className="text-gray-600">Cost:</span>
