@@ -2,7 +2,7 @@ import React from "react";
 
 export default function PrintableDocument({ title, children, showLogo = true }) {
     return (
-        <div className="printable-document max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-sm" style={{fontFamily: 'Arial, sans-serif'}}>
+        <div className="printable-document max-w-4xl mx-auto bg-white p-12 rounded-lg shadow-sm" style={{fontFamily: 'Times New Roman, serif'}}>
             <style>
                 {`
                     @page {
@@ -40,24 +40,22 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
                 `}
             </style>
 
-            {/* Header with optional logo */}
+            {/* Yellow Logo at top */}
+            <div className="mb-6 text-center">
+                <img 
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png" 
+                    alt="Contemporary Health Center"
+                    className="h-20 mx-auto"
+                />
+            </div>
+
+            {/* Header with contact info */}
             {showLogo && (
-                <div className="mb-8 pb-6 border-b-2 border-gray-800">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                            <img 
-                                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png" 
-                                alt="Contemporary Health Center"
-                                className="h-16"
-                            />
-                        </div>
-                        <div className="text-right text-xs text-gray-700 leading-relaxed">
-                            <div className="font-semibold">6150 Diamond Center Court #400</div>
-                            <div>Fort Myers, FL 33912</div>
-                            <div className="mt-1">Phone: 239-561-9191</div>
-                            <div>Fax: 239-561-9188</div>
-                            <div className="mt-1">contemporaryhealthcenter.com</div>
-                        </div>
+                <div className="mb-8 pb-4 border-b border-gray-400 text-center">
+                    <div className="text-sm text-gray-800 leading-relaxed">
+                        <div className="font-semibold">6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
+                        <div className="mt-1">Phone: 239-561-9191 | Fax: 239-561-9188</div>
+                        <div className="mt-1">contemporaryhealthcenter.com</div>
                     </div>
                 </div>
             )}
