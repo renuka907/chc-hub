@@ -497,8 +497,7 @@ ${result.contraindications.length > 0 ? `Contraindications:\n${result.contraindi
                                             ['code-block']
                                         ],
                                         clipboard: {
-                                            matchVisual: false,
-                                            matchers: []
+                                            matchVisual: true
                                         }
                                     }}
                                     formats={['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'color', 'background', 'list', 'bullet', 'indent', 'align', 'link', 'image', 'code-block', 'script', 'blockquote', 'direction']}

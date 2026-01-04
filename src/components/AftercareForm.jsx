@@ -278,8 +278,7 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
                                             ['clean']
                                         ],
                                         clipboard: {
-                                            matchVisual: false,
-                                            matchers: []
+                                            matchVisual: true
                                         }
                                     }}
                                     formats={['header', 'bold', 'italic', 'underline', 'color', 'list', 'bullet', 'indent', 'align', 'link', 'script', 'blockquote']}
@@ -301,8 +300,7 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
                                         ['clean']
                                     ],
                                     clipboard: {
-                                        matchVisual: false,
-                                        matchers: []
+                                        matchVisual: true
                                     }
                                 }}
                                 formats={['bold', 'italic', 'underline', 'list', 'bullet']}
@@ -323,8 +321,7 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
                                         ['clean']
                                     ],
                                     clipboard: {
-                                        matchVisual: false,
-                                        matchers: []
+                                        matchVisual: true
                                     }
                                 }}
                                 formats={['bold', 'italic', 'underline', 'list', 'bullet']}
