@@ -274,6 +274,13 @@ export default function CheckoutQuote() {
                         .printable-quote table td {
                             padding: 4px 6px !important;
                             line-height: 1.4 !important;
+                            border-bottom: 1.5px solid #333 !important;
+                        }
+                        .printable-quote table thead tr {
+                            background-color: #e5e7eb !important;
+                        }
+                        .printable-quote table tbody tr:nth-child(even) {
+                            background-color: #f9fafb !important;
                         }
                         .printable-quote .text-xl {
                             font-size: 18px !important;

@@ -124,6 +124,13 @@ export default function QuoteDetail() {
                         .printable-document table td {
                             padding: 4px 6px !important;
                             line-height: 1.4 !important;
+                            border-bottom: 1.5px solid #333 !important;
+                        }
+                        .printable-document table thead tr {
+                            background-color: #e5e7eb !important;
+                        }
+                        .printable-document table tbody tr:nth-child(even) {
+                            background-color: #f9fafb !important;
                         }
                         .printable-document .text-xl {
                             font-size: 18px !important;
