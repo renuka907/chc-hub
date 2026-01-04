@@ -101,87 +101,138 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
             <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
                 <style>
                     {`
-                        .printable-audit {
-                            display: none;
-                        }
                         @media print {
-                            body * {
-                                visibility: hidden;
+                            @page {
+                                size: letter;
+                                margin: 0.3in;
                             }
-                            .printable-audit,
-                            .printable-audit * {
-                                visibility: visible !important;
+                            
+                            body {
+                                margin: 0;
+                                padding: 0;
                             }
-                            .printable-audit {
-                                display: block !important;
-                                position: absolute !important;
-                                left: 0 !important;
-                                top: 0 !important;
-                                width: 100% !important;
-                            }
+                            
                             .no-print {
                                 display: none !important;
+                            }
+                            
+                            .printable-audit {
+                                display: block !important;
+                                position: fixed;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                background: white;
+                                font-size: 9pt;
+                                line-height: 1.2;
+                            }
+                            
+                            .print-header {
+                                border-bottom: 2px solid black;
+                                padding-bottom: 4pt;
+                                margin-bottom: 8pt;
+                            }
+                            
+                            .print-storage-section {
+                                page-break-inside: avoid;
+                                margin-bottom: 8pt;
+                            }
+                            
+                            .print-storage-header {
+                                background: black !important;
+                                color: white !important;
+                                -webkit-print-color-adjust: exact;
+                                print-color-adjust: exact;
+                                padding: 2pt 4pt;
+                                margin-bottom: 2pt;
+                                font-size: 8pt;
+                            }
+                            
+                            .print-table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                font-size: 8pt;
+                            }
+                            
+                            .print-table th {
+                                background: #e5e7eb !important;
+                                -webkit-print-color-adjust: exact;
+                                print-color-adjust: exact;
+                                border: 1px solid black;
+                                padding: 2pt;
+                                font-weight: bold;
+                            }
+                            
+                            .print-table td {
+                                border: 1px solid #999;
+                                padding: 2pt;
+                            }
+                            
+                            .print-footer {
+                                margin-top: 12pt;
+                                padding-top: 6pt;
+                                border-top: 1px solid #999;
+                                font-size: 8pt;
+                            }
+                        }
+                        
+                        @media screen {
+                            .printable-audit {
+                                display: none;
                             }
                         }
                     `}
                 </style>
 
                 <div className="printable-audit">
-                    <div className="p-4">
-                        <div className="border-b border-gray-800 pb-2 mb-3">
-                            <h1 className="text-lg font-bold">Daily Inventory Audit Form</h1>
-                            <div className="text-xs text-gray-600 mt-1">
-                                Date: {new Date().toLocaleDateString()} | Location: {selectedLocation?.name || 'All Locations'}
-                            </div>
+                    <div className="print-header">
+                        <div style={{fontSize: '14pt', fontWeight: 'bold'}}>Daily Inventory Audit Form</div>
+                        <div style={{fontSize: '8pt', marginTop: '2pt'}}>
+                            Date: {new Date().toLocaleDateString()} | Location: {selectedLocation?.name || 'All Locations'}
                         </div>
+                    </div>
 
-                        {Object.entries(itemsByStorage)
-                            .sort(([a], [b]) => a.localeCompare(b))
-                            .map(([storage, storageItems]) => (
-                            <div key={storage} className="mb-4 break-inside-avoid">
-                                <div className="bg-gray-800 text-white px-2 py-1 mb-1">
-                                    <div className="flex justify-between items-center text-xs">
-                                        <span className="font-bold">📍 {storage}</span>
-                                        <span>{storageItems.length} items</span>
-                                    </div>
-                                </div>
+                    {Object.entries(itemsByStorage)
+                        .sort(([a], [b]) => a.localeCompare(b))
+                        .map(([storage, storageItems]) => (
+                        <div key={storage} className="print-storage-section">
+                            <div className="print-storage-header">
+                                <strong>📍 {storage}</strong> ({storageItems.length} items)
+                            </div>
 
-                                <table className="w-full border-collapse text-xs">
-                                    <thead>
-                                        <tr className="bg-gray-100 border-b border-gray-800">
-                                            <th className="text-left p-1 font-bold">Item</th>
-                                            <th className="text-left p-1 font-bold">Type</th>
-                                            <th className="text-center p-1 font-bold">SKU</th>
-                                            <th className="text-center p-1 font-bold">Exp</th>
-                                            <th className="text-center p-1 font-bold">Unit</th>
-                                            <th className="text-center p-1 font-bold">Qty</th>
-                                            <th className="text-center p-1 font-bold w-16">New</th>
+                            <table className="print-table">
+                                <thead>
+                                    <tr>
+                                        <th style={{width: '35%'}}>Item</th>
+                                        <th style={{width: '12%'}}>Type</th>
+                                        <th style={{width: '10%'}}>SKU</th>
+                                        <th style={{width: '10%'}}>Exp</th>
+                                        <th style={{width: '8%'}}>Unit</th>
+                                        <th style={{width: '8%'}}>Qty</th>
+                                        <th style={{width: '17%'}}>New</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {storageItems.map(item => (
+                                        <tr key={item.id}>
+                                            <td><strong>{item.item_name}</strong></td>
+                                            <td>{item.item_type}</td>
+                                            <td style={{textAlign: 'center'}}>{item.sku || '-'}</td>
+                                            <td style={{textAlign: 'center'}}>
+                                                {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: '2-digit'}) : '-'}
+                                            </td>
+                                            <td style={{textAlign: 'center'}}>{item.unit}</td>
+                                            <td style={{textAlign: 'center', fontWeight: 'bold'}}>{item.quantity}</td>
+                                            <td style={{background: 'white'}}></td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        {storageItems.map(item => (
-                                            <tr key={item.id} className="border-b">
-                                                <td className="p-1 font-medium">{item.item_name}</td>
-                                                <td className="p-1">{item.item_type}</td>
-                                                <td className="p-1 text-center">{item.sku || '-'}</td>
-                                                <td className="p-1 text-center">
-                                                    {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: '2-digit'}) : '-'}
-                                                </td>
-                                                <td className="p-1 text-center">{item.unit}</td>
-                                                <td className="p-1 text-center font-semibold">{item.quantity}</td>
-                                                <td className="p-1">
-                                                    <div className="border border-gray-400 h-5 bg-white"></div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        ))}
-
-                        <div className="mt-4 pt-2 border-t border-gray-300">
-                            <p className="text-xs text-gray-600">Audited by: _________________ Signature: _________________ Date: _________________</p>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
+                    ))}
+
+                    <div className="print-footer">
+                        Audited by: _________________ Signature: _________________ Date: _________________
                     </div>
                 </div>
                 <DialogHeader className="no-print">
