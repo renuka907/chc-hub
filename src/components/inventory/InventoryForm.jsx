@@ -109,6 +109,7 @@ export default function InventoryForm({ open, onOpenChange, onSuccess, editItem 
             cost_per_unit: formData.cost_per_unit ? parseFloat(formData.cost_per_unit) : undefined,
             associated_pricing_item_ids: JSON.stringify(selectedPricingIds),
             location_id: formData.location_id || undefined,
+            storage_location: formData.storage_location || undefined,
             expiry_date: formData.expiry_date || undefined
         };
 
