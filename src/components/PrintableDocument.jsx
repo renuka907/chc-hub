@@ -9,7 +9,35 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
                         size: letter;
                         margin: 0.5in;
                     }
-                    
+
+                    .printable-document input[type="text"],
+                    .printable-document .form-field {
+                        border: none;
+                        border-bottom: 1px solid black;
+                        background: transparent;
+                        width: 100%;
+                        padding: 2px 4px;
+                        font-family: 'Times New Roman', serif;
+                        font-size: 11pt;
+                    }
+
+                    .printable-document .field-row {
+                        display: flex;
+                        gap: 20px;
+                        margin-bottom: 12px;
+                    }
+
+                    .printable-document .field-label {
+                        white-space: nowrap;
+                        padding-right: 8px;
+                    }
+
+                    .printable-document .field-input {
+                        flex: 1;
+                        border-bottom: 1px solid black;
+                        min-width: 200px;
+                    }
+
                     @media print {
                         body * {
                             visibility: hidden;
