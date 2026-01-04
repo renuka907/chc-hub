@@ -63,7 +63,8 @@ export default function AftercareLibrary() {
         "Gynecology": "bg-pink-100 text-pink-800",
         "Hormone Therapy": "bg-purple-100 text-purple-800",
         "Mens Health": "bg-blue-100 text-blue-800",
-        "General": "bg-gray-100 text-gray-800"
+        "General": "bg-gray-100 text-gray-800",
+        "Provider Forms": "bg-orange-100 text-orange-800"
     };
 
     const formTypeColors = {
