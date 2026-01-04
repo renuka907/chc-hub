@@ -5,12 +5,26 @@ import { PenLine, Calendar, CheckSquare, Type, User, Hash } from "lucide-react";
 
 export default function FormFieldInsert({ onInsert }) {
     const fields = [
-        { type: 'signature', label: 'Signature Line', icon: PenLine, html: '<p><br/></p><p style="border-bottom: 2px solid black; width: 300px; display: inline-block;"></p><p style="font-size: 11pt; margin-top: 5px;"><strong>Signature:</strong> _____________________ <strong>Date:</strong> _____________________</p>' },
-        { type: 'date', label: 'Date Field', icon: Calendar, html: '<p><strong>Date:</strong> _____________________</p>' },
-        { type: 'checkbox', label: 'Checkbox', icon: CheckSquare, html: '<p>☐ <span style="margin-left: 10px;">Option text here</span></p>' },
-        { type: 'text', label: 'Text Field', icon: Type, html: '<p>_________________________________________</p>' },
-        { type: 'name', label: 'Name Field', icon: User, html: '<p><strong>Patient Name:</strong> _________________________________________</p>' },
-        { type: 'number', label: 'Number Field', icon: Hash, html: '<p><strong>Phone:</strong> (___) ___-____</p>' },
+        { type: 'patient-info', label: 'Patient Info', icon: User, html: `<div style="margin: 20px 0;">
+<div class="field-row"><span class="field-label">Patient's Name:</span><span class="field-input">&nbsp;</span></div>
+<div class="field-row"><span class="field-label">Previous Name:</span><span class="field-input">&nbsp;</span></div>
+<div class="field-row" style="display: flex; gap: 40px;">
+    <div style="flex: 1; display: flex;"><span class="field-label">Date of Birth:</span><span class="field-input">&nbsp;</span></div>
+    <div style="flex: 1; display: flex;"><span class="field-label">Social Security Number:</span><span class="field-input">&nbsp;</span></div>
+</div>
+</div>` },
+        { type: 'text-line', label: 'Text Line', icon: Type, html: '<div class="field-row" style="margin: 10px 0;"><span class="field-label">Label:</span><span class="field-input">&nbsp;</span></div>' },
+        { type: 'checkbox', label: 'Checkbox', icon: CheckSquare, html: '<p style="margin: 8px 0;"><input type="checkbox" /> <span>Option text here</span></p>' },
+        { type: 'checkbox-line', label: 'Checkbox+Line', icon: CheckSquare, html: '<p style="margin: 8px 0;"><input type="checkbox" /> <span>Text:</span> <span class="field-input" style="display: inline-block; min-width: 400px;">&nbsp;</span></p>' },
+        { type: 'signature', label: 'Signature', icon: PenLine, html: '<div class="field-row" style="margin: 20px 0; display: flex; gap: 40px;"><div style="flex: 1;"><span class="field-label">PATIENT SIGNATURE:</span><span class="field-input">&nbsp;</span></div><div style="flex: 1;"><span class="field-label">DATE SIGNED:</span><span class="field-input">&nbsp;</span></div></div>' },
+        { type: 'provider-info', label: 'Provider Info', icon: User, html: `<div style="margin: 15px 0;">
+<div class="field-row"><span class="field-label">Name:</span><span class="field-input">&nbsp;</span></div>
+<div style="text-align: center; font-size: 9pt; font-style: italic; margin: 2px 0;">Physician, Hospital or Practice Name</div>
+<div class="field-row" style="display: flex; gap: 40px;">
+    <div style="flex: 1; display: flex;"><span class="field-label">Phone:</span><span class="field-input">&nbsp;</span></div>
+    <div style="flex: 1; display: flex;"><span class="field-label">Fax:</span><span class="field-input">&nbsp;</span></div>
+</div>
+</div>` },
     ];
 
     return (
