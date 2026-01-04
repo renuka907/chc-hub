@@ -186,7 +186,7 @@ export default function CheckoutQuote() {
 
     const handleSaveQuote = () => {
         const quoteData = {
-            quote_number: `Q-${Date.now()}`,
+            quote_number: `Q-${Math.floor(10000 + Math.random() * 90000)}`,
             clinic_location_id: selectedLocationId || undefined,
             patient_name: patientName || undefined,
             items: JSON.stringify(selectedItems),
