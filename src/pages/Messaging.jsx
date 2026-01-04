@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, Users } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Send, Users, Bot } from "lucide-react";
 import { format } from "date-fns";
+import AgentChat from "../components/messaging/AgentChat";
 
 export default function Messaging() {
     const [message, setMessage] = useState("");
@@ -76,71 +78,96 @@ export default function Messaging() {
                 </div>
             </div>
 
-            {/* Chat Container */}
-            <Card className="h-[600px] flex flex-col">
-                <CardHeader className="border-b">
-                    <CardTitle className="text-lg">Team Chat</CardTitle>
-                </CardHeader>
-                <CardContent className="flex-1 p-0 flex flex-col">
-                    {/* Messages Area */}
-                    <ScrollArea className="flex-1 p-4">
-                        <div className="space-y-4">
-                            {reversedMessages.map((msg) => {
-                                const isOwnMessage = user && msg.sender_email === user.email;
-                                const messageTime = format(new Date(msg.created_date), 'h:mm a');
-                                
-                                return (
-                                    <div
-                                        key={msg.id}
-                                        className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}
-                                    >
-                                        <div className={`max-w-[70%] ${isOwnMessage ? 'items-end' : 'items-start'} flex flex-col`}>
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <span className="text-xs font-medium text-gray-700">
-                                                    {isOwnMessage ? 'You' : msg.sender_name}
-                                                </span>
-                                                <span className="text-xs text-gray-500">{messageTime}</span>
-                                            </div>
-                                            <div
-                                                className={`rounded-2xl px-4 py-2 ${
-                                                    isOwnMessage
-                                                        ? 'bg-blue-600 text-white'
-                                                        : 'bg-gray-100 text-gray-900'
-                                                }`}
-                                            >
-                                                <p className="text-sm whitespace-pre-wrap break-words">
-                                                    {msg.message}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                            <div ref={messagesEndRef} />
-                        </div>
-                    </ScrollArea>
+            {/* Chat Container with Tabs */}
+            <Tabs defaultValue="team" className="space-y-4">
+                <TabsList className="grid w-full md:w-auto md:inline-grid grid-cols-2 gap-4">
+                    <TabsTrigger value="team" className="text-base">
+                        <Users className="w-4 h-4 mr-2" />
+                        Team Chat
+                    </TabsTrigger>
+                    <TabsTrigger value="assistant" className="text-base">
+                        <Bot className="w-4 h-4 mr-2" />
+                        Clinic Assistant
+                    </TabsTrigger>
+                </TabsList>
 
-                    {/* Input Area */}
-                    <div className="border-t p-4">
-                        <form onSubmit={handleSend} className="flex gap-2">
-                            <Input
-                                value={message}
-                                onChange={(e) => setMessage(e.target.value)}
-                                placeholder="Type your message..."
-                                className="flex-1"
-                                disabled={sendMessageMutation.isPending}
-                            />
-                            <Button
-                                type="submit"
-                                disabled={!message.trim() || sendMessageMutation.isPending}
-                                className="bg-blue-600 hover:bg-blue-700"
-                            >
-                                <Send className="w-4 h-4" />
-                            </Button>
-                        </form>
-                    </div>
-                </CardContent>
-            </Card>
+                {/* Team Chat Tab */}
+                <TabsContent value="team">
+                    <Card className="h-[600px] flex flex-col">
+                        <CardHeader className="border-b">
+                            <CardTitle className="text-lg">Team Chat</CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex-1 p-0 flex flex-col">
+                            {/* Messages Area */}
+                            <ScrollArea className="flex-1 p-4">
+                                <div className="space-y-4">
+                                    {reversedMessages.map((msg) => {
+                                        const isOwnMessage = user && msg.sender_email === user.email;
+                                        const messageTime = format(new Date(msg.created_date), 'h:mm a');
+                                        
+                                        return (
+                                            <div
+                                                key={msg.id}
+                                                className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}
+                                            >
+                                                <div className={`max-w-[70%] ${isOwnMessage ? 'items-end' : 'items-start'} flex flex-col`}>
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <span className="text-xs font-medium text-gray-700">
+                                                            {isOwnMessage ? 'You' : msg.sender_name}
+                                                        </span>
+                                                        <span className="text-xs text-gray-500">{messageTime}</span>
+                                                    </div>
+                                                    <div
+                                                        className={`rounded-2xl px-4 py-2 ${
+                                                            isOwnMessage
+                                                                ? 'bg-blue-600 text-white'
+                                                                : 'bg-gray-100 text-gray-900'
+                                                        }`}
+                                                    >
+                                                        <p className="text-sm whitespace-pre-wrap break-words">
+                                                            {msg.message}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                    <div ref={messagesEndRef} />
+                                </div>
+                            </ScrollArea>
+
+                            {/* Input Area */}
+                            <div className="border-t p-4">
+                                <form onSubmit={handleSend} className="flex gap-2">
+                                    <Input
+                                        value={message}
+                                        onChange={(e) => setMessage(e.target.value)}
+                                        placeholder="Type your message..."
+                                        className="flex-1"
+                                        disabled={sendMessageMutation.isPending}
+                                    />
+                                    <Button
+                                        type="submit"
+                                        disabled={!message.trim() || sendMessageMutation.isPending}
+                                        className="bg-blue-600 hover:bg-blue-700"
+                                    >
+                                        <Send className="w-4 h-4" />
+                                    </Button>
+                                </form>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                {/* Clinic Assistant Tab */}
+                <TabsContent value="assistant">
+                    <Card>
+                        <CardContent className="p-0">
+                            <AgentChat agentName="clinic_assistant" />
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+            </Tabs>
         </div>
     );
 }
