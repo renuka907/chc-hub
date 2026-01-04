@@ -26,10 +26,10 @@ export default function Home() {
             color: "from-cyan-500 to-blue-600"
         },
         {
-            title: "Clinic Directory",
-            description: "Find contact information for all clinic locations",
-            icon: Building2,
-            path: "ClinicDirectory",
+            title: "Pricing",
+            description: "Manage pricing for procedures, products, and packages",
+            icon: DollarSign,
+            path: "PricingManagement",
             color: "from-violet-500 to-purple-600"
         },
         {
