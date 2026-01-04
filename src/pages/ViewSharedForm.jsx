@@ -16,31 +16,44 @@ export default function ViewSharedForm() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [error, setError] = useState("");
 
-    const { data: sharedLink, isLoading: linkLoading } = useQuery({
+    const { data: sharedLink, isLoading: linkLoading, error: linkError } = useQuery({
         queryKey: ['sharedLink', token],
         queryFn: async () => {
             const allLinks = await base44.entities.SharedFormLink.list();
-            return allLinks.find(link => link.share_token === token);
+            const found = allLinks.find(link => link.share_token === token);
+            console.log('Looking for token:', token);
+            console.log('All links:', allLinks);
+            console.log('Found link:', found);
+            return found;
         },
-        enabled: !!token
+        enabled: !!token,
+        retry: false
     });
 
-    const { data: formContent, isLoading: contentLoading } = useQuery({
+    const { data: formContent, isLoading: contentLoading, error: contentError } = useQuery({
         queryKey: ['sharedFormContent', sharedLink?.entity_type, sharedLink?.entity_id],
         queryFn: async () => {
             if (!sharedLink) return null;
+            console.log('Fetching content for:', sharedLink.entity_type, sharedLink.entity_id);
             if (sharedLink.entity_type === "ConsentForm") {
                 const forms = await base44.entities.ConsentForm.list();
-                return forms.find(f => f.id === sharedLink.entity_id);
+                const found = forms.find(f => f.id === sharedLink.entity_id);
+                console.log('ConsentForm found:', found);
+                return found;
             } else if (sharedLink.entity_type === "AftercareInstruction") {
                 const instructions = await base44.entities.AftercareInstruction.list();
-                return instructions.find(i => i.id === sharedLink.entity_id);
+                const found = instructions.find(i => i.id === sharedLink.entity_id);
+                console.log('AftercareInstruction found:', found);
+                return found;
             } else if (sharedLink.entity_type === "Quote") {
                 const quotes = await base44.entities.Quote.list();
-                return quotes.find(q => q.id === sharedLink.entity_id);
+                const found = quotes.find(q => q.id === sharedLink.entity_id);
+                console.log('Quote found:', found);
+                return found;
             }
         },
-        enabled: !!sharedLink && (!sharedLink.password || isAuthenticated)
+        enabled: !!sharedLink && (!sharedLink.password || isAuthenticated),
+        retry: false
     });
 
     const { data: locations = [] } = useQuery({
@@ -91,7 +104,25 @@ export default function ViewSharedForm() {
     if (linkLoading) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-cyan-100 flex items-center justify-center">
-                <Loader2 className="w-12 h-12 animate-spin text-purple-600" />
+                <div className="text-center">
+                    <Loader2 className="w-12 h-12 animate-spin text-purple-600 mx-auto mb-4" />
+                    <p className="text-gray-600">Loading share link...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (linkError) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-cyan-100 flex items-center justify-center p-6">
+                <Card className="max-w-md w-full">
+                    <CardContent className="pt-6 text-center">
+                        <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+                        <h2 className="text-xl font-bold text-gray-900 mb-2">Error Loading Link</h2>
+                        <p className="text-gray-600 mb-4">There was an error loading the share link. Please check the console for details.</p>
+                        <pre className="text-xs text-left bg-gray-100 p-2 rounded">{JSON.stringify(linkError, null, 2)}</pre>
+                    </CardContent>
+                </Card>
             </div>
         );
     }
@@ -166,7 +197,25 @@ export default function ViewSharedForm() {
     if (contentLoading) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-cyan-100 flex items-center justify-center">
-                <Loader2 className="w-12 h-12 animate-spin text-purple-600" />
+                <div className="text-center">
+                    <Loader2 className="w-12 h-12 animate-spin text-purple-600 mx-auto mb-4" />
+                    <p className="text-gray-600">Loading content...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (contentError) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-cyan-100 flex items-center justify-center p-6">
+                <Card className="max-w-md w-full">
+                    <CardContent className="pt-6 text-center">
+                        <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+                        <h2 className="text-xl font-bold text-gray-900 mb-2">Error Loading Content</h2>
+                        <p className="text-gray-600 mb-4">There was an error loading the content. Please check the console for details.</p>
+                        <pre className="text-xs text-left bg-gray-100 p-2 rounded">{JSON.stringify(contentError, null, 2)}</pre>
+                    </CardContent>
+                </Card>
             </div>
         );
     }
