@@ -18,6 +18,7 @@ export default function AftercareLibrary() {
     const [showAftercareForm, setShowAftercareForm] = useState(false);
     const [showConsentForm, setShowConsentForm] = useState(false);
     const [activeTab, setActiveTab] = useState("aftercare");
+    const [showClinicForm, setShowClinicForm] = useState(false);
     const queryClient = useQueryClient();
 
     const { data: aftercareInstructions = [] } = useQuery({
@@ -49,7 +50,15 @@ export default function AftercareLibrary() {
         const matchesSearch = item.procedure_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             item.category?.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesFavorite = !showFavoritesOnly || item.is_favorite;
-        return matchesSearch && matchesFavorite;
+        const isNotProviderForm = item.category !== "Provider Forms";
+        return matchesSearch && matchesFavorite && isNotProviderForm;
+    });
+
+    const filteredClinicForms = aftercareInstructions.filter(item => {
+        const matchesSearch = item.procedure_name.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesFavorite = !showFavoritesOnly || item.is_favorite;
+        const isProviderForm = item.category === "Provider Forms";
+        return matchesSearch && matchesFavorite && isProviderForm;
     });
 
     const filteredForms = consentForms.filter(form => {
@@ -84,11 +93,15 @@ export default function AftercareLibrary() {
                     <p className="text-gray-600">Post-procedure instructions and consent forms</p>
                 </div>
                 <Button 
-                    onClick={() => activeTab === "aftercare" ? setShowAftercareForm(true) : setShowConsentForm(true)}
+                    onClick={() => {
+                        if (activeTab === "aftercare") setShowAftercareForm(true);
+                        else if (activeTab === "consent") setShowConsentForm(true);
+                        else if (activeTab === "clinic") setShowClinicForm(true);
+                    }}
                     className="bg-blue-600 hover:bg-blue-700"
                 >
                     <Plus className="w-4 h-4 mr-2" />
-                    Create {activeTab === "aftercare" ? "Aftercare" : "Consent Form"}
+                    Create {activeTab === "aftercare" ? "Aftercare" : activeTab === "consent" ? "Consent Form" : "Clinic Form"}
                 </Button>
             </div>
 
@@ -111,12 +124,15 @@ export default function AftercareLibrary() {
 
             {/* Tabs */}
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-                <TabsList className="grid w-full md:w-auto md:inline-grid grid-cols-2 gap-4">
+                <TabsList className="grid w-full md:w-auto md:inline-grid grid-cols-3 gap-4">
                     <TabsTrigger value="aftercare" className="text-base">
                         Aftercare Instructions
                     </TabsTrigger>
                     <TabsTrigger value="consent" className="text-base">
                         Consent Forms
+                    </TabsTrigger>
+                    <TabsTrigger value="clinic" className="text-base">
+                        Clinic Forms
                     </TabsTrigger>
                 </TabsList>
 
@@ -219,6 +235,50 @@ export default function AftercareLibrary() {
                         </div>
                     )}
                 </TabsContent>
+
+                {/* Clinic Forms Tab */}
+                <TabsContent value="clinic" className="space-y-4">
+                    {filteredClinicForms.length === 0 ? (
+                        <Card className="text-center py-12">
+                            <CardContent>
+                                <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                                <p className="text-gray-500">No clinic forms found</p>
+                            </CardContent>
+                        </Card>
+                    ) : (
+                        <div className="grid md:grid-cols-2 gap-6">
+                            {filteredClinicForms.map(instruction => (
+                                <div key={instruction.id} className="relative">
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            toggleAftercareFavorite(instruction.id, instruction.is_favorite);
+                                        }}
+                                        className="absolute top-4 right-4 z-10 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center hover:scale-110 transition-transform"
+                                    >
+                                        <Star className={`w-4 h-4 ${instruction.is_favorite ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`} />
+                                    </button>
+                                    <Link to={createPageUrl(`AftercareDetail?id=${instruction.id}`)}>
+                                        <Card className="h-full hover:shadow-lg transition-all duration-300 border-2 hover:border-blue-200 cursor-pointer group">
+                                            <CardHeader>
+                                                <div className="flex items-start justify-between mb-2">
+                                                    <Badge className="bg-orange-100 text-orange-800">
+                                                        Clinic Form
+                                                    </Badge>
+                                                    <Printer className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                                                </div>
+                                                <CardTitle className="group-hover:text-blue-600 transition-colors">
+                                                    {instruction.procedure_name}
+                                                </CardTitle>
+                                            </CardHeader>
+                                        </Card>
+                                    </Link>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </TabsContent>
             </Tabs>
 
             <AftercareForm
@@ -230,6 +290,12 @@ export default function AftercareLibrary() {
             <ConsentFormForm
                 open={showConsentForm}
                 onOpenChange={setShowConsentForm}
+                onSuccess={handleSuccess}
+            />
+
+            <AftercareForm
+                open={showClinicForm}
+                onOpenChange={setShowClinicForm}
                 onSuccess={handleSuccess}
             />
         </div>
