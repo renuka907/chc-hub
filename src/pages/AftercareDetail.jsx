@@ -8,8 +8,9 @@ import PrintableDocument from "../components/PrintableDocument";
 import AftercareForm from "../components/AftercareForm";
 import ShareFormDialog from "../components/forms/ShareFormDialog";
 import { usePermissions } from "../components/permissions/usePermissions";
+import { toast } from "sonner";
 import { openPrintWindow } from "../components/PrintHelper";
-import { Printer, ArrowLeft, AlertTriangle, Clock, Calendar as CalendarIcon, Pencil, Star, FileText, Share2 } from "lucide-react";
+import { Printer, ArrowLeft, AlertTriangle, Clock, Calendar as CalendarIcon, Pencil, Star, FileText, Share2, Save } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 
@@ -35,6 +36,29 @@ export default function AftercareDetail() {
     const toggleFavorite = async () => {
         await base44.entities.AftercareInstruction.update(instruction.id, { is_favorite: !instruction.is_favorite });
         queryClient.invalidateQueries({ queryKey: ['aftercareInstructions'] });
+    };
+
+    const saveAsTemplate = async () => {
+        try {
+            await base44.entities.FormTemplate.create({
+                template_name: instruction.procedure_name,
+                template_type: "AftercareInstruction",
+                category: instruction.category,
+                description: `Template created from ${instruction.procedure_name}`,
+                content: instruction.instructions,
+                metadata: JSON.stringify({
+                    duration: instruction.duration,
+                    warning_signs: instruction.warning_signs,
+                    follow_up: instruction.follow_up
+                }),
+                tags: instruction.tags || "[]",
+                usage_count: 0,
+                is_public: true
+            });
+            toast.success("Template created successfully!");
+        } catch (error) {
+            toast.error("Failed to create template");
+        }
     };
 
     const categoryColors = {
@@ -79,10 +103,16 @@ export default function AftercareDetail() {
                         {instruction.is_favorite ? 'Unfavorite' : 'Favorite'}
                     </Button>
                     {can("aftercare", "edit") && (
-                        <Button variant="outline" onClick={() => setShowEditForm(true)}>
-                            <Pencil className="w-4 h-4 mr-2" />
-                            Edit
-                        </Button>
+                        <>
+                            <Button variant="outline" onClick={saveAsTemplate}>
+                                <Save className="w-4 h-4 mr-2" />
+                                Save as Template
+                            </Button>
+                            <Button variant="outline" onClick={() => setShowEditForm(true)}>
+                                <Pencil className="w-4 h-4 mr-2" />
+                                Edit
+                            </Button>
+                        </>
                     )}
                     <Button onClick={openPrintWindow} className="bg-blue-600 hover:bg-blue-700">
                         <Printer className="w-4 h-4 mr-2" />

@@ -9,8 +9,9 @@ import VersionHistory from "../components/forms/VersionHistory";
 import TagManager from "../components/forms/TagManager";
 import ShareFormDialog from "../components/forms/ShareFormDialog";
 import { usePermissions } from "../components/permissions/usePermissions";
+import { toast } from "sonner";
 import { openPrintWindow } from "../components/PrintHelper";
-import { Printer, ArrowLeft, Pencil, Star, FileText, Trash2, History, Tag, Copy, Share2 } from "lucide-react";
+import { Printer, ArrowLeft, Pencil, Star, FileText, Trash2, History, Tag, Copy, Share2, Save } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { Card, CardContent } from "@/components/ui/card";
@@ -88,6 +89,25 @@ export default function ConsentFormDetail() {
         queryClient.invalidateQueries({ queryKey: ['consentForms'] });
     };
 
+    const saveAsTemplate = async () => {
+        try {
+            await base44.entities.FormTemplate.create({
+                template_name: form.form_name,
+                template_type: "ConsentForm",
+                category: form.form_type,
+                description: `Template created from ${form.form_name}`,
+                content: form.content,
+                metadata: "{}",
+                tags: form.tags || "[]",
+                usage_count: 0,
+                is_public: true
+            });
+            toast.success("Template created successfully!");
+        } catch (error) {
+            toast.error("Failed to create template");
+        }
+    };
+
     const formTypeColors = {
         "Procedure": "bg-blue-100 text-blue-800",
         "Treatment": "bg-purple-100 text-purple-800",
@@ -131,6 +151,10 @@ export default function ConsentFormDetail() {
                     </Button>
                     {can("consent", "edit") && (
                         <>
+                            <Button variant="outline" onClick={saveAsTemplate}>
+                                <Save className="w-4 h-4 mr-2" />
+                                Save as Template
+                            </Button>
                             <Button variant="outline" onClick={() => setShowTagManager(true)}>
                                 <Tag className="w-4 h-4 mr-2" />
                                 Tags

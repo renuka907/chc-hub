@@ -12,6 +12,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import FormFieldInsert from "./forms/FormFieldInsert";
 import FormTemplates from "./forms/FormTemplates";
+import TemplateSelector from "./templates/TemplateSelector";
 
 export default function ConsentFormForm({ open, onOpenChange, onSuccess, editForm = null }) {
     const [formData, setFormData] = useState({
@@ -27,6 +28,7 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
     const [isUploading, setIsUploading] = useState(false);
     const [isUploadingDoc, setIsUploadingDoc] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [showTemplateSelector, setShowTemplateSelector] = useState(false);
     const [showAiParams, setShowAiParams] = useState(false);
     const [aiParams, setAiParams] = useState({
         procedure_type: "",
@@ -446,6 +448,14 @@ ${result.contraindications.length > 0 ? `Contraindications:\n${result.contraindi
                                         <ListChecks className="w-4 h-4 mr-1" />
                                         Extract Key Info
                                     </Button>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setShowTemplateSelector(true)}
+                                    >
+                                        Load Template
+                                    </Button>
                                     <FormTemplates onSelectTemplate={handleSelectTemplate} />
                                     <FormFieldInsert onInsert={handleInsertField} />
                                 </div>
@@ -590,7 +600,21 @@ ${result.contraindications.length > 0 ? `Contraindications:\n${result.contraindi
                         )}
                     </Button>
                 </DialogFooter>
-            </DialogContent>
-        </Dialog>
-    );
-}
+
+                <TemplateSelector
+                    open={showTemplateSelector}
+                    onOpenChange={setShowTemplateSelector}
+                    templateType="ConsentForm"
+                    onSelect={(template) => {
+                        setFormData({
+                            ...formData,
+                            form_name: template.template_name,
+                            form_type: template.category || formData.form_type,
+                            content: template.content
+                        });
+                    }}
+                />
+                </DialogContent>
+                </Dialog>
+                );
+                }

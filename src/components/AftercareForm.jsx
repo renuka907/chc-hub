@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import FormFieldInsert from "./forms/FormFieldInsert";
+import TemplateSelector from "./templates/TemplateSelector";
 
 export default function AftercareForm({ open, onOpenChange, onSuccess, editInstruction = null }) {
     const [formData, setFormData] = useState({
@@ -27,6 +28,7 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
     const [isUploading, setIsUploading] = useState(false);
     const [isUploadingDoc, setIsUploadingDoc] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [showTemplateSelector, setShowTemplateSelector] = useState(false);
     const quillRef = React.useRef(null);
 
     useEffect(() => {
@@ -413,7 +415,21 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
                         )}
                     </Button>
                 </DialogFooter>
-            </DialogContent>
-        </Dialog>
-    );
-}
+
+                <TemplateSelector
+                    open={showTemplateSelector}
+                    onOpenChange={setShowTemplateSelector}
+                    templateType="AftercareInstruction"
+                    onSelect={(template) => {
+                        setFormData({
+                            ...formData,
+                            procedure_name: template.template_name,
+                            category: template.category || formData.category,
+                            instructions: template.content
+                        });
+                    }}
+                />
+                </DialogContent>
+                </Dialog>
+                );
+                }
