@@ -173,9 +173,10 @@ export default function AftercareDetail() {
                                         </Button>
                                     </a>
                                 </div>
-                                <iframe 
-                                    src={`${instruction.document_url}#view=FitH&toolbar=1&navpanes=0`}
-                                    className="w-full h-96 border-2 border-slate-300 rounded-lg"
+                                <embed 
+                                    src={instruction.document_url}
+                                    type="application/pdf"
+                                    className="w-full h-[600px] border-2 border-slate-300 rounded-lg"
                                     title="Document Preview"
                                 />
                             </CardContent>
