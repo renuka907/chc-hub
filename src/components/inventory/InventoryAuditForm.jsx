@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ClipboardCheck, Save, MapPin, Package } from "lucide-react";
+import { ClipboardCheck, Save, MapPin, Package, Printer } from "lucide-react";
 
 export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
     const [selectedLocationId, setSelectedLocationId] = useState("");
@@ -92,17 +92,114 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
 
     const selectedLocation = locations.find(loc => loc.id === selectedLocationId);
 
+    const handlePrint = () => {
+        window.print();
+    };
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+                {/* Print Styles */}
+                <style>
+                    {`
+                        @media print {
+                            @page {
+                                margin: 0.5cm;
+                            }
+                            body * {
+                                visibility: hidden;
+                            }
+                            .printable-audit,
+                            .printable-audit * {
+                                visibility: visible;
+                            }
+                            .printable-audit {
+                                position: absolute !important;
+                                left: 0 !important;
+                                top: 0 !important;
+                                width: 100%;
+                                padding: 10px !important;
+                            }
+                            .no-print {
+                                display: none !important;
+                            }
+                        }
+                    `}
+                </style>
+
+                {/* Printable Version */}
+                <div className="printable-audit fixed top-0 left-[-9999px] w-full bg-white">
+                    <div className="p-6">
+                        <div className="border-b-2 border-gray-800 pb-4 mb-6">
+                            <h1 className="text-2xl font-bold">Daily Inventory Audit Form</h1>
+                            <div className="text-sm text-gray-600 mt-2">
+                                Date: {new Date().toLocaleDateString()} | Location: {selectedLocation?.name || 'All Locations'}
+                            </div>
+                        </div>
+
+                        {Object.entries(itemsByStorage)
+                            .sort(([a], [b]) => a.localeCompare(b))
+                            .map(([storage, storageItems]) => (
+                            <div key={storage} className="mb-8 break-inside-avoid">
+                                <div className="bg-gray-800 text-white px-3 py-2 mb-2">
+                                    <div className="flex justify-between items-center">
+                                        <span className="font-bold text-lg">📍 {storage}</span>
+                                        <span className="text-sm">{storageItems.length} items</span>
+                                    </div>
+                                </div>
+
+                                <table className="w-full border-collapse">
+                                    <thead>
+                                        <tr className="bg-gray-100 border-b-2 border-gray-800">
+                                            <th className="text-left p-2 font-bold">Item Name</th>
+                                            <th className="text-left p-2 font-bold">Type</th>
+                                            <th className="text-center p-2 font-bold">SKU</th>
+                                            <th className="text-center p-2 font-bold">Unit</th>
+                                            <th className="text-center p-2 font-bold">Current Qty</th>
+                                            <th className="text-center p-2 font-bold w-24">New Count</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {storageItems.map(item => (
+                                            <tr key={item.id} className="border-b">
+                                                <td className="p-2 font-medium">{item.item_name}</td>
+                                                <td className="p-2 text-sm">{item.item_type}</td>
+                                                <td className="p-2 text-center text-sm">{item.sku || '-'}</td>
+                                                <td className="p-2 text-center text-sm">{item.unit}</td>
+                                                <td className="p-2 text-center font-semibold">{item.quantity}</td>
+                                                <td className="p-2">
+                                                    <div className="border-2 border-gray-400 h-8 bg-white"></div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ))}
+
+                        <div className="mt-8 pt-4 border-t-2 border-gray-300">
+                            <p className="text-sm text-gray-600">Audited by: _________________ Signature: _________________ Date: _________________</p>
+                        </div>
+                    </div>
+                </div>
                 <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2 text-2xl">
-                        <ClipboardCheck className="w-6 h-6 text-orange-600" />
-                        Daily Inventory Audit
-                    </DialogTitle>
+                    <div className="flex items-center justify-between no-print">
+                        <DialogTitle className="flex items-center gap-2 text-2xl">
+                            <ClipboardCheck className="w-6 h-6 text-orange-600" />
+                            Daily Inventory Audit
+                        </DialogTitle>
+                        <Button
+                            variant="outline"
+                            onClick={handlePrint}
+                            className="border-orange-600 text-orange-600 hover:bg-orange-50"
+                        >
+                            <Printer className="w-4 h-4 mr-2" />
+                            Print Form
+                        </Button>
+                    </div>
                 </DialogHeader>
 
-                <div className="space-y-4">
+                <div className="space-y-4 no-print">
                     {/* Location Selector */}
                     <div className="bg-orange-50 border-2 border-orange-200 rounded-lg p-4">
                         <Label className="text-sm font-semibold mb-2 block">Select Clinic Location</Label>
