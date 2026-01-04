@@ -101,8 +101,11 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
             <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
                 <style>
                     {`
+                        .printable-audit {
+                            display: none;
+                        }
                         @media print {
-                            * {
+                            body * {
                                 visibility: hidden;
                             }
                             .printable-audit,
@@ -116,11 +119,14 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                 top: 0 !important;
                                 width: 100% !important;
                             }
+                            .no-print {
+                                display: none !important;
+                            }
                         }
                     `}
                 </style>
 
-                <div className="printable-audit absolute left-0 top-0 w-full bg-white pointer-events-none">
+                <div className="printable-audit">
                     <div className="p-6">
                         <div className="border-b-2 border-gray-800 pb-4 mb-6">
                             <h1 className="text-2xl font-bold">Daily Inventory Audit Form</h1>
