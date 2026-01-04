@@ -324,6 +324,39 @@ export default function ViewSharedForm() {
                                         <p>This quote is valid for 30 days from the date of issue.</p>
                                         <p className="mt-2">Payment is due at the time of service unless other arrangements have been made.</p>
                                     </div>
+
+                                    {formContent.image_url && (
+                                        <div className="mt-6">
+                                            <img src={formContent.image_url} alt="Quote image" className="w-full max-h-96 object-contain rounded-lg border" />
+                                        </div>
+                                    )}
+
+                                    {formContent.document_url && (
+                                        <div className="mt-6 bg-slate-50 border p-4 rounded-lg">
+                                            <div className="flex items-center justify-between mb-4">
+                                                <div className="flex items-center gap-3">
+                                                    <FileText className="w-6 h-6 text-slate-600" />
+                                                    <div>
+                                                        <p className="font-semibold text-slate-900">Attached Document</p>
+                                                        <p className="text-sm text-slate-600">View or download the full document</p>
+                                                    </div>
+                                                </div>
+                                                <a 
+                                                    href={formContent.document_url} 
+                                                    target="_blank" 
+                                                    rel="noopener noreferrer"
+                                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                                                >
+                                                    Open PDF
+                                                </a>
+                                            </div>
+                                            <iframe 
+                                                src={formContent.document_url}
+                                                className="w-full h-[600px] border-2 border-slate-300 rounded-lg"
+                                                title="Document Preview"
+                                            />
+                                        </div>
+                                    )}
                                 </div>
                             );
                         })()}
