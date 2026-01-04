@@ -9,7 +9,6 @@ import AftercareForm from "../components/AftercareForm";
 import ShareFormDialog from "../components/forms/ShareFormDialog";
 import { usePermissions } from "../components/permissions/usePermissions";
 import { toast } from "sonner";
-import { openPrintWindow } from "../components/PrintHelper";
 import { Printer, ArrowLeft, AlertTriangle, Clock, Calendar as CalendarIcon, Pencil, Star, FileText, Share2, Save, Files } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
@@ -96,6 +95,37 @@ export default function AftercareDetail() {
 
     return (
         <div className="space-y-6">
+            {/* Print Styles */}
+            <style>
+                {`
+                    @media print {
+                        @page {
+                            margin: 0.3cm;
+                        }
+                        body * {
+                            visibility: hidden;
+                        }
+                        .printable-document,
+                        .printable-document * {
+                            visibility: visible;
+                            color: #000 !important;
+                        }
+                        .printable-document {
+                            position: absolute !important;
+                            left: 0 !important;
+                            top: 0 !important;
+                            width: 100%;
+                            padding: 5px !important;
+                            font-size: 11pt !important;
+                            line-height: 1.4 !important;
+                        }
+                        .no-print {
+                            display: none !important;
+                        }
+                    }
+                `}
+            </style>
+
             {/* Action Bar */}
             <div className="flex items-center justify-between no-print">
                 <Link to={createPageUrl("AftercareLibrary")}>
@@ -135,7 +165,7 @@ export default function AftercareDetail() {
                             </Button>
                         </>
                     )}
-                    <Button onClick={openPrintWindow} className="bg-blue-600 hover:bg-blue-700">
+                    <Button onClick={() => window.print()} className="bg-blue-600 hover:bg-blue-700">
                         <Printer className="w-4 h-4 mr-2" />
                         Print / PDF
                     </Button>
