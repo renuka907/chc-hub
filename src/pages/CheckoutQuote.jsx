@@ -252,31 +252,31 @@ export default function CheckoutQuote() {
                             top: 0 !important;
                             width: 100%;
                             padding: 5px !important;
-                            font-size: 11px !important;
-                            line-height: 1.3 !important;
+                            font-size: 13px !important;
+                            line-height: 1.4 !important;
                         }
                         .printable-quote h1 {
-                            font-size: 14px !important;
+                            font-size: 18px !important;
                             margin-bottom: 4px !important;
                         }
                         .printable-quote h3 {
-                            font-size: 11px !important;
+                            font-size: 14px !important;
                             margin-bottom: 4px !important;
                         }
                         .printable-quote .space-y-6 > * + * {
                             margin-top: 6px !important;
                         }
                         .printable-quote table {
-                            font-size: 9px !important;
+                            font-size: 12px !important;
                             border-collapse: collapse !important;
                         }
                         .printable-quote table th,
                         .printable-quote table td {
-                            padding: 2px 4px !important;
-                            line-height: 1.2 !important;
+                            padding: 3px 5px !important;
+                            line-height: 1.3 !important;
                         }
                         .printable-quote .text-xl {
-                            font-size: 14px !important;
+                            font-size: 16px !important;
                         }
                         .printable-quote .grid {
                             gap: 4px !important;
@@ -303,10 +303,10 @@ export default function CheckoutQuote() {
                             margin-top: 6px !important;
                         }
                         .printable-quote .text-sm {
-                            font-size: 8px !important;
+                            font-size: 11px !important;
                         }
                         .printable-quote .text-xs {
-                            font-size: 7px !important;
+                            font-size: 10px !important;
                         }
                         .no-print {
                             display: none !important;
