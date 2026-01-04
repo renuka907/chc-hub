@@ -174,7 +174,7 @@ export default function AftercareDetail() {
                                     </a>
                                 </div>
                                 <iframe 
-                                    src={instruction.document_url}
+                                    src={`${instruction.document_url}#view=FitH&toolbar=1&navpanes=0`}
                                     className="w-full h-96 border-2 border-slate-300 rounded-lg"
                                     title="Document Preview"
                                 />

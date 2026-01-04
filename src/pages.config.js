@@ -7,14 +7,14 @@ import DiscountManagement from './pages/DiscountManagement';
 import EducationDetail from './pages/EducationDetail';
 import EducationLibrary from './pages/EducationLibrary';
 import EmployeeQuestions from './pages/EmployeeQuestions';
+import FAQ from './pages/FAQ';
 import Home from './pages/Home';
 import InventoryManagement from './pages/InventoryManagement';
+import Messaging from './pages/Messaging';
 import PricingManagement from './pages/PricingManagement';
 import QuoteDetail from './pages/QuoteDetail';
 import QuotesManagement from './pages/QuotesManagement';
 import UserManagement from './pages/UserManagement';
-import FAQ from './pages/FAQ';
-import Messaging from './pages/Messaging';
 import __Layout from './Layout.jsx';
 
 
@@ -28,14 +28,14 @@ export const PAGES = {
     "EducationDetail": EducationDetail,
     "EducationLibrary": EducationLibrary,
     "EmployeeQuestions": EmployeeQuestions,
+    "FAQ": FAQ,
     "Home": Home,
     "InventoryManagement": InventoryManagement,
+    "Messaging": Messaging,
     "PricingManagement": PricingManagement,
     "QuoteDetail": QuoteDetail,
     "QuotesManagement": QuotesManagement,
     "UserManagement": UserManagement,
-    "FAQ": FAQ,
-    "Messaging": Messaging,
 }
 
 export const pagesConfig = {

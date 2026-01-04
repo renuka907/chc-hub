@@ -110,7 +110,7 @@ export default function ConsentFormDetail() {
                             </a>
                         </div>
                         <iframe 
-                            src={form.document_url}
+                            src={`${form.document_url}#view=FitH&toolbar=1&navpanes=0`}
                             className="w-full h-96 border-2 border-slate-300 rounded-lg"
                             title="Document Preview"
                         />
