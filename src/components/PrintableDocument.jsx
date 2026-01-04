@@ -98,6 +98,25 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
                         text-align: justify;
                     }
 
+                    /* Box styles */
+                    .printable-document .text-box {
+                        border: 2px solid black;
+                        padding: 12px;
+                        margin: 12px 0;
+                    }
+
+                    .printable-document .text-box-thin {
+                        border: 1px solid black;
+                        padding: 10px;
+                        margin: 10px 0;
+                    }
+
+                    .printable-document .text-box-dashed {
+                        border: 2px dashed black;
+                        padding: 12px;
+                        margin: 12px 0;
+                    }
+
                     @media print {
                         body * {
                             visibility: hidden;
