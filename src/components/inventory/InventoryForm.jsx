@@ -33,6 +33,7 @@ export default function InventoryForm({ open, onOpenChange, onSuccess, editItem 
     });
     const [selectedPricingIds, setSelectedPricingIds] = React.useState([]);
     const [isSaving, setIsSaving] = useState(false);
+    const [pricingSearchQuery, setPricingSearchQuery] = useState("");
 
     React.useEffect(() => {
         if (editItem) {
@@ -292,8 +293,17 @@ export default function InventoryForm({ open, onOpenChange, onSuccess, editItem 
 
                     <div className="space-y-2">
                         <Label>Associated Services/Products</Label>
+                        <Input
+                            placeholder="Search services..."
+                            value={pricingSearchQuery}
+                            onChange={(e) => setPricingSearchQuery(e.target.value)}
+                            className="mb-2"
+                        />
                         <div className="border rounded-lg p-3 space-y-2 max-h-48 overflow-y-auto bg-white">
-                            {pricingItems.filter(item => item.status === 'active').map(item => (
+                            {pricingItems.filter(item => 
+                                item.status === 'active' && 
+                                (!pricingSearchQuery || item.name.toLowerCase().includes(pricingSearchQuery.toLowerCase()))
+                            ).map(item => (
                                 <div key={item.id} className="flex items-center space-x-2">
                                     <input
                                         type="checkbox"
