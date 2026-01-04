@@ -11,7 +11,7 @@ import ShareFormDialog from "../components/forms/ShareFormDialog";
 import { usePermissions } from "../components/permissions/usePermissions";
 import { toast } from "sonner";
 import { openPrintWindow } from "../components/PrintHelper";
-import { Printer, ArrowLeft, Pencil, Star, FileText, Trash2, History, Tag, Copy, Share2, Save } from "lucide-react";
+import { Printer, ArrowLeft, Pencil, Star, FileText, Trash2, History, Tag, Copy, Share2, Save, Files } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { Card, CardContent } from "@/components/ui/card";
@@ -108,6 +108,23 @@ export default function ConsentFormDetail() {
         }
     };
 
+    const duplicateForm = async () => {
+        try {
+            const duplicated = await base44.entities.ConsentForm.create({
+                ...form,
+                id: undefined,
+                form_name: `${form.form_name} (Copy)`,
+                created_date: undefined,
+                updated_date: undefined,
+                parent_id: undefined
+            });
+            toast.success("Form duplicated successfully!");
+            navigate(createPageUrl(`ConsentFormDetail?id=${duplicated.id}`));
+        } catch (error) {
+            toast.error("Failed to duplicate form");
+        }
+    };
+
     const formTypeColors = {
         "Procedure": "bg-blue-100 text-blue-800",
         "Treatment": "bg-purple-100 text-purple-800",
@@ -151,6 +168,10 @@ export default function ConsentFormDetail() {
                     </Button>
                     {can("consent", "edit") && (
                         <>
+                            <Button variant="outline" onClick={duplicateForm}>
+                                <Files className="w-4 h-4 mr-2" />
+                                Duplicate
+                            </Button>
                             <Button variant="outline" onClick={saveAsTemplate}>
                                 <Save className="w-4 h-4 mr-2" />
                                 Save as Template

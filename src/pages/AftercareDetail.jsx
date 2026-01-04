@@ -10,7 +10,7 @@ import ShareFormDialog from "../components/forms/ShareFormDialog";
 import { usePermissions } from "../components/permissions/usePermissions";
 import { toast } from "sonner";
 import { openPrintWindow } from "../components/PrintHelper";
-import { Printer, ArrowLeft, AlertTriangle, Clock, Calendar as CalendarIcon, Pencil, Star, FileText, Share2, Save } from "lucide-react";
+import { Printer, ArrowLeft, AlertTriangle, Clock, Calendar as CalendarIcon, Pencil, Star, FileText, Share2, Save, Files } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 
@@ -61,6 +61,23 @@ export default function AftercareDetail() {
         }
     };
 
+    const duplicateInstruction = async () => {
+        try {
+            const duplicated = await base44.entities.AftercareInstruction.create({
+                ...instruction,
+                id: undefined,
+                procedure_name: `${instruction.procedure_name} (Copy)`,
+                created_date: undefined,
+                updated_date: undefined,
+                parent_id: undefined
+            });
+            toast.success("Instruction duplicated successfully!");
+            navigate(createPageUrl(`AftercareDetail?id=${duplicated.id}`));
+        } catch (error) {
+            toast.error("Failed to duplicate instruction");
+        }
+    };
+
     const categoryColors = {
         "Gynecology": "bg-pink-100 text-pink-800",
         "Hormone Therapy": "bg-purple-100 text-purple-800",
@@ -104,6 +121,10 @@ export default function AftercareDetail() {
                     </Button>
                     {can("aftercare", "edit") && (
                         <>
+                            <Button variant="outline" onClick={duplicateInstruction}>
+                                <Files className="w-4 h-4 mr-2" />
+                                Duplicate
+                            </Button>
                             <Button variant="outline" onClick={saveAsTemplate}>
                                 <Save className="w-4 h-4 mr-2" />
                                 Save as Template

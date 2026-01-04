@@ -5,13 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileText, Plus, Star, Eye, Trash2, Edit, Copy, Sparkles } from "lucide-react";
+import { FileText, Plus, Star, Eye, Trash2, Edit, Copy, Sparkles, Files } from "lucide-react";
 import SearchBar from "../components/SearchBar";
 import TemplateForm from "../components/templates/TemplateForm";
 import TemplatePreview from "../components/templates/TemplatePreview";
 import AISuggestTemplates from "../components/templates/AISuggestTemplates";
 import { usePermissions } from "../components/permissions/usePermissions";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 export default function FormTemplates() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -42,6 +43,23 @@ export default function FormTemplates() {
             setDeleteConfirm(null);
         }
     });
+
+    const duplicateTemplate = async (template) => {
+        try {
+            await base44.entities.FormTemplate.create({
+                ...template,
+                id: undefined,
+                template_name: `${template.template_name} (Copy)`,
+                created_date: undefined,
+                updated_date: undefined,
+                usage_count: 0
+            });
+            queryClient.invalidateQueries({ queryKey: ['formTemplates'] });
+            toast.success("Template duplicated successfully!");
+        } catch (error) {
+            toast.error("Failed to duplicate template");
+        }
+    };
 
     const filteredTemplates = templates.filter(template => {
         const matchesSearch = template.template_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -158,16 +176,25 @@ export default function FormTemplates() {
                                                 Preview
                                             </Button>
                                             {can(activeTab === "consent" ? "consent" : "aftercare", "edit") && (
-                                                <Button
-                                                    size="sm"
-                                                    variant="outline"
-                                                    onClick={() => {
-                                                        setSelectedTemplate(template);
-                                                        setShowCreateDialog(true);
-                                                    }}
-                                                >
-                                                    <Edit className="w-3 h-3" />
-                                                </Button>
+                                                <>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        onClick={() => duplicateTemplate(template)}
+                                                    >
+                                                        <Files className="w-3 h-3" />
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        onClick={() => {
+                                                            setSelectedTemplate(template);
+                                                            setShowCreateDialog(true);
+                                                        }}
+                                                    >
+                                                        <Edit className="w-3 h-3" />
+                                                    </Button>
+                                                </>
                                             )}
                                             {can(activeTab === "consent" ? "consent" : "aftercare", "delete") && (
                                                 <Button

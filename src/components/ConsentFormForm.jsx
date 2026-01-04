@@ -13,6 +13,7 @@ import 'react-quill/dist/quill.snow.css';
 import FormFieldInsert from "./forms/FormFieldInsert";
 import FormTemplates from "./forms/FormTemplates";
 import TemplateSelector from "./templates/TemplateSelector";
+import DragDropFormBuilder from "./forms/DragDropFormBuilder";
 
 export default function ConsentFormForm({ open, onOpenChange, onSuccess, editForm = null }) {
     const [formData, setFormData] = useState({
@@ -30,6 +31,7 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
     const [isSaving, setIsSaving] = useState(false);
     const [showTemplateSelector, setShowTemplateSelector] = useState(false);
     const [showSourceCode, setShowSourceCode] = useState(false);
+    const [showFormBuilder, setShowFormBuilder] = useState(false);
     const [showAiParams, setShowAiParams] = useState(false);
     const [aiParams, setAiParams] = useState({
         procedure_type: "",
@@ -278,8 +280,9 @@ ${result.contraindications.length > 0 ? `Contraindications:\n${result.contraindi
                 </DialogHeader>
                 
                 <Tabs defaultValue="details" className="w-full">
-                    <TabsList className="grid w-full grid-cols-3">
+                    <TabsList className="grid w-full grid-cols-4">
                         <TabsTrigger value="details">Details</TabsTrigger>
+                        <TabsTrigger value="builder">Form Builder</TabsTrigger>
                         <TabsTrigger value="content">Content</TabsTrigger>
                         <TabsTrigger value="media">Media & Files</TabsTrigger>
                     </TabsList>
@@ -418,6 +421,21 @@ ${result.contraindications.length > 0 ? `Contraindications:\n${result.contraindi
                             </Button>
                         </div>
                         </TabsContent>
+
+                    <TabsContent value="builder" className="space-y-4 mt-4">
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                            <p className="text-sm text-blue-900">
+                                <strong>Drag & Drop Form Builder:</strong> Add fields, reorder them by dragging, and generate HTML for your form.
+                            </p>
+                        </div>
+                        <DragDropFormBuilder
+                            onChange={(fields, html) => {
+                                if (html) {
+                                    setFormData({...formData, content: html});
+                                }
+                            }}
+                        />
+                    </TabsContent>
 
                     <TabsContent value="content" className="space-y-4 mt-4">
                         <div className="space-y-2">
