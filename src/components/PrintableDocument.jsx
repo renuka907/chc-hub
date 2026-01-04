@@ -2,9 +2,14 @@ import React from "react";
 
 export default function PrintableDocument({ title, children, showLogo = true }) {
     return (
-        <div className="printable-document bg-white">
+        <div className="printable-document max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-sm" style={{fontFamily: 'Arial, sans-serif'}}>
             <style>
                 {`
+                    @page {
+                        size: letter;
+                        margin: 0.75in;
+                    }
+                    
                     @media print {
                         body * {
                             visibility: hidden;
@@ -17,7 +22,8 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
                             left: 0;
                             top: 0;
                             width: 100%;
-                            padding: 40px;
+                            background: white;
+                            padding: 0;
                         }
                         .no-print {
                             display: none !important;
@@ -25,39 +31,53 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
                         .print-page-break {
                             page-break-before: always;
                         }
+                        * {
+                            -webkit-print-color-adjust: exact !important;
+                            print-color-adjust: exact !important;
+                            color-adjust: exact !important;
+                        }
                     }
                 `}
             </style>
-            
-            <div className="max-w-4xl mx-auto p-8 bg-white">
-                {showLogo && (
-                    <div className="flex justify-center mb-4 pb-3 border-b border-gray-200">
-                        <div className="text-center">
+
+            {/* Header with optional logo */}
+            {showLogo && (
+                <div className="mb-8 pb-6 border-b-2 border-gray-800">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
                             <img 
                                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png" 
                                 alt="Contemporary Health Center"
-                                className="h-16 mx-auto mb-2"
+                                className="h-16"
                             />
-                            <div className="text-xs text-gray-600 font-medium">
-                                Go from Conventional to Contemporary Healthcare
-                            </div>
+                        </div>
+                        <div className="text-right text-xs text-gray-700 leading-relaxed">
+                            <div className="font-semibold">6150 Diamond Center Court #400</div>
+                            <div>Fort Myers, FL 33912</div>
+                            <div className="mt-1">Phone: 239-561-9191</div>
+                            <div>Fax: 239-561-9188</div>
+                            <div className="mt-1">contemporaryhealthcenter.com</div>
                         </div>
                     </div>
-                )}
-                
-                {title && (
-                    <h1 className="text-xl font-bold text-gray-900 mb-4">
-                        {title}
-                    </h1>
-                )}
-                
-                <div className="prose max-w-none">
-                    {children}
                 </div>
-                
-                <div className="mt-12 pt-6 border-t border-gray-200 text-sm text-gray-500">
-                    <p>Document generated on {new Date().toLocaleDateString()}</p>
-                </div>
+            )}
+
+            {/* Title */}
+            {title && (
+                <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center uppercase tracking-wide border-b pb-3">
+                    {title}
+                </h1>
+            )}
+
+            {/* Content */}
+            <div className="text-gray-900">
+                {children}
+            </div>
+
+            {/* Footer with date */}
+            <div className="text-center text-xs text-gray-600 mt-12 pt-4 border-t border-gray-300">
+                <p className="font-medium">Contemporary Health Center | Phone: 239-561-9191 | Email: office@contemporaryhealthcenter.com</p>
+                <p className="mt-1">Document Generated: {new Date().toLocaleDateString()}</p>
             </div>
         </div>
     );
