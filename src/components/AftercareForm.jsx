@@ -10,6 +10,7 @@ import { Sparkles, Loader2, Upload, X } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import FormFieldInsert from "./forms/FormFieldInsert";
 
 export default function AftercareForm({ open, onOpenChange, onSuccess, editInstruction = null }) {
     const [formData, setFormData] = useState({
@@ -26,6 +27,7 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
     const [isUploading, setIsUploading] = useState(false);
     const [isUploadingDoc, setIsUploadingDoc] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const quillRef = React.useRef(null);
 
     useEffect(() => {
         if (editInstruction) {
@@ -133,6 +135,18 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
         setIsSaving(false);
     };
 
+    const handleInsertField = (html) => {
+        const quill = quillRef.current?.getEditor();
+        if (quill) {
+            const range = quill.getSelection();
+            if (range) {
+                quill.clipboard.dangerouslyPasteHTML(range.index, html);
+            } else {
+                quill.clipboard.dangerouslyPasteHTML(quill.getLength(), html);
+            }
+        }
+    };
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -214,16 +228,23 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
 
                     <TabsContent value="content" className="space-y-6 mt-4">
                         <div className="space-y-2">
-                            <Label htmlFor="instructions">Aftercare Instructions *</Label>
+                            <div className="flex items-center justify-between mb-2">
+                                <Label htmlFor="instructions">Aftercare Instructions *</Label>
+                                <FormFieldInsert onInsert={handleInsertField} />
+                            </div>
                             <ReactQuill
+                                ref={quillRef}
                                 value={formData.instructions}
                                 onChange={(value) => setFormData({...formData, instructions: value})}
                                 modules={{
                                     toolbar: [
                                         [{ 'header': [1, 2, 3, false] }],
                                         ['bold', 'italic', 'underline'],
+                                        [{ 'color': [] }],
                                         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                                         [{ 'indent': '-1'}, { 'indent': '+1' }],
+                                        [{ 'align': [] }],
+                                        ['link'],
                                         ['clean']
                                     ],
                                     clipboard: {

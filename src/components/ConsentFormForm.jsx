@@ -10,6 +10,8 @@ import { Sparkles, Loader2, Upload, X } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import FormFieldInsert from "./forms/FormFieldInsert";
+import FormTemplates from "./forms/FormTemplates";
 
 export default function ConsentFormForm({ open, onOpenChange, onSuccess, editForm = null }) {
     const [formData, setFormData] = useState({
@@ -25,6 +27,7 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
     const [isUploading, setIsUploading] = useState(false);
     const [isUploadingDoc, setIsUploadingDoc] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const quillRef = React.useRef(null);
 
     useEffect(() => {
         if (editForm) {
@@ -125,6 +128,22 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
         setIsSaving(false);
     };
 
+    const handleInsertField = (html) => {
+        const quill = quillRef.current?.getEditor();
+        if (quill) {
+            const range = quill.getSelection();
+            if (range) {
+                quill.clipboard.dangerouslyPasteHTML(range.index, html);
+            } else {
+                quill.clipboard.dangerouslyPasteHTML(quill.getLength(), html);
+            }
+        }
+    };
+
+    const handleSelectTemplate = (content) => {
+        setFormData({ ...formData, content });
+    };
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -219,20 +238,33 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
 
                     <TabsContent value="content" className="space-y-4 mt-4">
                         <div className="space-y-2">
-                            <Label htmlFor="content">Form Content *</Label>
-                            <div className="text-xs text-gray-500 mb-2">
-                                Include purpose, risks, benefits, patient rights, and consent statement
+                            <div className="flex items-center justify-between mb-2">
+                                <div>
+                                    <Label htmlFor="content">Form Content *</Label>
+                                    <div className="text-xs text-gray-500 mt-1">
+                                        Use templates or insert form fields like signatures, dates, and checkboxes
+                                    </div>
+                                </div>
+                                <div className="flex gap-2">
+                                    <FormTemplates onSelectTemplate={handleSelectTemplate} />
+                                    <FormFieldInsert onInsert={handleInsertField} />
+                                </div>
                             </div>
                             <ReactQuill
+                                ref={quillRef}
                                 value={formData.content}
                                 onChange={(value) => setFormData({...formData, content: value})}
                                 modules={{
                                     toolbar: [
                                         [{ 'header': [1, 2, 3, false] }],
+                                        [{ 'font': [] }],
+                                        [{ 'size': ['small', false, 'large', 'huge'] }],
                                         ['bold', 'italic', 'underline', 'strike'],
+                                        [{ 'color': [] }, { 'background': [] }],
                                         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                                         [{ 'indent': '-1'}, { 'indent': '+1' }],
                                         [{ 'align': [] }],
+                                        ['link', 'image'],
                                         ['clean']
                                     ],
                                     clipboard: {
