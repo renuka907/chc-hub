@@ -179,23 +179,31 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                     </div>
                 </div>
                 <DialogHeader className="no-print">
-                    <div className="flex items-center justify-between">
-                        <DialogTitle className="flex items-center gap-2 text-2xl">
-                            <ClipboardCheck className="w-6 h-6 text-orange-600" />
-                            Daily Inventory Audit
-                        </DialogTitle>
-                        <Button
-                            variant="outline"
-                            onClick={handlePrint}
-                            className="border-orange-600 text-orange-600 hover:bg-orange-50"
-                        >
-                            <Printer className="w-4 h-4 mr-2" />
-                            Print Form
-                        </Button>
-                    </div>
+                    <DialogTitle className="flex items-center gap-2 text-2xl">
+                        <ClipboardCheck className="w-6 h-6 text-orange-600" />
+                        Daily Inventory Audit
+                    </DialogTitle>
                 </DialogHeader>
 
                 <div className="space-y-4 no-print">
+                    {/* Print Button - Prominent */}
+                    <div className="bg-gradient-to-r from-orange-500 to-orange-400 rounded-lg p-4 text-white">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h3 className="font-bold text-lg">Print Blank Audit Form</h3>
+                                <p className="text-sm text-orange-100">Print a form to manually record inventory counts</p>
+                            </div>
+                            <Button
+                                onClick={handlePrint}
+                                size="lg"
+                                className="bg-white text-orange-600 hover:bg-orange-50 font-semibold"
+                            >
+                                <Printer className="w-5 h-5 mr-2" />
+                                Print Form
+                            </Button>
+                        </div>
+                    </div>
+
                     {/* Location Selector */}
                     <div className="bg-orange-50 border-2 border-orange-200 rounded-lg p-4">
                         <Label className="text-sm font-semibold mb-2 block">Select Clinic Location</Label>
