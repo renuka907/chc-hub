@@ -24,6 +24,7 @@ export default function InventoryForm({ open, onOpenChange, onSuccess, editItem 
         reorder_quantity: "",
         cost_per_unit: "",
         location_id: "",
+        storage_location: "",
         associated_pricing_item_ids: "[]",
         supplier: "",
         notes: "",
@@ -49,6 +50,7 @@ export default function InventoryForm({ open, onOpenChange, onSuccess, editItem 
                 reorder_quantity: "",
                 cost_per_unit: "",
                 location_id: "",
+                storage_location: "",
                 associated_pricing_item_ids: "[]",
                 supplier: "",
                 notes: "",
@@ -223,6 +225,15 @@ export default function InventoryForm({ open, onOpenChange, onSuccess, editItem 
                                 </SelectContent>
                             </Select>
                         </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label>Storage Location</Label>
+                        <Input
+                            placeholder="e.g., Fridge, Lab, Room 6, Black Cabinet"
+                            value={formData.storage_location}
+                            onChange={(e) => setFormData({...formData, storage_location: e.target.value})}
+                        />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
