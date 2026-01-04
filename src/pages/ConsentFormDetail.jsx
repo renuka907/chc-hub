@@ -135,9 +135,10 @@ export default function ConsentFormDetail() {
                                 Print PDF
                             </Button>
                         </div>
-                        <iframe 
-                            src={`https://docs.google.com/viewer?url=${encodeURIComponent(form.document_url)}&embedded=true`}
-                            className="w-full h-[600px] border-2 border-slate-300 rounded-lg bg-white"
+                        <embed 
+                            src={form.document_url}
+                            type="application/pdf"
+                            className="w-full h-[600px] border-2 border-slate-300 rounded-lg"
                             title="Document Preview"
                         />
                     </CardContent>
