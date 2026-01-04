@@ -107,31 +107,31 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                         }
                         
                         @media print {
-                            html, body {
-                                height: auto;
-                                overflow: visible;
+                            body > *:not(.print-container) {
+                                display: none !important;
+                            }
+                            
+                            body {
+                                margin: 0;
+                                padding: 0;
+                            }
+                            
+                            .print-container {
+                                display: block !important;
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                background: white;
                             }
                             
                             * {
                                 -webkit-print-color-adjust: exact;
                                 print-color-adjust: exact;
                             }
-                            
-                            .no-print, .no-print * {
-                                display: none !important;
-                                visibility: hidden !important;
-                            }
-                            
-                            .printable-audit {
-                                display: block !important;
-                                visibility: visible !important;
-                                position: static !important;
-                                margin: 0 !important;
-                                padding: 0 !important;
-                            }
                         }
                         
-                        .printable-audit {
+                        .print-container {
                             display: none;
                         }
                     `}
