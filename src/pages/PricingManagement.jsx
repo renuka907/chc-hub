@@ -124,6 +124,8 @@ export default function PricingManagement() {
         "Aesthetics": "bg-rose-100 text-rose-800",
         "Body Sculpting": "bg-indigo-100 text-indigo-800",
         "Wellness": "bg-green-100 text-green-800",
+        "Syringes": "bg-orange-100 text-orange-800",
+        "Treatments": "bg-teal-100 text-teal-800",
         "Other": "bg-gray-100 text-gray-800"
     };
 
