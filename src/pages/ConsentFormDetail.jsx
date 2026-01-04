@@ -79,6 +79,11 @@ export default function ConsentFormDetail() {
         navigate(createPageUrl(`ConsentFormDetail?id=${version.id}`));
     };
 
+    const removeDocument = async () => {
+        await base44.entities.ConsentForm.update(form.id, { document_url: "" });
+        queryClient.invalidateQueries({ queryKey: ['consentForms'] });
+    };
+
     const formTypeColors = {
         "Procedure": "bg-blue-100 text-blue-800",
         "Treatment": "bg-purple-100 text-purple-800",
@@ -198,16 +203,27 @@ export default function ConsentFormDetail() {
                                     <p className="text-sm text-slate-600">View, print, or download the full document</p>
                                 </div>
                             </div>
-                            <a 
-                                href={form.document_url} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                            >
-                                <Button variant="outline" size="sm">
-                                    <Printer className="w-4 h-4 mr-2" />
-                                    Open PDF
+                            <div className="flex gap-2">
+                                <a 
+                                    href={form.document_url} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                >
+                                    <Button variant="outline" size="sm">
+                                        <Printer className="w-4 h-4 mr-2" />
+                                        Open PDF
+                                    </Button>
+                                </a>
+                                <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    onClick={removeDocument}
+                                    className="text-red-600 hover:bg-red-50"
+                                >
+                                    <Trash2 className="w-4 h-4 mr-2" />
+                                    Remove
                                 </Button>
-                            </a>
+                            </div>
                         </div>
                         <iframe 
                             src={form.document_url}
