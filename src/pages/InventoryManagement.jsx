@@ -71,8 +71,6 @@ export default function InventoryManagement() {
         setShowForm(true);
     };
 
-    const normalizeText = (text) => text.toLowerCase().replace(/['.\s]/g, '');
-
     const isExpiringSoon = (expiryDate) => {
         if (!expiryDate) return false;
         const today = new Date();
@@ -82,10 +80,13 @@ export default function InventoryManagement() {
     };
 
     const filteredItems = inventoryItems.filter(item => {
-        const normalizedQuery = normalizeText(searchQuery);
-        const matchesSearch = normalizeText(item.item_name).includes(normalizedQuery) ||
-                            normalizeText(item.sku || '').includes(normalizedQuery) ||
-                            normalizeText(item.notes || '').includes(normalizedQuery);
+        const query = searchQuery.toLowerCase();
+        const matchesSearch = !query || 
+            item.item_name.toLowerCase().includes(query) ||
+            (item.sku || '').toLowerCase().includes(query) ||
+            (item.notes || '').toLowerCase().includes(query) ||
+            (item.supplier || '').toLowerCase().includes(query) ||
+            (item.storage_location || '').toLowerCase().includes(query);
         
         const matchesType = selectedType === "all" || item.item_type === selectedType;
         const matchesLocation = selectedLocation === "all" || item.location_id === selectedLocation;

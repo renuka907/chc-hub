@@ -1,35 +1,35 @@
-import Home from './pages/Home';
-import EducationLibrary from './pages/EducationLibrary';
-import EducationDetail from './pages/EducationDetail';
-import AftercareLibrary from './pages/AftercareLibrary';
 import AftercareDetail from './pages/AftercareDetail';
-import ConsentFormDetail from './pages/ConsentFormDetail';
-import ClinicDirectory from './pages/ClinicDirectory';
+import AftercareLibrary from './pages/AftercareLibrary';
 import CheckoutQuote from './pages/CheckoutQuote';
-import QuoteDetail from './pages/QuoteDetail';
+import ClinicDirectory from './pages/ClinicDirectory';
+import ConsentFormDetail from './pages/ConsentFormDetail';
+import DiscountManagement from './pages/DiscountManagement';
+import EducationDetail from './pages/EducationDetail';
+import EducationLibrary from './pages/EducationLibrary';
+import Home from './pages/Home';
+import InventoryManagement from './pages/InventoryManagement';
 import PricingManagement from './pages/PricingManagement';
+import QuoteDetail from './pages/QuoteDetail';
 import QuotesManagement from './pages/QuotesManagement';
 import UserManagement from './pages/UserManagement';
-import DiscountManagement from './pages/DiscountManagement';
-import InventoryManagement from './pages/InventoryManagement';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Home": Home,
-    "EducationLibrary": EducationLibrary,
-    "EducationDetail": EducationDetail,
-    "AftercareLibrary": AftercareLibrary,
     "AftercareDetail": AftercareDetail,
-    "ConsentFormDetail": ConsentFormDetail,
-    "ClinicDirectory": ClinicDirectory,
+    "AftercareLibrary": AftercareLibrary,
     "CheckoutQuote": CheckoutQuote,
-    "QuoteDetail": QuoteDetail,
+    "ClinicDirectory": ClinicDirectory,
+    "ConsentFormDetail": ConsentFormDetail,
+    "DiscountManagement": DiscountManagement,
+    "EducationDetail": EducationDetail,
+    "EducationLibrary": EducationLibrary,
+    "Home": Home,
+    "InventoryManagement": InventoryManagement,
     "PricingManagement": PricingManagement,
+    "QuoteDetail": QuoteDetail,
     "QuotesManagement": QuotesManagement,
     "UserManagement": UserManagement,
-    "DiscountManagement": DiscountManagement,
-    "InventoryManagement": InventoryManagement,
 }
 
 export const pagesConfig = {
