@@ -87,7 +87,7 @@ export default function Messaging() {
                     </TabsTrigger>
                     <TabsTrigger value="assistant" className="text-base">
                         <Bot className="w-4 h-4 mr-2" />
-                        Clinic Assistant
+                        Peach
                     </TabsTrigger>
                 </TabsList>
 

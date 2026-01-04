@@ -111,7 +111,7 @@ export default function AgentChat({ agentName }) {
                         <Bot className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                        <h3 className="font-semibold text-gray-900">Clinic Assistant</h3>
+                        <h3 className="font-semibold text-gray-900">Peach</h3>
                         <p className="text-xs text-gray-600">
                             Ask about FAQs, medical info, inventory, or set reminders
                         </p>
@@ -138,7 +138,7 @@ export default function AgentChat({ agentName }) {
                                         <div className="flex items-center gap-2 mb-1">
                                             <Bot className="w-4 h-4 text-purple-600" />
                                             <span className="text-xs font-medium text-gray-700">
-                                                Clinic Assistant
+                                                Peach
                                             </span>
                                             {messageTime && <span className="text-xs text-gray-500">{messageTime}</span>}
                                         </div>
