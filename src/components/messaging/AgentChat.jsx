@@ -20,10 +20,26 @@ export default function AgentChat({ agentName }) {
         queryFn: () => base44.auth.me(),
     });
 
-    // Create conversation on mount
+    // Load or create conversation on mount
     useEffect(() => {
-        const createConversation = async () => {
+        const loadOrCreateConversation = async () => {
             try {
+                // Try to load saved conversation ID from localStorage
+                const savedConvId = localStorage.getItem(`agent_conv_${agentName}`);
+                
+                if (savedConvId) {
+                    // Load existing conversation
+                    try {
+                        const conv = await base44.agents.getConversation(savedConvId);
+                        setConversationId(conv.id);
+                        setMessages(conv.messages || []);
+                        return;
+                    } catch (error) {
+                        console.log("Saved conversation not found, creating new one");
+                    }
+                }
+                
+                // Create new conversation if no saved one exists
                 const conv = await base44.agents.createConversation({
                     agent_name: agentName,
                     metadata: {
@@ -33,11 +49,14 @@ export default function AgentChat({ agentName }) {
                 });
                 setConversationId(conv.id);
                 setMessages(conv.messages || []);
+                
+                // Save conversation ID to localStorage
+                localStorage.setItem(`agent_conv_${agentName}`, conv.id);
             } catch (error) {
-                console.error("Failed to create conversation:", error);
+                console.error("Failed to load/create conversation:", error);
             }
         };
-        createConversation();
+        loadOrCreateConversation();
     }, [agentName]);
 
     // Subscribe to conversation updates
