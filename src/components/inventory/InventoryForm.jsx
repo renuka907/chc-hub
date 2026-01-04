@@ -71,6 +71,22 @@ export default function InventoryForm({ open, onOpenChange, onSuccess, editItem 
         queryFn: () => base44.entities.PricingItem.list(),
     });
 
+    const { data: allInventoryItems = [] } = useQuery({
+        queryKey: ['allInventoryItems'],
+        queryFn: () => base44.entities.InventoryItem.list('-updated_date', 500),
+    });
+
+    // Get unique storage locations from existing inventory
+    const storageLocations = React.useMemo(() => {
+        const locations = new Set();
+        allInventoryItems.forEach(item => {
+            if (item.storage_location) {
+                locations.add(item.storage_location);
+            }
+        });
+        return Array.from(locations).sort();
+    }, [allInventoryItems]);
+
     const togglePricingItem = (itemId) => {
         setSelectedPricingIds(prev => {
             if (prev.includes(itemId)) {
@@ -229,11 +245,29 @@ export default function InventoryForm({ open, onOpenChange, onSuccess, editItem 
 
                     <div className="space-y-2">
                         <Label>Storage Location</Label>
-                        <Input
-                            placeholder="e.g., Fridge, Lab, Room 6, Black Cabinet"
-                            value={formData.storage_location}
-                            onChange={(e) => setFormData({...formData, storage_location: e.target.value})}
-                        />
+                        <div className="flex gap-2">
+                            <Select
+                                value={formData.storage_location}
+                                onValueChange={(value) => setFormData({...formData, storage_location: value})}
+                            >
+                                <SelectTrigger className="flex-1">
+                                    <SelectValue placeholder="Select or enter location" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {storageLocations.map(location => (
+                                        <SelectItem key={location} value={location}>
+                                            {location}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <Input
+                                placeholder="Or type new location"
+                                value={formData.storage_location}
+                                onChange={(e) => setFormData({...formData, storage_location: e.target.value})}
+                                className="flex-1"
+                            />
+                        </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
