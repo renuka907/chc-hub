@@ -29,6 +29,7 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
     const [isUploadingDoc, setIsUploadingDoc] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [showTemplateSelector, setShowTemplateSelector] = useState(false);
+    const [showSourceCode, setShowSourceCode] = useState(false);
     const [showAiParams, setShowAiParams] = useState(false);
     const [aiParams, setAiParams] = useState({
         procedure_type: "",
@@ -430,6 +431,14 @@ ${result.contraindications.length > 0 ? `Contraindications:\n${result.contraindi
                                 <div className="flex gap-2">
                                     <Button
                                         type="button"
+                                        variant={showSourceCode ? "default" : "outline"}
+                                        size="sm"
+                                        onClick={() => setShowSourceCode(!showSourceCode)}
+                                    >
+                                        {showSourceCode ? 'Visual Editor' : 'Source Code'}
+                                    </Button>
+                                    <Button
+                                        type="button"
                                         variant="outline"
                                         size="sm"
                                         onClick={handleSummarize}
@@ -460,33 +469,43 @@ ${result.contraindications.length > 0 ? `Contraindications:\n${result.contraindi
                                     <FormFieldInsert onInsert={handleInsertField} />
                                 </div>
                             </div>
-                            <ReactQuill
-                                ref={quillRef}
-                                value={formData.content}
-                                onChange={(value) => setFormData({...formData, content: value})}
-                                modules={{
-                                    toolbar: [
-                                        [{ 'header': [1, 2, 3, false] }],
-                                        [{ 'font': [] }],
-                                        [{ 'size': ['small', false, 'large', 'huge'] }],
-                                        ['bold', 'italic', 'underline', 'strike'],
-                                        [{ 'color': [] }, { 'background': [] }],
-                                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                                        [{ 'indent': '-1'}, { 'indent': '+1' }],
-                                        [{ 'align': [] }],
-                                        ['link', 'image'],
-                                        ['clean'],
-                                        ['code-block']
-                                    ],
-                                    clipboard: {
-                                        matchVisual: false,
-                                        matchers: []
-                                    }
-                                }}
-                                formats={['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'color', 'background', 'list', 'bullet', 'indent', 'align', 'link', 'image', 'code-block', 'script', 'blockquote', 'direction']}
-                                className="bg-white"
-                                style={{ height: '400px', marginBottom: '50px' }}
-                            />
+                            {showSourceCode ? (
+                                <Textarea
+                                    value={formData.content}
+                                    onChange={(e) => setFormData({...formData, content: e.target.value})}
+                                    className="font-mono text-sm"
+                                    style={{ height: '400px' }}
+                                    placeholder="Paste or edit HTML source code here..."
+                                />
+                            ) : (
+                                <ReactQuill
+                                    ref={quillRef}
+                                    value={formData.content}
+                                    onChange={(value) => setFormData({...formData, content: value})}
+                                    modules={{
+                                        toolbar: [
+                                            [{ 'header': [1, 2, 3, false] }],
+                                            [{ 'font': [] }],
+                                            [{ 'size': ['small', false, 'large', 'huge'] }],
+                                            ['bold', 'italic', 'underline', 'strike'],
+                                            [{ 'color': [] }, { 'background': [] }],
+                                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                            [{ 'indent': '-1'}, { 'indent': '+1' }],
+                                            [{ 'align': [] }],
+                                            ['link', 'image'],
+                                            ['clean'],
+                                            ['code-block']
+                                        ],
+                                        clipboard: {
+                                            matchVisual: false,
+                                            matchers: []
+                                        }
+                                    }}
+                                    formats={['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'color', 'background', 'list', 'bullet', 'indent', 'align', 'link', 'image', 'code-block', 'script', 'blockquote', 'direction']}
+                                    className="bg-white"
+                                    style={{ height: '400px', marginBottom: '50px' }}
+                                />
+                            )}
                         </div>
                     </TabsContent>
 

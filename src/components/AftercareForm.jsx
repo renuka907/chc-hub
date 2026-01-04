@@ -29,6 +29,7 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
     const [isUploadingDoc, setIsUploadingDoc] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [showTemplateSelector, setShowTemplateSelector] = useState(false);
+    const [showSourceCode, setShowSourceCode] = useState(false);
     const quillRef = React.useRef(null);
 
     useEffect(() => {
