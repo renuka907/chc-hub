@@ -137,7 +137,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                     `}
                 </style>
 
-                <div className="printable-audit" style={{color: 'black', backgroundColor: 'white'}}>
+                <div className="print-container" style={{color: 'black', backgroundColor: 'white'}}>
                     <div style={{borderBottom: '2px solid black', paddingBottom: '8px', marginBottom: '12px'}}>
                         <div style={{fontSize: '16px', fontWeight: 'bold', color: 'black'}}>Daily Inventory Audit Form</div>
                         <div style={{fontSize: '10px', marginTop: '4px', color: 'black'}}>
