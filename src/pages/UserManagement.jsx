@@ -8,7 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Users, Mail, Shield, UserPlus, Calendar, Trash2 } from "lucide-react";
+import { Users, Mail, Shield, UserPlus, Calendar, Trash2, Edit } from "lucide-react";
+import RoleManagementDialog from "../components/users/RoleManagementDialog";
+import { ROLE_LABELS } from "../components/permissions/usePermissions";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -26,6 +28,8 @@ export default function UserManagement() {
     const [inviteRole, setInviteRole] = useState("user");
     const [currentUser, setCurrentUser] = useState(null);
     const [deleteConfirm, setDeleteConfirm] = useState(null);
+    const [showRoleDialog, setShowRoleDialog] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
     const queryClient = useQueryClient();
 
     const { data: users = [], isLoading } = useQuery({
@@ -146,20 +150,35 @@ export default function UserManagement() {
                                                 ? 'bg-purple-100 text-purple-800' 
                                                 : user.role === 'manager'
                                                 ? 'bg-blue-100 text-blue-800'
+                                                : user.role === 'staff'
+                                                ? 'bg-green-100 text-green-800'
                                                 : 'bg-gray-100 text-gray-800'
                                         }>
                                             <Shield className="w-3 h-3 mr-1" />
-                                            {user.role === 'admin' ? 'Administrator' : user.role === 'manager' ? 'Manager' : 'User'}
+                                            {ROLE_LABELS[user.role] || 'User'}
                                         </Badge>
                                         {user.id !== currentUser?.id && (
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={() => setDeleteConfirm(user)}
-                                                className="text-gray-400 hover:text-red-600"
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </Button>
+                                            <>
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => {
+                                                        setSelectedUser(user);
+                                                        setShowRoleDialog(true);
+                                                    }}
+                                                >
+                                                    <Edit className="w-3 h-3 mr-1" />
+                                                    Change Role
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => setDeleteConfirm(user)}
+                                                    className="text-gray-400 hover:text-red-600"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </Button>
+                                            </>
                                         )}
                                     </div>
                                 </div>
@@ -193,17 +212,20 @@ export default function UserManagement() {
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="user">User</SelectItem>
+                                    <SelectItem value="read_only">Read-Only</SelectItem>
+                                    <SelectItem value="staff">Staff</SelectItem>
                                     <SelectItem value="manager">Manager</SelectItem>
                                     <SelectItem value="admin">Administrator</SelectItem>
                                 </SelectContent>
                             </Select>
                             <p className="text-xs text-gray-500">
                                 {inviteRole === 'admin' 
-                                    ? 'Admins can manage users and have full access' 
+                                    ? 'Full access to all features and user management' 
                                     : inviteRole === 'manager'
-                                    ? 'Managers can edit pricing and delete items'
-                                    : 'Regular users can access the app'}
+                                    ? 'Can manage content and forms, view discounts'
+                                    : inviteRole === 'staff'
+                                    ? 'Can create and edit forms, limited delete permissions'
+                                    : 'View-only access to forms and content'}
                             </p>
                         </div>
                     </div>
@@ -241,6 +263,12 @@ export default function UserManagement() {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
+
+            <RoleManagementDialog
+                open={showRoleDialog}
+                onOpenChange={setShowRoleDialog}
+                user={selectedUser}
+            />
         </div>
     );
 }

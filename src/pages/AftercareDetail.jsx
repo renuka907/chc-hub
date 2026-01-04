@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import PrintableDocument from "../components/PrintableDocument";
 import AftercareForm from "../components/AftercareForm";
 import ShareFormDialog from "../components/forms/ShareFormDialog";
+import { usePermissions } from "../components/permissions/usePermissions";
 import { openPrintWindow } from "../components/PrintHelper";
 import { Printer, ArrowLeft, AlertTriangle, Clock, Calendar as CalendarIcon, Pencil, Star, FileText, Share2 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -18,6 +19,7 @@ export default function AftercareDetail() {
     const [showEditForm, setShowEditForm] = useState(false);
     const [showShareDialog, setShowShareDialog] = useState(false);
     const queryClient = useQueryClient();
+    const { can } = usePermissions();
 
     const { data: instructions = [] } = useQuery({
         queryKey: ['aftercareInstructions'],
@@ -62,10 +64,12 @@ export default function AftercareDetail() {
                     </Button>
                 </Link>
                 <div className="flex gap-2">
-                    <Button variant="outline" onClick={() => setShowShareDialog(true)} className="border-blue-500 text-blue-600">
-                        <Share2 className="w-4 h-4 mr-2" />
-                        Share
-                    </Button>
+                    {can("aftercare", "share") && (
+                        <Button variant="outline" onClick={() => setShowShareDialog(true)} className="border-blue-500 text-blue-600">
+                            <Share2 className="w-4 h-4 mr-2" />
+                            Share
+                        </Button>
+                    )}
                     <Button 
                         variant="outline" 
                         onClick={toggleFavorite}
@@ -74,10 +78,12 @@ export default function AftercareDetail() {
                         <Star className={`w-4 h-4 mr-2 ${instruction.is_favorite ? 'fill-yellow-500' : ''}`} />
                         {instruction.is_favorite ? 'Unfavorite' : 'Favorite'}
                     </Button>
-                    <Button variant="outline" onClick={() => setShowEditForm(true)}>
-                        <Pencil className="w-4 h-4 mr-2" />
-                        Edit
-                    </Button>
+                    {can("aftercare", "edit") && (
+                        <Button variant="outline" onClick={() => setShowEditForm(true)}>
+                            <Pencil className="w-4 h-4 mr-2" />
+                            Edit
+                        </Button>
+                    )}
                     <Button onClick={openPrintWindow} className="bg-blue-600 hover:bg-blue-700">
                         <Printer className="w-4 h-4 mr-2" />
                         Print / PDF

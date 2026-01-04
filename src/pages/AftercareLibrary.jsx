@@ -14,6 +14,7 @@ import AftercareForm from "../components/AftercareForm";
 import ConsentFormForm from "../components/ConsentFormForm";
 import BulkActionsBar from "../components/BulkActionsBar";
 import TagManager from "../components/forms/TagManager";
+import { usePermissions } from "../components/permissions/usePermissions";
 import { FileText, Printer, Plus, Star } from "lucide-react";
 
 export default function AftercareLibrary() {
@@ -27,6 +28,7 @@ export default function AftercareLibrary() {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [showTagManager, setShowTagManager] = useState(false);
     const queryClient = useQueryClient();
+    const { can } = usePermissions();
 
     const { data: aftercareInstructions = [] } = useQuery({
         queryKey: ['aftercareInstructions'],
@@ -133,18 +135,20 @@ export default function AftercareLibrary() {
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Aftercare & Forms</h1>
                     <p className="text-gray-600">Post-procedure instructions and consent forms</p>
-                </div>
-                <Button 
-                    onClick={() => {
-                        if (activeTab === "aftercare") setShowAftercareForm(true);
-                        else if (activeTab === "consent") setShowConsentForm(true);
-                        else if (activeTab === "clinic") setShowClinicForm(true);
-                    }}
-                    className="bg-blue-600 hover:bg-blue-700"
-                >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Create {activeTab === "aftercare" ? "Aftercare" : activeTab === "consent" ? "Consent Form" : "Clinic Form"}
-                </Button>
+                    </div>
+                    {can(activeTab === "consent" ? "consent" : "aftercare", "create") && (
+                    <Button 
+                        onClick={() => {
+                            if (activeTab === "aftercare") setShowAftercareForm(true);
+                            else if (activeTab === "consent") setShowConsentForm(true);
+                            else if (activeTab === "clinic") setShowClinicForm(true);
+                        }}
+                        className="bg-blue-600 hover:bg-blue-700"
+                    >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Create {activeTab === "aftercare" ? "Aftercare" : activeTab === "consent" ? "Consent Form" : "Clinic Form"}
+                    </Button>
+                    )}
             </div>
 
             {/* Search and Favorites */}

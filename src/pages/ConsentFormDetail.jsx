@@ -8,6 +8,7 @@ import ConsentFormForm from "../components/ConsentFormForm";
 import VersionHistory from "../components/forms/VersionHistory";
 import TagManager from "../components/forms/TagManager";
 import ShareFormDialog from "../components/forms/ShareFormDialog";
+import { usePermissions } from "../components/permissions/usePermissions";
 import { openPrintWindow } from "../components/PrintHelper";
 import { Printer, ArrowLeft, Pencil, Star, FileText, Trash2, History, Tag, Copy, Share2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -26,6 +27,7 @@ export default function ConsentFormDetail() {
     const [showShareDialog, setShowShareDialog] = useState(false);
     const queryClient = useQueryClient();
     const navigate = useNavigate();
+    const { can } = usePermissions();
 
     const { data: forms = [] } = useQuery({
         queryKey: ['consentForms'],
@@ -113,10 +115,12 @@ export default function ConsentFormDetail() {
                     </Button>
                 </Link>
                 <div className="flex gap-2">
-                    <Button variant="outline" onClick={() => setShowShareDialog(true)} className="border-blue-500 text-blue-600">
-                        <Share2 className="w-4 h-4 mr-2" />
-                        Share
-                    </Button>
+                    {can("consent", "share") && (
+                        <Button variant="outline" onClick={() => setShowShareDialog(true)} className="border-blue-500 text-blue-600">
+                            <Share2 className="w-4 h-4 mr-2" />
+                            Share
+                        </Button>
+                    )}
                     <Button 
                         variant="outline" 
                         onClick={toggleFavorite}
@@ -125,26 +129,32 @@ export default function ConsentFormDetail() {
                         <Star className={`w-4 h-4 mr-2 ${form.is_favorite ? 'fill-yellow-500' : ''}`} />
                         {form.is_favorite ? 'Unfavorite' : 'Favorite'}
                     </Button>
-                    <Button variant="outline" onClick={() => setShowTagManager(true)}>
-                        <Tag className="w-4 h-4 mr-2" />
-                        Tags
-                    </Button>
-                    <Button variant="outline" onClick={() => setShowVersionHistory(true)}>
-                        <History className="w-4 h-4 mr-2" />
-                        Version History
-                    </Button>
-                    <Button variant="outline" onClick={() => setShowNewVersionDialog(true)}>
-                        <Copy className="w-4 h-4 mr-2" />
-                        New Version
-                    </Button>
-                    <Button variant="outline" onClick={() => setShowEditForm(true)}>
-                        <Pencil className="w-4 h-4 mr-2" />
-                        Edit
-                    </Button>
-                    <Button variant="outline" onClick={() => setShowDeleteDialog(true)} className="border-red-300 text-red-600 hover:bg-red-50">
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        Delete
-                    </Button>
+                    {can("consent", "edit") && (
+                        <>
+                            <Button variant="outline" onClick={() => setShowTagManager(true)}>
+                                <Tag className="w-4 h-4 mr-2" />
+                                Tags
+                            </Button>
+                            <Button variant="outline" onClick={() => setShowVersionHistory(true)}>
+                                <History className="w-4 h-4 mr-2" />
+                                Version History
+                            </Button>
+                            <Button variant="outline" onClick={() => setShowNewVersionDialog(true)}>
+                                <Copy className="w-4 h-4 mr-2" />
+                                New Version
+                            </Button>
+                            <Button variant="outline" onClick={() => setShowEditForm(true)}>
+                                <Pencil className="w-4 h-4 mr-2" />
+                                Edit
+                            </Button>
+                        </>
+                    )}
+                    {can("consent", "delete") && (
+                        <Button variant="outline" onClick={() => setShowDeleteDialog(true)} className="border-red-300 text-red-600 hover:bg-red-50">
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Delete
+                        </Button>
+                    )}
                     <Button onClick={openPrintWindow} className="bg-blue-600 hover:bg-blue-700">
                         <Printer className="w-4 h-4 mr-2" />
                         Print / PDF
