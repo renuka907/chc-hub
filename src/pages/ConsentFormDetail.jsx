@@ -80,64 +80,9 @@ export default function ConsentFormDetail() {
             </div>
 
             {/* Printable Content */}
-            <PrintableDocument title={form.form_name}>
-                <div className="space-y-6">
-                    {/* Metadata */}
-                    <div className="flex flex-wrap gap-3 items-center">
-                        <Badge className={`${formTypeColors[form.form_type]} text-sm px-3 py-1`}>
-                            {form.form_type} Form
-                        </Badge>
-                        {form.version && (
-                            <Badge variant="outline">Version {form.version}</Badge>
-                        )}
-                        {form.effective_date && (
-                            <span className="text-sm text-gray-600">
-                                Effective: {new Date(form.effective_date).toLocaleDateString()}
-                            </span>
-                        )}
-                    </div>
-
-                    {/* Image */}
-                    {form.image_url && (
-                        <div className="my-6">
-                            <img 
-                                src={form.image_url} 
-                                alt={form.form_name}
-                                className="w-full max-w-2xl mx-auto rounded-lg"
-                            />
-                        </div>
-                    )}
-
-                    {/* Form Content */}
-                    <div className="whitespace-pre-wrap text-gray-900 leading-loose text-sm border-t-2 border-gray-300 pt-6" style={{lineHeight: '1.8'}}>
-                        {form.content}
-                    </div>
-
-                    {/* Signature Section */}
-                    <div className="border-t-2 border-gray-800 pt-8 mt-12 space-y-10">
-                        <div className="grid grid-cols-2 gap-8">
-                            <div>
-                                <label className="text-xs text-gray-700 font-semibold uppercase tracking-wide block mb-2">Patient Name (Print)</label>
-                                <div className="border-b-2 border-gray-800 h-8"></div>
-                            </div>
-                            <div>
-                                <label className="text-xs text-gray-700 font-semibold uppercase tracking-wide block mb-2">Date of Birth</label>
-                                <div className="border-b-2 border-gray-800 h-8"></div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="text-xs text-gray-700 font-semibold uppercase tracking-wide block mb-2">Patient Signature</label>
-                            <div className="border-b-2 border-gray-800 h-12 mb-2"></div>
-                            <div className="text-xs text-gray-600">Date: _____________________</div>
-                        </div>
-
-                        <div>
-                            <label className="text-xs text-gray-700 font-semibold uppercase tracking-wide block mb-2">Witness/Staff Signature</label>
-                            <div className="border-b-2 border-gray-800 h-12 mb-2"></div>
-                            <div className="text-xs text-gray-600">Date: _____________________</div>
-                        </div>
-                    </div>
+            <PrintableDocument title="" showLogo={false}>
+                <div className="whitespace-pre-wrap text-black text-sm leading-relaxed" style={{lineHeight: '1.6', fontFamily: 'Times New Roman, serif'}}>
+                    {form.content}
                 </div>
             </PrintableDocument>
 
