@@ -107,10 +107,10 @@ export default function AftercareDetail() {
                     {/* Main Instructions */}
                     <Card>
                         <CardHeader>
-                            <CardTitle>Post-Procedure Instructions</CardTitle>
+                            <CardTitle className="text-lg font-bold uppercase tracking-wide border-b pb-2">Post-Procedure Instructions</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="whitespace-pre-wrap text-gray-800 leading-relaxed">
+                            <div className="whitespace-pre-wrap text-gray-900 leading-loose text-sm" style={{lineHeight: '1.8'}}>
                                 {instruction.instructions}
                             </div>
                         </CardContent>
@@ -118,15 +118,15 @@ export default function AftercareDetail() {
 
                     {/* Warning Signs */}
                     {instruction.warning_signs && (
-                        <Card className="bg-amber-50 border-amber-300">
+                        <Card className="bg-amber-50 border-2 border-amber-400">
                             <CardHeader>
-                                <CardTitle className="flex items-center text-amber-900">
+                                <CardTitle className="flex items-center text-amber-900 text-lg font-bold uppercase tracking-wide">
                                     <AlertTriangle className="w-5 h-5 mr-2" />
                                     Warning Signs - Contact Us Immediately
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="whitespace-pre-wrap text-amber-900 leading-relaxed">
+                                <div className="whitespace-pre-wrap text-amber-900 leading-loose text-sm font-medium" style={{lineHeight: '1.8'}}>
                                     {instruction.warning_signs}
                                 </div>
                             </CardContent>
@@ -178,14 +178,17 @@ export default function AftercareDetail() {
                     )}
 
                     {/* Contact Information */}
-                    <Card className="bg-slate-50 border-slate-200">
+                    <Card className="bg-slate-100 border-2 border-slate-300">
                         <CardContent className="pt-6">
-                            <p className="text-sm text-slate-700">
-                                <strong>Questions or Concerns?</strong><br />
-                                Please contact our office if you have any questions about your recovery or if you experience any concerning symptoms.<br /><br />
-                                <strong>Phone:</strong> 239-561-9191 (call or text)<br />
-                                <strong>Email:</strong> office@contemporaryhealthcenter.com
-                            </p>
+                            <div className="text-sm text-slate-900 leading-relaxed">
+                                <p className="font-bold text-base mb-3 uppercase tracking-wide">Questions or Concerns?</p>
+                                <p className="mb-3">Please contact our office if you have any questions about your recovery or if you experience any concerning symptoms.</p>
+                                <div className="border-t border-slate-300 pt-3 mt-3">
+                                    <p className="font-semibold">📞 Phone: 239-561-9191 (call or text)</p>
+                                    <p className="font-semibold mt-1">📧 Email: office@contemporaryhealthcenter.com</p>
+                                    <p className="font-semibold mt-1">🌐 Web: contemporaryhealthcenter.com</p>
+                                </div>
+                            </div>
                         </CardContent>
                     </Card>
                 </div>

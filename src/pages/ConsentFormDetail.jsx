@@ -109,7 +109,7 @@ export default function ConsentFormDetail() {
                     )}
 
                     {/* Form Content */}
-                    <div className="whitespace-pre-wrap text-gray-800 leading-relaxed border-t pt-6">
+                    <div className="whitespace-pre-wrap text-gray-900 leading-loose text-sm border-t-2 border-gray-300 pt-6" style={{lineHeight: '1.8'}}>
                         {form.content}
                     </div>
 
@@ -141,19 +141,28 @@ export default function ConsentFormDetail() {
                     )}
 
                     {/* Signature Section */}
-                    <div className="border-t pt-8 mt-12 space-y-8">
-                        <div>
-                            <div className="border-b border-gray-400 mb-2 pb-1">
-                                <span className="text-gray-600 text-sm">Patient Signature</span>
+                    <div className="border-t-2 border-gray-800 pt-8 mt-12 space-y-10">
+                        <div className="grid grid-cols-2 gap-8">
+                            <div>
+                                <label className="text-xs text-gray-700 font-semibold uppercase tracking-wide block mb-2">Patient Name (Print)</label>
+                                <div className="border-b-2 border-gray-800 h-8"></div>
                             </div>
-                            <div className="text-sm text-gray-500">Date: ________________</div>
+                            <div>
+                                <label className="text-xs text-gray-700 font-semibold uppercase tracking-wide block mb-2">Date of Birth</label>
+                                <div className="border-b-2 border-gray-800 h-8"></div>
+                            </div>
                         </div>
 
                         <div>
-                            <div className="border-b border-gray-400 mb-2 pb-1">
-                                <span className="text-gray-600 text-sm">Witness/Staff Signature</span>
-                            </div>
-                            <div className="text-sm text-gray-500">Date: ________________</div>
+                            <label className="text-xs text-gray-700 font-semibold uppercase tracking-wide block mb-2">Patient Signature</label>
+                            <div className="border-b-2 border-gray-800 h-12 mb-2"></div>
+                            <div className="text-xs text-gray-600">Date: _____________________</div>
+                        </div>
+
+                        <div>
+                            <label className="text-xs text-gray-700 font-semibold uppercase tracking-wide block mb-2">Witness/Staff Signature</label>
+                            <div className="border-b-2 border-gray-800 h-12 mb-2"></div>
+                            <div className="text-xs text-gray-600">Date: _____________________</div>
                         </div>
                     </div>
                 </div>
