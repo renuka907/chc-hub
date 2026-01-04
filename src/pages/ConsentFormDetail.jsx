@@ -81,9 +81,15 @@ export default function ConsentFormDetail() {
 
             {/* Printable Content */}
             <PrintableDocument title="" showLogo={false}>
-                <div className="whitespace-pre-wrap text-black text-sm leading-relaxed" style={{lineHeight: '1.6', fontFamily: 'Times New Roman, serif'}}>
-                    {form.content}
-                </div>
+                <div 
+                    className="text-black text-base leading-relaxed prose prose-sm max-w-none"
+                    style={{
+                        lineHeight: '1.8', 
+                        fontFamily: 'Times New Roman, serif',
+                        letterSpacing: '0.01em'
+                    }}
+                    dangerouslySetInnerHTML={{ __html: form.content }}
+                />
             </PrintableDocument>
 
             {/* Uploaded Document - Outside printable section, at the very bottom */}

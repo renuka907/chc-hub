@@ -110,9 +110,11 @@ export default function AftercareDetail() {
                             <CardTitle className="text-lg font-bold uppercase tracking-wide border-b pb-2">Post-Procedure Instructions</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="whitespace-pre-wrap text-gray-900 leading-loose text-sm" style={{lineHeight: '1.8'}}>
-                                {instruction.instructions}
-                            </div>
+                            <div 
+                                className="text-gray-900 text-base prose prose-sm max-w-none"
+                                style={{lineHeight: '1.8', fontFamily: 'Times New Roman, serif'}}
+                                dangerouslySetInnerHTML={{ __html: instruction.instructions }}
+                            />
                         </CardContent>
                     </Card>
 
@@ -126,9 +128,11 @@ export default function AftercareDetail() {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="whitespace-pre-wrap text-amber-900 leading-loose text-sm font-medium" style={{lineHeight: '1.8'}}>
-                                    {instruction.warning_signs}
-                                </div>
+                                <div 
+                                    className="text-amber-900 text-base font-medium prose prose-sm max-w-none"
+                                    style={{lineHeight: '1.8', fontFamily: 'Times New Roman, serif'}}
+                                    dangerouslySetInnerHTML={{ __html: instruction.warning_signs }}
+                                />
                             </CardContent>
                         </Card>
                     )}
@@ -143,9 +147,11 @@ export default function AftercareDetail() {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="whitespace-pre-wrap text-green-900 leading-relaxed">
-                                    {instruction.follow_up}
-                                </div>
+                                <div 
+                                    className="text-green-900 text-base prose prose-sm max-w-none"
+                                    style={{lineHeight: '1.8', fontFamily: 'Times New Roman, serif'}}
+                                    dangerouslySetInnerHTML={{ __html: instruction.follow_up }}
+                                />
                             </CardContent>
                         </Card>
                     )}
