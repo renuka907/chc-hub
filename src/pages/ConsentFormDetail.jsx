@@ -1,21 +1,24 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import PrintableDocument from "../components/PrintableDocument";
 import ConsentFormForm from "../components/ConsentFormForm";
 import { openPrintWindow } from "../components/PrintHelper";
-import { Printer, ArrowLeft, Pencil, Star, FileText } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Printer, ArrowLeft, Pencil, Star, FileText, Trash2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { Card, CardContent } from "@/components/ui/card";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 export default function ConsentFormDetail() {
     const urlParams = new URLSearchParams(window.location.search);
     const formId = urlParams.get('id');
     const [showEditForm, setShowEditForm] = useState(false);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const queryClient = useQueryClient();
+    const navigate = useNavigate();
 
     const { data: forms = [] } = useQuery({
         queryKey: ['consentForms'],
@@ -32,6 +35,19 @@ export default function ConsentFormDetail() {
     const toggleFavorite = async () => {
         await base44.entities.ConsentForm.update(form.id, { is_favorite: !form.is_favorite });
         queryClient.invalidateQueries({ queryKey: ['consentForms'] });
+    };
+
+    const deleteMutation = useMutation({
+        mutationFn: (id) => base44.entities.ConsentForm.delete(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['consentForms'] });
+            navigate(createPageUrl("AftercareLibrary"));
+        }
+    });
+
+    const handleDelete = () => {
+        deleteMutation.mutate(form.id);
+        setShowDeleteDialog(false);
     };
 
     const formTypeColors = {
@@ -72,6 +88,10 @@ export default function ConsentFormDetail() {
                     <Button variant="outline" onClick={() => setShowEditForm(true)}>
                         <Pencil className="w-4 h-4 mr-2" />
                         Edit
+                    </Button>
+                    <Button variant="outline" onClick={() => setShowDeleteDialog(true)} className="border-red-300 text-red-600 hover:bg-red-50">
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete
                     </Button>
                     <Button onClick={openPrintWindow} className="bg-blue-600 hover:bg-blue-700">
                         <Printer className="w-4 h-4 mr-2" />
@@ -133,6 +153,23 @@ export default function ConsentFormDetail() {
                     editForm={form}
                 />
             )}
-        </div>
-    );
-}
+
+            <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Consent Form?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Are you sure you want to delete "{form?.form_name}"? This action cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+                            Delete
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+            </div>
+            );
+            }
