@@ -10,8 +10,8 @@ import QuoteDetail from './pages/QuoteDetail';
 import PricingManagement from './pages/PricingManagement';
 import QuotesManagement from './pages/QuotesManagement';
 import UserManagement from './pages/UserManagement';
-import InventoryManagement from './pages/InventoryManagement';
 import DiscountManagement from './pages/DiscountManagement';
+import InventoryManagement from './pages/InventoryManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -28,8 +28,8 @@ export const PAGES = {
     "PricingManagement": PricingManagement,
     "QuotesManagement": QuotesManagement,
     "UserManagement": UserManagement,
-    "InventoryManagement": InventoryManagement,
     "DiscountManagement": DiscountManagement,
+    "InventoryManagement": InventoryManagement,
 }
 
 export const pagesConfig = {

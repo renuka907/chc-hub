@@ -402,6 +402,10 @@ export default function InventoryManagement() {
                                                         </div>
 
                                                         <div className="text-xs space-y-1">
+                                                            <div className="flex justify-between">
+                                                                <span className="text-gray-600">Location:</span>
+                                                                <span className="font-medium">{getLocationName(item.location_id)}</span>
+                                                            </div>
                                                             {item.cost_per_unit && (
                                                                 <div className="flex justify-between">
                                                                     <span className="text-gray-600">Cost:</span>
