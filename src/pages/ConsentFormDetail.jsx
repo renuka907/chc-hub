@@ -116,7 +116,7 @@ export default function ConsentFormDetail() {
 
             {/* Uploaded Document - Outside printable section, at the very bottom */}
             {form.document_url && (
-                <Card className="bg-slate-50 border-slate-200 no-print">
+                <Card className="bg-slate-50 border-slate-200">
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center gap-3">
