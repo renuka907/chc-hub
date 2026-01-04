@@ -226,9 +226,16 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
                                 value={formData.content}
                                 onChange={(e) => setFormData({...formData, content: e.target.value})}
                                 placeholder="Full consent form text..."
-                                rows={18}
-                                className="text-base font-mono"
+                                rows={20}
+                                className="text-base leading-relaxed p-4 font-serif"
+                                style={{
+                                    lineHeight: '1.8',
+                                    letterSpacing: '0.01em'
+                                }}
                             />
+                            <div className="text-xs text-gray-500 italic mt-2">
+                                💡 Tip: Use proper spacing between paragraphs for better readability (double line breaks)
+                            </div>
                         </div>
                     </TabsContent>
 

@@ -210,7 +210,7 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
                         </Button>
                     </TabsContent>
 
-                    <TabsContent value="content" className="space-y-4 mt-4">
+                    <TabsContent value="content" className="space-y-6 mt-4">
                         <div className="space-y-2">
                             <Label htmlFor="instructions">Aftercare Instructions *</Label>
                             <Textarea
@@ -218,9 +218,16 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
                                 value={formData.instructions}
                                 onChange={(e) => setFormData({...formData, instructions: e.target.value})}
                                 placeholder="Detailed step-by-step aftercare instructions for patients..."
-                                rows={10}
-                                className="text-base font-mono"
+                                rows={12}
+                                className="text-base leading-relaxed p-4 font-serif"
+                                style={{
+                                    lineHeight: '1.8',
+                                    letterSpacing: '0.01em'
+                                }}
                             />
+                            <div className="text-xs text-gray-500 italic">
+                                💡 Use bullet points or numbered lists for clarity
+                            </div>
                         </div>
 
                         <div className="space-y-2">
@@ -230,8 +237,12 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
                                 value={formData.warning_signs}
                                 onChange={(e) => setFormData({...formData, warning_signs: e.target.value})}
                                 placeholder="Critical signs and symptoms to watch for..."
-                                rows={5}
-                                className="text-base"
+                                rows={6}
+                                className="text-base leading-relaxed p-4 font-serif"
+                                style={{
+                                    lineHeight: '1.8',
+                                    letterSpacing: '0.01em'
+                                }}
                             />
                         </div>
 
@@ -242,8 +253,12 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
                                 value={formData.follow_up}
                                 onChange={(e) => setFormData({...formData, follow_up: e.target.value})}
                                 placeholder="Follow-up appointment recommendations..."
-                                rows={4}
-                                className="text-base"
+                                rows={5}
+                                className="text-base leading-relaxed p-4 font-serif"
+                                style={{
+                                    lineHeight: '1.8',
+                                    letterSpacing: '0.01em'
+                                }}
                             />
                         </div>
                     </TabsContent>
