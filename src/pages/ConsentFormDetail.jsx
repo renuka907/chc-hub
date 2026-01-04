@@ -104,16 +104,14 @@ export default function ConsentFormDetail() {
                                     <p className="text-sm text-slate-600">View, print, or download the full document</p>
                                 </div>
                             </div>
-                            <a 
-                                href={form.document_url} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
+                            <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => window.open(form.document_url, '_blank')}
                             >
-                                <Button variant="outline" size="sm">
-                                    <Printer className="w-4 h-4 mr-2" />
-                                    Open PDF
-                                </Button>
-                            </a>
+                                <Printer className="w-4 h-4 mr-2" />
+                                Print PDF
+                            </Button>
                         </div>
                         <embed 
                             src={form.document_url}
