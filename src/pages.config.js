@@ -15,6 +15,7 @@ import PricingManagement from './pages/PricingManagement';
 import QuoteDetail from './pages/QuoteDetail';
 import QuotesManagement from './pages/QuotesManagement';
 import UserManagement from './pages/UserManagement';
+import ViewSharedForm from './pages/ViewSharedForm';
 import __Layout from './Layout.jsx';
 
 
@@ -36,6 +37,7 @@ export const PAGES = {
     "QuoteDetail": QuoteDetail,
     "QuotesManagement": QuotesManagement,
     "UserManagement": UserManagement,
+    "ViewSharedForm": ViewSharedForm,
 }
 
 export const pagesConfig = {
