@@ -1,23 +1,52 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { MessageSquare, Send, HelpCircle } from "lucide-react";
+import { MessageSquare, Send, HelpCircle, Plus, Pencil, Trash2, Search } from "lucide-react";
+import FAQForm from "../components/FAQForm";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function FAQ() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [question, setQuestion] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("all");
+    const [searchQuery, setSearchQuery] = useState("");
+    const [showFaqForm, setShowFaqForm] = useState(false);
+    const [editingFaq, setEditingFaq] = useState(null);
+    const [deletingFaq, setDeletingFaq] = useState(null);
+    const queryClient = useQueryClient();
+
+    const { data: user } = useQuery({
+        queryKey: ['currentUser'],
+        queryFn: () => base44.auth.me(),
+    });
 
     const { data: faqs = [] } = useQuery({
         queryKey: ['faqs'],
         queryFn: () => base44.entities.FAQ.list('order', 100),
+    });
+
+    const deleteFaqMutation = useMutation({
+        mutationFn: (id) => base44.entities.FAQ.delete(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['faqs'] });
+            setDeletingFaq(null);
+        },
     });
 
     const sendEmailMutation = useMutation({
@@ -53,18 +82,64 @@ export default function FAQ() {
         "Benefits": "bg-yellow-100 text-yellow-800"
     };
 
-    const filteredFaqs = selectedCategory === "all" 
-        ? faqs 
-        : faqs.filter(faq => faq.category === selectedCategory);
+    const normalizeText = (text) => {
+        return text.toLowerCase().replace(/[\s\-\.]/g, '');
+    };
+
+    const filteredFaqs = faqs.filter(faq => {
+        const categoryMatch = selectedCategory === "all" || faq.category === selectedCategory;
+        const searchMatch = !searchQuery || 
+            normalizeText(faq.question).includes(normalizeText(searchQuery)) ||
+            normalizeText(faq.answer).includes(normalizeText(searchQuery));
+        return categoryMatch && searchMatch;
+    });
 
     const categories = ["all", ...new Set(faqs.map(f => f.category))];
+
+    const isAdmin = user?.role === 'admin' || user?.role === 'manager';
+
+    const handleEdit = (faq) => {
+        setEditingFaq(faq);
+        setShowFaqForm(true);
+    };
+
+    const handleDelete = () => {
+        if (deletingFaq) {
+            deleteFaqMutation.mutate(deletingFaq.id);
+        }
+    };
+
+    const handleFormSuccess = () => {
+        queryClient.invalidateQueries({ queryKey: ['faqs'] });
+        setShowFaqForm(false);
+        setEditingFaq(null);
+    };
 
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">Frequently Asked Questions</h1>
-                <p className="text-gray-600">Find answers to common questions or ask your own</p>
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Frequently Asked Questions</h1>
+                    <p className="text-gray-600">Find answers to common questions or ask your own</p>
+                </div>
+                {isAdmin && (
+                    <Button onClick={() => { setEditingFaq(null); setShowFaqForm(true); }} className="bg-blue-600 hover:bg-blue-700">
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add FAQ
+                    </Button>
+                )}
+            </div>
+
+            {/* Search Bar */}
+            <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Input
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search FAQs..."
+                    className="pl-10"
+                />
             </div>
 
             {/* Category Filters */}
@@ -101,7 +176,25 @@ export default function FAQ() {
                                             <Badge className={categoryColors[faq.category]}>
                                                 {faq.category}
                                             </Badge>
-                                            <span>{faq.question}</span>
+                                            <span className="flex-1">{faq.question}</span>
+                                            {isAdmin && (
+                                                <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="ghost"
+                                                        onClick={() => handleEdit(faq)}
+                                                    >
+                                                        <Pencil className="w-4 h-4" />
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="ghost"
+                                                        onClick={() => setDeletingFaq(faq)}
+                                                    >
+                                                        <Trash2 className="w-4 h-4 text-red-600" />
+                                                    </Button>
+                                                </div>
+                                            )}
                                         </div>
                                     </AccordionTrigger>
                                     <AccordionContent>
@@ -168,6 +261,30 @@ export default function FAQ() {
                     </form>
                 </CardContent>
             </Card>
+
+            <FAQForm
+                open={showFaqForm}
+                onOpenChange={setShowFaqForm}
+                onSuccess={handleFormSuccess}
+                editFaq={editingFaq}
+            />
+
+            <AlertDialog open={!!deletingFaq} onOpenChange={() => setDeletingFaq(null)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Delete FAQ</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Are you sure you want to delete this FAQ? This action cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+                            Delete
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }
