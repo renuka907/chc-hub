@@ -66,7 +66,6 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
                     .printable-document p {
                         margin: 8px 0;
                         line-height: 1.4;
-                        text-align: left;
                     }
 
                     .printable-document strong {
@@ -80,6 +79,23 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
 
                     .printable-document li {
                         margin: 5px 0;
+                    }
+
+                    /* Quill alignment classes */
+                    .printable-document .ql-align-left {
+                        text-align: left;
+                    }
+
+                    .printable-document .ql-align-center {
+                        text-align: center;
+                    }
+
+                    .printable-document .ql-align-right {
+                        text-align: right;
+                    }
+
+                    .printable-document .ql-align-justify {
+                        text-align: justify;
                     }
 
                     @media print {
