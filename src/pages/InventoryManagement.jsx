@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import SearchBar from "../components/SearchBar";
 import InventoryForm from "../components/inventory/InventoryForm";
-import { Package, Plus, Pencil, Trash2, AlertTriangle, TrendingDown } from "lucide-react";
+import { Package, Plus, Pencil, Trash2, AlertTriangle, TrendingDown, Calendar, Settings } from "lucide-react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -23,6 +23,8 @@ export default function InventoryManagement() {
     const [selectedType, setSelectedType] = useState("all");
     const [selectedLocation, setSelectedLocation] = useState("all");
     const [showLowStockOnly, setShowLowStockOnly] = useState(false);
+    const [showExpiringOnly, setShowExpiringOnly] = useState(false);
+    const [expiryThresholdDays, setExpiryThresholdDays] = useState(30);
     const [showForm, setShowForm] = useState(false);
     const [editingItem, setEditingItem] = useState(null);
     const [deleteConfirm, setDeleteConfirm] = useState(null);
@@ -69,6 +71,14 @@ export default function InventoryManagement() {
 
     const normalizeText = (text) => text.toLowerCase().replace(/['.\s]/g, '');
 
+    const isExpiringSoon = (expiryDate) => {
+        if (!expiryDate) return false;
+        const today = new Date();
+        const expiry = new Date(expiryDate);
+        const daysUntilExpiry = Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+        return daysUntilExpiry >= 0 && daysUntilExpiry <= expiryThresholdDays;
+    };
+
     const filteredItems = inventoryItems.filter(item => {
         const normalizedQuery = normalizeText(searchQuery);
         const matchesSearch = normalizeText(item.item_name).includes(normalizedQuery) ||
@@ -78,13 +88,18 @@ export default function InventoryManagement() {
         const matchesType = selectedType === "all" || item.item_type === selectedType;
         const matchesLocation = selectedLocation === "all" || item.location_id === selectedLocation;
         const matchesLowStock = !showLowStockOnly || (item.quantity <= item.low_stock_threshold);
+        const matchesExpiring = !showExpiringOnly || isExpiringSoon(item.expiry_date);
         const isActive = item.status === 'active';
         
-        return matchesSearch && matchesType && matchesLocation && matchesLowStock && isActive;
+        return matchesSearch && matchesType && matchesLocation && matchesLowStock && matchesExpiring && isActive;
     });
 
     const lowStockCount = inventoryItems.filter(item => 
         item.quantity <= item.low_stock_threshold && item.status === 'active'
+    ).length;
+
+    const expiringCount = inventoryItems.filter(item => 
+        item.status === 'active' && isExpiringSoon(item.expiry_date)
     ).length;
 
     const totalValue = inventoryItems
@@ -142,7 +157,7 @@ export default function InventoryManagement() {
             </div>
 
             {/* Stats */}
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid md:grid-cols-4 gap-4">
                 <Card>
                     <CardContent className="p-6">
                         <div className="flex items-center justify-between">
@@ -162,6 +177,17 @@ export default function InventoryManagement() {
                                 <p className="text-2xl font-bold text-red-600">{lowStockCount}</p>
                             </div>
                             <AlertTriangle className="w-8 h-8 text-red-500" />
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className={expiringCount > 0 ? 'border-2 border-amber-300' : ''}>
+                    <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-gray-600">Expiring Soon</p>
+                                <p className="text-2xl font-bold text-amber-600">{expiringCount}</p>
+                            </div>
+                            <Calendar className="w-8 h-8 text-amber-500" />
                         </div>
                     </CardContent>
                 </Card>
@@ -187,6 +213,27 @@ export default function InventoryManagement() {
                 />
             </div>
 
+            {/* Expiry Threshold Config */}
+            <div className="bg-white rounded-3xl p-6 shadow-md">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <Settings className="w-5 h-5 text-gray-600" />
+                        <span className="text-sm font-medium text-gray-700">Expiry Alert Threshold:</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <input
+                            type="number"
+                            min="1"
+                            max="365"
+                            value={expiryThresholdDays}
+                            onChange={(e) => setExpiryThresholdDays(parseInt(e.target.value) || 30)}
+                            className="w-20 px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-900"
+                        />
+                        <span className="text-sm text-gray-600">days before expiry</span>
+                    </div>
+                </div>
+            </div>
+
             {/* Filters */}
             <div className="bg-white rounded-3xl p-6 shadow-md">
                 <div className="flex flex-wrap gap-3 items-center">
@@ -200,6 +247,17 @@ export default function InventoryManagement() {
                     >
                         <AlertTriangle className="w-4 h-4" />
                         Low Stock
+                    </button>
+                    <button
+                        onClick={() => setShowExpiringOnly(!showExpiringOnly)}
+                        className={`px-6 py-2.5 rounded-2xl text-sm font-medium transition-all flex items-center gap-2 ${
+                            showExpiringOnly 
+                                ? "bg-amber-500 text-white shadow-md" 
+                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        }`}
+                    >
+                        <Calendar className="w-4 h-4" />
+                        Expiring Soon
                     </button>
                     <div className="w-px h-6 bg-gray-300" />
                     {["all", "Product", "Supply", "Equipment", "Medication"].map(type => (
@@ -242,7 +300,7 @@ export default function InventoryManagement() {
                 </div>
             </div>
 
-            {/* Inventory Items */}
+            {/* Inventory Items Grouped by Location */}
             {isLoading ? (
                 <div className="text-center py-12">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
@@ -256,119 +314,164 @@ export default function InventoryManagement() {
                     </CardContent>
                 </Card>
             ) : (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredItems.map(item => {
-                        const isLowStock = item.quantity <= item.low_stock_threshold;
-                        const associatedServices = getPricingItemNames(item.associated_pricing_item_ids);
-                        
-                        return (
-                            <Card key={item.id} className={`hover:shadow-lg transition-all duration-300 border-2 ${isLowStock ? 'border-red-300 bg-red-50' : ''}`}>
-                                <CardHeader className="pb-3">
-                                    <div className="flex items-start justify-between mb-3">
-                                        <div className="flex flex-wrap gap-2">
-                                            <Badge className={typeColors[item.item_type]}>
-                                                {item.item_type}
-                                            </Badge>
-                                            {isLowStock && (
-                                                <Badge className="bg-red-500 text-white">
-                                                    <AlertTriangle className="w-3 h-3 mr-1" />
-                                                    Low Stock
-                                                </Badge>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <CardTitle className="text-xl mb-2">{item.item_name}</CardTitle>
-                                    {item.sku && (
-                                        <div className="text-sm text-gray-500">SKU: {item.sku}</div>
-                                    )}
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="space-y-3">
-                                        <div className="bg-gray-50 rounded-lg p-3">
-                                            <div className="flex justify-between items-center mb-2">
-                                                <span className="text-sm text-gray-600">Current Stock:</span>
-                                                <span className={`text-2xl font-bold ${isLowStock ? 'text-red-600' : 'text-green-600'}`}>
-                                                    {item.quantity} {item.unit}
-                                                </span>
-                                            </div>
-                                            <div className="flex justify-between text-sm">
-                                                <span className="text-gray-600">Low Stock Alert:</span>
-                                                <span className="font-medium">{item.low_stock_threshold} {item.unit}</span>
-                                            </div>
-                                            {item.reorder_quantity && (
-                                                <div className="flex justify-between text-sm mt-1">
-                                                    <span className="text-gray-600">Reorder Qty:</span>
-                                                    <span className="font-medium">{item.reorder_quantity} {item.unit}</span>
-                                                </div>
-                                            )}
-                                        </div>
+                <div className="space-y-8">
+                    {(() => {
+                        // Group items by location
+                        const itemsByLocation = {};
+                        filteredItems.forEach(item => {
+                            const locationName = getLocationName(item.location_id);
+                            if (!itemsByLocation[locationName]) {
+                                itemsByLocation[locationName] = [];
+                            }
+                            itemsByLocation[locationName].push(item);
+                        });
 
-                                        <div className="text-sm space-y-1">
-                                            <div className="flex justify-between">
-                                                <span className="text-gray-600">Location:</span>
-                                                <span className="font-medium">{getLocationName(item.location_id)}</span>
-                                            </div>
-                                            {item.cost_per_unit && (
-                                                <div className="flex justify-between">
-                                                    <span className="text-gray-600">Cost/Unit:</span>
-                                                    <span className="font-medium">${item.cost_per_unit}</span>
-                                                </div>
-                                            )}
-                                            {item.supplier && (
-                                                <div className="flex justify-between">
-                                                    <span className="text-gray-600">Supplier:</span>
-                                                    <span className="font-medium">{item.supplier}</span>
-                                                </div>
-                                            )}
-                                            {item.expiry_date && (
-                                                <div className="flex justify-between">
-                                                    <span className="text-gray-600">Expires:</span>
-                                                    <span className="font-medium">{new Date(item.expiry_date).toLocaleDateString()}</span>
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {associatedServices.length > 0 && (
+                        return Object.entries(itemsByLocation).map(([locationName, items]) => (
+                            <div key={locationName}>
+                                {/* Location Header */}
+                                <div className="bg-gradient-to-r from-orange-600 to-orange-500 text-white rounded-2xl p-4 mb-4 shadow-md">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <Package className="w-6 h-6" />
                                             <div>
-                                                <div className="text-xs text-gray-600 mb-1">Used in:</div>
-                                                <div className="flex flex-wrap gap-1">
-                                                    {associatedServices.map((service, idx) => (
-                                                        <Badge key={idx} variant="outline" className="text-xs">
-                                                            {service}
-                                                        </Badge>
-                                                    ))}
-                                                </div>
+                                                <h2 className="text-2xl font-bold">{locationName}</h2>
+                                                <p className="text-orange-100 text-sm">{items.length} items</p>
                                             </div>
-                                        )}
-
-                                        {item.notes && (
-                                            <p className="text-sm text-gray-600 italic">{item.notes}</p>
-                                        )}
-
-                                        {canEdit && (
-                                            <div className="flex gap-2 pt-2 border-t">
-                                                <Button 
-                                                    variant="outline" 
-                                                    className="flex-1"
-                                                    onClick={() => handleEdit(item)}
-                                                >
-                                                    <Pencil className="w-4 h-4 mr-2" />
-                                                    Edit
-                                                </Button>
-                                                <Button 
-                                                    variant="outline" 
-                                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                                                    onClick={() => setDeleteConfirm(item)}
-                                                >
-                                                    <Trash2 className="w-4 h-4" />
-                                                </Button>
-                                            </div>
+                                        </div>
+                                        {items.filter(i => i.quantity <= i.low_stock_threshold).length > 0 && (
+                                            <Badge className="bg-red-500 text-white border-0">
+                                                <AlertTriangle className="w-3 h-3 mr-1" />
+                                                {items.filter(i => i.quantity <= i.low_stock_threshold).length} Low Stock
+                                            </Badge>
                                         )}
                                     </div>
-                                </CardContent>
-                            </Card>
-                        );
-                    })}
+                                </div>
+
+                                {/* Items Grid */}
+                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {items.map(item => {
+                                        const isLowStock = item.quantity <= item.low_stock_threshold;
+                                        const itemExpiringSoon = isExpiringSoon(item.expiry_date);
+                                        const daysUntilExpiry = item.expiry_date ? Math.ceil((new Date(item.expiry_date) - new Date()) / (1000 * 60 * 60 * 24)) : null;
+                                        const associatedServices = getPricingItemNames(item.associated_pricing_item_ids);
+                                        
+                                        return (
+                                            <Card key={item.id} className={`hover:shadow-lg transition-all duration-300 border-2 ${
+                                                isLowStock && itemExpiringSoon ? 'border-red-500 bg-red-50' : 
+                                                isLowStock ? 'border-red-300 bg-red-50' : 
+                                                itemExpiringSoon ? 'border-amber-300 bg-amber-50' : ''
+                                            }`}>
+                                                <CardHeader className="pb-3">
+                                                    <div className="flex items-start justify-between mb-3">
+                                                        <div className="flex flex-wrap gap-2">
+                                                            <Badge className={typeColors[item.item_type]}>
+                                                                {item.item_type}
+                                                            </Badge>
+                                                            {isLowStock && (
+                                                                <Badge className="bg-red-500 text-white">
+                                                                    <AlertTriangle className="w-3 h-3 mr-1" />
+                                                                    Low Stock
+                                                                </Badge>
+                                                            )}
+                                                            {itemExpiringSoon && daysUntilExpiry !== null && (
+                                                                <Badge className="bg-amber-500 text-white">
+                                                                    <Calendar className="w-3 h-3 mr-1" />
+                                                                    {daysUntilExpiry === 0 ? 'Expires Today' : `${daysUntilExpiry}d`}
+                                                                </Badge>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <CardTitle className="text-lg mb-1">{item.item_name}</CardTitle>
+                                                    {item.sku && (
+                                                        <div className="text-xs text-gray-500">SKU: {item.sku}</div>
+                                                    )}
+                                                </CardHeader>
+                                                <CardContent>
+                                                    <div className="space-y-2">
+                                                        <div className="bg-gray-50 rounded-lg p-3">
+                                                            <div className="flex justify-between items-center mb-1">
+                                                                <span className="text-xs text-gray-600">Stock:</span>
+                                                                <span className={`text-xl font-bold ${isLowStock ? 'text-red-600' : 'text-green-600'}`}>
+                                                                    {item.quantity} {item.unit}
+                                                                </span>
+                                                            </div>
+                                                            <div className="flex justify-between text-xs">
+                                                                <span className="text-gray-600">Alert at:</span>
+                                                                <span className="font-medium">{item.low_stock_threshold} {item.unit}</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="text-xs space-y-1">
+                                                            {item.cost_per_unit && (
+                                                                <div className="flex justify-between">
+                                                                    <span className="text-gray-600">Cost:</span>
+                                                                    <span className="font-medium">${item.cost_per_unit}/{item.unit}</span>
+                                                                </div>
+                                                            )}
+                                                            {item.supplier && (
+                                                                <div className="flex justify-between">
+                                                                    <span className="text-gray-600">Supplier:</span>
+                                                                    <span className="font-medium text-right ml-2">{item.supplier}</span>
+                                                                </div>
+                                                            )}
+                                                            {item.expiry_date && (
+                                                                <div className="flex justify-between">
+                                                                    <span className="text-gray-600">Expires:</span>
+                                                                    <span className={`font-medium ${itemExpiringSoon ? 'text-amber-600' : ''}`}>
+                                                                        {new Date(item.expiry_date).toLocaleDateString()}
+                                                                    </span>
+                                                                </div>
+                                                            )}
+                                                        </div>
+
+                                                        {associatedServices.length > 0 && (
+                                                            <div>
+                                                                <div className="text-xs text-gray-600 mb-1">Used in:</div>
+                                                                <div className="flex flex-wrap gap-1">
+                                                                    {associatedServices.slice(0, 2).map((service, idx) => (
+                                                                        <Badge key={idx} variant="outline" className="text-xs">
+                                                                            {service}
+                                                                        </Badge>
+                                                                    ))}
+                                                                    {associatedServices.length > 2 && (
+                                                                        <Badge variant="outline" className="text-xs">
+                                                                            +{associatedServices.length - 2}
+                                                                        </Badge>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        )}
+
+                                                        {canEdit && (
+                                                            <div className="flex gap-2 pt-2 border-t">
+                                                                <Button 
+                                                                    variant="outline" 
+                                                                    size="sm"
+                                                                    className="flex-1"
+                                                                    onClick={() => handleEdit(item)}
+                                                                >
+                                                                    <Pencil className="w-3 h-3 mr-1" />
+                                                                    Edit
+                                                                </Button>
+                                                                <Button 
+                                                                    variant="outline"
+                                                                    size="sm"
+                                                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                                    onClick={() => setDeleteConfirm(item)}
+                                                                >
+                                                                    <Trash2 className="w-3 h-3" />
+                                                                </Button>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        ));
+                    })()}
                 </div>
             )}
 
