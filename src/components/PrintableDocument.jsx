@@ -2,12 +2,12 @@ import React from "react";
 
 export default function PrintableDocument({ title, children, showLogo = true }) {
     return (
-        <div className="printable-document max-w-4xl mx-auto bg-white p-16 rounded-lg shadow-sm" style={{fontFamily: 'Times New Roman, serif'}}>
+        <div className="printable-document w-full mx-auto bg-white p-8 sm:p-12" style={{fontFamily: 'Times New Roman, serif'}}>
             <style>
                 {`
                     @page {
                         size: letter;
-                        margin: 0.75in;
+                        margin: 0.5in;
                     }
                     
                     @media print {
@@ -41,28 +41,28 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
             </style>
 
             {/* Yellow Logo at top */}
-            <div className="mb-6 text-center">
+            <div className="mb-4 text-center">
                 <img 
                     src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png" 
                     alt="Contemporary Health Center"
-                    className="h-20 mx-auto"
+                    className="h-16 mx-auto"
                 />
             </div>
 
             {/* Header with contact info */}
             {showLogo && (
-                <div className="mb-8 pb-4 border-b border-gray-400 text-center">
-                    <div className="text-sm text-gray-800 leading-relaxed">
+                <div className="mb-6 pb-3 border-b border-gray-400 text-center">
+                    <div className="text-xs text-gray-800 leading-relaxed">
                         <div className="font-semibold">6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
-                        <div className="mt-1">Phone: 239-561-9191 | Fax: 239-561-9188</div>
-                        <div className="mt-1">contemporaryhealthcenter.com</div>
+                        <div className="mt-0.5">Phone: 239-561-9191 | Fax: 239-561-9188</div>
+                        <div className="mt-0.5">contemporaryhealthcenter.com</div>
                     </div>
                 </div>
             )}
 
             {/* Title */}
             {title && (
-                <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center uppercase tracking-wide border-b pb-3">
+                <h1 className="text-xl font-bold text-gray-900 mb-4 text-center uppercase tracking-wide border-b pb-2">
                     {title}
                 </h1>
             )}
@@ -73,9 +73,9 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
             </div>
 
             {/* Footer with date */}
-            <div className="text-center text-xs text-gray-600 mt-12 pt-4 border-t border-gray-300">
+            <div className="text-center text-xs text-gray-600 mt-8 pt-3 border-t border-gray-300">
                 <p className="font-medium">Contemporary Health Center | Phone: 239-561-9191 | Email: office@contemporaryhealthcenter.com</p>
-                <p className="mt-1">Document Generated: {new Date().toLocaleDateString()}</p>
+                <p className="mt-0.5">Document Generated: {new Date().toLocaleDateString()}</p>
             </div>
         </div>
     );
