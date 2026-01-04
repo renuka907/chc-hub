@@ -111,24 +111,31 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                             }
                             .printable-audit,
                             .printable-audit * {
-                                visibility: visible;
+                                visibility: visible !important;
                             }
                             .printable-audit {
-                                position: absolute !important;
+                                position: fixed !important;
                                 left: 0 !important;
                                 top: 0 !important;
-                                width: 100%;
+                                width: 100% !important;
+                                height: 100% !important;
                                 padding: 10px !important;
+                                overflow: visible !important;
                             }
                             .no-print {
                                 display: none !important;
+                            }
+                        }
+                        @media screen {
+                            .printable-audit {
+                                display: none;
                             }
                         }
                     `}
                 </style>
 
                 {/* Printable Version */}
-                <div className="printable-audit fixed top-0 left-[-9999px] w-full bg-white">
+                <div className="printable-audit bg-white">
                     <div className="p-6">
                         <div className="border-b-2 border-gray-800 pb-4 mb-6">
                             <h1 className="text-2xl font-bold">Daily Inventory Audit Form</h1>
