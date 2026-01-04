@@ -321,7 +321,7 @@ export default function PricingForm({ open, onOpenChange, onSuccess, editItem = 
                     <div className="border-t pt-4">
                         <div className="flex items-center justify-between mb-4">
                             <Label className="text-lg font-semibold">Pricing Tiers</Label>
-                            <Button type="button" onClick={addTier} size="sm">
+                            <Button type="button" onClick={addTier} size="sm" className="bg-green-600 hover:bg-green-700 text-white">
                                 <Plus className="w-4 h-4 mr-1" />
                                 Add Tier
                             </Button>
