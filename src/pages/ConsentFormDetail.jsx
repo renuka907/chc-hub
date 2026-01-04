@@ -102,52 +102,50 @@ export default function ConsentFormDetail() {
 
             {/* Printable Content */}
             <PrintableDocument title="" showLogo={false}>
-                <div className="space-y-6">
-                    <div 
-                        className="text-black"
-                        style={{
-                            fontSize: '11pt',
-                            fontFamily: 'Times New Roman, serif',
-                            lineHeight: '1.4',
-                            textAlign: 'left'
-                        }}
-                        dangerouslySetInnerHTML={{ __html: form.content }}
-                    />
-
-                    {/* Uploaded Document */}
-                    {form.document_url && (
-                        <Card className="bg-slate-50 border-slate-200 no-print">
-                            <CardContent className="pt-6">
-                                <div className="flex items-center justify-between mb-4">
-                                    <div className="flex items-center gap-3">
-                                        <FileText className="w-6 h-6 text-slate-600" />
-                                        <div>
-                                            <p className="font-semibold text-slate-900">Attached Document (PDF)</p>
-                                            <p className="text-sm text-slate-600">View, print, or download the full document</p>
-                                        </div>
-                                    </div>
-                                    <a 
-                                        href={form.document_url} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                    >
-                                        <Button variant="outline" size="sm">
-                                            <Printer className="w-4 h-4 mr-2" />
-                                            Open PDF
-                                        </Button>
-                                    </a>
-                                </div>
-                                <embed 
-                                    src={form.document_url}
-                                    type="application/pdf"
-                                    className="w-full h-[600px] border-2 border-slate-300 rounded-lg"
-                                    title="Document Preview"
-                                />
-                            </CardContent>
-                        </Card>
-                    )}
-                </div>
+                <div 
+                    className="text-black"
+                    style={{
+                        fontSize: '11pt',
+                        fontFamily: 'Times New Roman, serif',
+                        lineHeight: '1.4',
+                        textAlign: 'left'
+                    }}
+                    dangerouslySetInnerHTML={{ __html: form.content }}
+                />
             </PrintableDocument>
+
+            {/* Uploaded Document - Outside printable section, at the very bottom */}
+            {form.document_url && (
+                <Card className="bg-slate-50 border-slate-200 no-print">
+                    <CardContent className="pt-6">
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                                <FileText className="w-6 h-6 text-slate-600" />
+                                <div>
+                                    <p className="font-semibold text-slate-900">Attached Document (PDF)</p>
+                                    <p className="text-sm text-slate-600">View, print, or download the full document</p>
+                                </div>
+                            </div>
+                            <a 
+                                href={form.document_url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                            >
+                                <Button variant="outline" size="sm">
+                                    <Printer className="w-4 h-4 mr-2" />
+                                    Open PDF
+                                </Button>
+                            </a>
+                        </div>
+                        <embed 
+                            src={form.document_url}
+                            type="application/pdf"
+                            className="w-full h-[600px] border-2 border-slate-300 rounded-lg"
+                            title="Document Preview"
+                        />
+                    </CardContent>
+                </Card>
+            )}
 
             {form && (
                 <ConsentFormForm
