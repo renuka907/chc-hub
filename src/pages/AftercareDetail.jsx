@@ -152,27 +152,32 @@ export default function AftercareDetail() {
 
                     {/* Uploaded Document */}
                     {instruction.document_url && (
-                        <Card className="bg-slate-50 border-slate-200">
+                        <Card className="bg-slate-50 border-slate-200 no-print">
                             <CardContent className="pt-6">
-                                <div className="flex items-center justify-between">
+                                <div className="flex items-center justify-between mb-4">
                                     <div className="flex items-center gap-3">
                                         <FileText className="w-6 h-6 text-slate-600" />
                                         <div>
-                                            <p className="font-semibold text-slate-900">Attached Document</p>
-                                            <p className="text-sm text-slate-600">Click to view or download</p>
+                                            <p className="font-semibold text-slate-900">Attached Document (PDF)</p>
+                                            <p className="text-sm text-slate-600">View, print, or download the full document</p>
                                         </div>
                                     </div>
                                     <a 
                                         href={instruction.document_url} 
                                         target="_blank" 
                                         rel="noopener noreferrer"
-                                        className="no-print"
                                     >
                                         <Button variant="outline" size="sm">
-                                            View Document
+                                            <Printer className="w-4 h-4 mr-2" />
+                                            Open PDF
                                         </Button>
                                     </a>
                                 </div>
+                                <iframe 
+                                    src={instruction.document_url}
+                                    className="w-full h-96 border-2 border-slate-300 rounded-lg"
+                                    title="Document Preview"
+                                />
                             </CardContent>
                         </Card>
                     )}
