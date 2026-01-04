@@ -40,7 +40,9 @@ export default function InventoryManagement() {
     const { data: inventoryItems = [], isLoading } = useQuery({
         queryKey: ['inventoryItems'],
         queryFn: () => base44.entities.InventoryItem.list('-updated_date', 500),
-        refetchInterval: 3000,
+        refetchInterval: 10000,
+        refetchOnWindowFocus: false,
+        retry: 1,
     });
 
     const { data: locations = [] } = useQuery({
