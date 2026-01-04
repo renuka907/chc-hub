@@ -8,6 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sparkles, Loader2, Upload, X } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 export default function ConsentFormForm({ open, onOpenChange, onSuccess, editForm = null }) {
     const [formData, setFormData] = useState({
@@ -221,21 +223,22 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
                             <div className="text-xs text-gray-500 mb-2">
                                 Include purpose, risks, benefits, patient rights, and consent statement
                             </div>
-                            <Textarea
-                                id="content"
+                            <ReactQuill
                                 value={formData.content}
-                                onChange={(e) => setFormData({...formData, content: e.target.value})}
-                                placeholder="Full consent form text..."
-                                rows={20}
-                                className="text-base leading-relaxed p-4 font-serif"
-                                style={{
-                                    lineHeight: '1.8',
-                                    letterSpacing: '0.01em'
+                                onChange={(value) => setFormData({...formData, content: value})}
+                                modules={{
+                                    toolbar: [
+                                        [{ 'header': [1, 2, 3, false] }],
+                                        ['bold', 'italic', 'underline', 'strike'],
+                                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                        [{ 'indent': '-1'}, { 'indent': '+1' }],
+                                        [{ 'align': [] }],
+                                        ['clean']
+                                    ]
                                 }}
+                                className="bg-white"
+                                style={{ height: '400px', marginBottom: '50px' }}
                             />
-                            <div className="text-xs text-gray-500 italic mt-2">
-                                💡 Tip: Use proper spacing between paragraphs for better readability (double line breaks)
-                            </div>
                         </div>
                     </TabsContent>
 

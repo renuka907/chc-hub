@@ -8,6 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sparkles, Loader2, Upload, X } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 export default function AftercareForm({ open, onOpenChange, onSuccess, editInstruction = null }) {
     const [formData, setFormData] = useState({
@@ -213,52 +215,54 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
                     <TabsContent value="content" className="space-y-6 mt-4">
                         <div className="space-y-2">
                             <Label htmlFor="instructions">Aftercare Instructions *</Label>
-                            <Textarea
-                                id="instructions"
+                            <ReactQuill
                                 value={formData.instructions}
-                                onChange={(e) => setFormData({...formData, instructions: e.target.value})}
-                                placeholder="Detailed step-by-step aftercare instructions for patients..."
-                                rows={12}
-                                className="text-base leading-relaxed p-4 font-serif"
-                                style={{
-                                    lineHeight: '1.8',
-                                    letterSpacing: '0.01em'
+                                onChange={(value) => setFormData({...formData, instructions: value})}
+                                modules={{
+                                    toolbar: [
+                                        [{ 'header': [1, 2, 3, false] }],
+                                        ['bold', 'italic', 'underline'],
+                                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                        [{ 'indent': '-1'}, { 'indent': '+1' }],
+                                        ['clean']
+                                    ]
                                 }}
+                                className="bg-white"
+                                style={{ height: '300px', marginBottom: '50px' }}
                             />
-                            <div className="text-xs text-gray-500 italic">
-                                💡 Use bullet points or numbered lists for clarity
-                            </div>
                         </div>
 
                         <div className="space-y-2">
                             <Label htmlFor="warning_signs">⚠️ Warning Signs</Label>
-                            <Textarea
-                                id="warning_signs"
+                            <ReactQuill
                                 value={formData.warning_signs}
-                                onChange={(e) => setFormData({...formData, warning_signs: e.target.value})}
-                                placeholder="Critical signs and symptoms to watch for..."
-                                rows={6}
-                                className="text-base leading-relaxed p-4 font-serif"
-                                style={{
-                                    lineHeight: '1.8',
-                                    letterSpacing: '0.01em'
+                                onChange={(value) => setFormData({...formData, warning_signs: value})}
+                                modules={{
+                                    toolbar: [
+                                        ['bold', 'italic', 'underline'],
+                                        [{ 'list': 'bullet' }],
+                                        ['clean']
+                                    ]
                                 }}
+                                className="bg-white"
+                                style={{ height: '200px', marginBottom: '50px' }}
                             />
                         </div>
 
                         <div className="space-y-2">
                             <Label htmlFor="follow_up">Follow-up Information</Label>
-                            <Textarea
-                                id="follow_up"
+                            <ReactQuill
                                 value={formData.follow_up}
-                                onChange={(e) => setFormData({...formData, follow_up: e.target.value})}
-                                placeholder="Follow-up appointment recommendations..."
-                                rows={5}
-                                className="text-base leading-relaxed p-4 font-serif"
-                                style={{
-                                    lineHeight: '1.8',
-                                    letterSpacing: '0.01em'
+                                onChange={(value) => setFormData({...formData, follow_up: value})}
+                                modules={{
+                                    toolbar: [
+                                        ['bold', 'italic', 'underline'],
+                                        [{ 'list': 'bullet' }],
+                                        ['clean']
+                                    ]
                                 }}
+                                className="bg-white"
+                                style={{ height: '150px', marginBottom: '50px' }}
                             />
                         </div>
                     </TabsContent>
