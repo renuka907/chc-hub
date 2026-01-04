@@ -6,8 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import PrintableDocument from "../components/PrintableDocument";
 import AftercareForm from "../components/AftercareForm";
+import ShareFormDialog from "../components/forms/ShareFormDialog";
 import { openPrintWindow } from "../components/PrintHelper";
-import { Printer, ArrowLeft, AlertTriangle, Clock, Calendar as CalendarIcon, Pencil, Star, FileText } from "lucide-react";
+import { Printer, ArrowLeft, AlertTriangle, Clock, Calendar as CalendarIcon, Pencil, Star, FileText, Share2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 
@@ -15,6 +16,7 @@ export default function AftercareDetail() {
     const urlParams = new URLSearchParams(window.location.search);
     const instructionId = urlParams.get('id');
     const [showEditForm, setShowEditForm] = useState(false);
+    const [showShareDialog, setShowShareDialog] = useState(false);
     const queryClient = useQueryClient();
 
     const { data: instructions = [] } = useQuery({
@@ -60,6 +62,10 @@ export default function AftercareDetail() {
                     </Button>
                 </Link>
                 <div className="flex gap-2">
+                    <Button variant="outline" onClick={() => setShowShareDialog(true)} className="border-blue-500 text-blue-600">
+                        <Share2 className="w-4 h-4 mr-2" />
+                        Share
+                    </Button>
                     <Button 
                         variant="outline" 
                         onClick={toggleFavorite}
@@ -214,6 +220,14 @@ export default function AftercareDetail() {
                     editInstruction={instruction}
                 />
             )}
+
+            <ShareFormDialog
+                open={showShareDialog}
+                onOpenChange={setShowShareDialog}
+                entityType="AftercareInstruction"
+                entityId={instruction.id}
+                formName={instruction.procedure_name}
+            />
         </div>
     );
 }
