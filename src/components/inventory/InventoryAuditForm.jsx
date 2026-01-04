@@ -138,9 +138,9 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                 </style>
 
                 <div className="printable-audit" style={{color: 'black', backgroundColor: 'white'}}>
-                    <div className="print-header">
-                        <div style={{fontSize: '14pt', fontWeight: 'bold'}}>Daily Inventory Audit Form</div>
-                        <div style={{fontSize: '8pt', marginTop: '2pt'}}>
+                    <div style={{borderBottom: '2px solid black', paddingBottom: '8px', marginBottom: '12px'}}>
+                        <div style={{fontSize: '16px', fontWeight: 'bold', color: 'black'}}>Daily Inventory Audit Form</div>
+                        <div style={{fontSize: '10px', marginTop: '4px', color: 'black'}}>
                             Date: {new Date().toLocaleDateString()} | Location: {selectedLocation?.name || 'All Locations'}
                         </div>
                     </div>
@@ -148,35 +148,47 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                     {Object.entries(itemsByStorage)
                         .sort(([a], [b]) => a.localeCompare(b))
                         .map(([storage, storageItems]) => (
-                        <div key={storage} className="print-storage-section">
-                            <div className="print-storage-header">
-                                <strong>📍 {storage}</strong> ({storageItems.length} items)
+                        <div key={storage} style={{marginBottom: '12px', pageBreakInside: 'avoid'}}>
+                            <div style={{
+                                background: 'black', 
+                                color: 'white',
+                                padding: '4px 8px',
+                                marginBottom: '4px',
+                                fontSize: '10px',
+                                fontWeight: 'bold'
+                            }}>
+                                📍 {storage} ({storageItems.length} items)
                             </div>
 
-                            <table className="print-table">
+                            <table style={{
+                                width: '100%',
+                                borderCollapse: 'collapse',
+                                fontSize: '9px',
+                                color: 'black'
+                            }}>
                                 <thead>
-                                    <tr>
-                                        <th style={{width: '35%'}}>Item</th>
-                                        <th style={{width: '12%'}}>Type</th>
-                                        <th style={{width: '10%'}}>SKU</th>
-                                        <th style={{width: '10%'}}>Exp</th>
-                                        <th style={{width: '8%'}}>Unit</th>
-                                        <th style={{width: '8%'}}>Qty</th>
-                                        <th style={{width: '17%'}}>New</th>
+                                    <tr style={{backgroundColor: '#e5e7eb'}}>
+                                        <th style={{border: '1px solid black', padding: '3px', textAlign: 'left', width: '35%'}}>Item</th>
+                                        <th style={{border: '1px solid black', padding: '3px', textAlign: 'left', width: '12%'}}>Type</th>
+                                        <th style={{border: '1px solid black', padding: '3px', textAlign: 'center', width: '10%'}}>SKU</th>
+                                        <th style={{border: '1px solid black', padding: '3px', textAlign: 'center', width: '10%'}}>Exp</th>
+                                        <th style={{border: '1px solid black', padding: '3px', textAlign: 'center', width: '8%'}}>Unit</th>
+                                        <th style={{border: '1px solid black', padding: '3px', textAlign: 'center', width: '8%'}}>Qty</th>
+                                        <th style={{border: '1px solid black', padding: '3px', textAlign: 'center', width: '17%'}}>New</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {storageItems.map(item => (
                                         <tr key={item.id}>
-                                            <td><strong>{item.item_name}</strong></td>
-                                            <td>{item.item_type}</td>
-                                            <td style={{textAlign: 'center'}}>{item.sku || '-'}</td>
-                                            <td style={{textAlign: 'center'}}>
+                                            <td style={{border: '1px solid #999', padding: '3px'}}><strong>{item.item_name}</strong></td>
+                                            <td style={{border: '1px solid #999', padding: '3px'}}>{item.item_type}</td>
+                                            <td style={{border: '1px solid #999', padding: '3px', textAlign: 'center'}}>{item.sku || '-'}</td>
+                                            <td style={{border: '1px solid #999', padding: '3px', textAlign: 'center'}}>
                                                 {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: '2-digit'}) : '-'}
                                             </td>
-                                            <td style={{textAlign: 'center'}}>{item.unit}</td>
-                                            <td style={{textAlign: 'center', fontWeight: 'bold'}}>{item.quantity}</td>
-                                            <td style={{background: 'white'}}></td>
+                                            <td style={{border: '1px solid #999', padding: '3px', textAlign: 'center'}}>{item.unit}</td>
+                                            <td style={{border: '1px solid #999', padding: '3px', textAlign: 'center', fontWeight: 'bold'}}>{item.quantity}</td>
+                                            <td style={{border: '1px solid #999', padding: '3px', background: 'white'}}></td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -184,7 +196,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                         </div>
                     ))}
 
-                    <div className="print-footer">
+                    <div style={{marginTop: '16px', paddingTop: '8px', borderTop: '1px solid #999', fontSize: '9px', color: 'black'}}>
                         Audited by: _________________ Signature: _________________ Date: _________________
                     </div>
                 </div>
