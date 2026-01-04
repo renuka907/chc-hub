@@ -1,0 +1,406 @@
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import SearchBar from "../components/SearchBar";
+import InventoryForm from "../components/inventory/InventoryForm";
+import { Package, Plus, Pencil, Trash2, AlertTriangle, TrendingDown } from "lucide-react";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
+export default function InventoryManagement() {
+    const [searchQuery, setSearchQuery] = useState("");
+    const [selectedType, setSelectedType] = useState("all");
+    const [selectedLocation, setSelectedLocation] = useState("all");
+    const [showLowStockOnly, setShowLowStockOnly] = useState(false);
+    const [showForm, setShowForm] = useState(false);
+    const [editingItem, setEditingItem] = useState(null);
+    const [deleteConfirm, setDeleteConfirm] = useState(null);
+    const [currentUser, setCurrentUser] = useState(null);
+    const queryClient = useQueryClient();
+
+    React.useEffect(() => {
+        base44.auth.me().then(user => setCurrentUser(user)).catch(() => {});
+    }, []);
+
+    const { data: inventoryItems = [], isLoading } = useQuery({
+        queryKey: ['inventoryItems'],
+        queryFn: () => base44.entities.InventoryItem.list('-updated_date', 500),
+    });
+
+    const { data: locations = [] } = useQuery({
+        queryKey: ['clinicLocations'],
+        queryFn: () => base44.entities.ClinicLocation.list(),
+    });
+
+    const { data: pricingItems = [] } = useQuery({
+        queryKey: ['pricingItems'],
+        queryFn: () => base44.entities.PricingItem.list(),
+    });
+
+    const deleteMutation = useMutation({
+        mutationFn: (id) => base44.entities.InventoryItem.delete(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['inventoryItems'] });
+            setDeleteConfirm(null);
+        },
+    });
+
+    const handleSuccess = () => {
+        queryClient.invalidateQueries({ queryKey: ['inventoryItems'] });
+        setEditingItem(null);
+        setShowForm(false);
+    };
+
+    const handleEdit = (item) => {
+        setEditingItem(item);
+        setShowForm(true);
+    };
+
+    const normalizeText = (text) => text.toLowerCase().replace(/['.\s]/g, '');
+
+    const filteredItems = inventoryItems.filter(item => {
+        const normalizedQuery = normalizeText(searchQuery);
+        const matchesSearch = normalizeText(item.item_name).includes(normalizedQuery) ||
+                            normalizeText(item.sku || '').includes(normalizedQuery) ||
+                            normalizeText(item.notes || '').includes(normalizedQuery);
+        
+        const matchesType = selectedType === "all" || item.item_type === selectedType;
+        const matchesLocation = selectedLocation === "all" || item.location_id === selectedLocation;
+        const matchesLowStock = !showLowStockOnly || (item.quantity <= item.low_stock_threshold);
+        const isActive = item.status === 'active';
+        
+        return matchesSearch && matchesType && matchesLocation && matchesLowStock && isActive;
+    });
+
+    const lowStockCount = inventoryItems.filter(item => 
+        item.quantity <= item.low_stock_threshold && item.status === 'active'
+    ).length;
+
+    const totalValue = inventoryItems
+        .filter(item => item.status === 'active')
+        .reduce((sum, item) => sum + ((item.cost_per_unit || 0) * item.quantity), 0);
+
+    const typeColors = {
+        "Product": "bg-green-100 text-green-800",
+        "Supply": "bg-blue-100 text-blue-800",
+        "Equipment": "bg-purple-100 text-purple-800",
+        "Medication": "bg-red-100 text-red-800"
+    };
+
+    const getLocationName = (locationId) => {
+        const location = locations.find(loc => loc.id === locationId);
+        return location?.name || "N/A";
+    };
+
+    const getPricingItemNames = (itemIds) => {
+        if (!itemIds) return [];
+        try {
+            const ids = JSON.parse(itemIds);
+            return ids.map(id => {
+                const item = pricingItems.find(p => p.id === id);
+                return item?.name || id;
+            });
+        } catch (e) {
+            return [];
+        }
+    };
+
+    const canEdit = currentUser?.role === 'admin' || currentUser?.role === 'manager';
+
+    return (
+        <div className="space-y-6">
+            {/* Header */}
+            <div className="bg-white rounded-3xl p-6 shadow-md">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
+                            <Package className="w-6 h-6 text-orange-600" />
+                        </div>
+                        <div>
+                            <h1 className="text-3xl font-bold text-gray-900">Inventory Management</h1>
+                            <p className="text-gray-600">Track stock levels and manage supplies</p>
+                        </div>
+                    </div>
+                    {canEdit && (
+                        <Button onClick={() => { setEditingItem(null); setShowForm(true); }} className="bg-orange-600 hover:bg-orange-700">
+                            <Plus className="w-4 h-4 mr-2" />
+                            Add Item
+                        </Button>
+                    )}
+                </div>
+            </div>
+
+            {/* Stats */}
+            <div className="grid md:grid-cols-3 gap-4">
+                <Card>
+                    <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-gray-600">Total Items</p>
+                                <p className="text-2xl font-bold text-gray-900">{inventoryItems.filter(i => i.status === 'active').length}</p>
+                            </div>
+                            <Package className="w-8 h-8 text-blue-500" />
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-gray-600">Low Stock Alerts</p>
+                                <p className="text-2xl font-bold text-red-600">{lowStockCount}</p>
+                            </div>
+                            <AlertTriangle className="w-8 h-8 text-red-500" />
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-gray-600">Total Value</p>
+                                <p className="text-2xl font-bold text-green-600">${totalValue.toLocaleString()}</p>
+                            </div>
+                            <TrendingDown className="w-8 h-8 text-green-500" />
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* Search */}
+            <div className="bg-white rounded-3xl p-6 shadow-md">
+                <SearchBar
+                    value={searchQuery}
+                    onChange={setSearchQuery}
+                    placeholder="Search inventory items..."
+                />
+            </div>
+
+            {/* Filters */}
+            <div className="bg-white rounded-3xl p-6 shadow-md">
+                <div className="flex flex-wrap gap-3 items-center">
+                    <button
+                        onClick={() => setShowLowStockOnly(!showLowStockOnly)}
+                        className={`px-6 py-2.5 rounded-2xl text-sm font-medium transition-all flex items-center gap-2 ${
+                            showLowStockOnly 
+                                ? "bg-red-500 text-white shadow-md" 
+                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        }`}
+                    >
+                        <AlertTriangle className="w-4 h-4" />
+                        Low Stock
+                    </button>
+                    <div className="w-px h-6 bg-gray-300" />
+                    {["all", "Product", "Supply", "Equipment", "Medication"].map(type => (
+                        <button
+                            key={type}
+                            onClick={() => setSelectedType(type)}
+                            className={`px-6 py-2.5 rounded-2xl text-sm font-medium transition-all ${
+                                selectedType === type 
+                                    ? "bg-orange-600 text-white shadow-md" 
+                                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                            }`}
+                        >
+                            {type === "all" ? "All Types" : type}
+                        </button>
+                    ))}
+                    <div className="w-px h-6 bg-gray-300" />
+                    <button
+                        onClick={() => setSelectedLocation("all")}
+                        className={`px-6 py-2.5 rounded-2xl text-sm font-medium transition-all ${
+                            selectedLocation === "all" 
+                                ? "bg-orange-600 text-white shadow-md" 
+                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        }`}
+                    >
+                        All Locations
+                    </button>
+                    {locations.filter(loc => loc.status === 'active').map(location => (
+                        <button
+                            key={location.id}
+                            onClick={() => setSelectedLocation(location.id)}
+                            className={`px-6 py-2.5 rounded-2xl text-sm font-medium transition-all ${
+                                selectedLocation === location.id 
+                                    ? "bg-orange-600 text-white shadow-md" 
+                                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                            }`}
+                        >
+                            {location.name}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* Inventory Items */}
+            {isLoading ? (
+                <div className="text-center py-12">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
+                </div>
+            ) : filteredItems.length === 0 ? (
+                <Card className="text-center py-12">
+                    <CardContent>
+                        <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                        <p className="text-gray-500 text-lg">No inventory items found</p>
+                        <p className="text-gray-400 text-sm mt-2">Try adjusting your search or filters</p>
+                    </CardContent>
+                </Card>
+            ) : (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredItems.map(item => {
+                        const isLowStock = item.quantity <= item.low_stock_threshold;
+                        const associatedServices = getPricingItemNames(item.associated_pricing_item_ids);
+                        
+                        return (
+                            <Card key={item.id} className={`hover:shadow-lg transition-all duration-300 border-2 ${isLowStock ? 'border-red-300 bg-red-50' : ''}`}>
+                                <CardHeader className="pb-3">
+                                    <div className="flex items-start justify-between mb-3">
+                                        <div className="flex flex-wrap gap-2">
+                                            <Badge className={typeColors[item.item_type]}>
+                                                {item.item_type}
+                                            </Badge>
+                                            {isLowStock && (
+                                                <Badge className="bg-red-500 text-white">
+                                                    <AlertTriangle className="w-3 h-3 mr-1" />
+                                                    Low Stock
+                                                </Badge>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <CardTitle className="text-xl mb-2">{item.item_name}</CardTitle>
+                                    {item.sku && (
+                                        <div className="text-sm text-gray-500">SKU: {item.sku}</div>
+                                    )}
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="space-y-3">
+                                        <div className="bg-gray-50 rounded-lg p-3">
+                                            <div className="flex justify-between items-center mb-2">
+                                                <span className="text-sm text-gray-600">Current Stock:</span>
+                                                <span className={`text-2xl font-bold ${isLowStock ? 'text-red-600' : 'text-green-600'}`}>
+                                                    {item.quantity} {item.unit}
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between text-sm">
+                                                <span className="text-gray-600">Low Stock Alert:</span>
+                                                <span className="font-medium">{item.low_stock_threshold} {item.unit}</span>
+                                            </div>
+                                            {item.reorder_quantity && (
+                                                <div className="flex justify-between text-sm mt-1">
+                                                    <span className="text-gray-600">Reorder Qty:</span>
+                                                    <span className="font-medium">{item.reorder_quantity} {item.unit}</span>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="text-sm space-y-1">
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-600">Location:</span>
+                                                <span className="font-medium">{getLocationName(item.location_id)}</span>
+                                            </div>
+                                            {item.cost_per_unit && (
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">Cost/Unit:</span>
+                                                    <span className="font-medium">${item.cost_per_unit}</span>
+                                                </div>
+                                            )}
+                                            {item.supplier && (
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">Supplier:</span>
+                                                    <span className="font-medium">{item.supplier}</span>
+                                                </div>
+                                            )}
+                                            {item.expiry_date && (
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">Expires:</span>
+                                                    <span className="font-medium">{new Date(item.expiry_date).toLocaleDateString()}</span>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {associatedServices.length > 0 && (
+                                            <div>
+                                                <div className="text-xs text-gray-600 mb-1">Used in:</div>
+                                                <div className="flex flex-wrap gap-1">
+                                                    {associatedServices.map((service, idx) => (
+                                                        <Badge key={idx} variant="outline" className="text-xs">
+                                                            {service}
+                                                        </Badge>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {item.notes && (
+                                            <p className="text-sm text-gray-600 italic">{item.notes}</p>
+                                        )}
+
+                                        {canEdit && (
+                                            <div className="flex gap-2 pt-2 border-t">
+                                                <Button 
+                                                    variant="outline" 
+                                                    className="flex-1"
+                                                    onClick={() => handleEdit(item)}
+                                                >
+                                                    <Pencil className="w-4 h-4 mr-2" />
+                                                    Edit
+                                                </Button>
+                                                <Button 
+                                                    variant="outline" 
+                                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                    onClick={() => setDeleteConfirm(item)}
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        );
+                    })}
+                </div>
+            )}
+
+            <InventoryForm
+                open={showForm}
+                onOpenChange={(open) => {
+                    setShowForm(open);
+                    if (!open) setEditingItem(null);
+                }}
+                onSuccess={handleSuccess}
+                editItem={editingItem}
+            />
+
+            <AlertDialog open={!!deleteConfirm} onOpenChange={(open) => !open && setDeleteConfirm(null)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Inventory Item?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Are you sure you want to delete "{deleteConfirm?.item_name}"? This action cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={() => deleteMutation.mutate(deleteConfirm.id)}
+                            className="bg-red-600 hover:bg-red-700"
+                        >
+                            Delete
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </div>
+    );
+}
