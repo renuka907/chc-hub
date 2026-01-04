@@ -6,7 +6,8 @@ import {
     FileText, 
     Building2, 
     DollarSign,
-    Stethoscope
+    Stethoscope,
+    Package
 } from "lucide-react";
 
 export default function Home() {
@@ -115,17 +116,19 @@ export default function Home() {
 
             {/* Additional Info Cards */}
             <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-3xl p-8 shadow-md">
-                    <div className="flex items-start space-x-4">
-                        <div className="w-12 h-12 bg-white/60 rounded-2xl flex items-center justify-center flex-shrink-0">
-                            <Stethoscope className="w-6 h-6 text-purple-700" />
-                        </div>
-                        <div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">Enter Your Medical Query</h3>
-                            <p className="text-gray-700">Access patient education, clinic operations, and pricing tools with ease. Designed for busy healthcare professionals.</p>
+                <Link to={createPageUrl("InventoryManagement")}>
+                    <div className="bg-gradient-to-br from-orange-100 to-amber-100 rounded-3xl p-8 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group">
+                        <div className="flex items-start space-x-4">
+                            <div className="w-12 h-12 bg-white/60 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                                <Package className="w-6 h-6 text-orange-700" />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-bold text-gray-900 mb-2">Inventory Management</h3>
+                                <p className="text-gray-700">Track supplies, medications, and equipment across all clinic locations. Monitor stock levels and expiration dates.</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </Link>
 
                 <div className="bg-gradient-to-br from-blue-100 to-cyan-100 rounded-3xl p-8 shadow-md">
                     <div className="flex items-start space-x-4">
