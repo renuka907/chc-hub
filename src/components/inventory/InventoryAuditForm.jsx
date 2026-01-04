@@ -154,6 +154,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                             <th className="text-left p-2 font-bold">Item Name</th>
                                             <th className="text-left p-2 font-bold">Type</th>
                                             <th className="text-center p-2 font-bold">SKU</th>
+                                            <th className="text-center p-2 font-bold">Exp Date</th>
                                             <th className="text-center p-2 font-bold">Unit</th>
                                             <th className="text-center p-2 font-bold">Current Qty</th>
                                             <th className="text-center p-2 font-bold w-24">New Count</th>
@@ -165,6 +166,9 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                                 <td className="p-2 font-medium">{item.item_name}</td>
                                                 <td className="p-2 text-sm">{item.item_type}</td>
                                                 <td className="p-2 text-center text-sm">{item.sku || '-'}</td>
+                                                <td className="p-2 text-center text-sm">
+                                                    {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString() : '-'}
+                                                </td>
                                                 <td className="p-2 text-center text-sm">{item.unit}</td>
                                                 <td className="p-2 text-center font-semibold">{item.quantity}</td>
                                                 <td className="p-2">
@@ -287,6 +291,11 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                                             </Badge>
                                                             {item.sku && (
                                                                 <span className="text-xs text-gray-500">SKU: {item.sku}</span>
+                                                            )}
+                                                            {item.expiry_date && (
+                                                                <span className="text-xs text-gray-500">
+                                                                    Exp: {new Date(item.expiry_date).toLocaleDateString()}
+                                                                </span>
                                                             )}
                                                         </div>
                                                     </div>
