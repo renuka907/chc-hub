@@ -63,6 +63,25 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
                         background: black;
                     }
 
+                    .printable-document p {
+                        margin: 8px 0;
+                        line-height: 1.4;
+                        text-align: left;
+                    }
+
+                    .printable-document strong {
+                        font-weight: bold;
+                    }
+
+                    .printable-document ul, .printable-document ol {
+                        margin: 10px 0;
+                        padding-left: 30px;
+                    }
+
+                    .printable-document li {
+                        margin: 5px 0;
+                    }
+
                     @media print {
                         body * {
                             visibility: hidden;
