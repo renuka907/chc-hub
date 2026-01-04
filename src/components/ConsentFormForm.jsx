@@ -234,7 +234,10 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
                                         [{ 'indent': '-1'}, { 'indent': '+1' }],
                                         [{ 'align': [] }],
                                         ['clean']
-                                    ]
+                                    ],
+                                    clipboard: {
+                                        matchVisual: false
+                                    }
                                 }}
                                 className="bg-white"
                                 style={{ height: '400px', marginBottom: '50px' }}
