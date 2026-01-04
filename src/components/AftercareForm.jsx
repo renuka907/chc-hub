@@ -233,32 +233,60 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
                         <div className="space-y-2">
                             <div className="flex items-center justify-between mb-2">
                                 <Label htmlFor="instructions">Aftercare Instructions *</Label>
-                                <FormFieldInsert onInsert={handleInsertField} />
+                                <div className="flex gap-2">
+                                    <Button
+                                        type="button"
+                                        variant={showSourceCode ? "default" : "outline"}
+                                        size="sm"
+                                        onClick={() => setShowSourceCode(!showSourceCode)}
+                                    >
+                                        {showSourceCode ? 'Visual Editor' : 'Source Code'}
+                                    </Button>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setShowTemplateSelector(true)}
+                                    >
+                                        Load Template
+                                    </Button>
+                                    <FormFieldInsert onInsert={handleInsertField} />
+                                </div>
                             </div>
-                            <ReactQuill
-                                ref={quillRef}
-                                value={formData.instructions}
-                                onChange={(value) => setFormData({...formData, instructions: value})}
-                                modules={{
-                                    toolbar: [
-                                        [{ 'header': [1, 2, 3, false] }],
-                                        ['bold', 'italic', 'underline'],
-                                        [{ 'color': [] }],
-                                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                                        [{ 'indent': '-1'}, { 'indent': '+1' }],
-                                        [{ 'align': [] }],
-                                        ['link'],
-                                        ['clean']
-                                    ],
-                                    clipboard: {
-                                        matchVisual: false,
-                                        matchers: []
-                                    }
-                                }}
-                                formats={['header', 'bold', 'italic', 'underline', 'color', 'list', 'bullet', 'indent', 'align', 'link', 'script', 'blockquote']}
-                                className="bg-white"
-                                style={{ height: '300px', marginBottom: '50px' }}
-                            />
+                            {showSourceCode ? (
+                                <Textarea
+                                    value={formData.instructions}
+                                    onChange={(e) => setFormData({...formData, instructions: e.target.value})}
+                                    className="font-mono text-sm"
+                                    style={{ height: '300px' }}
+                                    placeholder="Paste or edit HTML source code here..."
+                                />
+                            ) : (
+                                <ReactQuill
+                                    ref={quillRef}
+                                    value={formData.instructions}
+                                    onChange={(value) => setFormData({...formData, instructions: value})}
+                                    modules={{
+                                        toolbar: [
+                                            [{ 'header': [1, 2, 3, false] }],
+                                            ['bold', 'italic', 'underline'],
+                                            [{ 'color': [] }],
+                                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                            [{ 'indent': '-1'}, { 'indent': '+1' }],
+                                            [{ 'align': [] }],
+                                            ['link'],
+                                            ['clean']
+                                        ],
+                                        clipboard: {
+                                            matchVisual: false,
+                                            matchers: []
+                                        }
+                                    }}
+                                    formats={['header', 'bold', 'italic', 'underline', 'color', 'list', 'bullet', 'indent', 'align', 'link', 'script', 'blockquote']}
+                                    className="bg-white"
+                                    style={{ height: '300px', marginBottom: '50px' }}
+                                />
+                            )}
                         </div>
 
                         <div className="space-y-2">
