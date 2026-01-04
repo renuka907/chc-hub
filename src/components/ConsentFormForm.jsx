@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sparkles, Loader2, Upload, X } from "lucide-react";
+import { Sparkles, Loader2, Upload, X, FileText, ListChecks } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -27,6 +27,13 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
     const [isUploading, setIsUploading] = useState(false);
     const [isUploadingDoc, setIsUploadingDoc] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [showAiParams, setShowAiParams] = useState(false);
+    const [aiParams, setAiParams] = useState({
+        procedure_type: "",
+        patient_condition: "",
+        specific_risks: "",
+        additional_notes: ""
+    });
     const quillRef = React.useRef(null);
 
     useEffect(() => {
@@ -53,14 +60,33 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
 
         setIsGenerating(true);
         try {
+            let prompt = `Create a detailed, professional medical consent form for "${formData.form_name}" of type ${formData.form_type}.`;
+            
+            if (aiParams.procedure_type) {
+                prompt += `\n\nProcedure Type: ${aiParams.procedure_type}`;
+            }
+            if (aiParams.patient_condition) {
+                prompt += `\n\nPatient Condition/Context: ${aiParams.patient_condition}`;
+            }
+            if (aiParams.specific_risks) {
+                prompt += `\n\nSpecific Risks to Address: ${aiParams.specific_risks}`;
+            }
+            if (aiParams.additional_notes) {
+                prompt += `\n\nAdditional Requirements: ${aiParams.additional_notes}`;
+            }
+
+            prompt += `\n\nThe form must include:
+1. Clear purpose and description of the procedure/treatment
+2. Comprehensive risks and benefits
+3. Alternative options
+4. Patient rights and responsibilities
+5. Formal consent statement
+6. Signature and date fields
+
+Format the content in HTML with proper structure, bold headings, and professional medical terminology. Include patient information fields at the top (name, DOB, date). Make it legally appropriate and easy to understand.`;
+
             const result = await base44.integrations.Core.InvokeLLM({
-                prompt: `Create a consent form for "${formData.form_name}" of type ${formData.form_type}. Include:
-                1. Purpose and description
-                2. Risks and benefits
-                3. Patient rights
-                4. Consent statement
-                
-                Make it professional and legally appropriate.`,
+                prompt: prompt,
                 response_json_schema: {
                     type: "object",
                     properties: {
@@ -73,6 +99,7 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
                 ...formData,
                 content: result.content
             });
+            setShowAiParams(false);
         } catch (error) {
             alert('Failed to generate content. Please try again.');
         }
@@ -142,6 +169,100 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
 
     const handleSelectTemplate = (content) => {
         setFormData({ ...formData, content });
+    };
+
+    const handleSummarize = async () => {
+        if (!formData.content) {
+            alert('No content to summarize');
+            return;
+        }
+
+        setIsGenerating(true);
+        try {
+            const result = await base44.integrations.Core.InvokeLLM({
+                prompt: `Analyze and summarize this medical consent form. Extract:
+1. Main purpose/procedure
+2. Key risks mentioned
+3. Key benefits mentioned
+4. Important patient responsibilities
+5. Required signatures/dates
+
+Form content:
+${formData.content}
+
+Provide a clear, concise summary in professional format.`,
+                response_json_schema: {
+                    type: "object",
+                    properties: {
+                        summary: { type: "string" },
+                        key_points: { type: "array", items: { type: "string" } }
+                    }
+                }
+            });
+
+            alert(`Summary:\n\n${result.summary}\n\nKey Points:\n${result.key_points.join('\n')}`);
+        } catch (error) {
+            alert('Failed to generate summary. Please try again.');
+        }
+        setIsGenerating(false);
+    };
+
+    const handleExtractKeyInfo = async () => {
+        if (!formData.content) {
+            alert('No content to extract from');
+            return;
+        }
+
+        setIsGenerating(true);
+        try {
+            const result = await base44.integrations.Core.InvokeLLM({
+                prompt: `Extract key information from this medical consent form and structure it as JSON:
+
+Form content:
+${formData.content}
+
+Extract:
+- Procedure/treatment name
+- Primary risks (list)
+- Primary benefits (list)
+- Patient requirements/responsibilities (list)
+- Follow-up requirements (if any)
+- Contraindications (if any)`,
+                response_json_schema: {
+                    type: "object",
+                    properties: {
+                        procedure_name: { type: "string" },
+                        risks: { type: "array", items: { type: "string" } },
+                        benefits: { type: "array", items: { type: "string" } },
+                        patient_responsibilities: { type: "array", items: { type: "string" } },
+                        follow_up: { type: "string" },
+                        contraindications: { type: "array", items: { type: "string" } }
+                    }
+                }
+            });
+
+            const formatted = `Extracted Information:
+
+Procedure: ${result.procedure_name}
+
+Risks:
+${result.risks.map(r => `• ${r}`).join('\n')}
+
+Benefits:
+${result.benefits.map(b => `• ${b}`).join('\n')}
+
+Patient Responsibilities:
+${result.patient_responsibilities.map(p => `• ${p}`).join('\n')}
+
+${result.follow_up ? `Follow-up: ${result.follow_up}` : ''}
+
+${result.contraindications.length > 0 ? `Contraindications:\n${result.contraindications.map(c => `• ${c}`).join('\n')}` : ''}`;
+
+            alert(formatted);
+        } catch (error) {
+            alert('Failed to extract key information. Please try again.');
+        }
+        setIsGenerating(false);
     };
 
     return (
@@ -215,26 +336,85 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
                             </div>
                         </div>
 
-                        <Button
-                            type="button"
-                            onClick={handleGenerate}
-                            disabled={isGenerating || !formData.form_name || !formData.form_type}
-                            className="w-full bg-purple-600 hover:bg-purple-700"
-                            size="lg"
-                        >
-                            {isGenerating ? (
-                                <>
-                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                    Generating Content...
-                                </>
-                            ) : (
-                                <>
-                                    <Sparkles className="w-4 h-4 mr-2" />
-                                    Generate Form Content with AI
-                                </>
+                        <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                                <Label className="text-base font-semibold">AI Generation Options</Label>
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => setShowAiParams(!showAiParams)}
+                                >
+                                    {showAiParams ? 'Hide' : 'Show'} Advanced Parameters
+                                </Button>
+                            </div>
+
+                            {showAiParams && (
+                                <div className="space-y-3 p-4 bg-purple-50 rounded-lg border border-purple-200">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="procedure_type" className="text-sm">Specific Procedure Type</Label>
+                                        <Input
+                                            id="procedure_type"
+                                            value={aiParams.procedure_type}
+                                            onChange={(e) => setAiParams({...aiParams, procedure_type: e.target.value})}
+                                            placeholder="e.g., Minimally invasive laparoscopic surgery"
+                                            className="text-sm"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="patient_condition" className="text-sm">Patient Condition/Context</Label>
+                                        <Input
+                                            id="patient_condition"
+                                            value={aiParams.patient_condition}
+                                            onChange={(e) => setAiParams({...aiParams, patient_condition: e.target.value})}
+                                            placeholder="e.g., Post-menopausal, history of endometriosis"
+                                            className="text-sm"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="specific_risks" className="text-sm">Specific Risks to Address</Label>
+                                        <Input
+                                            id="specific_risks"
+                                            value={aiParams.specific_risks}
+                                            onChange={(e) => setAiParams({...aiParams, specific_risks: e.target.value})}
+                                            placeholder="e.g., Bleeding, infection, anesthesia complications"
+                                            className="text-sm"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="additional_notes" className="text-sm">Additional Requirements</Label>
+                                        <Textarea
+                                            id="additional_notes"
+                                            value={aiParams.additional_notes}
+                                            onChange={(e) => setAiParams({...aiParams, additional_notes: e.target.value})}
+                                            placeholder="Any other specific requirements or information to include..."
+                                            className="text-sm h-20"
+                                        />
+                                    </div>
+                                </div>
                             )}
-                        </Button>
-                    </TabsContent>
+
+                            <Button
+                                type="button"
+                                onClick={handleGenerate}
+                                disabled={isGenerating || !formData.form_name || !formData.form_type}
+                                className="w-full bg-purple-600 hover:bg-purple-700"
+                                size="lg"
+                            >
+                                {isGenerating ? (
+                                    <>
+                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                        Generating Content...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Sparkles className="w-4 h-4 mr-2" />
+                                        Generate Form Content with AI
+                                    </>
+                                )}
+                            </Button>
+                        </div>
+                        </TabsContent>
 
                     <TabsContent value="content" className="space-y-4 mt-4">
                         <div className="space-y-2">
@@ -246,6 +426,26 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
                                     </div>
                                 </div>
                                 <div className="flex gap-2">
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={handleSummarize}
+                                        disabled={isGenerating || !formData.content}
+                                    >
+                                        <FileText className="w-4 h-4 mr-1" />
+                                        Summarize
+                                    </Button>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={handleExtractKeyInfo}
+                                        disabled={isGenerating || !formData.content}
+                                    >
+                                        <ListChecks className="w-4 h-4 mr-1" />
+                                        Extract Key Info
+                                    </Button>
                                     <FormTemplates onSelectTemplate={handleSelectTemplate} />
                                     <FormFieldInsert onInsert={handleInsertField} />
                                 </div>
