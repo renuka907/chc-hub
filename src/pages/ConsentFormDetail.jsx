@@ -137,9 +137,8 @@ export default function ConsentFormDetail() {
                                 </Button>
                             </a>
                         </div>
-                        <embed 
+                        <iframe 
                             src={form.document_url}
-                            type="application/pdf"
                             className="w-full h-[600px] border-2 border-slate-300 rounded-lg"
                             title="Document Preview"
                         />
