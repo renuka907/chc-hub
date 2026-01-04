@@ -81,12 +81,48 @@ export default function ConsentFormDetail() {
 
             {/* Printable Content */}
             <PrintableDocument title="" showLogo={false}>
+                <style>
+                    {`
+                        .form-content p {
+                            margin: 8px 0;
+                            line-height: 1.5;
+                        }
+                        .form-content h1, .form-content h2, .form-content h3 {
+                            text-align: center;
+                            font-weight: bold;
+                            margin: 12px 0;
+                        }
+                        .form-content h1 {
+                            font-size: 16px;
+                        }
+                        .form-content h2 {
+                            font-size: 14px;
+                        }
+                        .form-content h3 {
+                            font-size: 13px;
+                        }
+                        .form-content ul, .form-content ol {
+                            margin: 8px 0;
+                            padding-left: 30px;
+                        }
+                        .form-content li {
+                            margin: 4px 0;
+                        }
+                        .form-content strong {
+                            font-weight: bold;
+                        }
+                        .form-content em {
+                            font-style: italic;
+                        }
+                    `}
+                </style>
                 <div 
-                    className="text-black text-base leading-relaxed prose prose-sm max-w-none"
+                    className="form-content text-black"
                     style={{
-                        lineHeight: '1.8', 
+                        fontSize: '12pt',
                         fontFamily: 'Times New Roman, serif',
-                        letterSpacing: '0.01em'
+                        lineHeight: '1.5',
+                        textAlign: 'left'
                     }}
                     dangerouslySetInnerHTML={{ __html: form.content }}
                 />
