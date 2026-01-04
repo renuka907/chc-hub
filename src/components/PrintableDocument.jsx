@@ -38,6 +38,31 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
                         min-width: 200px;
                     }
 
+                    .printable-document input[type="checkbox"] {
+                        appearance: none;
+                        -webkit-appearance: none;
+                        width: 14px;
+                        height: 14px;
+                        border: 1px solid black;
+                        background: white;
+                        margin-right: 8px;
+                        vertical-align: middle;
+                        cursor: pointer;
+                    }
+
+                    .printable-document input[type="checkbox"]:checked {
+                        background: white;
+                    }
+
+                    .printable-document input[type="checkbox"]:checked::after {
+                        content: '';
+                        display: block;
+                        width: 8px;
+                        height: 8px;
+                        margin: 2px;
+                        background: black;
+                    }
+
                     @media print {
                         body * {
                             visibility: hidden;
