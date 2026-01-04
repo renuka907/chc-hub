@@ -26,6 +26,7 @@ export default function ConsentFormDetail() {
 
     const handleSuccess = () => {
         queryClient.invalidateQueries({ queryKey: ['consentForms'] });
+        setShowEditForm(false);
     };
 
     const toggleFavorite = async () => {

@@ -37,7 +37,7 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
     const quillRef = React.useRef(null);
 
     useEffect(() => {
-        if (editForm) {
+        if (open && editForm) {
             setFormData(editForm);
         } else if (!open) {
             setFormData({
