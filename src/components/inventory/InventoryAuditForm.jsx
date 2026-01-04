@@ -18,6 +18,7 @@ import { ClipboardCheck, Save, MapPin, Package, Printer } from "lucide-react";
 export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
     const [selectedLocationId, setSelectedLocationId] = useState("");
     const [quantities, setQuantities] = useState({});
+    const [expiryDates, setExpiryDates] = useState({});
     const [isSaving, setIsSaving] = useState(false);
     const queryClient = useQueryClient();
 
@@ -47,13 +48,16 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
         itemsByStorage[storage].push(item);
     });
 
-    // Initialize quantities when items change
+    // Initialize quantities and expiry dates when items change
     useEffect(() => {
         const initialQty = {};
+        const initialExpiry = {};
         items.forEach(item => {
             initialQty[item.id] = item.quantity;
+            initialExpiry[item.id] = item.expiry_date || '';
         });
         setQuantities(initialQty);
+        setExpiryDates(initialExpiry);
     }, [items.length, selectedLocationId]);
 
     const handleQuantityChange = (itemId, value) => {
@@ -63,18 +67,33 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
         }));
     };
 
+    const handleExpiryDateChange = (itemId, value) => {
+        setExpiryDates(prev => ({
+            ...prev,
+            [itemId]: value
+        }));
+    };
+
     const handleSaveAudit = async () => {
         setIsSaving(true);
         
         try {
-            // Update all items with changed quantities
+            // Update all items with changed quantities or expiry dates
             const updates = items
-                .filter(item => quantities[item.id] !== item.quantity)
-                .map(item => 
-                    base44.entities.InventoryItem.update(item.id, {
-                        quantity: quantities[item.id]
-                    })
-                );
+                .filter(item => 
+                    quantities[item.id] !== item.quantity || 
+                    expiryDates[item.id] !== (item.expiry_date || '')
+                )
+                .map(item => {
+                    const updateData = {};
+                    if (quantities[item.id] !== item.quantity) {
+                        updateData.quantity = quantities[item.id];
+                    }
+                    if (expiryDates[item.id] !== (item.expiry_date || '')) {
+                        updateData.expiry_date = expiryDates[item.id] || undefined;
+                    }
+                    return base44.entities.InventoryItem.update(item.id, updateData);
+                });
 
             await Promise.all(updates);
             
@@ -88,7 +107,10 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
         }
     };
 
-    const changedCount = items.filter(item => quantities[item.id] !== item.quantity).length;
+    const changedCount = items.filter(item => 
+        quantities[item.id] !== item.quantity || 
+        expiryDates[item.id] !== (item.expiry_date || '')
+    ).length;
 
     const selectedLocation = locations.find(loc => loc.id === selectedLocationId);
 
@@ -303,7 +325,9 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                     {storageItems.map(item => {
                                         const currentQty = quantities[item.id] || 0;
                                         const originalQty = item.quantity;
-                                        const hasChanged = currentQty !== originalQty;
+                                        const currentExpiry = expiryDates[item.id] || '';
+                                        const originalExpiry = item.expiry_date || '';
+                                        const hasChanged = currentQty !== originalQty || currentExpiry !== originalExpiry;
                                         
                                         return (
                                             <div 
@@ -349,6 +373,18 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                                                 onChange={(e) => handleQuantityChange(item.id, e.target.value)}
                                                                 className={`h-14 text-2xl font-bold text-center ${
                                                                     hasChanged ? 'border-orange-500 border-3 bg-orange-50' : ''
+                                                                }`}
+                                                            />
+                                                        </div>
+
+                                                        <div className="w-48">
+                                                            <Label className="text-sm font-semibold mb-2 block">Expiry Date</Label>
+                                                            <Input
+                                                                type="date"
+                                                                value={currentExpiry}
+                                                                onChange={(e) => handleExpiryDateChange(item.id, e.target.value)}
+                                                                className={`h-14 text-center ${
+                                                                    currentExpiry !== originalExpiry ? 'border-orange-500 border-3 bg-orange-50' : ''
                                                                 }`}
                                                             />
                                                         </div>
