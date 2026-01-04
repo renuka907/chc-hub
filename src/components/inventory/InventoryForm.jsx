@@ -73,7 +73,7 @@ export default function InventoryForm({ open, onOpenChange, onSuccess, editItem 
     });
 
     const { data: allInventoryItems = [] } = useQuery({
-        queryKey: ['allInventoryItems'],
+        queryKey: ['inventoryItems'],
         queryFn: () => base44.entities.InventoryItem.list('-updated_date', 500),
     });
 
