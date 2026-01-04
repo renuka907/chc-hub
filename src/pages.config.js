@@ -12,6 +12,7 @@ import PricingManagement from './pages/PricingManagement';
 import QuoteDetail from './pages/QuoteDetail';
 import QuotesManagement from './pages/QuotesManagement';
 import UserManagement from './pages/UserManagement';
+import EmployeeQuestions from './pages/EmployeeQuestions';
 import __Layout from './Layout.jsx';
 
 
@@ -30,6 +31,7 @@ export const PAGES = {
     "QuoteDetail": QuoteDetail,
     "QuotesManagement": QuotesManagement,
     "UserManagement": UserManagement,
+    "EmployeeQuestions": EmployeeQuestions,
 }
 
 export const pagesConfig = {

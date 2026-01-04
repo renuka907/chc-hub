@@ -130,17 +130,19 @@ export default function Home() {
                     </div>
                 </Link>
 
-                <div className="bg-gradient-to-br from-blue-100 to-cyan-100 rounded-3xl p-8 shadow-md">
-                    <div className="flex items-start space-x-4">
-                        <div className="w-12 h-12 bg-white/60 rounded-2xl flex items-center justify-center flex-shrink-0">
-                            <BookOpen className="w-6 h-6 text-blue-700" />
-                        </div>
-                        <div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">Medical Resources</h3>
-                            <p className="text-gray-700">All educational content is sourced from reliable medical references including Medscape and regularly reviewed for accuracy.</p>
+                <Link to={createPageUrl("EmployeeQuestions")}>
+                    <div className="bg-gradient-to-br from-blue-100 to-cyan-100 rounded-3xl p-8 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group">
+                        <div className="flex items-start space-x-4">
+                            <div className="w-12 h-12 bg-white/60 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                                <BookOpen className="w-6 h-6 text-blue-700" />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-bold text-gray-900 mb-2">Employee Questions</h3>
+                                <p className="text-gray-700">Ask questions or share concerns anonymously. View responses from management and participate in team discussions.</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </Link>
             </div>
         </div>
     );
