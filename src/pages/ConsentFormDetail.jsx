@@ -113,38 +113,6 @@ export default function ConsentFormDetail() {
                         {form.content}
                     </div>
 
-                    {/* Uploaded Document */}
-                    {form.document_url && (
-                        <Card className="bg-slate-50 border-slate-200 mt-6 no-print">
-                            <CardContent className="pt-6">
-                                <div className="flex items-center justify-between mb-4">
-                                    <div className="flex items-center gap-3">
-                                        <FileText className="w-6 h-6 text-slate-600" />
-                                        <div>
-                                            <p className="font-semibold text-slate-900">Attached Document (PDF)</p>
-                                            <p className="text-sm text-slate-600">View, print, or download the full document</p>
-                                        </div>
-                                    </div>
-                                    <a 
-                                        href={form.document_url} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                    >
-                                        <Button variant="outline" size="sm">
-                                            <Printer className="w-4 h-4 mr-2" />
-                                            Open PDF
-                                        </Button>
-                                    </a>
-                                </div>
-                                <iframe 
-                                    src={form.document_url}
-                                    className="w-full h-96 border-2 border-slate-300 rounded-lg"
-                                    title="Document Preview"
-                                />
-                            </CardContent>
-                        </Card>
-                    )}
-
                     {/* Signature Section */}
                     <div className="border-t-2 border-gray-800 pt-8 mt-12 space-y-10">
                         <div className="grid grid-cols-2 gap-8">
@@ -172,6 +140,38 @@ export default function ConsentFormDetail() {
                     </div>
                 </div>
             </PrintableDocument>
+
+            {/* Uploaded Document - Outside printable section, at the very bottom */}
+            {form.document_url && (
+                <Card className="bg-slate-50 border-slate-200 no-print">
+                    <CardContent className="pt-6">
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                                <FileText className="w-6 h-6 text-slate-600" />
+                                <div>
+                                    <p className="font-semibold text-slate-900">Attached Document (PDF)</p>
+                                    <p className="text-sm text-slate-600">View, print, or download the full document</p>
+                                </div>
+                            </div>
+                            <a 
+                                href={form.document_url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                            >
+                                <Button variant="outline" size="sm">
+                                    <Printer className="w-4 h-4 mr-2" />
+                                    Open PDF
+                                </Button>
+                            </a>
+                        </div>
+                        <iframe 
+                            src={form.document_url}
+                            className="w-full h-96 border-2 border-slate-300 rounded-lg"
+                            title="Document Preview"
+                        />
+                    </CardContent>
+                </Card>
+            )}
 
             {form && (
                 <ConsentFormForm
