@@ -93,7 +93,15 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
     const selectedLocation = locations.find(loc => loc.id === selectedLocationId);
 
     const handlePrint = () => {
-        window.print();
+        // Move print content to body for printing
+        const printContent = document.querySelector('.print-container');
+        if (printContent) {
+            const clone = printContent.cloneNode(true);
+            clone.style.display = 'block';
+            document.body.appendChild(clone);
+            window.print();
+            document.body.removeChild(clone);
+        }
     };
 
     return (
