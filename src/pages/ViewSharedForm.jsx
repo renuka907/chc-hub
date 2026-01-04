@@ -32,12 +32,21 @@ export default function ViewSharedForm() {
             if (sharedLink.entity_type === "ConsentForm") {
                 const forms = await base44.entities.ConsentForm.list();
                 return forms.find(f => f.id === sharedLink.entity_id);
-            } else {
+            } else if (sharedLink.entity_type === "AftercareInstruction") {
                 const instructions = await base44.entities.AftercareInstruction.list();
                 return instructions.find(i => i.id === sharedLink.entity_id);
+            } else if (sharedLink.entity_type === "Quote") {
+                const quotes = await base44.entities.Quote.list();
+                return quotes.find(q => q.id === sharedLink.entity_id);
             }
         },
         enabled: !!sharedLink && (!sharedLink.password || isAuthenticated)
+    });
+
+    const { data: locations = [] } = useQuery({
+        queryKey: ['clinicLocations'],
+        queryFn: () => base44.entities.ClinicLocation.list(),
+        enabled: !!sharedLink && sharedLink.entity_type === "Quote"
     });
 
     const incrementViewMutation = useMutation({
@@ -185,11 +194,15 @@ export default function ViewSharedForm() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                                    {sharedLink.entity_type === "ConsentForm" ? formContent.form_name : formContent.procedure_name}
+                                    {sharedLink.entity_type === "ConsentForm" ? formContent.form_name : 
+                                     sharedLink.entity_type === "Quote" ? `Quote ${formContent.quote_number}` : 
+                                     formContent.procedure_name}
                                 </h1>
                                 <p className="text-gray-600 flex items-center gap-2">
                                     <FileText className="w-4 h-4" />
-                                    {sharedLink.entity_type === "ConsentForm" ? "Consent Form" : "Aftercare Instructions"}
+                                    {sharedLink.entity_type === "ConsentForm" ? "Consent Form" : 
+                                     sharedLink.entity_type === "Quote" ? "Price Quote" : 
+                                     "Aftercare Instructions"}
                                 </p>
                             </div>
                             <Button onClick={openPrintWindow} className="bg-blue-600 hover:bg-blue-700">
@@ -213,6 +226,107 @@ export default function ViewSharedForm() {
                             }}
                             dangerouslySetInnerHTML={{ __html: formContent.content }}
                         />
+                    </PrintableDocument>
+                ) : sharedLink.entity_type === "Quote" ? (
+                    <PrintableDocument title="Price Quote" showLogo={true}>
+                        {(() => {
+                            const items = JSON.parse(formContent.items || '[]');
+                            const location = locations.find(l => l.id === formContent.clinic_location_id);
+                            return (
+                                <div className="space-y-6">
+                                    <div className="grid md:grid-cols-2 gap-6 pb-6 border-b">
+                                        <div>
+                                            <div className="text-sm text-gray-500 mb-1">Quote Number</div>
+                                            <div className="font-bold text-lg">{formContent.quote_number}</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-sm text-gray-500 mb-1">Date</div>
+                                            <div className="font-semibold">{new Date().toLocaleDateString()}</div>
+                                        </div>
+                                        {formContent.patient_name && (
+                                            <div>
+                                                <div className="text-sm text-gray-500 mb-1">Patient Name</div>
+                                                <div className="font-semibold">{formContent.patient_name}</div>
+                                            </div>
+                                        )}
+                                        {location && (
+                                            <div>
+                                                <div className="text-sm text-gray-500 mb-1">Clinic Location</div>
+                                                <div className="font-semibold">{location.name}</div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div>
+                                        <h3 className="font-bold text-lg mb-4">Items</h3>
+                                        <table className="w-full">
+                                            <thead className="bg-slate-100">
+                                                <tr>
+                                                    <th className="text-left p-3 font-semibold">Item</th>
+                                                    <th className="text-center p-3 font-semibold">Qty</th>
+                                                    <th className="text-right p-3 font-semibold">Price</th>
+                                                    <th className="text-right p-3 font-semibold">Subtotal</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {items.map((item, index) => (
+                                                    <tr key={index} className="border-b">
+                                                        <td className="p-3">
+                                                            <div className="font-medium">{item.name}</div>
+                                                            {item.tier_name && (
+                                                                <div className="text-sm text-gray-600">{item.tier_name}</div>
+                                                            )}
+                                                        </td>
+                                                        <td className="text-center p-3">{item.quantity}</td>
+                                                        <td className="text-right p-3">${item.price.toFixed(2)}</td>
+                                                        <td className="text-right p-3 font-semibold">
+                                                            ${(item.price * item.quantity).toFixed(2)}
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    {formContent.show_totals !== false && (
+                                        <div className="flex justify-end">
+                                            <div className="w-64 space-y-2">
+                                                <div className="flex justify-between pb-2">
+                                                    <span>Subtotal:</span>
+                                                    <span className="font-semibold">${formContent.subtotal.toFixed(2)}</span>
+                                                </div>
+                                                {formContent.discount_amount > 0 && (
+                                                    <div className="flex justify-between pb-2 text-green-600">
+                                                        <span>Discount:</span>
+                                                        <span className="font-semibold">-${formContent.discount_amount.toFixed(2)}</span>
+                                                    </div>
+                                                )}
+                                                <div className="flex justify-between pb-2">
+                                                    <span>Tax ({location?.tax_rate}%):</span>
+                                                    <span className="font-semibold">${formContent.tax_amount.toFixed(2)}</span>
+                                                </div>
+                                                <div className="flex justify-between text-xl font-bold text-blue-900 pt-2 border-t-2">
+                                                    <span>Total:</span>
+                                                    <span>${formContent.total.toFixed(2)}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {formContent.notes && (
+                                        <div className="bg-slate-50 p-4 rounded-lg border">
+                                            <div className="font-semibold mb-2">Notes:</div>
+                                            <div className="text-gray-700 whitespace-pre-wrap">{formContent.notes}</div>
+                                        </div>
+                                    )}
+
+                                    <div className="text-sm text-gray-500 border-t pt-4 mt-8">
+                                        <p>This quote is valid for 30 days from the date of issue.</p>
+                                        <p className="mt-2">Payment is due at the time of service unless other arrangements have been made.</p>
+                                    </div>
+                                </div>
+                            );
+                        })()}
                     </PrintableDocument>
                 ) : (
                     <PrintableDocument title={formContent.procedure_name} showLogo={true}>
