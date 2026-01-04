@@ -6,7 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import SearchBar from "../components/SearchBar";
 import InventoryForm from "../components/inventory/InventoryForm";
-import { Package, Plus, Pencil, Trash2, AlertTriangle, TrendingDown, Calendar, Settings } from "lucide-react";
+import InventoryAuditForm from "../components/inventory/InventoryAuditForm";
+import { Package, Plus, Pencil, Trash2, AlertTriangle, TrendingDown, Calendar, Settings, ClipboardCheck } from "lucide-react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -26,6 +27,7 @@ export default function InventoryManagement() {
     const [showExpiringOnly, setShowExpiringOnly] = useState(false);
     const [expiryThresholdDays, setExpiryThresholdDays] = useState(30);
     const [showForm, setShowForm] = useState(false);
+    const [showAuditForm, setShowAuditForm] = useState(false);
     const [editingItem, setEditingItem] = useState(null);
     const [deleteConfirm, setDeleteConfirm] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
@@ -148,10 +150,20 @@ export default function InventoryManagement() {
                         </div>
                     </div>
                     {canEdit && (
-                        <Button onClick={() => { setEditingItem(null); setShowForm(true); }} className="bg-orange-600 hover:bg-orange-700">
-                            <Plus className="w-4 h-4 mr-2" />
-                            Add Item
-                        </Button>
+                        <div className="flex gap-3">
+                            <Button 
+                                onClick={() => setShowAuditForm(true)} 
+                                variant="outline"
+                                className="border-orange-600 text-orange-600 hover:bg-orange-50"
+                            >
+                                <ClipboardCheck className="w-4 h-4 mr-2" />
+                                Daily Audit
+                            </Button>
+                            <Button onClick={() => { setEditingItem(null); setShowForm(true); }} className="bg-orange-600 hover:bg-orange-700">
+                                <Plus className="w-4 h-4 mr-2" />
+                                Add Item
+                            </Button>
+                        </div>
                     )}
                 </div>
             </div>
@@ -489,6 +501,12 @@ export default function InventoryManagement() {
                 }}
                 onSuccess={handleSuccess}
                 editItem={editingItem}
+            />
+
+            <InventoryAuditForm
+                open={showAuditForm}
+                onOpenChange={setShowAuditForm}
+                onSuccess={handleSuccess}
             />
 
             <AlertDialog open={!!deleteConfirm} onOpenChange={(open) => !open && setDeleteConfirm(null)}>
