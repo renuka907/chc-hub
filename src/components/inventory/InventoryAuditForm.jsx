@@ -111,9 +111,9 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                             .printable-audit,
                             .printable-audit * {
                                 visibility: visible !important;
-                                display: block !important;
                             }
                             .printable-audit {
+                                display: block !important;
                                 position: absolute !important;
                                 left: 0 !important;
                                 top: 0 !important;
@@ -127,10 +127,10 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                 </style>
 
                 <div className="printable-audit">
-                    <div className="p-6">
-                        <div className="border-b-2 border-gray-800 pb-4 mb-6">
-                            <h1 className="text-2xl font-bold">Daily Inventory Audit Form</h1>
-                            <div className="text-sm text-gray-600 mt-2">
+                    <div className="p-4">
+                        <div className="border-b border-gray-800 pb-2 mb-3">
+                            <h1 className="text-lg font-bold">Daily Inventory Audit Form</h1>
+                            <div className="text-xs text-gray-600 mt-1">
                                 Date: {new Date().toLocaleDateString()} | Location: {selectedLocation?.name || 'All Locations'}
                             </div>
                         </div>
@@ -138,39 +138,39 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                         {Object.entries(itemsByStorage)
                             .sort(([a], [b]) => a.localeCompare(b))
                             .map(([storage, storageItems]) => (
-                            <div key={storage} className="mb-8 break-inside-avoid">
-                                <div className="bg-gray-800 text-white px-3 py-2 mb-2">
-                                    <div className="flex justify-between items-center">
-                                        <span className="font-bold text-lg">📍 {storage}</span>
-                                        <span className="text-sm">{storageItems.length} items</span>
+                            <div key={storage} className="mb-4 break-inside-avoid">
+                                <div className="bg-gray-800 text-white px-2 py-1 mb-1">
+                                    <div className="flex justify-between items-center text-xs">
+                                        <span className="font-bold">📍 {storage}</span>
+                                        <span>{storageItems.length} items</span>
                                     </div>
                                 </div>
 
-                                <table className="w-full border-collapse">
+                                <table className="w-full border-collapse text-xs">
                                     <thead>
-                                        <tr className="bg-gray-100 border-b-2 border-gray-800">
-                                            <th className="text-left p-2 font-bold">Item Name</th>
-                                            <th className="text-left p-2 font-bold">Type</th>
-                                            <th className="text-center p-2 font-bold">SKU</th>
-                                            <th className="text-center p-2 font-bold">Exp Date</th>
-                                            <th className="text-center p-2 font-bold">Unit</th>
-                                            <th className="text-center p-2 font-bold">Current Qty</th>
-                                            <th className="text-center p-2 font-bold w-24">New Count</th>
+                                        <tr className="bg-gray-100 border-b border-gray-800">
+                                            <th className="text-left p-1 font-bold">Item</th>
+                                            <th className="text-left p-1 font-bold">Type</th>
+                                            <th className="text-center p-1 font-bold">SKU</th>
+                                            <th className="text-center p-1 font-bold">Exp</th>
+                                            <th className="text-center p-1 font-bold">Unit</th>
+                                            <th className="text-center p-1 font-bold">Qty</th>
+                                            <th className="text-center p-1 font-bold w-16">New</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {storageItems.map(item => (
                                             <tr key={item.id} className="border-b">
-                                                <td className="p-2 font-medium">{item.item_name}</td>
-                                                <td className="p-2 text-sm">{item.item_type}</td>
-                                                <td className="p-2 text-center text-sm">{item.sku || '-'}</td>
-                                                <td className="p-2 text-center text-sm">
-                                                    {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString() : '-'}
+                                                <td className="p-1 font-medium">{item.item_name}</td>
+                                                <td className="p-1">{item.item_type}</td>
+                                                <td className="p-1 text-center">{item.sku || '-'}</td>
+                                                <td className="p-1 text-center">
+                                                    {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: '2-digit'}) : '-'}
                                                 </td>
-                                                <td className="p-2 text-center text-sm">{item.unit}</td>
-                                                <td className="p-2 text-center font-semibold">{item.quantity}</td>
-                                                <td className="p-2">
-                                                    <div className="border-2 border-gray-400 h-8 bg-white"></div>
+                                                <td className="p-1 text-center">{item.unit}</td>
+                                                <td className="p-1 text-center font-semibold">{item.quantity}</td>
+                                                <td className="p-1">
+                                                    <div className="border border-gray-400 h-5 bg-white"></div>
                                                 </td>
                                             </tr>
                                         ))}
@@ -179,8 +179,8 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                             </div>
                         ))}
 
-                        <div className="mt-8 pt-4 border-t-2 border-gray-300">
-                            <p className="text-sm text-gray-600">Audited by: _________________ Signature: _________________ Date: _________________</p>
+                        <div className="mt-4 pt-2 border-t border-gray-300">
+                            <p className="text-xs text-gray-600">Audited by: _________________ Signature: _________________ Date: _________________</p>
                         </div>
                     </div>
                 </div>
