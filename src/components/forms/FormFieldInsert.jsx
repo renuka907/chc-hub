@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { PenLine, Calendar, CheckSquare, Type, User, Hash } from "lucide-react";
+import { PenLine, Calendar, CheckSquare, Type, User, Hash, Square } from "lucide-react";
 
 export default function FormFieldInsert({ onInsert }) {
     const fields = [
@@ -25,6 +25,9 @@ export default function FormFieldInsert({ onInsert }) {
     <div style="flex: 1; display: flex;"><span class="field-label">Fax:</span><span class="field-input">&nbsp;</span></div>
 </div>
 </div>` },
+        { type: 'box-solid', label: 'Solid Box', icon: Square, html: '<div class="text-box"><p>Your text here...</p></div>' },
+        { type: 'box-thin', label: 'Thin Box', icon: Square, html: '<div class="text-box-thin"><p>Your text here...</p></div>' },
+        { type: 'box-dashed', label: 'Dashed Box', icon: Square, html: '<div class="text-box-dashed"><p>Your text here...</p></div>' },
     ];
 
     return (
