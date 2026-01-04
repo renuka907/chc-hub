@@ -135,11 +135,18 @@ export default function ConsentFormDetail() {
                                 Print PDF
                             </Button>
                         </div>
-                        <iframe 
-                            src={form.document_url}
+                        <object 
+                            data={`${form.document_url}#view=FitH&toolbar=1`}
+                            type="application/pdf"
                             className="w-full h-[600px] border-2 border-slate-300 rounded-lg"
                             title="Document Preview"
-                        />
+                        >
+                            <p className="p-4 text-center">
+                                <a href={form.document_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                                    Click here to view the PDF document
+                                </a>
+                            </p>
+                        </object>
                     </CardContent>
                 </Card>
             )}
