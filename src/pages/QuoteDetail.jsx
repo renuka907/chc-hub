@@ -102,37 +102,37 @@ export default function QuoteDetail() {
                             top: 0 !important;
                             width: 100%;
                             padding: 5px !important;
-                            font-size: 13px !important;
-                            line-height: 1.4 !important;
+                            font-size: 15px !important;
+                            line-height: 1.5 !important;
                         }
                         .printable-document h1 {
-                            font-size: 18px !important;
+                            font-size: 20px !important;
                             margin-bottom: 4px !important;
                         }
                         .printable-document h3 {
-                            font-size: 14px !important;
+                            font-size: 16px !important;
                             margin-bottom: 4px !important;
                         }
                         .printable-document .space-y-6 > * + * {
                             margin-top: 6px !important;
                         }
                         .printable-document table {
-                            font-size: 12px !important;
+                            font-size: 14px !important;
                             border-collapse: collapse !important;
                         }
                         .printable-document table th,
                         .printable-document table td {
-                            padding: 3px 5px !important;
-                            line-height: 1.3 !important;
+                            padding: 4px 6px !important;
+                            line-height: 1.4 !important;
                         }
                         .printable-document .text-xl {
-                            font-size: 16px !important;
+                            font-size: 18px !important;
                         }
                         .printable-document .grid {
                             gap: 4px !important;
                         }
                         .printable-document img {
-                            max-height: 30px !important;
+                            max-height: 50px !important;
                         }
                         .printable-document .pb-6 {
                             padding-bottom: 4px !important;
@@ -153,10 +153,10 @@ export default function QuoteDetail() {
                             margin-top: 6px !important;
                         }
                         .printable-document .text-sm {
-                            font-size: 11px !important;
+                            font-size: 13px !important;
                         }
                         .printable-document .text-xs {
-                            font-size: 10px !important;
+                            font-size: 12px !important;
                         }
                         .no-print {
                             display: none !important;
