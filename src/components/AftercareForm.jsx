@@ -248,9 +248,11 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
                                         ['clean']
                                     ],
                                     clipboard: {
-                                        matchVisual: true
+                                        matchVisual: false,
+                                        matchers: []
                                     }
                                 }}
+                                formats={['header', 'bold', 'italic', 'underline', 'color', 'list', 'bullet', 'indent', 'align', 'link', 'script', 'blockquote']}
                                 className="bg-white"
                                 style={{ height: '300px', marginBottom: '50px' }}
                             />
@@ -268,9 +270,11 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
                                         ['clean']
                                     ],
                                     clipboard: {
-                                        matchVisual: true
+                                        matchVisual: false,
+                                        matchers: []
                                     }
                                 }}
+                                formats={['bold', 'italic', 'underline', 'list', 'bullet']}
                                 className="bg-white"
                                 style={{ height: '200px', marginBottom: '50px' }}
                             />
@@ -288,9 +292,11 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
                                         ['clean']
                                     ],
                                     clipboard: {
-                                        matchVisual: true
+                                        matchVisual: false,
+                                        matchers: []
                                     }
                                 }}
+                                formats={['bold', 'italic', 'underline', 'list', 'bullet']}
                                 className="bg-white"
                                 style={{ height: '150px', marginBottom: '50px' }}
                             />

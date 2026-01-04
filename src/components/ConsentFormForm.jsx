@@ -265,12 +265,15 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
                                         [{ 'indent': '-1'}, { 'indent': '+1' }],
                                         [{ 'align': [] }],
                                         ['link', 'image'],
-                                        ['clean']
+                                        ['clean'],
+                                        ['code-block']
                                     ],
                                     clipboard: {
-                                        matchVisual: true
+                                        matchVisual: false,
+                                        matchers: []
                                     }
                                 }}
+                                formats={['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'color', 'background', 'list', 'bullet', 'indent', 'align', 'link', 'image', 'code-block', 'script', 'blockquote', 'direction']}
                                 className="bg-white"
                                 style={{ height: '400px', marginBottom: '50px' }}
                             />
