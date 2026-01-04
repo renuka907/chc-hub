@@ -218,13 +218,14 @@ export default function EmployeeQuestions() {
                             </label>
                         </div>
                     </div>
-                    <DialogFooter>
+                    <DialogFooter className="flex gap-2">
                         <Button variant="outline" onClick={() => setShowAddDialog(false)}>
                             Cancel
                         </Button>
                         <Button
                             onClick={handleSubmitQuestion}
                             disabled={!newQuestion.trim() || createQuestionMutation.isPending}
+                            className="bg-blue-600 hover:bg-blue-700 text-white"
                         >
                             Submit Question
                         </Button>
@@ -255,13 +256,14 @@ export default function EmployeeQuestions() {
                             </div>
                         </div>
                     )}
-                    <DialogFooter>
+                    <DialogFooter className="flex gap-2">
                         <Button variant="outline" onClick={() => setSelectedQuestion(null)}>
                             Cancel
                         </Button>
                         <Button
                             onClick={handleSubmitResponse}
                             disabled={!response.trim() || updateQuestionMutation.isPending}
+                            className="bg-blue-600 hover:bg-blue-700 text-white"
                         >
                             Submit Response
                         </Button>

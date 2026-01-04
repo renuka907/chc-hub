@@ -6,13 +6,13 @@ import ConsentFormDetail from './pages/ConsentFormDetail';
 import DiscountManagement from './pages/DiscountManagement';
 import EducationDetail from './pages/EducationDetail';
 import EducationLibrary from './pages/EducationLibrary';
+import EmployeeQuestions from './pages/EmployeeQuestions';
 import Home from './pages/Home';
 import InventoryManagement from './pages/InventoryManagement';
 import PricingManagement from './pages/PricingManagement';
 import QuoteDetail from './pages/QuoteDetail';
 import QuotesManagement from './pages/QuotesManagement';
 import UserManagement from './pages/UserManagement';
-import EmployeeQuestions from './pages/EmployeeQuestions';
 import __Layout from './Layout.jsx';
 
 
@@ -25,13 +25,13 @@ export const PAGES = {
     "DiscountManagement": DiscountManagement,
     "EducationDetail": EducationDetail,
     "EducationLibrary": EducationLibrary,
+    "EmployeeQuestions": EmployeeQuestions,
     "Home": Home,
     "InventoryManagement": InventoryManagement,
     "PricingManagement": PricingManagement,
     "QuoteDetail": QuoteDetail,
     "QuotesManagement": QuotesManagement,
     "UserManagement": UserManagement,
-    "EmployeeQuestions": EmployeeQuestions,
 }
 
 export const pagesConfig = {
