@@ -81,47 +81,12 @@ export default function ConsentFormDetail() {
 
             {/* Printable Content */}
             <PrintableDocument title="" showLogo={false}>
-                <style>
-                    {`
-                        .form-content p {
-                            margin: 8px 0;
-                            line-height: 1.5;
-                        }
-                        .form-content h1, .form-content h2, .form-content h3 {
-                            text-align: center;
-                            font-weight: bold;
-                            margin: 12px 0;
-                        }
-                        .form-content h1 {
-                            font-size: 16px;
-                        }
-                        .form-content h2 {
-                            font-size: 14px;
-                        }
-                        .form-content h3 {
-                            font-size: 13px;
-                        }
-                        .form-content ul, .form-content ol {
-                            margin: 8px 0;
-                            padding-left: 30px;
-                        }
-                        .form-content li {
-                            margin: 4px 0;
-                        }
-                        .form-content strong {
-                            font-weight: bold;
-                        }
-                        .form-content em {
-                            font-style: italic;
-                        }
-                    `}
-                </style>
                 <div 
-                    className="form-content text-black"
+                    className="text-black"
                     style={{
-                        fontSize: '12pt',
+                        fontSize: '11pt',
                         fontFamily: 'Times New Roman, serif',
-                        lineHeight: '1.5',
+                        lineHeight: '1.4',
                         textAlign: 'left'
                     }}
                     dangerouslySetInnerHTML={{ __html: form.content }}
