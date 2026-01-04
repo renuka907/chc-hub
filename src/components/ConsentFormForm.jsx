@@ -266,7 +266,10 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
                                         [{ 'align': [] }],
                                         ['link', 'image'],
                                         ['clean']
-                                    ]
+                                    ],
+                                    clipboard: {
+                                        matchVisual: true
+                                    }
                                 }}
                                 className="bg-white"
                                 style={{ height: '400px', marginBottom: '50px' }}

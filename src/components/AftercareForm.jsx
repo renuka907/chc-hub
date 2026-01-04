@@ -246,7 +246,10 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
                                         [{ 'align': [] }],
                                         ['link'],
                                         ['clean']
-                                    ]
+                                    ],
+                                    clipboard: {
+                                        matchVisual: true
+                                    }
                                 }}
                                 className="bg-white"
                                 style={{ height: '300px', marginBottom: '50px' }}
@@ -263,7 +266,10 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
                                         ['bold', 'italic', 'underline'],
                                         [{ 'list': 'bullet' }],
                                         ['clean']
-                                    ]
+                                    ],
+                                    clipboard: {
+                                        matchVisual: true
+                                    }
                                 }}
                                 className="bg-white"
                                 style={{ height: '200px', marginBottom: '50px' }}
@@ -280,7 +286,10 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
                                         ['bold', 'italic', 'underline'],
                                         [{ 'list': 'bullet' }],
                                         ['clean']
-                                    ]
+                                    ],
+                                    clipboard: {
+                                        matchVisual: true
+                                    }
                                 }}
                                 className="bg-white"
                                 style={{ height: '150px', marginBottom: '50px' }}
