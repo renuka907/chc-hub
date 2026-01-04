@@ -300,32 +300,33 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                                         </div>
                                                     </div>
                                                     
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="text-right">
-                                                            <div className="text-xs text-gray-500">Original</div>
-                                                            <div className="text-sm font-medium text-gray-700">
-                                                                {originalQty} {item.unit}
+                                                    <div className="flex items-center gap-6 flex-1 justify-end">
+                                                        <div className="text-center bg-gray-50 rounded-lg px-4 py-2">
+                                                            <div className="text-xs text-gray-500 mb-1">Current Stock</div>
+                                                            <div className="text-2xl font-bold text-gray-900">
+                                                                {originalQty}
                                                             </div>
+                                                            <div className="text-xs text-gray-500 mt-1">{item.unit}</div>
                                                         </div>
                                                         
-                                                        <div className="w-32">
-                                                            <Label className="text-xs">New Count</Label>
+                                                        <div className="w-48">
+                                                            <Label className="text-sm font-semibold mb-2 block">New Count</Label>
                                                             <Input
                                                                 type="number"
                                                                 min="0"
                                                                 step="1"
                                                                 value={currentQty}
                                                                 onChange={(e) => handleQuantityChange(item.id, e.target.value)}
-                                                                className={`h-10 font-semibold ${
-                                                                    hasChanged ? 'border-orange-500 border-2' : ''
+                                                                className={`h-14 text-2xl font-bold text-center ${
+                                                                    hasChanged ? 'border-orange-500 border-3 bg-orange-50' : ''
                                                                 }`}
                                                             />
                                                         </div>
 
                                                         {hasChanged && (
-                                                            <div className="text-right">
-                                                                <div className="text-xs text-gray-500">Change</div>
-                                                                <div className={`text-sm font-bold ${
+                                                            <div className="text-center bg-green-50 rounded-lg px-4 py-2 min-w-[80px]">
+                                                                <div className="text-xs text-gray-500 mb-1">Difference</div>
+                                                                <div className={`text-2xl font-bold ${
                                                                     currentQty > originalQty ? 'text-green-600' : 'text-red-600'
                                                                 }`}>
                                                                     {currentQty > originalQty ? '+' : ''}
