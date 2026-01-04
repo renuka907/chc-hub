@@ -7,7 +7,8 @@ import {
     Building2, 
     DollarSign,
     Stethoscope,
-    Package
+    Package,
+    MessageSquare
 } from "lucide-react";
 
 export default function Home() {
@@ -130,15 +131,15 @@ export default function Home() {
                     </div>
                 </Link>
 
-                <Link to={createPageUrl("EmployeeQuestions")}>
+                <Link to={createPageUrl("FAQ")}>
                     <div className="bg-gradient-to-br from-blue-100 to-cyan-100 rounded-3xl p-8 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group">
                         <div className="flex items-start space-x-4">
                             <div className="w-12 h-12 bg-white/60 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                                <BookOpen className="w-6 h-6 text-blue-700" />
+                                <MessageSquare className="w-6 h-6 text-blue-700" />
                             </div>
                             <div>
-                                <h3 className="text-xl font-bold text-gray-900 mb-2">Employee Questions</h3>
-                                <p className="text-gray-700">Ask questions or share concerns anonymously. View responses from management and participate in team discussions.</p>
+                                <h3 className="text-xl font-bold text-gray-900 mb-2">FAQs & Questions</h3>
+                                <p className="text-gray-700">Browse frequently asked questions or submit your own question to management.</p>
                             </div>
                         </div>
                     </div>
