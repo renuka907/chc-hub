@@ -79,17 +79,6 @@ export default function Layout({ children, currentPageName }) {
                         --primary-dark: #6d28d9;
                         --accent: #06b6d4;
                     }
-
-                    @media print {
-                        html, body {
-                            background: white !important;
-                            background-image: none !important;
-                        }
-                        body > div {
-                            background: white !important;
-                            background-image: none !important;
-                        }
-                    }
                 `}
             </style>
             

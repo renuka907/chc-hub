@@ -241,7 +241,7 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
                                 {sharedLinks.map((link) => {
                                     const expired = isExpired(link.expires_at);
                                     const url = `${window.location.origin}/#/ViewSharedForm?token=${link.share_token}`;
-
+                                    
                                     return (
                                         <Card key={link.id} className={!link.is_active || expired ? "opacity-50" : ""}>
                                             <CardContent className="pt-3 pb-3">

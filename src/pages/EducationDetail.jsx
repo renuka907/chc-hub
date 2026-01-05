@@ -63,8 +63,30 @@ export default function EducationDetail() {
             <style>
                 {`
                     @media print {
-                        .no-print {
-                            display: none !important;
+                        @page {
+                            size: 8.5in 11in;
+                            margin: 0.5in;
+                        }
+                        body {
+                            margin: 0;
+                            padding: 0;
+                        }
+                        body * {
+                            visibility: hidden;
+                        }
+                        .printable-document,
+                        .printable-document * {
+                            visibility: visible;
+                        }
+                        .printable-document {
+                            position: static !important;
+                            width: 100% !important;
+                            max-width: 100% !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            font-size: 12pt !important;
+                            line-height: 1.4 !important;
+                            color: #000 !important;
                         }
                         .printable-document h1 {
                             font-size: 18pt !important;

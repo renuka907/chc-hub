@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -10,28 +10,88 @@ import { openPrintWindow } from "../components/PrintHelper";
 import { Lock, AlertCircle, Loader2, FileText, Printer } from "lucide-react";
 
 export default function ViewSharedForm() {
+    console.log('=== ViewSharedForm LOADED ===');
+    console.log('Full hash:', window.location.hash);
+    console.log('Full href:', window.location.href);
+    
+    // Parse token from hash-based URL (e.g., /#/ViewSharedForm?token=xyz)
     const hashParts = window.location.hash.split('?');
     const queryString = hashParts.length > 1 ? hashParts[1] : '';
     const urlParams = new URLSearchParams(queryString);
     const token = urlParams.get('token');
     
+    console.log('Parsed token:', token);
     const [passwordInput, setPasswordInput] = useState("");
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [error, setError] = useState("");
 
-    const { data: sharedData, isLoading, error: loadError } = useQuery({
-        queryKey: ['sharedForm', token],
+    console.log('ViewSharedForm rendered');
+    console.log('Full URL:', window.location.href);
+    console.log('Hash:', window.location.hash);
+    console.log('Query string:', queryString);
+    console.log('Token:', token);
+
+    const { data: sharedLink, isLoading: linkLoading, error: linkError } = useQuery({
+        queryKey: ['sharedLink', token],
         queryFn: async () => {
-            const response = await base44.functions.invoke('getSharedForm', { token });
-            return response.data;
+            console.log('=== FETCHING SHARED LINK ===');
+            console.log('Token:', token);
+            const allLinks = await base44.asServiceRole.entities.SharedFormLink.list();
+            console.log('All shared links:', allLinks.length, allLinks);
+            const found = allLinks.find(link => link.share_token === token);
+            console.log('Match found:', found);
+            return found;
         },
         enabled: !!token,
         retry: false
     });
 
-    const sharedLink = sharedData?.sharedLink;
-    const formContent = sharedData?.formContent;
-    const locations = sharedData?.locations || [];
+    const { data: formContent, isLoading: contentLoading, error: contentError } = useQuery({
+        queryKey: ['sharedFormContent', sharedLink?.entity_type, sharedLink?.entity_id],
+        queryFn: async () => {
+            if (!sharedLink) return null;
+            console.log('Fetching content for:', sharedLink.entity_type, sharedLink.entity_id);
+            if (sharedLink.entity_type === "ConsentForm") {
+                const forms = await base44.asServiceRole.entities.ConsentForm.list();
+                const found = forms.find(f => f.id === sharedLink.entity_id);
+                console.log('ConsentForm found:', found);
+                return found;
+            } else if (sharedLink.entity_type === "AftercareInstruction") {
+                const instructions = await base44.asServiceRole.entities.AftercareInstruction.list();
+                const found = instructions.find(i => i.id === sharedLink.entity_id);
+                console.log('AftercareInstruction found:', found);
+                return found;
+            } else if (sharedLink.entity_type === "Quote") {
+                const quotes = await base44.asServiceRole.entities.Quote.list();
+                const found = quotes.find(q => q.id === sharedLink.entity_id);
+                console.log('Quote found:', found);
+                return found;
+            }
+        },
+        enabled: !!sharedLink && (!sharedLink.password || isAuthenticated),
+        retry: false
+    });
+
+    const { data: locations = [] } = useQuery({
+        queryKey: ['clinicLocations'],
+        queryFn: () => base44.asServiceRole.entities.ClinicLocation.list(),
+        enabled: !!sharedLink && sharedLink.entity_type === "Quote"
+    });
+
+    const incrementViewMutation = useMutation({
+        mutationFn: async (linkId) => {
+            const currentCount = sharedLink.view_count || 0;
+            await base44.asServiceRole.entities.SharedFormLink.update(linkId, {
+                view_count: currentCount + 1
+            });
+        }
+    });
+
+    React.useEffect(() => {
+        if (sharedLink && (!sharedLink.password || isAuthenticated) && !incrementViewMutation.data) {
+            incrementViewMutation.mutate(sharedLink.id);
+        }
+    }, [sharedLink, isAuthenticated]);
 
     const handlePasswordSubmit = (e) => {
         e.preventDefault();
@@ -57,7 +117,7 @@ export default function ViewSharedForm() {
         );
     }
 
-    if (isLoading) {
+    if (linkLoading) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-cyan-100 flex items-center justify-center">
                 <div className="text-center">
@@ -68,28 +128,31 @@ export default function ViewSharedForm() {
         );
     }
 
-    if (loadError) {
+    if (linkError) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-cyan-100 flex items-center justify-center p-6">
                 <Card className="max-w-md w-full">
                     <CardContent className="pt-6 text-center">
                         <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-                        <h2 className="text-xl font-bold text-gray-900 mb-2">Link Not Available</h2>
-                        <p className="text-gray-600">This share link has been disabled or does not exist.</p>
+                        <h2 className="text-xl font-bold text-gray-900 mb-2">Error Loading Link</h2>
+                        <p className="text-gray-600 mb-4">There was an error loading the share link. Please check the console for details.</p>
+                        <pre className="text-xs text-left bg-gray-100 p-2 rounded">{JSON.stringify(linkError, null, 2)}</pre>
                     </CardContent>
                 </Card>
             </div>
         );
     }
 
-    if (!sharedLink || !formContent) {
+    if (!sharedLink || !sharedLink.is_active) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-cyan-100 flex items-center justify-center p-6">
                 <Card className="max-w-md w-full">
                     <CardContent className="pt-6 text-center">
                         <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-                        <h2 className="text-xl font-bold text-gray-900 mb-2">Form Not Found</h2>
-                        <p className="text-gray-600">The shared form could not be found.</p>
+                        <h2 className="text-xl font-bold text-gray-900 mb-2">Link Not Available</h2>
+                        <p className="text-gray-600">
+                            This share link has been disabled or does not exist.
+                        </p>
                     </CardContent>
                 </Card>
             </div>
@@ -141,6 +204,46 @@ export default function ViewSharedForm() {
                                 Unlock Form
                             </Button>
                         </form>
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
+
+    if (contentLoading) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-cyan-100 flex items-center justify-center">
+                <div className="text-center">
+                    <Loader2 className="w-12 h-12 animate-spin text-purple-600 mx-auto mb-4" />
+                    <p className="text-gray-600">Loading content...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (contentError) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-cyan-100 flex items-center justify-center p-6">
+                <Card className="max-w-md w-full">
+                    <CardContent className="pt-6 text-center">
+                        <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+                        <h2 className="text-xl font-bold text-gray-900 mb-2">Error Loading Content</h2>
+                        <p className="text-gray-600 mb-4">There was an error loading the content. Please check the console for details.</p>
+                        <pre className="text-xs text-left bg-gray-100 p-2 rounded">{JSON.stringify(contentError, null, 2)}</pre>
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
+
+    if (!formContent) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-cyan-100 flex items-center justify-center p-6">
+                <Card className="max-w-md w-full">
+                    <CardContent className="pt-6 text-center">
+                        <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+                        <h2 className="text-xl font-bold text-gray-900 mb-2">Form Not Found</h2>
+                        <p className="text-gray-600">The shared form could not be found.</p>
                     </CardContent>
                 </Card>
             </div>

@@ -10,17 +10,6 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
                         margin: 0.5in;
                     }
 
-                    @media print {
-                        html, body {
-                            background: white !important;
-                            background-image: none !important;
-                        }
-                        body > div {
-                            background: white !important;
-                            background-image: none !important;
-                        }
-                    }
-
                     .printable-document input[type="text"],
                     .printable-document .form-field {
                         border: none;
@@ -129,9 +118,6 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
                     }
 
                     @media print {
-                        html, body {
-                            background: white !important;
-                        }
                         body * {
                             visibility: hidden;
                         }
@@ -139,11 +125,11 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
                             visibility: visible;
                         }
                         .printable-document {
-                            position: fixed;
+                            position: absolute;
                             left: 0;
                             top: 0;
                             width: 100%;
-                            background: white !important;
+                            background: white;
                             padding: 0.5in;
                             border: 2px solid black;
                             max-width: 100%;

@@ -6,7 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PrintableDocument from "../components/PrintableDocument";
 import EditQuoteDialog from "../components/quotes/EditQuoteDialog";
-import { Printer, ArrowLeft, Edit } from "lucide-react";
+import { Printer, ArrowLeft, Edit, Share2 } from "lucide-react";
+import ShareFormDialog from "../components/forms/ShareFormDialog";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 
@@ -16,6 +17,7 @@ export default function QuoteDetail() {
     const autoPrint = urlParams.get('autoprint') === 'true';
     const queryClient = useQueryClient();
     const [showEditDialog, setShowEditDialog] = useState(false);
+    const [showShareDialog, setShowShareDialog] = useState(false);
 
     const { data: quote, isLoading: quoteLoading } = useQuery({
         queryKey: ['quote', quoteId],
@@ -85,8 +87,25 @@ export default function QuoteDetail() {
             <style>
                 {`
                     @media print {
-                        .no-print {
-                            display: none !important;
+                        @page {
+                            margin: 0.3cm;
+                        }
+                        body * {
+                            visibility: hidden;
+                        }
+                        .printable-document,
+                        .printable-document * {
+                            visibility: visible;
+                            color: #000 !important;
+                        }
+                        .printable-document {
+                            position: absolute !important;
+                            left: 0 !important;
+                            top: 0 !important;
+                            width: 100%;
+                            padding: 5px !important;
+                            font-size: 15px !important;
+                            line-height: 1.5 !important;
                         }
                         .printable-document h1 {
                             font-size: 20px !important;
@@ -178,6 +197,10 @@ export default function QuoteDetail() {
                             </SelectContent>
                         </Select>
                     </div>
+                    <Button onClick={() => setShowShareDialog(true)} variant="outline" className="border-blue-500 text-blue-600">
+                        <Share2 className="w-4 h-4 mr-2" />
+                        Share
+                    </Button>
                     <Button onClick={() => setShowEditDialog(true)} variant="outline">
                         <Edit className="w-4 h-4 mr-2" />
                         Edit Items
@@ -317,6 +340,14 @@ export default function QuoteDetail() {
                     queryClient.invalidateQueries(['quote', quoteId]);
                     queryClient.invalidateQueries(['quotes']);
                 }}
+            />
+
+            <ShareFormDialog
+                open={showShareDialog}
+                onOpenChange={setShowShareDialog}
+                entityType="Quote"
+                entityId={quote.id}
+                formName={`Quote ${quote.quote_number}`}
             />
         </div>
     );
