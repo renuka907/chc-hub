@@ -1,3 +1,4 @@
+import AftercareDetail from './pages/AftercareDetail';
 import AftercareLibrary from './pages/AftercareLibrary';
 import CheckoutQuote from './pages/CheckoutQuote';
 import ClinicDirectory from './pages/ClinicDirectory';
@@ -17,11 +18,11 @@ import QuoteDetail from './pages/QuoteDetail';
 import QuotesManagement from './pages/QuotesManagement';
 import UserManagement from './pages/UserManagement';
 import ViewSharedForm from './pages/ViewSharedForm';
-import AftercareDetail from './pages/AftercareDetail';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AftercareDetail": AftercareDetail,
     "AftercareLibrary": AftercareLibrary,
     "CheckoutQuote": CheckoutQuote,
     "ClinicDirectory": ClinicDirectory,
@@ -41,7 +42,6 @@ export const PAGES = {
     "QuotesManagement": QuotesManagement,
     "UserManagement": UserManagement,
     "ViewSharedForm": ViewSharedForm,
-    "AftercareDetail": AftercareDetail,
 }
 
 export const pagesConfig = {

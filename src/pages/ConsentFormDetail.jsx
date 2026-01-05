@@ -145,24 +145,28 @@ export default function ConsentFormDetail() {
                 {`
                     @media print {
                         @page {
-                            margin: 0.3cm;
+                            margin: 0.5in;
+                        }
+                        body {
+                            background: white !important;
                         }
                         body * {
                             visibility: hidden;
                         }
                         .printable-document,
                         .printable-document * {
-                            visibility: visible;
+                            visibility: visible !important;
                             color: #000 !important;
                         }
                         .printable-document {
                             position: absolute !important;
                             left: 0 !important;
                             top: 0 !important;
-                            width: 100%;
-                            padding: 5px !important;
+                            width: 100% !important;
+                            padding: 0 !important;
                             font-size: 11pt !important;
                             line-height: 1.4 !important;
+                            background: white !important;
                         }
                         .no-print {
                             display: none !important;
