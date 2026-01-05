@@ -76,7 +76,7 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
     });
 
     const copyToClipboard = (token) => {
-        const url = `${window.location.origin}/ViewSharedForm?token=${token}`;
+        const url = `${window.location.origin}/#/ViewSharedForm?token=${token}`;
         navigator.clipboard.writeText(url);
         setCopiedToken(token);
         toast.success("Link copied to clipboard!");
@@ -205,7 +205,7 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
                             <div className="space-y-2 max-h-[300px] overflow-y-auto">
                                 {sharedLinks.map((link) => {
                                     const expired = isExpired(link.expires_at);
-                                    const url = `${window.location.origin}/ViewSharedForm?token=${link.share_token}`;
+                                    const url = `${window.location.origin}/#/ViewSharedForm?token=${link.share_token}`;
                                     
                                     return (
                                         <Card key={link.id} className={!link.is_active || expired ? "opacity-50" : ""}>
