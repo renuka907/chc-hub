@@ -231,7 +231,7 @@ export default function AftercareDetail() {
                                     Warning Signs - Contact Us Immediately
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent>
+                            <CardContent className="card-compact-content">
                                 <div 
                                     className="text-amber-900 text-base font-medium prose prose-sm max-w-none"
                                     style={{lineHeight: '1.8', fontFamily: 'Times New Roman, serif'}}
@@ -248,9 +248,8 @@ export default function AftercareDetail() {
                                 <CardTitle className="flex items-center text-green-900">
                                     <CalendarIcon className="w-5 h-5 mr-2" />
                                     Follow-Up Appointment
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
+                                </CardHeader>
+                            <CardContent className="card-compact-content">
                                 <div 
                                     className="text-green-900 text-base prose prose-sm max-w-none"
                                     style={{lineHeight: '1.8', fontFamily: 'Times New Roman, serif'}}
