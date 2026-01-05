@@ -249,7 +249,8 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                         Audited by: _________________ Signature: _________________ Date: _________________
                     </div>
                 </div>
-                <DialogHeader className="no-print">
+
+                <DialogHeader className="no-print print:hidden">
                     <DialogTitle className="flex items-center gap-2 text-2xl">
                         <ClipboardCheck className="w-6 h-6 text-orange-600" />
                         Daily Inventory Audit
