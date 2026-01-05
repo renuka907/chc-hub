@@ -10,7 +10,7 @@ import { openPrintWindow } from "../components/PrintHelper";
 import { Lock, AlertCircle, Loader2, FileText, Printer } from "lucide-react";
 
 export default function ViewSharedForm() {
-    const urlParams = new URLSearchParams(window.location.search);
+    const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || window.location.search);
     const token = urlParams.get('token');
     const [passwordInput, setPasswordInput] = useState("");
     const [isAuthenticated, setIsAuthenticated] = useState(false);
