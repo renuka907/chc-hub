@@ -80,15 +80,15 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
     });
 
     const copyToClipboard = (token) => {
-        const url = `${window.location.origin}/#/ViewSharedForm?token=${token}`;
-        navigator.clipboard.writeText(url);
+        const functionUrl = `${window.location.origin}/api/functions/getSharedForm?token=${token}`;
+        navigator.clipboard.writeText(functionUrl);
         setCopiedToken(token);
         toast.success("Link copied to clipboard!");
         setTimeout(() => setCopiedToken(null), 2000);
     };
 
     const copyEmbedCode = (token, type) => {
-        const url = `${window.location.origin}/#/ViewSharedForm?token=${token}`;
+        const url = `${window.location.origin}/api/functions/getSharedForm?token=${token}`;
         let code;
         if (type === 'iframe') {
             code = `<iframe src="${url}" width="100%" height="800" frameborder="0" style="border: 1px solid #e5e7eb; border-radius: 8px;"></iframe>`;
@@ -240,8 +240,8 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
                             <div className="space-y-2 max-h-[300px] overflow-y-auto">
                                 {sharedLinks.map((link) => {
                                     const expired = isExpired(link.expires_at);
-                                    const url = `${window.location.origin}/#/ViewSharedForm?token=${link.share_token}`;
-                                    
+                                    const url = `${window.location.origin}/api/functions/getSharedForm?token=${link.share_token}`;
+
                                     return (
                                         <Card key={link.id} className={!link.is_active || expired ? "opacity-50" : ""}>
                                             <CardContent className="pt-3 pb-3">
@@ -346,7 +346,7 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
                                                     <div className="flex justify-center p-6 bg-white rounded-lg border-2">
                                                     <QRCodeSVG 
                                                     id={`qr-${showQRCode.share_token}`}
-                                                    value={`${window.location.origin}/#/ViewSharedForm?token=${showQRCode.share_token}`}
+                                                    value={`${window.location.origin}/api/functions/getSharedForm?token=${showQRCode.share_token}`}
                                                     size={256}
                                                     level="H"
                                                     includeMargin={true}
@@ -399,7 +399,7 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
                                                     <div className="relative">
                                                     <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-xs overflow-x-auto">
                                                     {`<iframe 
-                                                    src="${window.location.origin}/#/ViewSharedForm?token=${showEmbedCode.share_token}"
+                                                    src="${window.location.origin}/api/functions/getSharedForm?token=${showEmbedCode.share_token}"
                                                     width="100%" 
                                                     height="800" 
                                                     frameborder="0"
