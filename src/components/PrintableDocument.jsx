@@ -207,6 +207,7 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
                 <p className="font-medium">Contemporary Health Center | Phone: 239-561-9191 | Email: office@contemporaryhealthcenter.com</p>
                 <p className="mt-0.5">Document Generated: {new Date().toLocaleDateString()}</p>
             </div>
+            </div>
         </div>
     );
 }
