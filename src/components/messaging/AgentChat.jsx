@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, Bot, Loader2 } from "lucide-react";
+import { Send, Bot, Loader2, Mic, MicOff } from "lucide-react";
 import { format } from "date-fns";
 
 export default function AgentChat({ agentName }) {
@@ -12,7 +12,9 @@ export default function AgentChat({ agentName }) {
     const [conversationId, setConversationId] = useState(null);
     const [messages, setMessages] = useState([]);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
     const messagesEndRef = useRef(null);
+    const recognitionRef = useRef(null);
     const queryClient = useQueryClient();
 
     const { data: user } = useQuery({
@@ -102,6 +104,42 @@ export default function AgentChat({ agentName }) {
         }
     };
 
+    const toggleVoiceInput = () => {
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            alert('Voice input is not supported in your browser');
+            return;
+        }
+
+        if (isRecording) {
+            recognitionRef.current?.stop();
+            setIsRecording(false);
+        } else {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+
+            recognition.onresult = (event) => {
+                const transcript = Array.from(event.results)
+                    .map(result => result[0].transcript)
+                    .join('');
+                setMessage(transcript);
+            };
+
+            recognition.onerror = () => {
+                setIsRecording(false);
+            };
+
+            recognition.onend = () => {
+                setIsRecording(false);
+            };
+
+            recognitionRef.current = recognition;
+            recognition.start();
+            setIsRecording(true);
+        }
+    };
+
     return (
         <div className="h-[550px] flex flex-col">
             {/* Agent Header */}
@@ -183,6 +221,15 @@ export default function AgentChat({ agentName }) {
                         className="flex-1"
                         disabled={isProcessing || !conversationId}
                     />
+                    <Button
+                        type="button"
+                        onClick={toggleVoiceInput}
+                        variant="outline"
+                        className={isRecording ? "bg-red-50 border-red-300" : ""}
+                        disabled={isProcessing || !conversationId}
+                    >
+                        {isRecording ? <MicOff className="w-4 h-4 text-red-600" /> : <Mic className="w-4 h-4" />}
+                    </Button>
                     <Button
                         type="submit"
                         disabled={!message.trim() || isProcessing || !conversationId}
