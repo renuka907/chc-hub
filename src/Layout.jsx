@@ -17,7 +17,8 @@ import {
             MessageSquare,
             Layers,
             LogOut,
-            ChevronDown
+            ChevronDown,
+            Sparkles
         } from "lucide-react";
 
 export default function Layout({ children, currentPageName }) {
@@ -131,6 +132,15 @@ export default function Layout({ children, currentPageName }) {
                             <div>
                                 <div className="text-2xl font-bold text-gray-900">CHC Hub</div>
                             </div>
+                        </Link>
+
+                        {/* Chat with Peach Button */}
+                        <Link 
+                            to={createPageUrl("Messaging")} 
+                            className="hidden md:flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
+                        >
+                            <Sparkles className="w-4 h-4" />
+                            <span>Chat with Peach</span>
                         </Link>
 
                         {/* Desktop Navigation */}
