@@ -128,20 +128,16 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                 margin: 0.5in;
                             }
                             
-                            body * {
-                                visibility: hidden;
-                            }
-                            
-                            #print-content,
-                            #print-content * {
-                                visibility: visible;
+                            body > * {
+                                display: none !important;
                             }
                             
                             #print-content {
-                                position: absolute;
-                                left: 0;
-                                top: 0;
-                                width: 100%;
+                                display: block !important;
+                                position: static !important;
+                                visibility: visible !important;
+                                width: 100% !important;
+                                padding: 20px !important;
                             }
                             
                             .no-print {
