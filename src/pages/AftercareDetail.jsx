@@ -125,6 +125,8 @@ export default function AftercareDetail() {
                         .printable-document .card-compact {
                             padding: 8px !important;
                             margin: 6px 0 !important;
+                            page-break-inside: avoid !important;
+                            break-inside: avoid !important;
                         }
                         .printable-document .card-compact-header {
                             padding: 6px !important;
@@ -132,6 +134,10 @@ export default function AftercareDetail() {
                         }
                         .printable-document .card-compact-content {
                             padding: 8px !important;
+                        }
+                        .printable-document > div > * {
+                            page-break-inside: avoid !important;
+                            break-inside: avoid !important;
                         }
                     }
                 `}
