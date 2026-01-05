@@ -26,33 +26,23 @@ export default function Layout({ children, currentPageName }) {
                         hash.includes('ViewSharedForm') ||
                         hash.includes('token=');
     
-    const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
-    const [currentUser, setCurrentUser] = React.useState(null);
-    const [isLoading, setIsLoading] = React.useState(!isPublicPage);
-
     // If public page, render immediately without any auth or layout
     if (isPublicPage) {
         return <div className="min-h-screen">{children}</div>;
     }
+    
+    const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+    const [currentUser, setCurrentUser] = React.useState(null);
+    const [isLoading, setIsLoading] = React.useState(true);
 
     React.useEffect(() => {
-        // Skip authentication entirely for public pages
-        const currentHash = window.location.hash;
-        if (currentHash.includes('ViewSharedForm') || currentHash.includes('token=')) {
-            return;
-        }
-
         base44.auth.me()
             .then(user => {
                 setCurrentUser(user);
                 setIsLoading(false);
             })
             .catch(() => {
-                // Only redirect to login if NOT on a public page
-                const hashCheck = window.location.hash;
-                if (!hashCheck.includes('ViewSharedForm') && !hashCheck.includes('token=')) {
-                    base44.auth.redirectToLogin();
-                }
+                base44.auth.redirectToLogin();
             });
     }, []);
 
