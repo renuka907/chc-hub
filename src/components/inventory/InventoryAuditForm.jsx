@@ -128,8 +128,13 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                     
                     @media print {
                         @page {
-                            margin: 0.5in;
+                            margin: 0.4in;
                             size: portrait;
+                        }
+                        
+                        html, body {
+                            height: auto;
+                            overflow: visible;
                         }
                         
                         body * {
@@ -148,12 +153,13 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                             top: 0;
                             width: 100%;
                             background: white !important;
-                            padding: 20px;
+                            padding: 10px;
                         }
                         
                         .storage-group {
                             page-break-inside: avoid;
-                            margin-bottom: 20px;
+                            break-inside: avoid;
+                            margin-bottom: 15px;
                         }
                         
                         .dark-banner {
@@ -166,6 +172,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                         table {
                             width: 100%;
                             border-collapse: collapse;
+                            page-break-inside: auto;
                         }
                         
                         thead {
@@ -173,14 +180,23 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                             -webkit-print-color-adjust: exact !important;
                             print-color-adjust: exact !important;
                         }
+                        
+                        tr {
+                            page-break-inside: avoid;
+                            break-inside: avoid;
+                        }
+                        
+                        .audit-footer {
+                            page-break-before: avoid;
+                        }
                     }
                 `}
             </style>
 
             <div className="inventory-print-only">
-                <div style={{borderBottom: '2px solid black', paddingBottom: '8px', marginBottom: '16px'}}>
-                    <div style={{fontSize: '18px', fontWeight: 'bold', color: 'black'}}>Daily Inventory Audit Form</div>
-                    <div style={{fontSize: '11px', marginTop: '4px', color: 'black'}}>
+                <div style={{borderBottom: '2px solid black', paddingBottom: '6px', marginBottom: '12px'}}>
+                    <div style={{fontSize: '16px', fontWeight: 'bold', color: 'black'}}>Daily Inventory Audit Form</div>
+                    <div style={{fontSize: '10px', marginTop: '3px', color: 'black'}}>
                         Date: {new Date().toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'})} | Location: {selectedLocation?.name || 'All Locations'}
                     </div>
                 </div>
@@ -193,9 +209,9 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                         <div className="dark-banner" style={{
                             background: '#1a1a1a', 
                             color: 'white',
-                            padding: '8px 12px',
+                            padding: '6px 10px',
                             marginBottom: '0',
-                            fontSize: '12px',
+                            fontSize: '11px',
                             fontWeight: 'bold',
                             letterSpacing: '0.5px'
                         }}>
@@ -205,34 +221,34 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                         <table style={{
                             width: '100%',
                             borderCollapse: 'collapse',
-                            fontSize: '10px',
+                            fontSize: '9px',
                             color: 'black',
                             border: '1px solid #666',
-                            marginBottom: '20px'
+                            marginBottom: '15px'
                         }}>
                             <thead>
                                 <tr style={{backgroundColor: '#e5e7eb'}}>
-                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'left', fontSize: '10px', fontWeight: 'bold'}}>Item</th>
-                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'left', fontSize: '10px', fontWeight: 'bold', width: '80px'}}>Type</th>
-                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '60px'}}>SKU</th>
-                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '70px'}}>Exp</th>
-                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '60px'}}>Unit</th>
-                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '50px'}}>Qty</th>
-                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '60px'}}>New</th>
+                                    <th style={{border: '1px solid #666', padding: '4px 6px', textAlign: 'left', fontSize: '9px', fontWeight: 'bold'}}>Item</th>
+                                    <th style={{border: '1px solid #666', padding: '4px 6px', textAlign: 'left', fontSize: '9px', fontWeight: 'bold', width: '70px'}}>Type</th>
+                                    <th style={{border: '1px solid #666', padding: '4px 6px', textAlign: 'center', fontSize: '9px', fontWeight: 'bold', width: '50px'}}>SKU</th>
+                                    <th style={{border: '1px solid #666', padding: '4px 6px', textAlign: 'center', fontSize: '9px', fontWeight: 'bold', width: '60px'}}>Exp</th>
+                                    <th style={{border: '1px solid #666', padding: '4px 6px', textAlign: 'center', fontSize: '9px', fontWeight: 'bold', width: '50px'}}>Unit</th>
+                                    <th style={{border: '1px solid #666', padding: '4px 6px', textAlign: 'center', fontSize: '9px', fontWeight: 'bold', width: '40px'}}>Qty</th>
+                                    <th style={{border: '1px solid #666', padding: '4px 6px', textAlign: 'center', fontSize: '9px', fontWeight: 'bold', width: '50px'}}>New</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {storageItems.map(item => (
                                     <tr key={item.id}>
-                                        <td style={{border: '1px solid #999', padding: '6px 8px', fontSize: '10px'}}>{item.item_name}</td>
-                                        <td style={{border: '1px solid #999', padding: '6px 8px', fontSize: '10px'}}>{item.item_type}</td>
-                                        <td style={{border: '1px solid #999', padding: '6px 8px', textAlign: 'center', fontSize: '10px'}}>{item.sku || '-'}</td>
-                                        <td style={{border: '1px solid #999', padding: '6px 8px', textAlign: 'center', fontSize: '10px'}}>
+                                        <td style={{border: '1px solid #999', padding: '4px 6px', fontSize: '9px'}}>{item.item_name}</td>
+                                        <td style={{border: '1px solid #999', padding: '4px 6px', fontSize: '9px'}}>{item.item_type}</td>
+                                        <td style={{border: '1px solid #999', padding: '4px 6px', textAlign: 'center', fontSize: '9px'}}>{item.sku || '-'}</td>
+                                        <td style={{border: '1px solid #999', padding: '4px 6px', textAlign: 'center', fontSize: '9px'}}>
                                             {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: '2-digit'}) : '-'}
                                         </td>
-                                        <td style={{border: '1px solid #999', padding: '6px 8px', textAlign: 'center', fontSize: '10px'}}>{item.unit}</td>
-                                        <td style={{border: '1px solid #999', padding: '6px 8px', textAlign: 'center', fontWeight: 'bold', fontSize: '10px'}}>{item.quantity}</td>
-                                        <td style={{border: '1px solid #999', padding: '6px 8px', background: 'white'}}></td>
+                                        <td style={{border: '1px solid #999', padding: '4px 6px', textAlign: 'center', fontSize: '9px'}}>{item.unit}</td>
+                                        <td style={{border: '1px solid #999', padding: '4px 6px', textAlign: 'center', fontWeight: 'bold', fontSize: '9px'}}>{item.quantity}</td>
+                                        <td style={{border: '1px solid #999', padding: '4px 6px', background: 'white'}}></td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -240,7 +256,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                     </div>
                 ))}
 
-                <div style={{marginTop: '20px', paddingTop: '8px', borderTop: '1px solid #999', fontSize: '10px', color: 'black'}}>
+                <div className="audit-footer" style={{marginTop: '15px', paddingTop: '6px', borderTop: '1px solid #999', fontSize: '9px', color: 'black'}}>
                     Audited by: _________________ Signature: _________________ Date: _________________
                 </div>
             </div>
