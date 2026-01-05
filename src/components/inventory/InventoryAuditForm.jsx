@@ -159,6 +159,15 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                 display: none !important;
                             }
                             
+                            table {
+                                page-break-inside: auto !important;
+                            }
+                            
+                            tr {
+                                page-break-inside: avoid !important;
+                                page-break-after: auto !important;
+                            }
+                            
                             * {
                                 -webkit-print-color-adjust: exact !important;
                                 print-color-adjust: exact !important;
