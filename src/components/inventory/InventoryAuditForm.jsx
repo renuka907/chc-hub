@@ -132,32 +132,23 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                             size: portrait;
                         }
                         
-                        body {
-                            margin: 0;
-                            padding: 0;
-                        }
-                        
                         body * {
-                            visibility: hidden !important;
-                            display: none !important;
+                            visibility: hidden;
                         }
                         
                         .inventory-print-only,
                         .inventory-print-only * {
                             visibility: visible !important;
-                            display: block !important;
                         }
                         
                         .inventory-print-only {
-                            position: fixed !important;
-                            left: 0 !important;
-                            top: 0 !important;
-                            width: 100% !important;
-                            height: auto !important;
+                            display: block !important;
+                            position: absolute;
+                            left: 0;
+                            top: 0;
+                            width: 100%;
                             background: white !important;
-                            padding: 0 !important;
-                            margin: 0 !important;
-                            overflow: visible !important;
+                            padding: 20px;
                         }
                         
                         .storage-group {
