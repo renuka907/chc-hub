@@ -6,8 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PrintableDocument from "../components/PrintableDocument";
 import EditQuoteDialog from "../components/quotes/EditQuoteDialog";
-import { Printer, ArrowLeft, Edit, Share2 } from "lucide-react";
-import ShareFormDialog from "../components/forms/ShareFormDialog";
+import { Printer, ArrowLeft, Edit } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 
@@ -196,10 +195,6 @@ export default function QuoteDetail() {
                             </SelectContent>
                         </Select>
                     </div>
-                    <Button onClick={() => setShowShareDialog(true)} variant="outline" className="border-blue-500 text-blue-600">
-                        <Share2 className="w-4 h-4 mr-2" />
-                        Share
-                    </Button>
                     <Button onClick={() => setShowEditDialog(true)} variant="outline">
                         <Edit className="w-4 h-4 mr-2" />
                         Edit Items
@@ -339,14 +334,6 @@ export default function QuoteDetail() {
                     queryClient.invalidateQueries(['quote', quoteId]);
                     queryClient.invalidateQueries(['quotes']);
                 }}
-            />
-
-            <ShareFormDialog
-                open={showShareDialog}
-                onOpenChange={setShowShareDialog}
-                entityType="Quote"
-                entityId={quote.id}
-                formName={`Quote ${quote.quote_number}`}
             />
         </div>
     );
