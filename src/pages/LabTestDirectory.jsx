@@ -1,0 +1,413 @@
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { usePermissions } from "../components/permissions/usePermissions";
+import { Search, Loader2, TestTube, Star, ExternalLink, Plus, AlertCircle } from "lucide-react";
+import { toast } from "sonner";
+
+export default function LabTestDirectory() {
+    const [searchQuery, setSearchQuery] = useState("");
+    const [isSearching, setIsSearching] = useState(false);
+    const [searchResults, setSearchResults] = useState(null);
+    const queryClient = useQueryClient();
+    const { can } = usePermissions();
+
+    const { data: savedTests = [], isLoading } = useQuery({
+        queryKey: ['labTests'],
+        queryFn: () => base44.entities.LabTestInfo.list('-updated_date'),
+    });
+
+    const toggleFavoriteMutation = useMutation({
+        mutationFn: ({ id, isFavorite }) => 
+            base44.entities.LabTestInfo.update(id, { is_favorite: !isFavorite }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['labTests'] });
+        }
+    });
+
+    const saveTestMutation = useMutation({
+        mutationFn: (testData) => base44.entities.LabTestInfo.create(testData),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['labTests'] });
+            toast.success("Test information saved");
+        }
+    });
+
+    const handleSearch = async () => {
+        if (!searchQuery.trim()) {
+            toast.error("Please enter a test name");
+            return;
+        }
+
+        setIsSearching(true);
+        setSearchResults(null);
+
+        try {
+            const response = await base44.integrations.Core.InvokeLLM({
+                prompt: `Search for the lab test "${searchQuery}" on Quest Diagnostics test directory (https://testdirectory.questdiagnostics.com/test/home).
+                
+Provide the following information in JSON format:
+- test_name: Official test name
+- test_code: Quest test code if available
+- tube_type: Required tube type (color and type, e.g., "Lavender-top EDTA tube")
+- specimen_type: Type of specimen (e.g., "Whole blood", "Serum", "Plasma")
+- collection_instructions: How to collect the specimen
+- storage_requirements: Storage temperature and conditions
+- volume_required: Required specimen volume
+- quest_url: Direct URL to the test page on Quest Diagnostics
+- category: Test category (e.g., "Hematology", "Chemistry", "Hormone", "Microbiology")
+- notes: Any special handling or important notes
+
+If you can't find the exact test, suggest similar tests.`,
+                add_context_from_internet: true,
+                response_json_schema: {
+                    type: "object",
+                    properties: {
+                        found: { type: "boolean" },
+                        test_name: { type: "string" },
+                        test_code: { type: "string" },
+                        tube_type: { type: "string" },
+                        specimen_type: { type: "string" },
+                        collection_instructions: { type: "string" },
+                        storage_requirements: { type: "string" },
+                        volume_required: { type: "string" },
+                        quest_url: { type: "string" },
+                        category: { type: "string" },
+                        notes: { type: "string" },
+                        suggestions: {
+                            type: "array",
+                            items: { type: "string" }
+                        }
+                    }
+                }
+            });
+
+            setSearchResults(response);
+        } catch (error) {
+            toast.error("Failed to search Quest Diagnostics");
+            console.error(error);
+        } finally {
+            setIsSearching(false);
+        }
+    };
+
+    const handleSaveTest = (testData) => {
+        saveTestMutation.mutate({
+            test_name: testData.test_name,
+            test_code: testData.test_code || "",
+            tube_type: testData.tube_type,
+            specimen_type: testData.specimen_type || "",
+            collection_instructions: testData.collection_instructions || "",
+            storage_requirements: testData.storage_requirements || "",
+            volume_required: testData.volume_required || "",
+            quest_url: testData.quest_url || "",
+            category: testData.category || "General",
+            notes: testData.notes || "",
+            is_favorite: false
+        });
+    };
+
+    const tubeColors = {
+        "lavender": "bg-purple-100 text-purple-800",
+        "purple": "bg-purple-100 text-purple-800",
+        "red": "bg-red-100 text-red-800",
+        "gold": "bg-yellow-100 text-yellow-800",
+        "yellow": "bg-yellow-100 text-yellow-800",
+        "green": "bg-green-100 text-green-800",
+        "blue": "bg-blue-100 text-blue-800",
+        "gray": "bg-gray-100 text-gray-800",
+        "pink": "bg-pink-100 text-pink-800"
+    };
+
+    const getTubeColor = (tubeType) => {
+        if (!tubeType) return "bg-gray-100 text-gray-800";
+        const lowerTube = tubeType.toLowerCase();
+        for (const [color, className] of Object.entries(tubeColors)) {
+            if (lowerTube.includes(color)) return className;
+        }
+        return "bg-gray-100 text-gray-800";
+    };
+
+    const filteredTests = savedTests.filter(test =>
+        test.test_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        test.test_code?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        test.category?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const favoriteTests = filteredTests.filter(t => t.is_favorite);
+    const otherTests = filteredTests.filter(t => !t.is_favorite);
+
+    return (
+        <div className="space-y-6">
+            <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">Lab Test Directory</h1>
+                <p className="text-gray-600">Search Quest Diagnostics for tube types and specimen requirements</p>
+            </div>
+
+            {/* Search Section */}
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <Search className="w-5 h-5" />
+                        Search Quest Diagnostics
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div className="flex gap-2">
+                        <Input
+                            placeholder="Enter lab test name (e.g., CBC, TSH, Vitamin D)"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                        />
+                        <Button 
+                            onClick={handleSearch} 
+                            disabled={isSearching}
+                            className="bg-blue-600 hover:bg-blue-700"
+                        >
+                            {isSearching ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                    Searching...
+                                </>
+                            ) : (
+                                <>
+                                    <Search className="w-4 h-4 mr-2" />
+                                    Search
+                                </>
+                            )}
+                        </Button>
+                    </div>
+
+                    {/* Search Results */}
+                    {searchResults && (
+                        <div className="space-y-4 mt-4">
+                            {searchResults.found ? (
+                                <Card className="border-blue-200 bg-blue-50">
+                                    <CardContent className="pt-6 space-y-4">
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex-1">
+                                                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                                                    {searchResults.test_name}
+                                                </h3>
+                                                {searchResults.test_code && (
+                                                    <Badge variant="outline" className="mb-2">
+                                                        Code: {searchResults.test_code}
+                                                    </Badge>
+                                                )}
+                                            </div>
+                                            {can("aftercare", "create") && (
+                                                <Button
+                                                    size="sm"
+                                                    onClick={() => handleSaveTest(searchResults)}
+                                                    disabled={saveTestMutation.isPending}
+                                                >
+                                                    <Plus className="w-4 h-4 mr-2" />
+                                                    Save to Directory
+                                                </Button>
+                                            )}
+                                        </div>
+
+                                        <div className="grid md:grid-cols-2 gap-4">
+                                            <div>
+                                                <p className="text-sm font-semibold text-gray-700 mb-1">Tube Type</p>
+                                                <Badge className={getTubeColor(searchResults.tube_type)}>
+                                                    <TestTube className="w-3 h-3 mr-1" />
+                                                    {searchResults.tube_type}
+                                                </Badge>
+                                            </div>
+                                            {searchResults.specimen_type && (
+                                                <div>
+                                                    <p className="text-sm font-semibold text-gray-700 mb-1">Specimen Type</p>
+                                                    <p className="text-sm text-gray-800">{searchResults.specimen_type}</p>
+                                                </div>
+                                            )}
+                                            {searchResults.volume_required && (
+                                                <div>
+                                                    <p className="text-sm font-semibold text-gray-700 mb-1">Volume Required</p>
+                                                    <p className="text-sm text-gray-800">{searchResults.volume_required}</p>
+                                                </div>
+                                            )}
+                                            {searchResults.category && (
+                                                <div>
+                                                    <p className="text-sm font-semibold text-gray-700 mb-1">Category</p>
+                                                    <Badge variant="outline">{searchResults.category}</Badge>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {searchResults.collection_instructions && (
+                                            <div>
+                                                <p className="text-sm font-semibold text-gray-700 mb-1">Collection Instructions</p>
+                                                <p className="text-sm text-gray-800">{searchResults.collection_instructions}</p>
+                                            </div>
+                                        )}
+
+                                        {searchResults.storage_requirements && (
+                                            <div>
+                                                <p className="text-sm font-semibold text-gray-700 mb-1">Storage Requirements</p>
+                                                <p className="text-sm text-gray-800">{searchResults.storage_requirements}</p>
+                                            </div>
+                                        )}
+
+                                        {searchResults.notes && (
+                                            <Alert>
+                                                <AlertCircle className="h-4 w-4" />
+                                                <AlertDescription>{searchResults.notes}</AlertDescription>
+                                            </Alert>
+                                        )}
+
+                                        {searchResults.quest_url && (
+                                            <a 
+                                                href={searchResults.quest_url} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700"
+                                            >
+                                                View on Quest Diagnostics
+                                                <ExternalLink className="w-3 h-3 ml-1" />
+                                            </a>
+                                        )}
+                                    </CardContent>
+                                </Card>
+                            ) : (
+                                <Alert>
+                                    <AlertCircle className="h-4 w-4" />
+                                    <AlertDescription>
+                                        <p className="font-semibold mb-2">Test not found</p>
+                                        {searchResults.suggestions?.length > 0 && (
+                                            <div>
+                                                <p className="text-sm mb-1">Similar tests:</p>
+                                                <ul className="text-sm list-disc list-inside">
+                                                    {searchResults.suggestions.map((suggestion, i) => (
+                                                        <li key={i}>{suggestion}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </AlertDescription>
+                                </Alert>
+                            )}
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
+
+            {/* Saved Tests */}
+            <div>
+                <h2 className="text-xl font-bold text-gray-900 mb-4">Saved Tests ({savedTests.length})</h2>
+                
+                {isLoading ? (
+                    <div className="text-center py-12">
+                        <Loader2 className="w-8 h-8 animate-spin mx-auto text-gray-400" />
+                    </div>
+                ) : savedTests.length === 0 ? (
+                    <Card>
+                        <CardContent className="py-12 text-center text-gray-500">
+                            <TestTube className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                            <p>No saved tests yet. Search for tests above to get started.</p>
+                        </CardContent>
+                    </Card>
+                ) : (
+                    <div className="space-y-4">
+                        {favoriteTests.length > 0 && (
+                            <div>
+                                <h3 className="text-sm font-semibold text-gray-600 mb-2 flex items-center gap-2">
+                                    <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />
+                                    Favorites
+                                </h3>
+                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {favoriteTests.map(test => (
+                                        <TestCard 
+                                            key={test.id} 
+                                            test={test} 
+                                            onToggleFavorite={toggleFavoriteMutation.mutate}
+                                            getTubeColor={getTubeColor}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {otherTests.length > 0 && (
+                            <div>
+                                {favoriteTests.length > 0 && (
+                                    <h3 className="text-sm font-semibold text-gray-600 mb-2">All Tests</h3>
+                                )}
+                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {otherTests.map(test => (
+                                        <TestCard 
+                                            key={test.id} 
+                                            test={test} 
+                                            onToggleFavorite={toggleFavoriteMutation.mutate}
+                                            getTubeColor={getTubeColor}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
+function TestCard({ test, onToggleFavorite, getTubeColor }) {
+    return (
+        <Card className="hover:shadow-md transition-shadow">
+            <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                    <CardTitle className="text-base">{test.test_name}</CardTitle>
+                    <button
+                        onClick={() => onToggleFavorite({ id: test.id, isFavorite: test.is_favorite })}
+                        className="text-gray-400 hover:text-yellow-500"
+                    >
+                        <Star className={`w-4 h-4 ${test.is_favorite ? 'fill-yellow-500 text-yellow-500' : ''}`} />
+                    </button>
+                </div>
+                {test.test_code && (
+                    <Badge variant="outline" className="w-fit text-xs">
+                        {test.test_code}
+                    </Badge>
+                )}
+            </CardHeader>
+            <CardContent className="space-y-3">
+                <div>
+                    <Badge className={getTubeColor(test.tube_type)}>
+                        <TestTube className="w-3 h-3 mr-1" />
+                        {test.tube_type}
+                    </Badge>
+                </div>
+                {test.specimen_type && (
+                    <div>
+                        <p className="text-xs font-semibold text-gray-600">Specimen</p>
+                        <p className="text-sm text-gray-800">{test.specimen_type}</p>
+                    </div>
+                )}
+                {test.storage_requirements && (
+                    <div>
+                        <p className="text-xs font-semibold text-gray-600">Storage</p>
+                        <p className="text-sm text-gray-800">{test.storage_requirements}</p>
+                    </div>
+                )}
+                {test.quest_url && (
+                    <a 
+                        href={test.quest_url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center text-xs text-blue-600 hover:text-blue-700"
+                    >
+                        View on Quest
+                        <ExternalLink className="w-3 h-3 ml-1" />
+                    </a>
+                )}
+            </CardContent>
+        </Card>
+    );
+}

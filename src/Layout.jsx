@@ -46,6 +46,7 @@ export default function Layout({ children, currentPageName }) {
     const navItems = [
         { name: "Home", path: "Home", icon: Home },
         { name: "Messaging", path: "Messaging", icon: MessageSquare },
+        { name: "Lab Tests", path: "LabTestDirectory", icon: Stethoscope },
         { name: "Education Library", path: "EducationLibrary", icon: BookOpen },
         { name: "Aftercare & Forms", path: "AftercareLibrary", icon: FileText },
         { name: "Form Templates", path: "FormTemplates", icon: Layers },
