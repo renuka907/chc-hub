@@ -16,7 +16,8 @@ import {
             Tag,
             MessageSquare,
             Layers,
-            LogOut
+            LogOut,
+            ChevronDown
         } from "lucide-react";
 
 export default function Layout({ children, currentPageName }) {
@@ -34,6 +35,7 @@ export default function Layout({ children, currentPageName }) {
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
     const [currentUser, setCurrentUser] = React.useState(null);
     const [isLoading, setIsLoading] = React.useState(true);
+    const [openDropdown, setOpenDropdown] = React.useState(null);
 
     React.useEffect(() => {
         base44.auth.me()
@@ -46,20 +48,54 @@ export default function Layout({ children, currentPageName }) {
             });
     }, []);
 
-    const navItems = [
-        { name: "Home", path: "Home", icon: Home },
-        { name: "Messaging", path: "Messaging", icon: MessageSquare },
-        { name: "Procedures", path: "ProceduresManagement", icon: Stethoscope },
-        { name: "Lab Tests", path: "LabTestDirectory", icon: Stethoscope },
-        { name: "Education Library", path: "EducationLibrary", icon: BookOpen },
-        { name: "Aftercare & Forms", path: "AftercareLibrary", icon: FileText },
-        { name: "Form Templates", path: "FormTemplates", icon: Layers },
-        { name: "Clinic Directory", path: "ClinicDirectory", icon: Building2 },
-        { name: "Pricing", path: "PricingManagement", icon: DollarSign },
-        { name: "Quotes", path: "QuotesManagement", icon: FileText },
-        { name: "Inventory", path: "InventoryManagement", icon: Package },
-        ...(currentUser?.role === 'admin' || currentUser?.role === 'manager' ? [{ name: "Discounts", path: "DiscountManagement", icon: Tag }] : []),
-        ...(currentUser?.role === 'admin' ? [{ name: "Users", path: "UserManagement", icon: Users }] : []),
+    const menuGroups = [
+        {
+            name: "Home",
+            path: "Home",
+            icon: Home,
+            single: true
+        },
+        {
+            name: "Messaging",
+            path: "Messaging",
+            icon: MessageSquare,
+            single: true
+        },
+        {
+            name: "Clinical",
+            icon: Stethoscope,
+            items: [
+                { name: "Procedures", path: "ProceduresManagement", icon: Stethoscope },
+                { name: "Lab Tests", path: "LabTestDirectory", icon: Stethoscope },
+                { name: "Education Library", path: "EducationLibrary", icon: BookOpen },
+            ]
+        },
+        {
+            name: "Forms & Documents",
+            icon: FileText,
+            items: [
+                { name: "Aftercare & Consents", path: "AftercareLibrary", icon: FileText },
+                { name: "Form Templates", path: "FormTemplates", icon: Layers },
+            ]
+        },
+        {
+            name: "Business",
+            icon: DollarSign,
+            items: [
+                { name: "Clinic Directory", path: "ClinicDirectory", icon: Building2 },
+                { name: "Pricing", path: "PricingManagement", icon: DollarSign },
+                { name: "Quotes", path: "QuotesManagement", icon: FileText },
+                { name: "Inventory", path: "InventoryManagement", icon: Package },
+                ...(currentUser?.role === 'admin' || currentUser?.role === 'manager' ? [{ name: "Discounts", path: "DiscountManagement", icon: Tag }] : []),
+            ]
+        },
+        ...(currentUser?.role === 'admin' ? [{
+            name: "Admin",
+            icon: Users,
+            items: [
+                { name: "User Management", path: "UserManagement", icon: Users },
+            ]
+        }] : []),
     ];
 
     if (isLoading) {
@@ -98,28 +134,79 @@ export default function Layout({ children, currentPageName }) {
                         </Link>
 
                         {/* Desktop Navigation */}
-                        <nav className="hidden md:flex items-center space-x-1">
-                            {navItems.map((item) => {
-                                const Icon = item.icon;
-                                const isActive = currentPageName === item.path;
+                        <nav className="hidden lg:flex items-center space-x-1">
+                            {menuGroups.map((group, idx) => {
+                                if (group.single) {
+                                    const Icon = group.icon;
+                                    const isActive = currentPageName === group.path;
+                                    return (
+                                        <Link
+                                            key={group.path}
+                                            to={createPageUrl(group.path)}
+                                            className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                                                isActive
+                                                    ? "bg-white shadow-sm text-purple-900"
+                                                    : "text-gray-600 hover:bg-white/50 hover:text-gray-900"
+                                            }`}
+                                        >
+                                            <Icon className="w-4 h-4" />
+                                            <span>{group.name}</span>
+                                        </Link>
+                                    );
+                                }
+                                
+                                const Icon = group.icon;
+                                const isGroupActive = group.items.some(item => item.path === currentPageName);
+                                const isOpen = openDropdown === idx;
+                                
                                 return (
-                                    <Link
-                                        key={item.path}
-                                        to={createPageUrl(item.path)}
-                                        className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                                            isActive
-                                                ? "bg-white shadow-md text-purple-900"
-                                                : "text-gray-600 hover:bg-white/50 hover:text-gray-900"
-                                        }`}
-                                    >
-                                        <Icon className="w-4 h-4" />
-                                        <span>{item.name}</span>
-                                    </Link>
+                                    <div key={idx} className="relative">
+                                        <button
+                                            onMouseEnter={() => setOpenDropdown(idx)}
+                                            onMouseLeave={() => setOpenDropdown(null)}
+                                            className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                                                isGroupActive
+                                                    ? "bg-white shadow-sm text-purple-900"
+                                                    : "text-gray-600 hover:bg-white/50 hover:text-gray-900"
+                                            }`}
+                                        >
+                                            <Icon className="w-4 h-4" />
+                                            <span>{group.name}</span>
+                                            <ChevronDown className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                                        </button>
+                                        
+                                        {isOpen && (
+                                            <div 
+                                                onMouseEnter={() => setOpenDropdown(idx)}
+                                                onMouseLeave={() => setOpenDropdown(null)}
+                                                className="absolute top-full left-0 mt-1 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
+                                            >
+                                                {group.items.map((item) => {
+                                                    const ItemIcon = item.icon;
+                                                    const isActive = currentPageName === item.path;
+                                                    return (
+                                                        <Link
+                                                            key={item.path}
+                                                            to={createPageUrl(item.path)}
+                                                            className={`flex items-center space-x-3 px-4 py-2 text-sm transition-colors ${
+                                                                isActive
+                                                                    ? "bg-purple-50 text-purple-900 font-medium"
+                                                                    : "text-gray-700 hover:bg-gray-50"
+                                                            }`}
+                                                        >
+                                                            <ItemIcon className="w-4 h-4" />
+                                                            <span>{item.name}</span>
+                                                        </Link>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+                                    </div>
                                 );
                             })}
                             <button
                                 onClick={() => base44.auth.logout()}
-                                className="flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all text-gray-600 hover:bg-white/50 hover:text-gray-900"
+                                className="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all text-gray-600 hover:bg-white/50 hover:text-gray-900"
                             >
                                 <LogOut className="w-4 h-4" />
                                 <span>Sign Out</span>
@@ -129,7 +216,7 @@ export default function Layout({ children, currentPageName }) {
                         {/* Mobile menu button */}
                         <button
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                            className="md:hidden p-2 rounded-lg hover:bg-slate-100"
+                            className="lg:hidden p-2 rounded-lg hover:bg-slate-100"
                         >
                             {mobileMenuOpen ? (
                                 <X className="w-6 h-6 text-gray-600" />
@@ -141,29 +228,59 @@ export default function Layout({ children, currentPageName }) {
 
                     {/* Mobile Navigation */}
                     {mobileMenuOpen && (
-                        <div className="md:hidden py-4 border-t border-slate-200">
-                            {navItems.map((item) => {
-                                const Icon = item.icon;
-                                const isActive = currentPageName === item.path;
+                        <div className="lg:hidden py-4 border-t border-slate-200">
+                            {menuGroups.map((group, idx) => {
+                                if (group.single) {
+                                    const Icon = group.icon;
+                                    const isActive = currentPageName === group.path;
+                                    return (
+                                        <Link
+                                            key={group.path}
+                                            to={createPageUrl(group.path)}
+                                            onClick={() => setMobileMenuOpen(false)}
+                                            className={`flex items-center space-x-3 px-4 py-3 text-sm font-medium ${
+                                                isActive
+                                                    ? "bg-purple-50 text-purple-900 border-l-4 border-purple-600"
+                                                    : "text-gray-600 hover:bg-purple-50"
+                                            }`}
+                                        >
+                                            <Icon className="w-5 h-5" />
+                                            <span>{group.name}</span>
+                                        </Link>
+                                    );
+                                }
+                                
+                                const Icon = group.icon;
                                 return (
-                                    <Link
-                                        key={item.path}
-                                        to={createPageUrl(item.path)}
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className={`flex items-center space-x-3 px-4 py-3 text-sm font-medium ${
-                                            isActive
-                                                ? "bg-purple-50 text-purple-900 border-l-4 border-purple-600"
-                                                : "text-gray-600 hover:bg-purple-50"
-                                        }`}
-                                    >
-                                        <Icon className="w-5 h-5" />
-                                        <span>{item.name}</span>
-                                    </Link>
+                                    <div key={idx}>
+                                        <div className="px-4 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                                            {group.name}
+                                        </div>
+                                        {group.items.map((item) => {
+                                            const ItemIcon = item.icon;
+                                            const isActive = currentPageName === item.path;
+                                            return (
+                                                <Link
+                                                    key={item.path}
+                                                    to={createPageUrl(item.path)}
+                                                    onClick={() => setMobileMenuOpen(false)}
+                                                    className={`flex items-center space-x-3 px-8 py-3 text-sm font-medium ${
+                                                        isActive
+                                                            ? "bg-purple-50 text-purple-900 border-l-4 border-purple-600"
+                                                            : "text-gray-600 hover:bg-purple-50"
+                                                    }`}
+                                                >
+                                                    <ItemIcon className="w-4 h-4" />
+                                                    <span>{item.name}</span>
+                                                </Link>
+                                            );
+                                        })}
+                                    </div>
                                 );
                             })}
                             <button
                                 onClick={() => base44.auth.logout()}
-                                className="flex items-center space-x-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-purple-50 w-full"
+                                className="flex items-center space-x-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-purple-50 w-full mt-2"
                             >
                                 <LogOut className="w-5 h-5" />
                                 <span>Sign Out</span>

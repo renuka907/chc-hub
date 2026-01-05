@@ -9,7 +9,6 @@ import EducationLibrary from './pages/EducationLibrary';
 import EmployeeQuestions from './pages/EmployeeQuestions';
 import FAQ from './pages/FAQ';
 import FormTemplates from './pages/FormTemplates';
-import Home from './pages/Home';
 import InventoryManagement from './pages/InventoryManagement';
 import LabTestDirectory from './pages/LabTestDirectory';
 import Messaging from './pages/Messaging';
@@ -20,6 +19,7 @@ import QuoteDetail from './pages/QuoteDetail';
 import QuotesManagement from './pages/QuotesManagement';
 import UserManagement from './pages/UserManagement';
 import ViewSharedForm from './pages/ViewSharedForm';
+import Home from './pages/Home';
 import __Layout from './Layout.jsx';
 
 
@@ -35,7 +35,6 @@ export const PAGES = {
     "EmployeeQuestions": EmployeeQuestions,
     "FAQ": FAQ,
     "FormTemplates": FormTemplates,
-    "Home": Home,
     "InventoryManagement": InventoryManagement,
     "LabTestDirectory": LabTestDirectory,
     "Messaging": Messaging,
@@ -46,6 +45,7 @@ export const PAGES = {
     "QuotesManagement": QuotesManagement,
     "UserManagement": UserManagement,
     "ViewSharedForm": ViewSharedForm,
+    "Home": Home,
 }
 
 export const pagesConfig = {
