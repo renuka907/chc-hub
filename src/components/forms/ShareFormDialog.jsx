@@ -87,19 +87,19 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-w-2xl">
                 <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2">
-                        <Share2 className="w-5 h-5" />
+                    <DialogTitle className="flex items-center gap-2 text-base">
+                        <Share2 className="w-4 h-4" />
                         Share "{formName}"
                     </DialogTitle>
                 </DialogHeader>
 
-                <div className="space-y-6">
+                <div className="space-y-4">
                     {/* Create New Link Section */}
                     <Card>
-                        <CardContent className="pt-6 space-y-4">
-                            <h3 className="font-semibold text-lg">Create New Share Link</h3>
+                        <CardContent className="pt-4 space-y-3">
+                            <h3 className="font-semibold text-base">Create New Share Link</h3>
                             
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
