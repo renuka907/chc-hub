@@ -129,6 +129,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                     @media print {
                         @page {
                             margin: 0.5in;
+                            size: portrait;
                         }
                         
                         body * {
@@ -146,7 +147,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                             left: 0;
                             top: 0;
                             width: 100%;
-                            background: white;
+                            background: white !important;
                             padding: 20px;
                         }
                         
@@ -155,80 +156,94 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                             margin-bottom: 20px;
                         }
                         
+                        .dark-banner {
+                            background: #1a1a1a !important;
+                            -webkit-print-color-adjust: exact !important;
+                            print-color-adjust: exact !important;
+                            color: white !important;
+                        }
+                        
                         table {
                             width: 100%;
                             border-collapse: collapse;
+                        }
+                        
+                        thead {
+                            background: #e5e7eb !important;
+                            -webkit-print-color-adjust: exact !important;
+                            print-color-adjust: exact !important;
                         }
                     }
                 `}
             </style>
 
             <div className="inventory-print-only">
-                    <div style={{borderBottom: '2px solid black', paddingBottom: '8px', marginBottom: '16px'}}>
-                        <div style={{fontSize: '18px', fontWeight: 'bold', color: 'black'}}>Daily Inventory Audit Form</div>
-                        <div style={{fontSize: '11px', marginTop: '4px', color: 'black'}}>
-                            Date: {new Date().toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'})} | Location: {selectedLocation?.name || 'All Locations'}
-                        </div>
-                    </div>
-
-                    {Object.entries(itemsByStorage)
-                        .sort(([a], [b]) => a.localeCompare(b))
-                        .filter(([storage, storageItems]) => storageItems.length > 0)
-                        .map(([storage, storageItems]) => (
-                        <div key={storage} className="storage-group" style={{marginBottom: '20px', pageBreakInside: 'avoid'}}>
-                            <div style={{
-                                background: '#1a1a1a', 
-                                color: 'white',
-                                padding: '8px 12px',
-                                marginBottom: '0',
-                                fontSize: '12px',
-                                fontWeight: 'bold',
-                                letterSpacing: '0.5px'
-                            }}>
-                                📍 {storage} ({storageItems.length} items)
-                            </div>
-
-                            <table style={{
-                                width: '100%',
-                                borderCollapse: 'collapse',
-                                fontSize: '10px',
-                                color: 'black',
-                                border: '1px solid #666'
-                            }}>
-                                <thead>
-                                    <tr style={{backgroundColor: '#e5e7eb'}}>
-                                        <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'left', fontSize: '10px', fontWeight: 'bold'}}>Item</th>
-                                        <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'left', fontSize: '10px', fontWeight: 'bold', width: '80px'}}>Type</th>
-                                        <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '60px'}}>SKU</th>
-                                        <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '70px'}}>Exp</th>
-                                        <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '60px'}}>Unit</th>
-                                        <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '50px'}}>Qty</th>
-                                        <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '60px'}}>New</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {storageItems.map(item => (
-                                        <tr key={item.id}>
-                                            <td style={{border: '1px solid #999', padding: '6px 8px', fontSize: '10px'}}>{item.item_name}</td>
-                                            <td style={{border: '1px solid #999', padding: '6px 8px', fontSize: '10px'}}>{item.item_type}</td>
-                                            <td style={{border: '1px solid #999', padding: '6px 8px', textAlign: 'center', fontSize: '10px'}}>{item.sku || '-'}</td>
-                                            <td style={{border: '1px solid #999', padding: '6px 8px', textAlign: 'center', fontSize: '10px'}}>
-                                                {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: '2-digit'}) : '-'}
-                                            </td>
-                                            <td style={{border: '1px solid #999', padding: '6px 8px', textAlign: 'center', fontSize: '10px'}}>{item.unit}</td>
-                                            <td style={{border: '1px solid #999', padding: '6px 8px', textAlign: 'center', fontWeight: 'bold', fontSize: '10px'}}>{item.quantity}</td>
-                                            <td style={{border: '1px solid #999', padding: '6px 8px', background: 'white'}}></td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    ))}
-
-                    <div style={{marginTop: '20px', paddingTop: '8px', borderTop: '1px solid #999', fontSize: '10px', color: 'black'}}>
-                        Audited by: _________________ Signature: _________________ Date: _________________
+                <div style={{borderBottom: '2px solid black', paddingBottom: '8px', marginBottom: '16px'}}>
+                    <div style={{fontSize: '18px', fontWeight: 'bold', color: 'black'}}>Daily Inventory Audit Form</div>
+                    <div style={{fontSize: '11px', marginTop: '4px', color: 'black'}}>
+                        Date: {new Date().toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'})} | Location: {selectedLocation?.name || 'All Locations'}
                     </div>
                 </div>
+
+                {Object.entries(itemsByStorage)
+                    .sort(([a], [b]) => a.localeCompare(b))
+                    .filter(([storage, storageItems]) => storageItems.length > 0)
+                    .map(([storage, storageItems]) => (
+                    <div key={storage} className="storage-group">
+                        <div className="dark-banner" style={{
+                            background: '#1a1a1a', 
+                            color: 'white',
+                            padding: '8px 12px',
+                            marginBottom: '0',
+                            fontSize: '12px',
+                            fontWeight: 'bold',
+                            letterSpacing: '0.5px'
+                        }}>
+                            📍 {storage} ({storageItems.length} items)
+                        </div>
+
+                        <table style={{
+                            width: '100%',
+                            borderCollapse: 'collapse',
+                            fontSize: '10px',
+                            color: 'black',
+                            border: '1px solid #666',
+                            marginBottom: '20px'
+                        }}>
+                            <thead>
+                                <tr style={{backgroundColor: '#e5e7eb'}}>
+                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'left', fontSize: '10px', fontWeight: 'bold'}}>Item</th>
+                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'left', fontSize: '10px', fontWeight: 'bold', width: '80px'}}>Type</th>
+                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '60px'}}>SKU</th>
+                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '70px'}}>Exp</th>
+                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '60px'}}>Unit</th>
+                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '50px'}}>Qty</th>
+                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '60px'}}>New</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {storageItems.map(item => (
+                                    <tr key={item.id}>
+                                        <td style={{border: '1px solid #999', padding: '6px 8px', fontSize: '10px'}}>{item.item_name}</td>
+                                        <td style={{border: '1px solid #999', padding: '6px 8px', fontSize: '10px'}}>{item.item_type}</td>
+                                        <td style={{border: '1px solid #999', padding: '6px 8px', textAlign: 'center', fontSize: '10px'}}>{item.sku || '-'}</td>
+                                        <td style={{border: '1px solid #999', padding: '6px 8px', textAlign: 'center', fontSize: '10px'}}>
+                                            {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: '2-digit'}) : '-'}
+                                        </td>
+                                        <td style={{border: '1px solid #999', padding: '6px 8px', textAlign: 'center', fontSize: '10px'}}>{item.unit}</td>
+                                        <td style={{border: '1px solid #999', padding: '6px 8px', textAlign: 'center', fontWeight: 'bold', fontSize: '10px'}}>{item.quantity}</td>
+                                        <td style={{border: '1px solid #999', padding: '6px 8px', background: 'white'}}></td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                ))}
+
+                <div style={{marginTop: '20px', paddingTop: '8px', borderTop: '1px solid #999', fontSize: '10px', color: 'black'}}>
+                    Audited by: _________________ Signature: _________________ Date: _________________
+                </div>
+            </div>
 
             <Dialog open={open} onOpenChange={onOpenChange}>
                 <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
