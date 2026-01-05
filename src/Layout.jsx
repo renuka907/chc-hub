@@ -21,7 +21,8 @@ import {
 export default function Layout({ children, currentPageName }) {
     // Check if this is a public page immediately - before any state or effects
     const isPublicPage = currentPageName === "ViewSharedForm" || 
-                        window.location.hash.includes('ViewSharedForm');
+                        window.location.hash.includes('ViewSharedForm') ||
+                        window.location.hash.includes('token=');
     
     // If public page, render immediately without any auth or layout
     if (isPublicPage) {
