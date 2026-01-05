@@ -128,6 +128,7 @@ export default function AftercareDetail() {
                             page-break-inside: avoid !important;
                             break-inside: avoid !important;
                             display: block !important;
+                            overflow: visible !important;
                         }
                         .printable-document .card-compact-header {
                             padding: 6px !important;
@@ -139,12 +140,19 @@ export default function AftercareDetail() {
                         .printable-document .bg-blue-50,
                         .printable-document .bg-amber-50,
                         .printable-document .bg-green-50,
-                        .printable-document .bg-slate-100,
-                        .printable-document [class*="bg-"] {
+                        .printable-document .bg-slate-100 {
                             page-break-inside: avoid !important;
                             break-inside: avoid !important;
-                            orphans: 3 !important;
-                            widows: 3 !important;
+                            page-break-before: auto !important;
+                            page-break-after: auto !important;
+                            orphans: 4 !important;
+                            widows: 4 !important;
+                            display: block !important;
+                            overflow: visible !important;
+                            position: relative !important;
+                        }
+                        .printable-document .bg-amber-50 {
+                            min-height: 100px !important;
                         }
                         .printable-document > div > * {
                             page-break-inside: avoid !important;
