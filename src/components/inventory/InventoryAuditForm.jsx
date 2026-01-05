@@ -212,13 +212,13 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                         }}>
                             <thead>
                                 <tr style={{backgroundColor: '#e5e7eb'}}>
-                                    <th style={{border: '1px solid #666', padding: '6px 4px', textAlign: 'left', fontSize: '10px', fontWeight: 'bold'}}>Item</th>
-                                    <th style={{border: '1px solid #666', padding: '6px 4px', textAlign: 'left', fontSize: '10px', fontWeight: 'bold', width: '70px'}}>Type</th>
-                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '60px'}}>SKU</th>
-                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '70px'}}>Exp</th>
-                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '60px'}}>Unit</th>
-                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '50px'}}>Qty</th>
-                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '60px'}}>New</th>
+                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'left', fontSize: '10px', fontWeight: 'bold'}}>Item</th>
+                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '80px'}}>Type</th>
+                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '65px'}}>SKU</th>
+                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '65px'}}>Exp</th>
+                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '65px'}}>Unit</th>
+                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '65px'}}>Qty</th>
+                                    <th style={{border: '1px solid #666', padding: '6px 8px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '100px'}}>New</th>
                                 </tr>
                             </thead>
                             <tbody>
