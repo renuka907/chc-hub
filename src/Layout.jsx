@@ -15,7 +15,8 @@ import {
             Package,
             Tag,
             MessageSquare,
-            Layers
+            Layers,
+            LogOut
         } from "lucide-react";
 
 export default function Layout({ children, currentPageName }) {
@@ -120,6 +121,13 @@ export default function Layout({ children, currentPageName }) {
                                     </Link>
                                 );
                             })}
+                            <button
+                                onClick={() => base44.auth.logout()}
+                                className="flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all text-gray-600 hover:bg-white/50 hover:text-gray-900"
+                            >
+                                <LogOut className="w-4 h-4" />
+                                <span>Sign Out</span>
+                            </button>
                         </nav>
 
                         {/* Mobile menu button */}
@@ -157,6 +165,13 @@ export default function Layout({ children, currentPageName }) {
                                     </Link>
                                 );
                             })}
+                            <button
+                                onClick={() => base44.auth.logout()}
+                                className="flex items-center space-x-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-purple-50 w-full"
+                            >
+                                <LogOut className="w-5 h-5" />
+                                <span>Sign Out</span>
+                            </button>
                         </div>
                     )}
                 </div>
