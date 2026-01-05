@@ -49,11 +49,11 @@ export default function Layout({ children, currentPageName }) {
     const navItems = [
         { name: "Home", path: "Home", icon: Home },
         { name: "Messaging", path: "Messaging", icon: MessageSquare },
+        { name: "Procedures", path: "ProceduresManagement", icon: Stethoscope },
         { name: "Lab Tests", path: "LabTestDirectory", icon: Stethoscope },
         { name: "Education Library", path: "EducationLibrary", icon: BookOpen },
         { name: "Aftercare & Forms", path: "AftercareLibrary", icon: FileText },
         { name: "Form Templates", path: "FormTemplates", icon: Layers },
-        ...(currentUser?.role === 'admin' || currentUser?.role === 'manager' ? [{ name: "Procedures", path: "ProceduresManagement", icon: Stethoscope }] : []),
         { name: "Clinic Directory", path: "ClinicDirectory", icon: Building2 },
         { name: "Pricing", path: "PricingManagement", icon: DollarSign },
         { name: "Quotes", path: "QuotesManagement", icon: FileText },

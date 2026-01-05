@@ -19,6 +19,7 @@ import QuotesManagement from './pages/QuotesManagement';
 import UserManagement from './pages/UserManagement';
 import ViewSharedForm from './pages/ViewSharedForm';
 import ProceduresManagement from './pages/ProceduresManagement';
+import ProcedureDetail from './pages/ProcedureDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -44,6 +45,7 @@ export const PAGES = {
     "UserManagement": UserManagement,
     "ViewSharedForm": ViewSharedForm,
     "ProceduresManagement": ProceduresManagement,
+    "ProcedureDetail": ProcedureDetail,
 }
 
 export const pagesConfig = {
