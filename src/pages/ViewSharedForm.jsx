@@ -10,7 +10,10 @@ import { openPrintWindow } from "../components/PrintHelper";
 import { Lock, AlertCircle, Loader2, FileText, Printer } from "lucide-react";
 
 export default function ViewSharedForm() {
-    const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || window.location.search);
+    // Parse token from hash-based URL (e.g., /#/ViewSharedForm?token=xyz)
+    const hashParts = window.location.hash.split('?');
+    const queryString = hashParts.length > 1 ? hashParts[1] : '';
+    const urlParams = new URLSearchParams(queryString);
     const token = urlParams.get('token');
     const [passwordInput, setPasswordInput] = useState("");
     const [isAuthenticated, setIsAuthenticated] = useState(false);
