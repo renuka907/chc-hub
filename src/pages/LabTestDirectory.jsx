@@ -49,28 +49,38 @@ export default function LabTestDirectory() {
 
         try {
             const response = await base44.integrations.Core.InvokeLLM({
-                prompt: `You are a medical laboratory specialist. Find detailed information about the lab test: "${searchQuery}"
+                prompt: `Find lab test information for: "${searchQuery}"
 
-Search Quest Diagnostics test directory and medical laboratory resources to find:
+This could be an abbreviation or full name. Find the CLOSEST MATCH from standard medical lab tests:
 
-1. Test Name: Official name of the test
-2. Test Code: Quest Diagnostics test code (if available)
-3. Tube Type: Exact tube color and anticoagulant (e.g., "Lavender-top EDTA tube", "Red-top serum tube", "Gold/SST tube")
-4. Specimen Type: What specimen is needed (whole blood, serum, plasma, urine, etc.)
-5. Collection Instructions: Step-by-step collection process
-6. Storage: Temperature and conditions (e.g., "Room temperature", "Refrigerate 2-8°C", "Freeze")
-7. Volume: Amount needed (e.g., "1 mL", "5 mL whole blood")
-8. Category: Test category (Hematology, Chemistry, Hormone, Microbiology, etc.)
-9. Special Notes: Any critical handling requirements
+Common abbreviations you should recognize:
+- CBC = Complete Blood Count (Lavender EDTA)
+- CMP = Comprehensive Metabolic Panel (Gold SST)
+- BMP = Basic Metabolic Panel (Gold SST)
+- TSH = Thyroid Stimulating Hormone (Gold SST)
+- T3, T4 = Thyroid hormones (Gold SST)
+- PSA = Prostate Specific Antigen (Gold SST)
+- HbA1c = Hemoglobin A1c (Lavender EDTA)
+- Lipid Panel = Cholesterol panel (Gold SST)
+- ESR = Erythrocyte Sedimentation Rate (Lavender EDTA)
+- PT/INR = Prothrombin Time (Blue sodium citrate)
+- PTT = Partial Thromboplastin Time (Blue sodium citrate)
 
-Common test examples:
-- CBC (Complete Blood Count): Lavender-top EDTA tube
-- CMP (Comprehensive Metabolic Panel): Gold/SST or green-top tube
-- TSH (Thyroid Stimulating Hormone): Gold/SST tube, serum
-- Vitamin D: Gold/SST tube, serum, protect from light
+ALWAYS return found: true if you recognize the test (even partially). Provide your best match.
 
-Return "found": true if you find the test information, false if not found.
-If not found, provide at least 3 similar test name suggestions.`,
+Required information:
+- test_name: Full official name
+- test_code: Quest code if known
+- tube_type: Exact tube (e.g., "Lavender-top EDTA", "Gold-top SST", "Red-top")
+- specimen_type: Blood type or other specimen
+- collection_instructions: How to collect
+- storage_requirements: Storage temp and conditions
+- volume_required: Amount needed
+- quest_url: Link to Quest page (use format: https://testdirectory.questdiagnostics.com/test/test-detail/[testcode])
+- category: Hematology/Chemistry/Hormone/etc
+- notes: Special handling
+
+Only return found: false if you truly cannot identify what test they're asking about.`,
                 add_context_from_internet: true,
                 response_json_schema: {
                     type: "object",
