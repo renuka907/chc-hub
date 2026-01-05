@@ -133,12 +133,13 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                         }
                         
                         html, body {
-                            height: auto;
-                            overflow: visible;
+                            height: auto !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
                         }
                         
                         body * {
-                            visibility: hidden;
+                            visibility: hidden !important;
                         }
                         
                         .inventory-print-only,
@@ -148,12 +149,15 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                         
                         .inventory-print-only {
                             display: block !important;
-                            position: absolute;
-                            left: 0;
-                            top: 0;
-                            width: 100%;
+                            position: fixed !important;
+                            left: 0 !important;
+                            top: 0 !important;
+                            width: 100% !important;
+                            height: auto !important;
                             background: white !important;
-                            padding: 10px;
+                            padding: 10px !important;
+                            margin: 0 !important;
+                            overflow: visible !important;
                         }
                         
                         .storage-group {
@@ -188,6 +192,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                         
                         .audit-footer {
                             page-break-before: avoid;
+                            margin-bottom: 0 !important;
                         }
                     }
                 `}
