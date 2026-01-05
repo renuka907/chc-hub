@@ -19,18 +19,29 @@ export default function ViewSharedForm() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [error, setError] = useState("");
 
+    console.log('ViewSharedForm rendered');
+    console.log('Full URL:', window.location.href);
+    console.log('Hash:', window.location.hash);
+    console.log('Query string:', queryString);
+    console.log('Token:', token);
+
     const { data: sharedLink, isLoading: linkLoading, error: linkError } = useQuery({
         queryKey: ['sharedLink', token],
         queryFn: async () => {
+            console.log('Fetching shared links...');
             const allLinks = await base44.entities.SharedFormLink.list();
             const found = allLinks.find(link => link.share_token === token);
             console.log('Looking for token:', token);
             console.log('All links:', allLinks);
             console.log('Found link:', found);
+            if (!found) {
+                console.error('No matching link found for token:', token);
+            }
             return found;
         },
         enabled: !!token,
-        retry: false
+        retry: false,
+        staleTime: 0
     });
 
     const { data: formContent, isLoading: contentLoading, error: contentError } = useQuery({
