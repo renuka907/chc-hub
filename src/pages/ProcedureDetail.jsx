@@ -116,13 +116,13 @@ export default function ProcedureDetail() {
                     >
                         <Star className={`w-4 h-4 ${procedure.is_favorite ? 'fill-current text-yellow-500' : ''}`} />
                     </Button>
-                    {can('aftercare', 'edit') && (
+                    {can('procedure', 'edit') && (
                         <Button variant="outline" onClick={() => setShowEditForm(true)}>
                             <Edit className="w-4 h-4 mr-2" />
                             Edit
                         </Button>
                     )}
-                    {can('aftercare', 'delete') && (
+                    {can('procedure', 'delete') && (
                         <Button 
                             variant="outline" 
                             onClick={() => setShowDeleteDialog(true)}

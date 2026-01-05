@@ -63,7 +63,7 @@ export default function ProceduresManagement() {
                     <h1 className="text-3xl font-bold text-gray-900">Procedure Library</h1>
                     <p className="text-gray-600 mt-1">Manage step-by-step procedure guides</p>
                 </div>
-                {can('aftercare', 'create') && (
+                {can('procedure', 'create') && (
                     <Button
                         onClick={() => {
                             setEditingProcedure(null);
@@ -177,7 +177,7 @@ export default function ProceduresManagement() {
                                             View Details
                                         </Link>
                                     </Button>
-                                    {can('aftercare', 'edit') && (
+                                    {can('procedure', 'edit') && (
                                         <Button
                                             variant="outline"
                                             size="sm"
