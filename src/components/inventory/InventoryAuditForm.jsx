@@ -448,5 +448,6 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                 </div>
             </DialogContent>
         </Dialog>
+        </>
     );
 }
