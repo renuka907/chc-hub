@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Search, Star, Clock, Package } from "lucide-react";
 import { Link } from "react-router-dom";
-import { createPageUrl } from "./utils";
+import { createPageUrl } from "../utils";
 import ProcedureForm from "../components/procedures/ProcedureForm";
 import { usePermissions } from "../components/permissions/usePermissions";
 
