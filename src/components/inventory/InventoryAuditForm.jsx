@@ -236,7 +236,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                     </DialogTitle>
                 </DialogHeader>
 
-                <div className="space-y-4 no-print print:hidden">
+                <div className="space-y-4">
                     {/* Print Button - Prominent */}
                     <div className="bg-gradient-to-r from-orange-500 to-orange-400 rounded-lg p-4 text-white">
                         <div className="flex items-center justify-between">
