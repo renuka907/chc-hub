@@ -19,19 +19,18 @@ import {
         } from "lucide-react";
 
 export default function Layout({ children, currentPageName }) {
+    // Check if this is a public page immediately - before any state or effects
+    const isPublicPage = currentPageName === "ViewSharedForm" || 
+                        window.location.hash.includes('ViewSharedForm');
+    
+    // If public page, render immediately without any auth or layout
+    if (isPublicPage) {
+        return <>{children}</>;
+    }
+
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
     const [currentUser, setCurrentUser] = React.useState(null);
     const [isLoading, setIsLoading] = React.useState(true);
-
-    console.log('=== LAYOUT RENDER ===');
-    console.log('currentPageName:', currentPageName);
-    console.log('Is ViewSharedForm?', currentPageName === "ViewSharedForm");
-
-    // If this is ViewSharedForm, render immediately without layout
-    if (currentPageName === "ViewSharedForm") {
-        console.log('Rendering ViewSharedForm without layout');
-        return <>{children}</>;
-    }
 
     React.useEffect(() => {
         base44.auth.me()
@@ -40,11 +39,9 @@ export default function Layout({ children, currentPageName }) {
                 setIsLoading(false);
             })
             .catch(() => {
-                // Redirect to login if not authenticated - include hash for hash-based routing
-                const redirectUrl = window.location.pathname + window.location.search + window.location.hash;
-                base44.auth.redirectToLogin(redirectUrl);
+                base44.auth.redirectToLogin();
             });
-    }, [currentPageName]);
+    }, []);
 
     const navItems = [
         { name: "Home", path: "Home", icon: Home },
