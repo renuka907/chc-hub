@@ -125,7 +125,7 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-6xl">
+            <DialogContent className="max-w-[95vw]">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2 text-base">
                         <Share2 className="w-4 h-4" />
