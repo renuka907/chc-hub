@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import SearchBar from "../components/SearchBar";
 import InventoryForm from "../components/inventory/InventoryForm";
 import InventoryAuditForm from "../components/inventory/InventoryAuditForm";
-import { Package, Plus, Pencil, Trash2, AlertTriangle, TrendingDown, Calendar, Settings, ClipboardCheck } from "lucide-react";
+import InventoryAI from "../components/inventory/InventoryAI";
+import { Package, Plus, Pencil, Trash2, AlertTriangle, TrendingDown, Calendar, Settings, ClipboardCheck, Sparkles } from "lucide-react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -30,6 +31,7 @@ export default function InventoryManagement() {
     const [showAuditForm, setShowAuditForm] = useState(false);
     const [editingItem, setEditingItem] = useState(null);
     const [deleteConfirm, setDeleteConfirm] = useState(null);
+    const [showAI, setShowAI] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
     const queryClient = useQueryClient();
 
@@ -155,24 +157,42 @@ export default function InventoryManagement() {
                             <p className="text-gray-600">Track stock levels and manage supplies</p>
                         </div>
                     </div>
-                    {canEdit && (
-                        <div className="flex gap-3">
-                            <Button 
-                                onClick={() => setShowAuditForm(true)} 
-                                variant="outline"
-                                className="border-orange-600 text-orange-600 hover:bg-orange-50"
-                            >
-                                <ClipboardCheck className="w-4 h-4 mr-2" />
-                                Daily Audit
-                            </Button>
-                            <Button onClick={() => { setEditingItem(null); setShowForm(true); }} className="bg-orange-600 hover:bg-orange-700">
-                                <Plus className="w-4 h-4 mr-2" />
-                                Add Item
-                            </Button>
-                        </div>
-                    )}
+                    <div className="flex gap-3">
+                        <Button 
+                            onClick={() => setShowAI(!showAI)} 
+                            variant="outline"
+                            className={`border-purple-600 text-purple-600 hover:bg-purple-50 ${showAI ? 'bg-purple-50' : ''}`}
+                        >
+                            <Sparkles className="w-4 h-4 mr-2" />
+                            AI Assistant
+                        </Button>
+                        {canEdit && (
+                            <>
+                                <Button 
+                                    onClick={() => setShowAuditForm(true)} 
+                                    variant="outline"
+                                    className="border-orange-600 text-orange-600 hover:bg-orange-50"
+                                >
+                                    <ClipboardCheck className="w-4 h-4 mr-2" />
+                                    Daily Audit
+                                </Button>
+                                <Button onClick={() => { setEditingItem(null); setShowForm(true); }} className="bg-orange-600 hover:bg-orange-700">
+                                    <Plus className="w-4 h-4 mr-2" />
+                                    Add Item
+                                </Button>
+                            </>
+                        )}
+                    </div>
                 </div>
             </div>
+
+            {/* AI Assistant */}
+            {showAI && (
+                <InventoryAI 
+                    inventoryItems={inventoryItems.filter(i => i.status === 'active')} 
+                    locations={locations} 
+                />
+            )}
 
             {/* Stats */}
             <div className="grid md:grid-cols-4 gap-4">
