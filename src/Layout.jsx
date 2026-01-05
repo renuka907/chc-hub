@@ -21,25 +21,21 @@ import {
 
 export default function Layout({ children, currentPageName }) {
     // Check if this is a public page immediately - before any state or effects
+    const hash = window.location.hash;
     const isPublicPage = currentPageName === "ViewSharedForm" || 
-                        window.location.hash.includes('ViewSharedForm') ||
-                        window.location.hash.includes('token=');
+                        hash.includes('ViewSharedForm') ||
+                        hash.includes('token=');
     
-    // If public page, render immediately without any auth or layout
-    if (isPublicPage) {
-        return <>{children}</>;
-    }
-
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
     const [currentUser, setCurrentUser] = React.useState(null);
-    const [isLoading, setIsLoading] = React.useState(true);
+    const [isLoading, setIsLoading] = React.useState(!isPublicPage);
+
+    // If public page, render immediately without any auth or layout
+    if (isPublicPage) {
+        return <div className="min-h-screen">{children}</div>;
+    }
 
     React.useEffect(() => {
-        // Double check we're not on a public page before attempting auth
-        if (window.location.hash.includes('ViewSharedForm') || window.location.hash.includes('token=')) {
-            return;
-        }
-        
         base44.auth.me()
             .then(user => {
                 setCurrentUser(user);
