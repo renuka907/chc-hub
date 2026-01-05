@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { 
     BookOpen, 
     FileText, 
@@ -8,40 +10,56 @@ import {
     DollarSign,
     Stethoscope,
     Package,
-    MessageSquare
+    MessageSquare,
+    Tag,
+    Users,
+    Layers,
+    HelpCircle,
+    ArrowRight
 } from "lucide-react";
 
 export default function Home() {
-    const quickLinks = [
+    const navigationSections = [
         {
-            title: "Education Library",
-            description: "Access patient education materials organized by specialty",
-            icon: BookOpen,
-            path: "EducationLibrary",
-            color: "from-purple-500 to-violet-600"
+            title: "Clinical Resources",
+            color: "purple",
+            items: [
+                { title: "Procedures", description: "Step-by-step clinical guides", icon: Stethoscope, path: "ProceduresManagement" },
+                { title: "Lab Tests", description: "Quest diagnostic directory", icon: Stethoscope, path: "LabTestDirectory" },
+                { title: "Aftercare & Forms", description: "Patient instructions & consent", icon: FileText, path: "AftercareLibrary" },
+                { title: "Form Templates", description: "Reusable form library", icon: Layers, path: "FormTemplates" },
+            ]
         },
         {
-            title: "Aftercare & Forms",
-            description: "View procedure aftercare instructions and consent forms",
-            icon: FileText,
-            path: "AftercareLibrary",
-            color: "from-cyan-500 to-blue-600"
+            title: "Business Operations",
+            color: "emerald",
+            items: [
+                { title: "Pricing", description: "Services & treatment packages", icon: DollarSign, path: "PricingManagement" },
+                { title: "Quotes", description: "Patient pricing quotes", icon: FileText, path: "QuotesManagement" },
+                { title: "Discounts", description: "Promotions & special offers", icon: Tag, path: "DiscountManagement" },
+                { title: "Clinic Directory", description: "Location management", icon: Building2, path: "ClinicDirectory" },
+            ]
         },
         {
-            title: "Pricing",
-            description: "Manage pricing for procedures, products, and packages",
-            icon: DollarSign,
-            path: "PricingManagement",
-            color: "from-violet-500 to-purple-600"
-        },
-        {
-            title: "Checkout Quote",
-            description: "Generate price quotes for procedures and products",
-            icon: DollarSign,
-            path: "CheckoutQuote",
-            color: "from-fuchsia-500 to-pink-600"
+            title: "Management & Support",
+            color: "blue",
+            items: [
+                { title: "Inventory", description: "Supplies & stock tracking", icon: Package, path: "InventoryManagement" },
+                { title: "Education Library", description: "Patient education resources", icon: BookOpen, path: "EducationLibrary" },
+                { title: "Messaging", description: "Team communication hub", icon: MessageSquare, path: "Messaging" },
+                { title: "Users", description: "Staff & access management", icon: Users, path: "UserManagement" },
+            ]
         },
     ];
+
+    const getColorClasses = (color) => {
+        const colors = {
+            purple: { bg: "from-purple-500 to-purple-600", border: "border-purple-200 hover:border-purple-400" },
+            emerald: { bg: "from-emerald-500 to-emerald-600", border: "border-emerald-200 hover:border-emerald-400" },
+            blue: { bg: "from-blue-500 to-blue-600", border: "border-blue-200 hover:border-blue-400" },
+        };
+        return colors[color];
+    };
 
     return (
         <div className="space-y-8">
