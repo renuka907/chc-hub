@@ -119,52 +119,51 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
     };
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
-                <style>
-                    {`
-                        #inventory-print-content {
-                            display: none;
+        <>
+            <style>
+                {`
+                    .inventory-print-only {
+                        display: none;
+                    }
+                    
+                    @media print {
+                        @page {
+                            margin: 0.5in;
                         }
                         
-                        @media print {
-                            @page {
-                                margin: 0.5in;
-                            }
-                            
-                            .no-print, .print\\:hidden {
-                                display: none !important;
-                            }
-                            
-                            #inventory-print-content {
-                                display: block !important;
-                                color: black !important;
-                                background: white !important;
-                            }
-                            
-                            .storage-group {
-                                page-break-inside: avoid;
-                                margin-bottom: 20px;
-                            }
-                            
-                            table {
-                                width: 100%;
-                                border-collapse: collapse;
-                            }
-                            
-                            th, td {
-                                border: 1px solid #666;
-                                padding: 4px 6px;
-                            }
-                            
-                            thead {
-                                display: table-header-group;
-                            }
+                        body * {
+                            visibility: hidden;
                         }
-                    `}
-                </style>
+                        
+                        .inventory-print-only,
+                        .inventory-print-only * {
+                            visibility: visible !important;
+                        }
+                        
+                        .inventory-print-only {
+                            display: block !important;
+                            position: absolute;
+                            left: 0;
+                            top: 0;
+                            width: 100%;
+                            background: white;
+                            padding: 20px;
+                        }
+                        
+                        .storage-group {
+                            page-break-inside: avoid;
+                            margin-bottom: 20px;
+                        }
+                        
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+                    }
+                `}
+            </style>
 
-                <div id="inventory-print-content">
+            <div className="inventory-print-only">
                     <div style={{borderBottom: '2px solid black', paddingBottom: '8px', marginBottom: '16px'}}>
                         <div style={{fontSize: '18px', fontWeight: 'bold', color: 'black'}}>Daily Inventory Audit Form</div>
                         <div style={{fontSize: '11px', marginTop: '4px', color: 'black'}}>
