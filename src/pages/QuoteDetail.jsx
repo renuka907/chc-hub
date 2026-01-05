@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import PrintableDocument from "../components/PrintableDocument";
 import EditQuoteDialog from "../components/quotes/EditQuoteDialog";
 import { Printer, ArrowLeft, Edit, Share2 } from "lucide-react";
-import ShareFormDialog from "../components/forms/ShareFormDialog";
+
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 
@@ -17,7 +17,6 @@ export default function QuoteDetail() {
     const autoPrint = urlParams.get('autoprint') === 'true';
     const queryClient = useQueryClient();
     const [showEditDialog, setShowEditDialog] = useState(false);
-    const [showShareDialog, setShowShareDialog] = useState(false);
 
     const { data: quote, isLoading: quoteLoading } = useQuery({
         queryKey: ['quote', quoteId],
@@ -342,13 +341,7 @@ export default function QuoteDetail() {
                 }}
             />
 
-            <ShareFormDialog
-                open={showShareDialog}
-                onOpenChange={setShowShareDialog}
-                entityType="Quote"
-                entityId={quote.id}
-                formName={`Quote ${quote.quote_number}`}
-            />
+
         </div>
     );
 }
