@@ -137,13 +137,13 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                         }
                         
                         @media print {
-                            body > *:not(.print-container) {
-                                display: none !important;
+                            body * {
+                                visibility: hidden;
                             }
                             
-                            body {
-                                margin: 0;
-                                padding: 0;
+                            .print-container,
+                            .print-container * {
+                                visibility: visible !important;
                             }
                             
                             .print-container {
@@ -155,9 +155,14 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                 background: white;
                             }
                             
+                            .no-print {
+                                display: none !important;
+                            }
+                            
                             * {
-                                -webkit-print-color-adjust: exact;
-                                print-color-adjust: exact;
+                                -webkit-print-color-adjust: exact !important;
+                                print-color-adjust: exact !important;
+                                color-adjust: exact !important;
                             }
                         }
                         
