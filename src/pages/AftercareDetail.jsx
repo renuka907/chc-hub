@@ -201,7 +201,10 @@ export default function AftercareDetail() {
                             </Button>
                         </>
                     )}
-                    <Button onClick={() => window.print()} className="bg-blue-600 hover:bg-blue-700">
+                    <Button onClick={() => {
+                        window.print();
+                        setTimeout(() => setShowShareDialog(true), 500);
+                    }} className="bg-blue-600 hover:bg-blue-700">
                         <Printer className="w-4 h-4 mr-2" />
                         Print / PDF
                     </Button>
