@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, Bot, Loader2, Mic, MicOff } from "lucide-react";
+import { Send, Bot, Loader2, Mic, MicOff, Printer } from "lucide-react";
 import { format } from "date-fns";
 
 export default function AgentChat({ agentName }) {
@@ -104,6 +104,59 @@ export default function AgentChat({ agentName }) {
         }
     };
 
+    const handlePrint = (content) => {
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Peach Response</title>
+                <style>
+                    body {
+                        font-family: 'Times New Roman', serif;
+                        padding: 40px;
+                        max-width: 8.5in;
+                        margin: 0 auto;
+                    }
+                    h1 {
+                        color: #7c3aed;
+                        border-bottom: 2px solid #7c3aed;
+                        padding-bottom: 10px;
+                    }
+                    .content {
+                        line-height: 1.6;
+                        white-space: pre-wrap;
+                        font-size: 12pt;
+                    }
+                    .footer {
+                        margin-top: 40px;
+                        padding-top: 20px;
+                        border-top: 1px solid #ccc;
+                        text-align: center;
+                        color: #666;
+                        font-size: 10pt;
+                    }
+                    @media print {
+                        body { padding: 0.5in; }
+                    }
+                </style>
+            </head>
+            <body>
+                <h1>Peach Assistant Response</h1>
+                <p style="color: #666; font-size: 10pt;">Generated: ${new Date().toLocaleString()}</p>
+                <div class="content">${content}</div>
+                <div class="footer">
+                    Contemporary Health Center | CHC Hub
+                </div>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+        setTimeout(() => {
+            printWindow.print();
+        }, 250);
+    };
+
     const toggleVoiceInput = () => {
         if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
             alert('Voice input is not supported in your browser');
@@ -184,16 +237,29 @@ export default function AgentChat({ agentName }) {
                                     {isUser && messageTime && (
                                         <span className="text-xs text-gray-500 mb-1">{messageTime}</span>
                                     )}
-                                    <div
-                                        className={`rounded-2xl px-4 py-2 ${
-                                            isUser
-                                                ? 'bg-blue-600 text-white'
-                                                : 'bg-gray-100 text-gray-900'
-                                        }`}
-                                    >
-                                        <p className="text-sm whitespace-pre-wrap break-words">
-                                            {msg.content}
-                                        </p>
+                                    <div className="flex items-start gap-2">
+                                        <div
+                                            className={`rounded-2xl px-4 py-2 ${
+                                                isUser
+                                                    ? 'bg-blue-600 text-white'
+                                                    : 'bg-gray-100 text-gray-900'
+                                            }`}
+                                        >
+                                            <p className="text-sm whitespace-pre-wrap break-words">
+                                                {msg.content}
+                                            </p>
+                                        </div>
+                                        {!isUser && msg.content && (
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() => handlePrint(msg.content)}
+                                                className="h-8 w-8 opacity-0 hover:opacity-100 transition-opacity"
+                                                title="Print this response"
+                                            >
+                                                <Printer className="w-4 h-4 text-gray-600" />
+                                            </Button>
+                                        )}
                                     </div>
                                 </div>
                             </div>
