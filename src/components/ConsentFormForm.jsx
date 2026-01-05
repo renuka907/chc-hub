@@ -502,23 +502,25 @@ ${result.contraindications.length > 0 ? `Contraindications:\n${result.contraindi
                                     onChange={(value) => setFormData({...formData, content: value})}
                                     modules={{
                                         toolbar: [
-                                            [{ 'header': [1, 2, 3, false] }],
+                                            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
                                             [{ 'font': [] }],
                                             [{ 'size': ['small', false, 'large', 'huge'] }],
                                             ['bold', 'italic', 'underline', 'strike'],
+                                            [{ 'script': 'sub'}, { 'script': 'super' }],
                                             [{ 'color': [] }, { 'background': [] }],
-                                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                            ['blockquote', 'code-block'],
+                                            [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
                                             [{ 'indent': '-1'}, { 'indent': '+1' }],
+                                            [{ 'direction': 'rtl' }],
                                             [{ 'align': [] }],
-                                            ['link', 'image'],
-                                            ['clean'],
-                                            ['code-block']
+                                            ['link', 'image', 'video'],
+                                            ['clean']
                                         ],
                                         clipboard: {
                                             matchVisual: true
                                         }
                                     }}
-                                    formats={['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'color', 'background', 'list', 'bullet', 'indent', 'align', 'link', 'image', 'code-block', 'script', 'blockquote', 'direction']}
+                                    formats={['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'script', 'color', 'background', 'blockquote', 'code-block', 'list', 'bullet', 'check', 'indent', 'direction', 'align', 'link', 'image', 'video']}
                                     className="bg-white"
                                     style={{ height: '400px', marginBottom: '50px' }}
                                 />
