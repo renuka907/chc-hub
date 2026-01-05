@@ -53,6 +53,7 @@ export default function Layout({ children, currentPageName }) {
         { name: "Education Library", path: "EducationLibrary", icon: BookOpen },
         { name: "Aftercare & Forms", path: "AftercareLibrary", icon: FileText },
         { name: "Form Templates", path: "FormTemplates", icon: Layers },
+        ...(currentUser?.role === 'admin' || currentUser?.role === 'manager' ? [{ name: "Procedures", path: "ProceduresManagement", icon: Stethoscope }] : []),
         { name: "Clinic Directory", path: "ClinicDirectory", icon: Building2 },
         { name: "Pricing", path: "PricingManagement", icon: DollarSign },
         { name: "Quotes", path: "QuotesManagement", icon: FileText },

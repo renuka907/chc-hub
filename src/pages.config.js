@@ -1,7 +1,10 @@
+import AftercareDetail from './pages/AftercareDetail';
 import AftercareLibrary from './pages/AftercareLibrary';
 import CheckoutQuote from './pages/CheckoutQuote';
 import ClinicDirectory from './pages/ClinicDirectory';
+import ConsentFormDetail from './pages/ConsentFormDetail';
 import DiscountManagement from './pages/DiscountManagement';
+import EducationDetail from './pages/EducationDetail';
 import EducationLibrary from './pages/EducationLibrary';
 import EmployeeQuestions from './pages/EmployeeQuestions';
 import FAQ from './pages/FAQ';
@@ -11,21 +14,22 @@ import InventoryManagement from './pages/InventoryManagement';
 import LabTestDirectory from './pages/LabTestDirectory';
 import Messaging from './pages/Messaging';
 import PricingManagement from './pages/PricingManagement';
+import QuoteDetail from './pages/QuoteDetail';
 import QuotesManagement from './pages/QuotesManagement';
 import UserManagement from './pages/UserManagement';
-import EducationDetail from './pages/EducationDetail';
-import QuoteDetail from './pages/QuoteDetail';
-import ConsentFormDetail from './pages/ConsentFormDetail';
 import ViewSharedForm from './pages/ViewSharedForm';
-import AftercareDetail from './pages/AftercareDetail';
+import ProceduresManagement from './pages/ProceduresManagement';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AftercareDetail": AftercareDetail,
     "AftercareLibrary": AftercareLibrary,
     "CheckoutQuote": CheckoutQuote,
     "ClinicDirectory": ClinicDirectory,
+    "ConsentFormDetail": ConsentFormDetail,
     "DiscountManagement": DiscountManagement,
+    "EducationDetail": EducationDetail,
     "EducationLibrary": EducationLibrary,
     "EmployeeQuestions": EmployeeQuestions,
     "FAQ": FAQ,
@@ -35,13 +39,11 @@ export const PAGES = {
     "LabTestDirectory": LabTestDirectory,
     "Messaging": Messaging,
     "PricingManagement": PricingManagement,
+    "QuoteDetail": QuoteDetail,
     "QuotesManagement": QuotesManagement,
     "UserManagement": UserManagement,
-    "EducationDetail": EducationDetail,
-    "QuoteDetail": QuoteDetail,
-    "ConsentFormDetail": ConsentFormDetail,
     "ViewSharedForm": ViewSharedForm,
-    "AftercareDetail": AftercareDetail,
+    "ProceduresManagement": ProceduresManagement,
 }
 
 export const pagesConfig = {
