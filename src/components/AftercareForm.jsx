@@ -268,20 +268,25 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
                                     onChange={(value) => setFormData({...formData, instructions: value})}
                                     modules={{
                                         toolbar: [
-                                            [{ 'header': [1, 2, 3, false] }],
-                                            ['bold', 'italic', 'underline'],
-                                            [{ 'color': [] }],
-                                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                                            [{ 'font': [] }],
+                                            [{ 'size': ['small', false, 'large', 'huge'] }],
+                                            ['bold', 'italic', 'underline', 'strike'],
+                                            [{ 'script': 'sub'}, { 'script': 'super' }],
+                                            [{ 'color': [] }, { 'background': [] }],
+                                            ['blockquote', 'code-block'],
+                                            [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
                                             [{ 'indent': '-1'}, { 'indent': '+1' }],
+                                            [{ 'direction': 'rtl' }],
                                             [{ 'align': [] }],
-                                            ['link'],
+                                            ['link', 'image'],
                                             ['clean']
                                         ],
                                         clipboard: {
                                             matchVisual: true
                                         }
                                     }}
-                                    formats={['header', 'bold', 'italic', 'underline', 'color', 'list', 'bullet', 'indent', 'align', 'link', 'script', 'blockquote']}
+                                    formats={['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'script', 'color', 'background', 'blockquote', 'code-block', 'list', 'bullet', 'check', 'indent', 'direction', 'align', 'link', 'image']}
                                     className="bg-white"
                                     style={{ height: '300px', marginBottom: '50px' }}
                                 />
@@ -295,15 +300,18 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
                                 onChange={(value) => setFormData({...formData, warning_signs: value})}
                                 modules={{
                                     toolbar: [
-                                        ['bold', 'italic', 'underline'],
-                                        [{ 'list': 'bullet' }],
+                                        ['bold', 'italic', 'underline', 'strike'],
+                                        [{ 'script': 'sub'}, { 'script': 'super' }],
+                                        [{ 'color': [] }, { 'background': [] }],
+                                        [{ 'list': 'bullet' }, { 'list': 'check' }],
+                                        ['blockquote'],
                                         ['clean']
                                     ],
                                     clipboard: {
                                         matchVisual: true
                                     }
                                 }}
-                                formats={['bold', 'italic', 'underline', 'list', 'bullet']}
+                                formats={['bold', 'italic', 'underline', 'strike', 'script', 'color', 'background', 'list', 'bullet', 'check', 'blockquote']}
                                 className="bg-white"
                                 style={{ height: '200px', marginBottom: '50px' }}
                             />
@@ -316,15 +324,18 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
                                 onChange={(value) => setFormData({...formData, follow_up: value})}
                                 modules={{
                                     toolbar: [
-                                        ['bold', 'italic', 'underline'],
-                                        [{ 'list': 'bullet' }],
+                                        ['bold', 'italic', 'underline', 'strike'],
+                                        [{ 'script': 'sub'}, { 'script': 'super' }],
+                                        [{ 'color': [] }, { 'background': [] }],
+                                        [{ 'list': 'bullet' }, { 'list': 'check' }],
+                                        ['blockquote'],
                                         ['clean']
                                     ],
                                     clipboard: {
                                         matchVisual: true
                                     }
                                 }}
-                                formats={['bold', 'italic', 'underline', 'list', 'bullet']}
+                                formats={['bold', 'italic', 'underline', 'strike', 'script', 'color', 'background', 'list', 'bullet', 'check', 'blockquote']}
                                 className="bg-white"
                                 style={{ height: '150px', marginBottom: '50px' }}
                             />
