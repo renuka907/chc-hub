@@ -36,13 +36,23 @@ export default function Layout({ children, currentPageName }) {
     }
 
     React.useEffect(() => {
+        // Skip authentication entirely for public pages
+        const currentHash = window.location.hash;
+        if (currentHash.includes('ViewSharedForm') || currentHash.includes('token=')) {
+            return;
+        }
+
         base44.auth.me()
             .then(user => {
                 setCurrentUser(user);
                 setIsLoading(false);
             })
             .catch(() => {
-                base44.auth.redirectToLogin();
+                // Only redirect to login if NOT on a public page
+                const hashCheck = window.location.hash;
+                if (!hashCheck.includes('ViewSharedForm') && !hashCheck.includes('token=')) {
+                    base44.auth.redirectToLogin();
+                }
             });
     }, []);
 
