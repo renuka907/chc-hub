@@ -147,6 +147,9 @@ export default function ConsentFormDetail() {
                         @page {
                             margin: 0.3cm;
                         }
+                        body {
+                            background: white !important;
+                        }
                         body * {
                             visibility: hidden;
                         }
@@ -156,13 +159,14 @@ export default function ConsentFormDetail() {
                             color: #000 !important;
                         }
                         .printable-document {
-                            position: absolute !important;
+                            position: fixed !important;
                             left: 0 !important;
                             top: 0 !important;
                             width: 100%;
                             padding: 5px !important;
                             font-size: 11pt !important;
                             line-height: 1.4 !important;
+                            background: white !important;
                         }
                         .no-print {
                             display: none !important;

@@ -70,6 +70,7 @@ export default function EducationDetail() {
                         body {
                             margin: 0;
                             padding: 0;
+                            background: white !important;
                         }
                         body * {
                             visibility: hidden;
@@ -79,7 +80,9 @@ export default function EducationDetail() {
                             visibility: visible;
                         }
                         .printable-document {
-                            position: static !important;
+                            position: fixed !important;
+                            left: 0 !important;
+                            top: 0 !important;
                             width: 100% !important;
                             max-width: 100% !important;
                             margin: 0 !important;
@@ -87,6 +90,7 @@ export default function EducationDetail() {
                             font-size: 12pt !important;
                             line-height: 1.4 !important;
                             color: #000 !important;
+                            background: white !important;
                         }
                         .printable-document h1 {
                             font-size: 18pt !important;

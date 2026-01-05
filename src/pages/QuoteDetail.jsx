@@ -88,6 +88,9 @@ export default function QuoteDetail() {
                         @page {
                             margin: 0.3cm;
                         }
+                        body {
+                            background: white !important;
+                        }
                         body * {
                             visibility: hidden;
                         }
@@ -97,13 +100,14 @@ export default function QuoteDetail() {
                             color: #000 !important;
                         }
                         .printable-document {
-                            position: absolute !important;
+                            position: fixed !important;
                             left: 0 !important;
                             top: 0 !important;
                             width: 100%;
                             padding: 5px !important;
                             font-size: 15px !important;
                             line-height: 1.5 !important;
+                            background: white !important;
                         }
                         .printable-document h1 {
                             font-size: 20px !important;
