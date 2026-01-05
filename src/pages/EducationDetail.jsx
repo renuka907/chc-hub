@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import PrintableDocument from "../components/PrintableDocument";
 import EducationTopicForm from "../components/EducationTopicForm";
-import { openPrintWindow } from "../components/PrintHelper";
 import { Printer, ArrowLeft, Calendar, ExternalLink, Pencil, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
@@ -14,6 +13,7 @@ import { createPageUrl } from "../utils";
 export default function EducationDetail() {
     const urlParams = new URLSearchParams(window.location.search);
     const topicId = urlParams.get('id');
+    const autoPrint = urlParams.get('autoprint') === 'true';
     const [showEditForm, setShowEditForm] = useState(false);
     const queryClient = useQueryClient();
 
@@ -40,6 +40,15 @@ export default function EducationDetail() {
         "Medication Education": "bg-green-100 text-green-800"
     };
 
+    // Auto-trigger print when topic loads
+    React.useEffect(() => {
+        if (topic && autoPrint) {
+            setTimeout(() => {
+                window.print();
+            }, 500);
+        }
+    }, [topic, autoPrint]);
+
     if (!topic) {
         return (
             <div className="text-center py-12">
@@ -50,6 +59,75 @@ export default function EducationDetail() {
 
     return (
         <div className="space-y-6">
+            {/* Print Styles */}
+            <style>
+                {`
+                    @media print {
+                        @page {
+                            margin: 0.3cm;
+                        }
+                        body * {
+                            visibility: hidden;
+                        }
+                        .printable-document,
+                        .printable-document * {
+                            visibility: visible;
+                            color: #000 !important;
+                        }
+                        .printable-document {
+                            position: absolute !important;
+                            left: 0 !important;
+                            top: 0 !important;
+                            width: 100%;
+                            padding: 5px !important;
+                            font-size: 15px !important;
+                            line-height: 1.5 !important;
+                        }
+                        .printable-document h1 {
+                            font-size: 20px !important;
+                            margin-bottom: 4px !important;
+                        }
+                        .printable-document h3 {
+                            font-size: 16px !important;
+                            margin-bottom: 4px !important;
+                        }
+                        .printable-document .space-y-6 > * + * {
+                            margin-top: 6px !important;
+                        }
+                        .printable-document .text-xl {
+                            font-size: 18px !important;
+                        }
+                        .printable-document img {
+                            max-height: 200px !important;
+                        }
+                        .printable-document .text-sm {
+                            font-size: 13px !important;
+                        }
+                        .printable-document .text-xs {
+                            font-size: 12px !important;
+                        }
+                        .printable-document .pb-6 {
+                            padding-bottom: 4px !important;
+                        }
+                        .printable-document .mb-4 {
+                            margin-bottom: 4px !important;
+                        }
+                        .printable-document .p-4 {
+                            padding: 4px !important;
+                        }
+                        .printable-document .pt-4 {
+                            padding-top: 4px !important;
+                        }
+                        .printable-document .mt-8 {
+                            margin-top: 6px !important;
+                        }
+                        .no-print {
+                            display: none !important;
+                        }
+                    }
+                `}
+            </style>
+
             {/* Action Bar */}
             <div className="flex items-center justify-between no-print">
                 <Link to={createPageUrl("EducationLibrary")}>
@@ -71,7 +149,7 @@ export default function EducationDetail() {
                         <Pencil className="w-4 h-4 mr-2" />
                         Edit
                     </Button>
-                    <Button onClick={openPrintWindow} className="bg-blue-600 hover:bg-blue-700">
+                    <Button onClick={() => window.print()} className="bg-blue-600 hover:bg-blue-700">
                         <Printer className="w-4 h-4 mr-2" />
                         Print / PDF
                     </Button>
@@ -116,9 +194,10 @@ export default function EducationDetail() {
 
                     {/* Main Content */}
                     <div className="prose max-w-none">
-                        <div className="whitespace-pre-wrap text-gray-800 leading-relaxed">
-                            {topic.content}
-                        </div>
+                        <div 
+                            className="text-gray-800 leading-relaxed"
+                            dangerouslySetInnerHTML={{ __html: topic.content }}
+                        />
                     </div>
 
                     {/* Medical References */}
