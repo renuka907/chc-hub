@@ -49,21 +49,28 @@ export default function LabTestDirectory() {
 
         try {
             const response = await base44.integrations.Core.InvokeLLM({
-                prompt: `Search for the lab test "${searchQuery}" on Quest Diagnostics test directory (https://testdirectory.questdiagnostics.com/test/home).
-                
-Provide the following information in JSON format:
-- test_name: Official test name
-- test_code: Quest test code if available
-- tube_type: Required tube type (color and type, e.g., "Lavender-top EDTA tube")
-- specimen_type: Type of specimen (e.g., "Whole blood", "Serum", "Plasma")
-- collection_instructions: How to collect the specimen
-- storage_requirements: Storage temperature and conditions
-- volume_required: Required specimen volume
-- quest_url: Direct URL to the test page on Quest Diagnostics
-- category: Test category (e.g., "Hematology", "Chemistry", "Hormone", "Microbiology")
-- notes: Any special handling or important notes
+                prompt: `You are a medical laboratory specialist. Find detailed information about the lab test: "${searchQuery}"
 
-If you can't find the exact test, suggest similar tests.`,
+Search Quest Diagnostics test directory and medical laboratory resources to find:
+
+1. Test Name: Official name of the test
+2. Test Code: Quest Diagnostics test code (if available)
+3. Tube Type: Exact tube color and anticoagulant (e.g., "Lavender-top EDTA tube", "Red-top serum tube", "Gold/SST tube")
+4. Specimen Type: What specimen is needed (whole blood, serum, plasma, urine, etc.)
+5. Collection Instructions: Step-by-step collection process
+6. Storage: Temperature and conditions (e.g., "Room temperature", "Refrigerate 2-8°C", "Freeze")
+7. Volume: Amount needed (e.g., "1 mL", "5 mL whole blood")
+8. Category: Test category (Hematology, Chemistry, Hormone, Microbiology, etc.)
+9. Special Notes: Any critical handling requirements
+
+Common test examples:
+- CBC (Complete Blood Count): Lavender-top EDTA tube
+- CMP (Comprehensive Metabolic Panel): Gold/SST or green-top tube
+- TSH (Thyroid Stimulating Hormone): Gold/SST tube, serum
+- Vitamin D: Gold/SST tube, serum, protect from light
+
+Return "found": true if you find the test information, false if not found.
+If not found, provide at least 3 similar test name suggestions.`,
                 add_context_from_internet: true,
                 response_json_schema: {
                     type: "object",
