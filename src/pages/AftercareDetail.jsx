@@ -6,9 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import PrintableDocument from "../components/PrintableDocument";
 import AftercareForm from "../components/AftercareForm";
+import ShareFormDialog from "../components/forms/ShareFormDialog";
 import { usePermissions } from "../components/permissions/usePermissions";
 import { toast } from "sonner";
-import { Printer, ArrowLeft, AlertTriangle, Clock, Calendar as CalendarIcon, Pencil, Star, FileText, Save, Files } from "lucide-react";
+import { Printer, ArrowLeft, AlertTriangle, Clock, Calendar as CalendarIcon, Pencil, Star, FileText, Share2, Save, Files } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 
@@ -16,6 +17,7 @@ export default function AftercareDetail() {
     const urlParams = new URLSearchParams(window.location.search);
     const instructionId = urlParams.get('id');
     const [showEditForm, setShowEditForm] = useState(false);
+    const [showShareDialog, setShowShareDialog] = useState(false);
     const queryClient = useQueryClient();
     const { can } = usePermissions();
 
@@ -98,28 +100,24 @@ export default function AftercareDetail() {
                 {`
                     @media print {
                         @page {
-                            margin: 0.5in;
-                        }
-                        body {
-                            background: white !important;
+                            margin: 0.3cm;
                         }
                         body * {
                             visibility: hidden;
                         }
                         .printable-document,
                         .printable-document * {
-                            visibility: visible !important;
+                            visibility: visible;
                             color: #000 !important;
                         }
                         .printable-document {
                             position: absolute !important;
                             left: 0 !important;
                             top: 0 !important;
-                            width: 100% !important;
-                            padding: 0 !important;
+                            width: 100%;
+                            padding: 5px !important;
                             font-size: 11pt !important;
                             line-height: 1.4 !important;
-                            background: white !important;
                         }
                         .no-print {
                             display: none !important;
@@ -173,6 +171,12 @@ export default function AftercareDetail() {
                     </Button>
                 </Link>
                 <div className="flex gap-2">
+                    {can("aftercare", "share") && (
+                        <Button variant="outline" onClick={() => setShowShareDialog(true)} className="border-blue-500 text-blue-600">
+                            <Share2 className="w-4 h-4 mr-2" />
+                            Share
+                        </Button>
+                    )}
                     <Button 
                         variant="outline" 
                         onClick={toggleFavorite}
@@ -339,6 +343,14 @@ export default function AftercareDetail() {
                     editInstruction={instruction}
                 />
             )}
+
+            <ShareFormDialog
+                open={showShareDialog}
+                onOpenChange={setShowShareDialog}
+                entityType="AftercareInstruction"
+                entityId={instruction.id}
+                formName={instruction.procedure_name}
+            />
         </div>
     );
 }
