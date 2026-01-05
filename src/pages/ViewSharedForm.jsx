@@ -29,7 +29,7 @@ export default function ViewSharedForm() {
         queryKey: ['sharedLink', token],
         queryFn: async () => {
             console.log('Fetching shared links...');
-            const allLinks = await base44.entities.SharedFormLink.list();
+            const allLinks = await base44.asServiceRole.entities.SharedFormLink.list();
             const found = allLinks.find(link => link.share_token === token);
             console.log('Looking for token:', token);
             console.log('All links:', allLinks);
@@ -50,17 +50,17 @@ export default function ViewSharedForm() {
             if (!sharedLink) return null;
             console.log('Fetching content for:', sharedLink.entity_type, sharedLink.entity_id);
             if (sharedLink.entity_type === "ConsentForm") {
-                const forms = await base44.entities.ConsentForm.list();
+                const forms = await base44.asServiceRole.entities.ConsentForm.list();
                 const found = forms.find(f => f.id === sharedLink.entity_id);
                 console.log('ConsentForm found:', found);
                 return found;
             } else if (sharedLink.entity_type === "AftercareInstruction") {
-                const instructions = await base44.entities.AftercareInstruction.list();
+                const instructions = await base44.asServiceRole.entities.AftercareInstruction.list();
                 const found = instructions.find(i => i.id === sharedLink.entity_id);
                 console.log('AftercareInstruction found:', found);
                 return found;
             } else if (sharedLink.entity_type === "Quote") {
-                const quotes = await base44.entities.Quote.list();
+                const quotes = await base44.asServiceRole.entities.Quote.list();
                 const found = quotes.find(q => q.id === sharedLink.entity_id);
                 console.log('Quote found:', found);
                 return found;
@@ -72,14 +72,14 @@ export default function ViewSharedForm() {
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
-        queryFn: () => base44.entities.ClinicLocation.list(),
+        queryFn: () => base44.asServiceRole.entities.ClinicLocation.list(),
         enabled: !!sharedLink && sharedLink.entity_type === "Quote"
     });
 
     const incrementViewMutation = useMutation({
         mutationFn: async (linkId) => {
             const currentCount = sharedLink.view_count || 0;
-            await base44.entities.SharedFormLink.update(linkId, {
+            await base44.asServiceRole.entities.SharedFormLink.update(linkId, {
                 view_count: currentCount + 1
             });
         }
