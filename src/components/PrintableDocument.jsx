@@ -118,7 +118,28 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
                         margin: 12px 0;
                     }
 
+                    .printable-document-container {
+                        display: block;
+                    }
+
+                    .printable-document {
+                        box-sizing: border-box;
+                        page-break-after: always;
+                    }
+
+                    @media screen {
+                        .printable-document-container::after {
+                            content: '';
+                            display: block;
+                            height: 20px;
+                        }
+                    }
+
                     @media print {
+                        .printable-document-container {
+                            background: white !important;
+                            padding: 0 !important;
+                        }
                         body * {
                             visibility: hidden;
                         }
@@ -126,14 +147,13 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
                             visibility: visible;
                         }
                         .printable-document {
-                            position: absolute;
-                            left: 0;
-                            top: 0;
+                            position: static;
                             width: 100%;
                             background: white;
                             padding: 0.5in;
-                            border: 2px solid black;
-                            max-width: 100%;
+                            margin: 0;
+                            box-shadow: none;
+                            page-break-after: always;
                         }
                         .no-print {
                             display: none !important;
