@@ -6,12 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sparkles, Loader2, Image as ImageIcon, Wand2, Save } from "lucide-react";
+import { Sparkles, Loader2, Image as ImageIcon, Wand2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import EducationTemplateSelector from "../components/education/EducationTemplateSelector";
-import { toast } from "sonner";
 
 export default function EducationTopicForm({ open, onOpenChange, onSuccess, editTopic = null }) {
     const [formData, setFormData] = useState(editTopic || {
@@ -27,7 +25,8 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
     const [isGeneratingImage, setIsGeneratingImage] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
-    const [showTemplateSelector, setShowTemplateSelector] = useState(false);
+    const [showTemplates, setShowTemplates] = useState(false);
+    const [templates, setTemplates] = useState([]);
 
     const handleGenerate = async () => {
         if (!formData.title || !formData.category) {
@@ -99,40 +98,25 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
         setIsGeneratingImage(false);
     };
 
-    const handleTemplateSelect = (template) => {
-        setFormData({
-            ...formData,
-            summary: template.summary || formData.summary,
-            content: template.content || formData.content,
-            medical_references: template.medical_references || formData.medical_references,
-            image_url: template.image_url || formData.image_url
-        });
-        toast.success("Template loaded successfully!");
+    const loadTemplates = async () => {
+        try {
+            const allTopics = await base44.entities.EducationTopic.list();
+            const byCategory = allTopics.filter(t => t.category === formData.category);
+            setTemplates(byCategory.slice(0, 5));
+            setShowTemplates(true);
+        } catch (error) {
+            console.error('Failed to load templates:', error);
+        }
     };
 
-    const handleSaveAsTemplate = async () => {
-        if (!formData.title || !formData.category || !formData.content) {
-            alert('Please fill in title, category, and content before saving as template');
-            return;
-        }
-
-        try {
-            await base44.entities.EducationTemplate.create({
-                template_name: formData.title,
-                category: formData.category,
-                description: formData.summary,
-                summary: formData.summary,
-                content: formData.content,
-                medical_references: formData.medical_references,
-                image_url: formData.image_url,
-                is_public: true,
-                is_favorite: false,
-                usage_count: 0
-            });
-            toast.success("Saved as template!");
-        } catch (error) {
-            toast.error("Failed to save template");
-        }
+    const applyTemplate = (template) => {
+        setFormData({
+            ...formData,
+            summary: template.summary,
+            content: template.content,
+            medical_references: template.medical_references
+        });
+        setShowTemplates(false);
     };
 
     const handleImageUpload = async (e) => {
@@ -273,24 +257,33 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                             {formData.category && (
                                 <Button
                                     type="button"
-                                    onClick={() => setShowTemplateSelector(true)}
+                                    onClick={loadTemplates}
                                     variant="outline"
+                                    disabled={!formData.category}
                                 >
                                     <Wand2 className="w-4 h-4 mr-2" />
                                     Load Template
                                 </Button>
                             )}
-                            {formData.content && (
-                                <Button
-                                    type="button"
-                                    onClick={handleSaveAsTemplate}
-                                    variant="outline"
-                                >
-                                    <Save className="w-4 h-4 mr-2" />
-                                    Save as Template
-                                </Button>
-                            )}
                         </div>
+
+                        {showTemplates && templates.length > 0 && (
+                            <div className="border rounded-lg p-4 space-y-2">
+                                <p className="text-sm font-semibold text-gray-700">Available Templates:</p>
+                                {templates.map(template => (
+                                    <button
+                                        key={template.id}
+                                        onClick={() => applyTemplate(template)}
+                                        className="w-full text-left p-3 border rounded-lg hover:bg-purple-50 transition-colors"
+                                    >
+                                        <div className="font-medium text-sm">{template.title}</div>
+                                        {template.summary && (
+                                            <div className="text-xs text-gray-600 mt-1 line-clamp-2">{template.summary}</div>
+                                        )}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
 
                         <div className="space-y-2">
                             <Label htmlFor="content">Educational Content *</Label>
@@ -369,13 +362,6 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                         {isSaving ? 'Saving...' : (editTopic ? 'Update Topic' : 'Create Topic')}
                     </Button>
                 </DialogFooter>
-
-                <EducationTemplateSelector
-                    open={showTemplateSelector}
-                    onOpenChange={setShowTemplateSelector}
-                    category={formData.category}
-                    onSelect={handleTemplateSelect}
-                />
             </DialogContent>
         </Dialog>
     );
