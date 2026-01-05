@@ -27,9 +27,15 @@ export default function Layout({ children, currentPageName }) {
     console.log('currentPageName:', currentPageName);
     console.log('Is ViewSharedForm?', currentPageName === "ViewSharedForm");
 
+    // Check if it's a public page by looking at the URL hash directly
+    const isPublicPage = React.useMemo(() => {
+        const hash = window.location.hash;
+        return hash.includes('ViewSharedForm');
+    }, []);
+
     React.useEffect(() => {
         // Skip authentication for public pages
-        if (currentPageName === "ViewSharedForm") {
+        if (currentPageName === "ViewSharedForm" || isPublicPage) {
             console.log('Skipping auth for ViewSharedForm');
             setIsLoading(false);
             return;
@@ -45,7 +51,7 @@ export default function Layout({ children, currentPageName }) {
                 const redirectUrl = window.location.pathname + window.location.search + window.location.hash;
                 base44.auth.redirectToLogin(redirectUrl);
             });
-    }, [currentPageName]);
+    }, [currentPageName, isPublicPage]);
 
     const navItems = [
         { name: "Home", path: "Home", icon: Home },
@@ -70,7 +76,7 @@ export default function Layout({ children, currentPageName }) {
     }
 
     // Render public pages without layout
-    if (currentPageName === "ViewSharedForm") {
+    if (currentPageName === "ViewSharedForm" || isPublicPage) {
         return <>{children}</>;
     }
 
