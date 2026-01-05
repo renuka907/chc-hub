@@ -224,8 +224,8 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                             <tbody>
                                 {storageItems.map(item => (
                                     <tr key={item.id}>
-                                        <td style={{border: '1px solid #999', padding: '6px 4px', fontSize: '10px'}}>{item.item_name}</td>
-                                        <td style={{border: '1px solid #999', padding: '6px 4px', fontSize: '10px'}}>{item.item_type}</td>
+                                        <td style={{border: '1px solid #999', padding: '6px 8px', fontSize: '10px'}}>{item.item_name}</td>
+                                        <td style={{border: '1px solid #999', padding: '6px 8px', textAlign: 'center', fontSize: '10px'}}>{item.item_type}</td>
                                         <td style={{border: '1px solid #999', padding: '6px 8px', textAlign: 'center', fontSize: '10px'}}>{item.sku || '-'}</td>
                                         <td style={{border: '1px solid #999', padding: '6px 8px', textAlign: 'center', fontSize: '10px'}}>
                                             {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: '2-digit'}) : '-'}
