@@ -9,7 +9,11 @@ import PrintableDocument from "../components/PrintableDocument";
 import { openPrintWindow } from "../components/PrintHelper";
 import { Lock, AlertCircle, Loader2, FileText, Printer } from "lucide-react";
 
+console.log('=== ViewSharedForm module loaded ===');
+
 export default function ViewSharedForm() {
+    console.log('=== ViewSharedForm component rendering ===');
+    
     // Parse token from hash-based URL (e.g., /#/ViewSharedForm?token=xyz)
     const hashParts = window.location.hash.split('?');
     const queryString = hashParts.length > 1 ? hashParts[1] : '';
