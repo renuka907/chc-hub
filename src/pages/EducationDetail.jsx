@@ -126,29 +126,46 @@ export default function EducationDetail() {
                                 border-left: 4px solid #0ea5e9;
                                 padding: 1.5rem;
                                 border-radius: 0.5rem;
-                                margin: 1.5rem 0;
+                                margin: 2rem 0;
+                                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
                             }
                             .education-content ol {
                                 background: linear-gradient(to right, #faf5ff, #f3e8ff);
                                 border-left: 4px solid #a855f7;
                                 padding: 1.5rem;
                                 border-radius: 0.5rem;
-                                margin: 1.5rem 0;
+                                margin: 2rem 0;
+                                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
                             }
                             .education-content li {
-                                margin: 0.5rem 0;
+                                margin: 0.75rem 0;
                                 padding-left: 0.5rem;
+                                line-height: 1.7;
                             }
                             .education-content h3 {
                                 color: #1e293b;
+                                font-size: 1.5rem;
+                                font-weight: 700;
+                                margin-top: 3rem;
+                                margin-bottom: 1.25rem;
+                                padding-bottom: 0.5rem;
+                                border-bottom: 2px solid #e2e8f0;
+                            }
+                            .education-content h4 {
+                                color: #334155;
                                 font-size: 1.25rem;
                                 font-weight: 600;
                                 margin-top: 2rem;
                                 margin-bottom: 1rem;
                             }
                             .education-content p {
-                                margin-bottom: 1rem;
-                                line-height: 1.7;
+                                margin-bottom: 1.5rem;
+                                line-height: 1.8;
+                                font-size: 1.05rem;
+                            }
+                            .education-content strong {
+                                color: #1e293b;
+                                font-weight: 600;
                             }
                         `}</style>
                     </div>
