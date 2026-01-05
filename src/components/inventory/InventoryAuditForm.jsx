@@ -129,12 +129,26 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                         }
                         
                         @media print {
-                            .no-print {
-                                display: none !important;
+                            body * {
+                                visibility: hidden !important;
+                            }
+                            
+                            .print-container,
+                            .print-container * {
+                                visibility: visible !important;
                             }
                             
                             .print-container {
                                 display: block !important;
+                                position: absolute !important;
+                                left: 0 !important;
+                                top: 0 !important;
+                                width: 100% !important;
+                            }
+                            
+                            .no-print {
+                                display: none !important;
+                                visibility: hidden !important;
                             }
                             
                             .storage-group {
@@ -168,12 +182,6 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                         
                         .print-container {
                             display: none;
-                        }
-                        
-                        @media screen {
-                            .print-container {
-                                display: none;
-                            }
                         }
                     `}
                 </style>
