@@ -194,10 +194,16 @@ export default function EducationDetail() {
 
                     {/* Main Content */}
                     <div className="prose max-w-none">
-                        <div 
-                            className="text-gray-800 leading-relaxed"
-                            dangerouslySetInnerHTML={{ __html: topic.content }}
-                        />
+                        {topic.content?.includes('<') ? (
+                            <div 
+                                className="text-gray-800 leading-relaxed"
+                                dangerouslySetInnerHTML={{ __html: topic.content }}
+                            />
+                        ) : (
+                            <div className="whitespace-pre-wrap text-gray-800 leading-relaxed">
+                                {topic.content}
+                            </div>
+                        )}
                     </div>
 
                     {/* Medical References */}
