@@ -8,8 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import { Copy, Share2, Loader2, Eye, EyeOff, Clock, Lock, Trash2, CheckCircle2, ShieldX } from "lucide-react";
+import { Copy, Share2, Loader2, Eye, EyeOff, Clock, Lock, Trash2, CheckCircle2, ShieldX, QrCode, Code } from "lucide-react";
 import { toast } from "sonner";
+import { QRCodeSVG } from "qrcode.react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function ShareFormDialog({ open, onOpenChange, entityType, entityId, formName }) {
     const [hasExpiration, setHasExpiration] = useState(false);
@@ -19,6 +21,8 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
     const [showPassword, setShowPassword] = useState(false);
     const [copiedToken, setCopiedToken] = useState(null);
     const [revokeDialogLink, setRevokeDialogLink] = useState(null);
+    const [showQRCode, setShowQRCode] = useState(null);
+    const [showEmbedCode, setShowEmbedCode] = useState(null);
     const queryClient = useQueryClient();
 
     const { data: sharedLinks = [], isLoading } = useQuery({
@@ -81,6 +85,37 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
         setCopiedToken(token);
         toast.success("Link copied to clipboard!");
         setTimeout(() => setCopiedToken(null), 2000);
+    };
+
+    const copyEmbedCode = (token, type) => {
+        const url = `${window.location.origin}/#/ViewSharedForm?token=${token}`;
+        let code;
+        if (type === 'iframe') {
+            code = `<iframe src="${url}" width="100%" height="800" frameborder="0" style="border: 1px solid #e5e7eb; border-radius: 8px;"></iframe>`;
+        } else {
+            code = `<script src="${window.location.origin}/embed.js" data-token="${token}" data-type="form"></script>`;
+        }
+        navigator.clipboard.writeText(code);
+        toast.success("Embed code copied!");
+    };
+
+    const downloadQRCode = (token) => {
+        const svg = document.getElementById(`qr-${token}`);
+        const svgData = new XMLSerializer().serializeToString(svg);
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        const img = new Image();
+        img.onload = () => {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            const pngFile = canvas.toDataURL("image/png");
+            const downloadLink = document.createElement("a");
+            downloadLink.download = `qr-code-${token}.png`;
+            downloadLink.href = pngFile;
+            downloadLink.click();
+        };
+        img.src = "data:image/svg+xml;base64," + btoa(svgData);
     };
 
     const isExpired = (expiresAt) => {
@@ -249,6 +284,22 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
                                                         </div>
                                                     </div>
                                                     <div className="flex gap-1 flex-shrink-0">
+                                                        <Button
+                                                            size="sm"
+                                                            variant="outline"
+                                                            onClick={() => setShowQRCode(link)}
+                                                            className="text-purple-600 hover:bg-purple-50"
+                                                        >
+                                                            <QrCode className="w-4 h-4" />
+                                                        </Button>
+                                                        <Button
+                                                            size="sm"
+                                                            variant="outline"
+                                                            onClick={() => setShowEmbedCode(link)}
+                                                            className="text-blue-600 hover:bg-blue-50"
+                                                        >
+                                                            <Code className="w-4 h-4" />
+                                                        </Button>
                                                         {link.is_active && !expired && (
                                                             <Button
                                                                 size="sm"
@@ -270,16 +321,141 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
                                                             <Trash2 className="w-4 h-4" />
                                                         </Button>
                                                     </div>
-                                                </div>
-                                            </CardContent>
-                                        </Card>
-                                    );
-                                })}
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </DialogContent>
+                                                    </div>
+                                                    </CardContent>
+                                                    </Card>
+                                                    );
+                                                    })}
+                                                    </div>
+                                                    )}
+                                                    </div>
+                                                    </div>
+                                                    </DialogContent>
+
+                                                    {/* QR Code Dialog */}
+                                                    <Dialog open={!!showQRCode} onOpenChange={(open) => !open && setShowQRCode(null)}>
+                                                    <DialogContent className="max-w-md">
+                                                    <DialogHeader>
+                                                    <DialogTitle className="flex items-center gap-2">
+                                                    <QrCode className="w-5 h-5" />
+                                                    QR Code
+                                                    </DialogTitle>
+                                                    </DialogHeader>
+                                                    {showQRCode && (
+                                                    <div className="space-y-4">
+                                                    <div className="flex justify-center p-6 bg-white rounded-lg border-2">
+                                                    <QRCodeSVG 
+                                                    id={`qr-${showQRCode.share_token}`}
+                                                    value={`${window.location.origin}/#/ViewSharedForm?token=${showQRCode.share_token}`}
+                                                    size={256}
+                                                    level="H"
+                                                    includeMargin={true}
+                                                    />
+                                                    </div>
+                                                    <div className="flex gap-2">
+                                                    <Button 
+                                                    onClick={() => downloadQRCode(showQRCode.share_token)}
+                                                    className="flex-1"
+                                                    >
+                                                    Download PNG
+                                                    </Button>
+                                                    <Button 
+                                                    variant="outline"
+                                                    onClick={() => setShowQRCode(null)}
+                                                    className="flex-1"
+                                                    >
+                                                    Close
+                                                    </Button>
+                                                    </div>
+                                                    <p className="text-xs text-gray-500 text-center">
+                                                    Scan this QR code with a mobile device to access the form
+                                                    </p>
+                                                    </div>
+                                                    )}
+                                                    </DialogContent>
+                                                    </Dialog>
+
+                                                    {/* Embed Code Dialog */}
+                                                    <Dialog open={!!showEmbedCode} onOpenChange={(open) => !open && setShowEmbedCode(null)}>
+                                                    <DialogContent className="max-w-2xl">
+                                                    <DialogHeader>
+                                                    <DialogTitle className="flex items-center gap-2">
+                                                    <Code className="w-5 h-5" />
+                                                    Embed Code
+                                                    </DialogTitle>
+                                                    </DialogHeader>
+                                                    {showEmbedCode && (
+                                                    <Tabs defaultValue="iframe" className="w-full">
+                                                    <TabsList className="grid w-full grid-cols-2">
+                                                    <TabsTrigger value="iframe">iFrame</TabsTrigger>
+                                                    <TabsTrigger value="script">Script Tag</TabsTrigger>
+                                                    </TabsList>
+                                                    <TabsContent value="iframe" className="space-y-4">
+                                                    <div>
+                                                    <Label className="text-sm font-medium">iFrame Embed Code</Label>
+                                                    <p className="text-xs text-gray-500 mb-2">
+                                                    Copy and paste this code into your website's HTML
+                                                    </p>
+                                                    <div className="relative">
+                                                    <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-xs overflow-x-auto">
+                                                    {`<iframe 
+                                                    src="${window.location.origin}/#/ViewSharedForm?token=${showEmbedCode.share_token}"
+                                                    width="100%" 
+                                                    height="800" 
+                                                    frameborder="0"
+                                                    style="border: 1px solid #e5e7eb; border-radius: 8px;">
+                                                    </iframe>`}
+                                                    </pre>
+                                                    <Button
+                                                    size="sm"
+                                                    variant="ghost"
+                                                    className="absolute top-2 right-2"
+                                                    onClick={() => copyEmbedCode(showEmbedCode.share_token, 'iframe')}
+                                                    >
+                                                    <Copy className="w-4 h-4" />
+                                                    </Button>
+                                                    </div>
+                                                    </div>
+                                                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                                    <p className="text-xs text-blue-900">
+                                                    <strong>Preview:</strong> The form will be embedded directly in your page with full interactivity.
+                                                    </p>
+                                                    </div>
+                                                    </TabsContent>
+                                                    <TabsContent value="script" className="space-y-4">
+                                                    <div>
+                                                    <Label className="text-sm font-medium">Script Tag</Label>
+                                                    <p className="text-xs text-gray-500 mb-2">
+                                                    Lightweight embed that loads the form dynamically
+                                                    </p>
+                                                    <div className="relative">
+                                                    <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-xs overflow-x-auto">
+                                                    {`<script 
+                                                    src="${window.location.origin}/embed.js"
+                                                    data-token="${showEmbedCode.share_token}"
+                                                    data-type="form">
+                                                    </script>`}
+                                                    </pre>
+                                                    <Button
+                                                    size="sm"
+                                                    variant="ghost"
+                                                    className="absolute top-2 right-2"
+                                                    onClick={() => copyEmbedCode(showEmbedCode.share_token, 'script')}
+                                                    >
+                                                    <Copy className="w-4 h-4" />
+                                                    </Button>
+                                                    </div>
+                                                    </div>
+                                                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                                                    <p className="text-xs text-amber-900">
+                                                    <strong>Note:</strong> Script embed requires additional backend configuration.
+                                                    </p>
+                                                    </div>
+                                                    </TabsContent>
+                                                    </Tabs>
+                                                    )}
+                                                    </DialogContent>
+                                                    </Dialog>
 
             <AlertDialog open={!!revokeDialogLink} onOpenChange={(open) => !open && setRevokeDialogLink(null)}>
                 <AlertDialogContent>
