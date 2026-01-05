@@ -102,30 +102,23 @@ export default function AftercareDetail() {
                         }
                         html, body {
                             background: white !important;
-                            background-image: none !important;
                         }
-                        * {
-                            background: transparent !important;
-                            background-image: none !important;
+                        .no-print {
+                            display: none !important;
                         }
                         body * {
                             visibility: hidden;
                         }
-                        .printable-document,
-                        .printable-document * {
-                            visibility: visible;
-                            color: #000 !important;
-                            background: white !important;
-                        }
                         .printable-document {
-                            position: fixed !important;
+                            visibility: visible !important;
+                            position: absolute !important;
                             left: 0 !important;
                             top: 0 !important;
-                            width: 100%;
-                            padding: 5px !important;
-                            font-size: 11pt !important;
-                            line-height: 1.4 !important;
+                            width: 100% !important;
                             background: white !important;
+                        }
+                        .printable-document * {
+                            visibility: visible !important;
                         }
                         .no-print {
                             display: none !important;
