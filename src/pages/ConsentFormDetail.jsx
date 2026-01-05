@@ -7,10 +7,9 @@ import PrintableDocument from "../components/PrintableDocument";
 import ConsentFormForm from "../components/ConsentFormForm";
 import VersionHistory from "../components/forms/VersionHistory";
 import TagManager from "../components/forms/TagManager";
-import ShareFormDialog from "../components/forms/ShareFormDialog";
 import { usePermissions } from "../components/permissions/usePermissions";
 import { toast } from "sonner";
-import { Printer, ArrowLeft, Pencil, Star, FileText, Trash2, History, Tag, Copy, Share2, Save, Files } from "lucide-react";
+import { Printer, ArrowLeft, Pencil, Star, FileText, Trash2, History, Tag, Copy, Save, Files } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { Card, CardContent } from "@/components/ui/card";
@@ -24,7 +23,6 @@ export default function ConsentFormDetail() {
     const [showVersionHistory, setShowVersionHistory] = useState(false);
     const [showTagManager, setShowTagManager] = useState(false);
     const [showNewVersionDialog, setShowNewVersionDialog] = useState(false);
-    const [showShareDialog, setShowShareDialog] = useState(false);
     const queryClient = useQueryClient();
     const navigate = useNavigate();
     const { can } = usePermissions();
@@ -182,12 +180,6 @@ export default function ConsentFormDetail() {
                     </Button>
                 </Link>
                 <div className="flex gap-2">
-                    {can("consent", "share") && (
-                        <Button variant="outline" onClick={() => setShowShareDialog(true)} className="border-blue-500 text-blue-600">
-                            <Share2 className="w-4 h-4 mr-2" />
-                            Share
-                        </Button>
-                    )}
                     <Button 
                         variant="outline" 
                         onClick={toggleFavorite}
@@ -382,14 +374,6 @@ export default function ConsentFormDetail() {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-
-            <ShareFormDialog
-                open={showShareDialog}
-                onOpenChange={setShowShareDialog}
-                entityType="ConsentForm"
-                entityId={form.id}
-                formName={form.form_name}
-            />
-            </div>
-            );
-            }
+        </div>
+    );
+}

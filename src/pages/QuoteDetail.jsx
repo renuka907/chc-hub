@@ -17,7 +17,6 @@ export default function QuoteDetail() {
     const autoPrint = urlParams.get('autoprint') === 'true';
     const queryClient = useQueryClient();
     const [showEditDialog, setShowEditDialog] = useState(false);
-    const [showShareDialog, setShowShareDialog] = useState(false);
 
     const { data: quote, isLoading: quoteLoading } = useQuery({
         queryKey: ['quote', quoteId],

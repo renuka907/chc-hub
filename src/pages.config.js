@@ -1,7 +1,6 @@
 import AftercareLibrary from './pages/AftercareLibrary';
 import CheckoutQuote from './pages/CheckoutQuote';
 import ClinicDirectory from './pages/ClinicDirectory';
-import ConsentFormDetail from './pages/ConsentFormDetail';
 import DiscountManagement from './pages/DiscountManagement';
 import EducationDetail from './pages/EducationDetail';
 import EducationLibrary from './pages/EducationLibrary';
@@ -13,11 +12,12 @@ import InventoryManagement from './pages/InventoryManagement';
 import LabTestDirectory from './pages/LabTestDirectory';
 import Messaging from './pages/Messaging';
 import PricingManagement from './pages/PricingManagement';
-import QuoteDetail from './pages/QuoteDetail';
 import QuotesManagement from './pages/QuotesManagement';
 import UserManagement from './pages/UserManagement';
 import ViewSharedForm from './pages/ViewSharedForm';
+import QuoteDetail from './pages/QuoteDetail';
 import AftercareDetail from './pages/AftercareDetail';
+import ConsentFormDetail from './pages/ConsentFormDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -25,7 +25,6 @@ export const PAGES = {
     "AftercareLibrary": AftercareLibrary,
     "CheckoutQuote": CheckoutQuote,
     "ClinicDirectory": ClinicDirectory,
-    "ConsentFormDetail": ConsentFormDetail,
     "DiscountManagement": DiscountManagement,
     "EducationDetail": EducationDetail,
     "EducationLibrary": EducationLibrary,
@@ -37,11 +36,12 @@ export const PAGES = {
     "LabTestDirectory": LabTestDirectory,
     "Messaging": Messaging,
     "PricingManagement": PricingManagement,
-    "QuoteDetail": QuoteDetail,
     "QuotesManagement": QuotesManagement,
     "UserManagement": UserManagement,
     "ViewSharedForm": ViewSharedForm,
+    "QuoteDetail": QuoteDetail,
     "AftercareDetail": AftercareDetail,
+    "ConsentFormDetail": ConsentFormDetail,
 }
 
 export const pagesConfig = {
