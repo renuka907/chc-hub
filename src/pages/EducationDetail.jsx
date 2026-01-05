@@ -107,34 +107,35 @@ export default function EducationDetail() {
 
                     {/* Summary */}
                     {topic.summary && (
-                        <div className="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-lg print:bg-blue-50">
-                            <h3 className="font-semibold text-blue-900 mb-3 text-lg">Overview</h3>
-                            <p className="text-gray-800 leading-relaxed">{topic.summary}</p>
-                        </div>
+                        <Card className="bg-blue-50 border-blue-200">
+                            <CardContent className="pt-6">
+                                <p className="text-gray-800 font-medium">{topic.summary}</p>
+                            </CardContent>
+                        </Card>
                     )}
 
                     {/* Main Content */}
-                    <div className="bg-white border-l-4 border-gray-300 p-6 rounded-lg print:bg-white">
-                        <h3 className="font-semibold text-gray-900 mb-4 text-lg">Detailed Information</h3>
-                        <div 
-                            className="prose max-w-none text-gray-800 leading-relaxed"
-                            dangerouslySetInnerHTML={{ __html: topic.content }}
-                        />
+                    <div className="prose max-w-none">
+                        <div className="whitespace-pre-wrap text-gray-800 leading-relaxed">
+                            {topic.content}
+                        </div>
                     </div>
 
                     {/* Medical References */}
                     {topic.medical_references && (
-                        <div className="bg-slate-50 border-l-4 border-slate-400 p-6 rounded-lg print:bg-slate-50">
-                            <div className="flex items-start space-x-2">
-                                <ExternalLink className="w-5 h-5 text-slate-600 mt-1 flex-shrink-0" />
-                                <div className="flex-1">
-                                    <h3 className="font-semibold text-slate-900 mb-3 text-lg">Medical References</h3>
-                                    <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
-                                        {topic.medical_references}
-                                    </p>
+                        <Card className="bg-slate-50 border-slate-200">
+                            <CardContent className="pt-6">
+                                <div className="flex items-start space-x-2">
+                                    <ExternalLink className="w-5 h-5 text-slate-600 mt-1 flex-shrink-0" />
+                                    <div>
+                                        <h3 className="font-semibold text-slate-900 mb-2">Medical References</h3>
+                                        <p className="text-sm text-slate-700 whitespace-pre-wrap">
+                                            {topic.medical_references}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            </CardContent>
+                        </Card>
                     )}
 
                     {/* Disclaimer */}
