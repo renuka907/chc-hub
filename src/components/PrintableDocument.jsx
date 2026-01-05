@@ -11,11 +11,13 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
                     }
 
                     @media print {
-                        body {
+                        html, body {
                             background: white !important;
+                            background-image: none !important;
                         }
-                        * {
-                            background: transparent !important;
+                        body > div {
+                            background: white !important;
+                            background-image: none !important;
                         }
                     }
 
