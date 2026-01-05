@@ -4,6 +4,7 @@ import CheckoutQuote from './pages/CheckoutQuote';
 import ClinicDirectory from './pages/ClinicDirectory';
 import ConsentFormDetail from './pages/ConsentFormDetail';
 import DiscountManagement from './pages/DiscountManagement';
+import EducationDetail from './pages/EducationDetail';
 import EducationLibrary from './pages/EducationLibrary';
 import EmployeeQuestions from './pages/EmployeeQuestions';
 import FAQ from './pages/FAQ';
@@ -17,7 +18,6 @@ import QuotesManagement from './pages/QuotesManagement';
 import UserManagement from './pages/UserManagement';
 import ViewSharedForm from './pages/ViewSharedForm';
 import LabTestDirectory from './pages/LabTestDirectory';
-import EducationDetail from './pages/EducationDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -28,6 +28,7 @@ export const PAGES = {
     "ClinicDirectory": ClinicDirectory,
     "ConsentFormDetail": ConsentFormDetail,
     "DiscountManagement": DiscountManagement,
+    "EducationDetail": EducationDetail,
     "EducationLibrary": EducationLibrary,
     "EmployeeQuestions": EmployeeQuestions,
     "FAQ": FAQ,
@@ -41,7 +42,6 @@ export const PAGES = {
     "UserManagement": UserManagement,
     "ViewSharedForm": ViewSharedForm,
     "LabTestDirectory": LabTestDirectory,
-    "EducationDetail": EducationDetail,
 }
 
 export const pagesConfig = {
