@@ -23,6 +23,8 @@ export default function Layout({ children, currentPageName }) {
     const [currentUser, setCurrentUser] = React.useState(null);
     const [isLoading, setIsLoading] = React.useState(true);
 
+    console.log('Layout - currentPageName:', currentPageName);
+
     React.useEffect(() => {
         // Skip authentication for public pages
         if (currentPageName === "ViewSharedForm") {
