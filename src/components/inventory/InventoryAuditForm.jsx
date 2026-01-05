@@ -115,15 +115,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
     const selectedLocation = locations.find(loc => loc.id === selectedLocationId);
 
     const handlePrint = () => {
-        // Move print content to body for printing
-        const printContent = document.querySelector('.print-container');
-        if (printContent) {
-            const clone = printContent.cloneNode(true);
-            clone.style.display = 'block';
-            document.body.appendChild(clone);
-            window.print();
-            document.body.removeChild(clone);
-        }
+        window.print();
     };
 
     return (
@@ -137,26 +129,12 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                         }
                         
                         @media print {
-                            body * {
-                                visibility: hidden;
-                            }
-                            
-                            .print-container,
-                            .print-container * {
-                                visibility: visible !important;
+                            .no-print {
+                                display: none !important;
                             }
                             
                             .print-container {
                                 display: block !important;
-                                position: absolute;
-                                top: 0;
-                                left: 0;
-                                width: 100%;
-                                background: white;
-                            }
-                            
-                            .no-print {
-                                display: none !important;
                             }
                             
                             .storage-group {
@@ -190,6 +168,12 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                         
                         .print-container {
                             display: none;
+                        }
+                        
+                        @media screen {
+                            .print-container {
+                                display: none;
+                            }
                         }
                     `}
                 </style>
