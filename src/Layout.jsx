@@ -18,7 +18,8 @@ import {
             Layers,
             LogOut,
             ChevronDown,
-            Sparkles
+            Sparkles,
+            Bell
         } from "lucide-react";
 
 export default function Layout({ children, currentPageName }) {
@@ -134,14 +135,23 @@ export default function Layout({ children, currentPageName }) {
                             </div>
                         </Link>
 
-                        {/* Chat with Peach Button */}
-                        <Link 
-                            to={createPageUrl("Messaging")} 
-                            className="hidden md:flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
-                        >
-                            <Sparkles className="w-4 h-4" />
-                            <span>Chat with Peach</span>
-                        </Link>
+                        {/* Quick Action Buttons */}
+                        <div className="hidden md:flex items-center gap-2">
+                            <Link 
+                                to={createPageUrl("Messaging")} 
+                                className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
+                            >
+                                <Sparkles className="w-4 h-4" />
+                                <span>Chat with Peach</span>
+                            </Link>
+                            <Link 
+                                to={createPageUrl("Home")} 
+                                className="flex items-center gap-2 bg-white border-2 border-purple-300 text-purple-700 px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
+                            >
+                                <Bell className="w-4 h-4" />
+                                <span>Reminders</span>
+                            </Link>
+                        </div>
 
                         {/* Desktop Navigation */}
                         <nav className="hidden lg:flex items-center space-x-1">
