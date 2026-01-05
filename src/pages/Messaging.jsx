@@ -8,13 +8,15 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Send, Users, Bot, CheckCircle2, Circle, Trash2 } from "lucide-react";
+import { Send, Users, Bot, CheckCircle2, Circle, Trash2, Mic, MicOff } from "lucide-react";
 import { format } from "date-fns";
 import AgentChat from "../components/messaging/AgentChat";
 
 export default function Messaging() {
     const [message, setMessage] = useState("");
+    const [isRecording, setIsRecording] = useState(false);
     const messagesEndRef = useRef(null);
+    const recognitionRef = useRef(null);
     const queryClient = useQueryClient();
 
     const { data: user } = useQuery({
@@ -77,6 +79,42 @@ export default function Messaging() {
             sender_email: user.email,
             is_system: false
         });
+    };
+
+    const toggleVoiceInput = () => {
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            alert('Voice input is not supported in your browser');
+            return;
+        }
+
+        if (isRecording) {
+            recognitionRef.current?.stop();
+            setIsRecording(false);
+        } else {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+
+            recognition.onresult = (event) => {
+                const transcript = Array.from(event.results)
+                    .map(result => result[0].transcript)
+                    .join('');
+                setMessage(transcript);
+            };
+
+            recognition.onerror = () => {
+                setIsRecording(false);
+            };
+
+            recognition.onend = () => {
+                setIsRecording(false);
+            };
+
+            recognitionRef.current = recognition;
+            recognition.start();
+            setIsRecording(true);
+        }
     };
 
     useEffect(() => {
@@ -250,6 +288,14 @@ export default function Messaging() {
                                         className="flex-1"
                                         disabled={sendMessageMutation.isPending}
                                     />
+                                    <Button
+                                        type="button"
+                                        onClick={toggleVoiceInput}
+                                        variant="outline"
+                                        className={isRecording ? "bg-red-50 border-red-300" : ""}
+                                    >
+                                        {isRecording ? <MicOff className="w-4 h-4 text-red-600" /> : <Mic className="w-4 h-4" />}
+                                    </Button>
                                     <Button
                                         type="submit"
                                         disabled={!message.trim() || sendMessageMutation.isPending}
