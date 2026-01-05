@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, Bot, Loader2, Mic, MicOff, Printer } from "lucide-react";
+import { Send, Bot, Loader2, Mic, MicOff, Printer, Download } from "lucide-react";
 import { format } from "date-fns";
 
 export default function AgentChat({ agentName }) {
@@ -104,6 +104,30 @@ export default function AgentChat({ agentName }) {
         }
     };
 
+    const handleSaveChat = () => {
+        if (!messages.length) return;
+        
+        const chatHistory = messages.map(msg => {
+            const timestamp = msg.created_date 
+                ? format(new Date(msg.created_date), 'MMM d, yyyy h:mm a')
+                : '';
+            const role = msg.role === 'user' ? 'You' : 'Peach';
+            return `[${timestamp}] ${role}:\n${msg.content}\n`;
+        }).join('\n---\n\n');
+        
+        const fullText = `Peach Chat History\nContemporary Health Center\nSaved: ${new Date().toLocaleString()}\n\n${'='.repeat(60)}\n\n${chatHistory}`;
+        
+        const blob = new Blob([fullText], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `peach-chat-${new Date().toISOString().split('T')[0]}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+    };
+
     const handlePrint = (content) => {
         const printWindow = window.open('', '_blank');
         printWindow.document.write(`
@@ -197,16 +221,29 @@ export default function AgentChat({ agentName }) {
         <div className="h-[550px] flex flex-col">
             {/* Agent Header */}
             <div className="border-b p-4 bg-gradient-to-r from-purple-50 to-blue-50">
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
-                        <Bot className="w-6 h-6 text-white" />
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
+                            <Bot className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                            <h3 className="font-semibold text-gray-900">Peach</h3>
+                            <p className="text-xs text-gray-600">
+                                Ask about FAQs, medical info, inventory, or set reminders
+                            </p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 className="font-semibold text-gray-900">Peach</h3>
-                        <p className="text-xs text-gray-600">
-                            Ask about FAQs, medical info, inventory, or set reminders
-                        </p>
-                    </div>
+                    {messages.length > 0 && (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handleSaveChat}
+                            className="gap-2"
+                        >
+                            <Download className="w-4 h-4" />
+                            Save Chat
+                        </Button>
+                    )}
                 </div>
             </div>
 
