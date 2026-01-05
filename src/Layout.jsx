@@ -41,8 +41,9 @@ export default function Layout({ children, currentPageName }) {
                 setIsLoading(false);
             })
             .catch(() => {
-                // Redirect to login if not authenticated
-                base44.auth.redirectToLogin(window.location.pathname + window.location.search);
+                // Redirect to login if not authenticated - include hash for hash-based routing
+                const redirectUrl = window.location.pathname + window.location.search + window.location.hash;
+                base44.auth.redirectToLogin(redirectUrl);
             });
     }, [currentPageName]);
 
