@@ -2,7 +2,8 @@ import React from "react";
 
 export default function PrintableDocument({ title, children, showLogo = true }) {
     return (
-        <div className="printable-document w-full max-w-[8.5in] mx-auto bg-white p-8 border-2 border-black" style={{fontFamily: 'Times New Roman, serif'}}>
+        <div className="printable-document-container bg-gray-200 p-8">
+            <div className="printable-document w-[8.5in] min-h-[11in] mx-auto bg-white p-[0.5in] shadow-lg" style={{fontFamily: 'Times New Roman, serif'}}>
             <style>
                 {`
                     @page {
