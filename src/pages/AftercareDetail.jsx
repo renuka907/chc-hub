@@ -188,7 +188,7 @@ export default function AftercareDetail() {
                 <div className="space-y-6">
                     {/* Metadata */}
                     {instruction.category && (
-                        <Badge className={`${categoryColors[instruction.category]} text-sm px-3 py-1`}>
+                        <Badge className={`${categoryColors[instruction.category]} text-sm px-3 py-1 no-print`}>
                             {instruction.category}
                         </Badge>
                     )}
@@ -248,8 +248,7 @@ export default function AftercareDetail() {
                                 <CardTitle className="flex items-center text-green-900">
                                     <CalendarIcon className="w-5 h-5 mr-2" />
                                     Follow-Up Appointment
-                                </CardTitle>
-                            </CardHeader>
+                                </CardHeader>
                             <CardContent className="card-compact-content">
                                 <div 
                                     className="text-green-900 text-base prose prose-sm max-w-none"
