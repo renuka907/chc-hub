@@ -160,16 +160,21 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                             }
                             
                             .storage-group {
-                                page-break-inside: avoid !important;
+                                page-break-inside: auto !important;
                             }
                             
                             table {
                                 page-break-inside: auto !important;
+                                border-collapse: collapse !important;
                             }
                             
                             tr {
                                 page-break-inside: avoid !important;
                                 page-break-after: auto !important;
+                            }
+                            
+                            tbody tr {
+                                page-break-before: auto !important;
                             }
                             
                             thead {
@@ -200,7 +205,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                     {Object.entries(itemsByStorage)
                         .sort(([a], [b]) => a.localeCompare(b))
                         .map(([storage, storageItems]) => (
-                        <div key={storage} className="storage-group" style={{marginBottom: '12px', pageBreakInside: 'avoid'}}>
+                        <div key={storage} className="storage-group" style={{marginBottom: '12px'}}>
                             <div style={{
                                 background: 'black', 
                                 color: 'white',
