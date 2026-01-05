@@ -9,16 +9,18 @@ import PrintableDocument from "../components/PrintableDocument";
 import { openPrintWindow } from "../components/PrintHelper";
 import { Lock, AlertCircle, Loader2, FileText, Printer } from "lucide-react";
 
-console.log('=== ViewSharedForm module loaded ===');
-
 export default function ViewSharedForm() {
-    console.log('=== ViewSharedForm component rendering ===');
+    console.log('=== ViewSharedForm LOADED ===');
+    console.log('Full hash:', window.location.hash);
+    console.log('Full href:', window.location.href);
     
     // Parse token from hash-based URL (e.g., /#/ViewSharedForm?token=xyz)
     const hashParts = window.location.hash.split('?');
     const queryString = hashParts.length > 1 ? hashParts[1] : '';
     const urlParams = new URLSearchParams(queryString);
     const token = urlParams.get('token');
+    
+    console.log('Parsed token:', token);
     const [passwordInput, setPasswordInput] = useState("");
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [error, setError] = useState("");
@@ -32,20 +34,16 @@ export default function ViewSharedForm() {
     const { data: sharedLink, isLoading: linkLoading, error: linkError } = useQuery({
         queryKey: ['sharedLink', token],
         queryFn: async () => {
-            console.log('Fetching shared links...');
+            console.log('=== FETCHING SHARED LINK ===');
+            console.log('Token:', token);
             const allLinks = await base44.asServiceRole.entities.SharedFormLink.list();
+            console.log('All shared links:', allLinks.length, allLinks);
             const found = allLinks.find(link => link.share_token === token);
-            console.log('Looking for token:', token);
-            console.log('All links:', allLinks);
-            console.log('Found link:', found);
-            if (!found) {
-                console.error('No matching link found for token:', token);
-            }
+            console.log('Match found:', found);
             return found;
         },
         enabled: !!token,
-        retry: false,
-        staleTime: 0
+        retry: false
     });
 
     const { data: formContent, isLoading: contentLoading, error: contentError } = useQuery({
