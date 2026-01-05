@@ -126,26 +126,41 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                         @media print {
                             @page {
                                 margin: 0.5in;
+                                size: auto;
                             }
                             
-                            body > * {
-                                display: none !important;
+                            html, body {
+                                height: auto !important;
+                                overflow: visible !important;
                             }
                             
-                            #print-content {
-                                display: block !important;
-                                position: static !important;
+                            body * {
+                                visibility: hidden;
+                            }
+                            
+                            #inventory-print-content,
+                            #inventory-print-content * {
                                 visibility: visible !important;
+                            }
+                            
+                            #inventory-print-content {
+                                display: block !important;
+                                position: absolute !important;
+                                left: 0 !important;
+                                top: 0 !important;
                                 width: 100% !important;
                                 padding: 20px !important;
+                                background: white !important;
                             }
                             
                             .no-print {
                                 display: none !important;
+                                visibility: hidden !important;
                             }
                             
                             .storage-group {
                                 page-break-inside: avoid;
+                                break-inside: avoid;
                             }
                             
                             table {
@@ -171,7 +186,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                     `}
                 </style>
 
-                <div id="print-content" style={{display: 'none', color: 'black', backgroundColor: 'white', padding: '20px'}}>
+                <div id="inventory-print-content" className="hidden print:block" style={{color: 'black', backgroundColor: 'white', padding: '20px'}}>
                     <div style={{borderBottom: '2px solid black', paddingBottom: '8px', marginBottom: '16px'}}>
                         <div style={{fontSize: '18px', fontWeight: 'bold', color: 'black'}}>Daily Inventory Audit Form</div>
                         <div style={{fontSize: '11px', marginTop: '4px', color: 'black'}}>
