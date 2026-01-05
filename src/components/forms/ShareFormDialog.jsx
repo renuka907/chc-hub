@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import { Copy, Share2, Loader2, Eye, EyeOff, Clock, Lock, Trash2, CheckCircle2 } from "lucide-react";
+import { Copy, Share2, Loader2, Eye, EyeOff, Clock, Lock, Trash2, CheckCircle2, ShieldX } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ShareFormDialog({ open, onOpenChange, entityType, entityId, formName }) {
@@ -17,6 +18,7 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [copiedToken, setCopiedToken] = useState(null);
+    const [revokeDialogLink, setRevokeDialogLink] = useState(null);
     const queryClient = useQueryClient();
 
     const { data: sharedLinks = [], isLoading } = useQuery({
@@ -52,13 +54,14 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
         }
     });
 
-    const toggleLinkMutation = useMutation({
-        mutationFn: async ({ id, isActive }) => {
-            return await base44.entities.SharedFormLink.update(id, { is_active: !isActive });
+    const revokeLinkMutation = useMutation({
+        mutationFn: async (id) => {
+            return await base44.entities.SharedFormLink.update(id, { is_active: false });
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['sharedLinks'] });
-            toast.success("Link status updated");
+            setRevokeDialogLink(null);
+            toast.success("Link revoked - access disabled");
         }
     });
 
@@ -246,14 +249,17 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
                                                         </div>
                                                     </div>
                                                     <div className="flex gap-1 flex-shrink-0">
-                                                        <Button
-                                                            size="sm"
-                                                            variant="outline"
-                                                            onClick={() => toggleLinkMutation.mutate({ id: link.id, isActive: link.is_active })}
-                                                            disabled={toggleLinkMutation.isPending || expired}
-                                                        >
-                                                            {link.is_active ? 'Disable' : 'Enable'}
-                                                        </Button>
+                                                        {link.is_active && !expired && (
+                                                            <Button
+                                                                size="sm"
+                                                                variant="outline"
+                                                                onClick={() => setRevokeDialogLink(link)}
+                                                                className="text-orange-600 hover:bg-orange-50 border-orange-300"
+                                                            >
+                                                                <ShieldX className="w-4 h-4 mr-1" />
+                                                                Revoke
+                                                            </Button>
+                                                        )}
                                                         <Button
                                                             size="sm"
                                                             variant="outline"
@@ -274,6 +280,26 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
                     </div>
                 </div>
             </DialogContent>
+
+            <AlertDialog open={!!revokeDialogLink} onOpenChange={(open) => !open && setRevokeDialogLink(null)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Revoke Share Link Access?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This will immediately disable this share link. Anyone with this link will no longer be able to access the form. This action can be reversed by deleting and creating a new link.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction 
+                            onClick={() => revokeLinkMutation.mutate(revokeDialogLink?.id)}
+                            className="bg-orange-600 hover:bg-orange-700"
+                        >
+                            Revoke Access
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </Dialog>
     );
 }
