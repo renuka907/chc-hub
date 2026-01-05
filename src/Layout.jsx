@@ -24,6 +24,12 @@ export default function Layout({ children, currentPageName }) {
     const [isLoading, setIsLoading] = React.useState(true);
 
     React.useEffect(() => {
+        // Skip authentication for public pages
+        if (currentPageName === "ViewSharedForm") {
+            setIsLoading(false);
+            return;
+        }
+        
         base44.auth.me()
             .then(user => {
                 setCurrentUser(user);
@@ -33,7 +39,7 @@ export default function Layout({ children, currentPageName }) {
                 // Redirect to login if not authenticated
                 base44.auth.redirectToLogin(window.location.pathname + window.location.search);
             });
-    }, []);
+    }, [currentPageName]);
 
     const navItems = [
         { name: "Home", path: "Home", icon: Home },
@@ -55,6 +61,11 @@ export default function Layout({ children, currentPageName }) {
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
             </div>
         );
+    }
+
+    // Render public pages without layout
+    if (currentPageName === "ViewSharedForm") {
+        return <>{children}</>;
     }
 
     return (
