@@ -13,7 +13,8 @@ const PERMISSIONS = {
         discounts: { view: true, create: true, edit: true, delete: true },
         quotes: { view: true, create: true, edit: true, delete: true },
         users: { view: true, invite: true, edit: true, delete: true },
-        messaging: { view: true, send: true }
+        messaging: { view: true, send: true },
+        procedure: { view: true, create: true, edit: true, delete: true, read: true }
     },
     manager: {
         aftercare: { view: true, create: true, edit: true, delete: true, share: true },
@@ -25,7 +26,8 @@ const PERMISSIONS = {
         discounts: { view: true, create: true, edit: true, delete: true },
         quotes: { view: true, create: true, edit: true, delete: true },
         users: { view: true, invite: false, edit: false, delete: false },
-        messaging: { view: true, send: true }
+        messaging: { view: true, send: true },
+        procedure: { view: true, create: true, edit: true, delete: true, read: true }
     },
     staff: {
         aftercare: { view: true, create: true, edit: true, delete: false, share: true },
@@ -37,7 +39,8 @@ const PERMISSIONS = {
         discounts: { view: true, create: false, edit: false, delete: false },
         quotes: { view: true, create: true, edit: false, delete: false },
         users: { view: false, invite: false, edit: false, delete: false },
-        messaging: { view: true, send: true }
+        messaging: { view: true, send: true },
+        procedure: { view: false, create: false, edit: false, delete: false, read: false }
     },
     read_only: {
         aftercare: { view: true, create: false, edit: false, delete: false, share: false },
@@ -49,7 +52,8 @@ const PERMISSIONS = {
         discounts: { view: true, create: false, edit: false, delete: false },
         quotes: { view: true, create: false, edit: false, delete: false },
         users: { view: false, invite: false, edit: false, delete: false },
-        messaging: { view: true, send: false }
+        messaging: { view: true, send: false },
+        procedure: { view: false, create: false, edit: false, delete: false, read: false }
     }
 };
 
