@@ -123,33 +123,29 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
             <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
                 <style>
                     {`
-                        .print-container {
-                            display: none;
-                        }
-                        
                         @media print {
+                            @page {
+                                margin: 0.5in;
+                            }
+                            
                             body * {
-                                visibility: hidden !important;
+                                visibility: hidden;
                             }
                             
-                            .print-container,
-                            .print-container * {
-                                visibility: visible !important;
+                            #print-content,
+                            #print-content * {
+                                visibility: visible;
                             }
                             
-                            .print-container {
-                                display: block !important;
+                            #print-content {
                                 position: absolute;
                                 left: 0;
                                 top: 0;
                                 width: 100%;
-                                background: white;
-                                z-index: 9999;
                             }
                             
                             .no-print {
                                 display: none !important;
-                                visibility: hidden !important;
                             }
                             
                             .storage-group {
@@ -179,7 +175,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                     `}
                 </style>
 
-                <div className="print-container" style={{color: 'black', backgroundColor: 'white', padding: '20px'}}>
+                <div id="print-content" style={{display: 'none', color: 'black', backgroundColor: 'white', padding: '20px'}}>
                     <div style={{borderBottom: '2px solid black', paddingBottom: '8px', marginBottom: '16px'}}>
                         <div style={{fontSize: '18px', fontWeight: 'bold', color: 'black'}}>Daily Inventory Audit Form</div>
                         <div style={{fontSize: '11px', marginTop: '4px', color: 'black'}}>
