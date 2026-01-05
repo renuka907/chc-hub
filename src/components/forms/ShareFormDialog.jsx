@@ -185,28 +185,28 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
                     </Card>
 
                     {/* Existing Links Section */}
-                    <div className="space-y-3">
-                        <h3 className="font-semibold text-lg">Active Share Links</h3>
+                    <div className="space-y-2">
+                        <h3 className="font-semibold text-base">Active Share Links</h3>
                         
                         {isLoading ? (
-                            <div className="text-center py-8">
-                                <Loader2 className="w-6 h-6 animate-spin mx-auto text-gray-400" />
+                            <div className="text-center py-4">
+                                <Loader2 className="w-5 h-5 animate-spin mx-auto text-gray-400" />
                             </div>
                         ) : sharedLinks.length === 0 ? (
                             <Card>
-                                <CardContent className="py-8 text-center text-gray-500">
+                                <CardContent className="py-4 text-center text-sm text-gray-500">
                                     No share links created yet
                                 </CardContent>
                             </Card>
                         ) : (
-                            <div className="space-y-2">
+                            <div className="space-y-2 max-h-[300px] overflow-y-auto">
                                 {sharedLinks.map((link) => {
                                     const expired = isExpired(link.expires_at);
                                     const url = `${window.location.origin}/ViewSharedForm?token=${link.share_token}`;
                                     
                                     return (
                                         <Card key={link.id} className={!link.is_active || expired ? "opacity-50" : ""}>
-                                            <CardContent className="pt-4">
+                                            <CardContent className="pt-3 pb-3">
                                                 <div className="flex items-start justify-between gap-4">
                                                     <div className="flex-1 min-w-0">
                                                         <div className="flex items-center gap-2 mb-2">
