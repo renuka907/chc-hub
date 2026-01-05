@@ -51,7 +51,7 @@ export default function LabTestDirectory() {
             const response = await base44.integrations.Core.InvokeLLM({
                 prompt: `Find lab test information for: "${searchQuery}"
 
-This could be an abbreviation or full name. Find the CLOSEST MATCH from standard medical lab tests:
+This could be a test name, abbreviation, or Quest test code. Find the CLOSEST MATCH from standard medical lab tests:
 
 Common abbreviations you should recognize:
 - CBC = Complete Blood Count (Lavender EDTA)
@@ -177,7 +177,7 @@ Only return found: false if you truly cannot identify what test they're asking a
                 <CardContent className="space-y-4">
                     <div className="flex gap-2">
                         <Input
-                            placeholder="Enter lab test name (e.g., CBC, TSH, Vitamin D)"
+                            placeholder="Search by test name, code, or abbreviation (e.g., CBC, 7336, TSH)"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
