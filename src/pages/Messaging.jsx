@@ -221,15 +221,15 @@ export default function Messaging() {
             </Card>
 
             {/* Chat Container with Tabs */}
-            <Tabs defaultValue="team" className="space-y-4">
+            <Tabs defaultValue="assistant" className="space-y-4">
                 <TabsList className="grid w-full md:w-auto md:inline-grid grid-cols-2 gap-4">
-                    <TabsTrigger value="team" className="text-base">
-                        <Users className="w-4 h-4 mr-2" />
-                        Team Chat
-                    </TabsTrigger>
                     <TabsTrigger value="assistant" className="text-base">
                         <Bot className="w-4 h-4 mr-2" />
                         Peach
+                    </TabsTrigger>
+                    <TabsTrigger value="team" className="text-base">
+                        <Users className="w-4 h-4 mr-2" />
+                        Team Chat
                     </TabsTrigger>
                 </TabsList>
 
