@@ -144,28 +144,8 @@ export default function ConsentFormDetail() {
             <style>
                 {`
                     @media print {
-                        @page {
-                            margin: 0.3cm;
-                        }
-                        html, body {
-                            background: white !important;
-                        }
                         .no-print {
                             display: none !important;
-                        }
-                        body * {
-                            visibility: hidden;
-                        }
-                        .printable-document {
-                            visibility: visible !important;
-                            position: absolute !important;
-                            left: 0 !important;
-                            top: 0 !important;
-                            width: 100% !important;
-                            background: white !important;
-                        }
-                        .printable-document * {
-                            visibility: visible !important;
                         }
                         .no-print {
                             display: none !important;
