@@ -227,7 +227,9 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                     </div>
                 </div>
 
-                <DialogHeader className="no-print print:hidden">
+            <Dialog open={open} onOpenChange={onOpenChange}>
+                <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
                     <DialogTitle className="flex items-center gap-2 text-2xl">
                         <ClipboardCheck className="w-6 h-6 text-orange-600" />
                         Daily Inventory Audit
