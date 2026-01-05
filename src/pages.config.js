@@ -14,12 +14,12 @@ import InventoryManagement from './pages/InventoryManagement';
 import LabTestDirectory from './pages/LabTestDirectory';
 import Messaging from './pages/Messaging';
 import PricingManagement from './pages/PricingManagement';
+import ProcedureDetail from './pages/ProcedureDetail';
+import ProceduresManagement from './pages/ProceduresManagement';
 import QuoteDetail from './pages/QuoteDetail';
 import QuotesManagement from './pages/QuotesManagement';
 import UserManagement from './pages/UserManagement';
 import ViewSharedForm from './pages/ViewSharedForm';
-import ProceduresManagement from './pages/ProceduresManagement';
-import ProcedureDetail from './pages/ProcedureDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -40,12 +40,12 @@ export const PAGES = {
     "LabTestDirectory": LabTestDirectory,
     "Messaging": Messaging,
     "PricingManagement": PricingManagement,
+    "ProcedureDetail": ProcedureDetail,
+    "ProceduresManagement": ProceduresManagement,
     "QuoteDetail": QuoteDetail,
     "QuotesManagement": QuotesManagement,
     "UserManagement": UserManagement,
     "ViewSharedForm": ViewSharedForm,
-    "ProceduresManagement": ProceduresManagement,
-    "ProcedureDetail": ProcedureDetail,
 }
 
 export const pagesConfig = {

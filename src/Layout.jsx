@@ -94,7 +94,6 @@ export default function Layout({ children, currentPageName }) {
                             </div>
                             <div>
                                 <div className="text-2xl font-bold text-gray-900">CHC Hub</div>
-                                <div className="text-sm text-purple-600">Step-by-step care made simple</div>
                             </div>
                         </Link>
 
