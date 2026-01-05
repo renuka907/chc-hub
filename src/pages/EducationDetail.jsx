@@ -64,8 +64,12 @@ export default function EducationDetail() {
                 {`
                     @media print {
                         @page {
-                            margin: 0.5cm;
-                            size: letter;
+                            size: 8.5in 11in;
+                            margin: 0.5in;
+                        }
+                        body {
+                            margin: 0;
+                            padding: 0;
                         }
                         body * {
                             visibility: hidden;
@@ -73,53 +77,66 @@ export default function EducationDetail() {
                         .printable-document,
                         .printable-document * {
                             visibility: visible;
-                            color: #000 !important;
                         }
                         .printable-document {
-                            position: absolute !important;
-                            left: 0 !important;
-                            top: 0 !important;
-                            width: 100%;
-                            padding: 10px !important;
-                            font-size: 14px !important;
-                            line-height: 1.5 !important;
+                            position: static !important;
+                            width: 100% !important;
+                            max-width: 100% !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            font-size: 12pt !important;
+                            line-height: 1.4 !important;
+                            color: #000 !important;
                         }
                         .printable-document h1 {
-                            font-size: 20px !important;
-                            margin-bottom: 8px !important;
+                            font-size: 18pt !important;
+                            margin-bottom: 12pt !important;
                             page-break-after: avoid !important;
                         }
                         .printable-document h3 {
-                            font-size: 16px !important;
-                            margin-bottom: 6px !important;
+                            font-size: 14pt !important;
+                            margin-bottom: 8pt !important;
+                            margin-top: 12pt !important;
                             page-break-after: avoid !important;
                         }
-                        .printable-document .space-y-6 > * {
-                            page-break-inside: avoid !important;
-                        }
-                        .printable-document .prose {
-                            page-break-inside: auto !important;
-                        }
-                        .printable-document .prose p,
-                        .printable-document .prose ul,
-                        .printable-document .prose ol {
-                            page-break-inside: avoid !important;
+                        .printable-document p {
+                            margin-bottom: 8pt !important;
+                            orphans: 3 !important;
+                            widows: 3 !important;
                         }
                         .printable-document img {
-                            max-height: 200px !important;
+                            max-width: 100% !important;
+                            max-height: 4in !important;
                             page-break-inside: avoid !important;
-                            page-break-before: auto !important;
-                            page-break-after: auto !important;
+                            display: block !important;
+                            margin: 12pt auto !important;
                         }
-                        .printable-document .bg-blue-50,
-                        .printable-document .bg-slate-50 {
-                            background-color: #f8f9fa !important;
-                            border: 1px solid #ddd !important;
-                            padding: 8px !important;
+                        .printable-document .bg-blue-50 {
+                            background-color: #f0f4f8 !important;
+                            border: 1px solid #ccc !important;
+                            padding: 10pt !important;
+                            margin-bottom: 12pt !important;
                             page-break-inside: avoid !important;
+                        }
+                        .printable-document .bg-slate-50 {
+                            background-color: #f5f5f5 !important;
+                            border: 1px solid #ccc !important;
+                            padding: 10pt !important;
+                            margin-top: 12pt !important;
+                            page-break-inside: avoid !important;
+                        }
+                        .printable-document ul,
+                        .printable-document ol {
+                            margin-bottom: 8pt !important;
+                            padding-left: 20pt !important;
+                        }
+                        .printable-document li {
+                            margin-bottom: 4pt !important;
                         }
                         .printable-document .border-t {
                             border-top: 1px solid #ddd !important;
+                            padding-top: 12pt !important;
+                            margin-top: 12pt !important;
                         }
                         .no-print {
                             display: none !important;
