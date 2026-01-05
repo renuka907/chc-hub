@@ -67,10 +67,15 @@ export default function EducationDetail() {
                             size: 8.5in 11in;
                             margin: 0.5in;
                         }
-                        body {
+                        html, body {
                             margin: 0;
                             padding: 0;
                             background: white !important;
+                            background-image: none !important;
+                        }
+                        * {
+                            background: transparent !important;
+                            background-image: none !important;
                         }
                         body * {
                             visibility: hidden;
@@ -78,6 +83,7 @@ export default function EducationDetail() {
                         .printable-document,
                         .printable-document * {
                             visibility: visible;
+                            background: white !important;
                         }
                         .printable-document {
                             position: fixed !important;
