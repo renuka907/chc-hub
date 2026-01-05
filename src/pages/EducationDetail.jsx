@@ -64,7 +64,8 @@ export default function EducationDetail() {
                 {`
                     @media print {
                         @page {
-                            margin: 0.3cm;
+                            margin: 0.5cm;
+                            size: letter;
                         }
                         body * {
                             visibility: hidden;
@@ -79,47 +80,46 @@ export default function EducationDetail() {
                             left: 0 !important;
                             top: 0 !important;
                             width: 100%;
-                            padding: 5px !important;
-                            font-size: 15px !important;
+                            padding: 10px !important;
+                            font-size: 14px !important;
                             line-height: 1.5 !important;
                         }
                         .printable-document h1 {
                             font-size: 20px !important;
-                            margin-bottom: 4px !important;
+                            margin-bottom: 8px !important;
+                            page-break-after: avoid !important;
                         }
                         .printable-document h3 {
                             font-size: 16px !important;
-                            margin-bottom: 4px !important;
+                            margin-bottom: 6px !important;
+                            page-break-after: avoid !important;
                         }
-                        .printable-document .space-y-6 > * + * {
-                            margin-top: 6px !important;
+                        .printable-document .space-y-6 > * {
+                            page-break-inside: avoid !important;
                         }
-                        .printable-document .text-xl {
-                            font-size: 18px !important;
+                        .printable-document .prose {
+                            page-break-inside: auto !important;
+                        }
+                        .printable-document .prose p,
+                        .printable-document .prose ul,
+                        .printable-document .prose ol {
+                            page-break-inside: avoid !important;
                         }
                         .printable-document img {
                             max-height: 200px !important;
+                            page-break-inside: avoid !important;
+                            page-break-before: auto !important;
+                            page-break-after: auto !important;
                         }
-                        .printable-document .text-sm {
-                            font-size: 13px !important;
+                        .printable-document .bg-blue-50,
+                        .printable-document .bg-slate-50 {
+                            background-color: #f8f9fa !important;
+                            border: 1px solid #ddd !important;
+                            padding: 8px !important;
+                            page-break-inside: avoid !important;
                         }
-                        .printable-document .text-xs {
-                            font-size: 12px !important;
-                        }
-                        .printable-document .pb-6 {
-                            padding-bottom: 4px !important;
-                        }
-                        .printable-document .mb-4 {
-                            margin-bottom: 4px !important;
-                        }
-                        .printable-document .p-4 {
-                            padding: 4px !important;
-                        }
-                        .printable-document .pt-4 {
-                            padding-top: 4px !important;
-                        }
-                        .printable-document .mt-8 {
-                            margin-top: 6px !important;
+                        .printable-document .border-t {
+                            border-top: 1px solid #ddd !important;
                         }
                         .no-print {
                             display: none !important;
