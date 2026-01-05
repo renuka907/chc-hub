@@ -122,6 +122,17 @@ export default function AftercareDetail() {
                         .no-print {
                             display: none !important;
                         }
+                        .printable-document .card-compact {
+                            padding: 8px !important;
+                            margin: 6px 0 !important;
+                        }
+                        .printable-document .card-compact-header {
+                            padding: 6px !important;
+                            margin-bottom: 4px !important;
+                        }
+                        .printable-document .card-compact-content {
+                            padding: 8px !important;
+                        }
                     }
                 `}
             </style>
@@ -184,8 +195,8 @@ export default function AftercareDetail() {
 
                     {/* Duration */}
                     {instruction.duration && (
-                        <Card className="bg-blue-50 border-blue-200">
-                            <CardContent className="pt-6">
+                        <Card className="bg-blue-50 border-blue-200 card-compact">
+                            <CardContent className="pt-6 card-compact-content">
                                 <div className="flex items-center space-x-2">
                                     <Clock className="w-5 h-5 text-blue-600" />
                                     <div>
@@ -213,8 +224,8 @@ export default function AftercareDetail() {
 
                     {/* Warning Signs */}
                     {instruction.warning_signs && (
-                        <Card className="bg-amber-50 border-2 border-amber-400">
-                            <CardHeader>
+                        <Card className="bg-amber-50 border-2 border-amber-400 card-compact">
+                            <CardHeader className="card-compact-header">
                                 <CardTitle className="flex items-center text-amber-900 text-lg font-bold uppercase tracking-wide">
                                     <AlertTriangle className="w-5 h-5 mr-2" />
                                     Warning Signs - Contact Us Immediately
@@ -232,8 +243,8 @@ export default function AftercareDetail() {
 
                     {/* Follow-up */}
                     {instruction.follow_up && (
-                        <Card className="bg-green-50 border-green-200">
-                            <CardHeader>
+                        <Card className="bg-green-50 border-green-200 card-compact">
+                            <CardHeader className="card-compact-header">
                                 <CardTitle className="flex items-center text-green-900">
                                     <CalendarIcon className="w-5 h-5 mr-2" />
                                     Follow-Up Appointment
@@ -283,8 +294,8 @@ export default function AftercareDetail() {
                     )}
 
                     {/* Contact Information */}
-                    <Card className="bg-slate-100 border-2 border-slate-300">
-                        <CardContent className="pt-6">
+                    <Card className="bg-slate-100 border-2 border-slate-300 card-compact">
+                        <CardContent className="pt-6 card-compact-content">
                             <div className="text-sm text-slate-900 leading-relaxed">
                                 <p className="font-bold text-base mb-3 uppercase tracking-wide">Questions or Concerns?</p>
                                 <p className="mb-3">Please contact our office if you have any questions about your recovery or if you experience any concerning symptoms.</p>
