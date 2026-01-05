@@ -123,31 +123,20 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
             <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
                 <style>
                     {`
-                        @page {
-                            size: letter;
-                            margin: 0.4in 0.5in;
+                        .print-container {
+                            display: none;
                         }
                         
                         @media print {
-                            @page {
-                                margin: 0.5in;
-                            }
-                            
-                            body * {
-                                visibility: hidden;
-                            }
-                            
-                            .print-container,
-                            .print-container * {
-                                visibility: visible !important;
-                            }
-                            
                             .print-container {
-                                position: absolute;
-                                left: 0;
-                                top: 0;
-                                width: 100%;
                                 display: block !important;
+                                position: fixed;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                background: white;
+                                z-index: 9999;
                             }
                             
                             .no-print {
@@ -155,38 +144,29 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                             }
                             
                             .storage-group {
-                                page-break-inside: auto !important;
-                                margin-bottom: 8px !important;
+                                page-break-inside: avoid;
+                                margin-bottom: 6px;
                             }
                             
                             table {
-                                page-break-inside: auto !important;
-                                border-collapse: collapse !important;
-                                width: 100% !important;
+                                page-break-inside: auto;
+                                border-collapse: collapse;
+                                width: 100%;
                             }
                             
                             tr {
-                                page-break-inside: avoid !important;
-                                page-break-after: auto !important;
-                            }
-                            
-                            tbody tr {
-                                page-break-before: auto !important;
+                                page-break-inside: avoid;
+                                page-break-after: auto;
                             }
                             
                             thead {
-                                display: table-header-group !important;
+                                display: table-header-group;
                             }
                             
                             * {
                                 -webkit-print-color-adjust: exact !important;
                                 print-color-adjust: exact !important;
-                                color-adjust: exact !important;
                             }
-                        }
-                        
-                        .print-container {
-                            display: none;
                         }
                     `}
                 </style>
