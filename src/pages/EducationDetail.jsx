@@ -116,9 +116,41 @@ export default function EducationDetail() {
 
                     {/* Main Content */}
                     <div className="prose max-w-none">
-                        <div className="whitespace-pre-wrap text-gray-800 leading-relaxed">
-                            {topic.content}
-                        </div>
+                        <div 
+                            className="text-gray-800 leading-relaxed education-content"
+                            dangerouslySetInnerHTML={{ __html: topic.content }}
+                        />
+                        <style>{`
+                            .education-content ul {
+                                background: linear-gradient(to right, #f0f9ff, #e0f2fe);
+                                border-left: 4px solid #0ea5e9;
+                                padding: 1.5rem;
+                                border-radius: 0.5rem;
+                                margin: 1.5rem 0;
+                            }
+                            .education-content ol {
+                                background: linear-gradient(to right, #faf5ff, #f3e8ff);
+                                border-left: 4px solid #a855f7;
+                                padding: 1.5rem;
+                                border-radius: 0.5rem;
+                                margin: 1.5rem 0;
+                            }
+                            .education-content li {
+                                margin: 0.5rem 0;
+                                padding-left: 0.5rem;
+                            }
+                            .education-content h3 {
+                                color: #1e293b;
+                                font-size: 1.25rem;
+                                font-weight: 600;
+                                margin-top: 2rem;
+                                margin-bottom: 1rem;
+                            }
+                            .education-content p {
+                                margin-bottom: 1rem;
+                                line-height: 1.7;
+                            }
+                        `}</style>
                     </div>
 
                     {/* Medical References */}
