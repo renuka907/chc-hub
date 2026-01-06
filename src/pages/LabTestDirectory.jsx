@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -50,6 +50,20 @@ export default function LabTestDirectory() {
     });
 
     const handleSyncTube = (id) => syncTubeMutation.mutate({ id });
+
+    // Auto-sync tube types for saved tests missing tube_type when quest_url exists
+    const syncedRef = useRef(new Set());
+    useEffect(() => {
+        const toSync = (savedTests || []).filter(t => !t.tube_type && t.quest_url);
+        toSync.forEach(t => {
+            if (!syncedRef.current.has(t.id)) {
+                syncedRef.current.add(t.id);
+                base44.functions.invoke('syncQuestTubeType', { testId: t.id })
+                    .then(() => queryClient.invalidateQueries({ queryKey: ['labTests'] }))
+                    .catch(() => {/* ignore per-item errors */});
+            }
+        });
+    }, [savedTests]);
 
     const handleSearch = async () => {
         if (!searchQuery.trim()) {
@@ -356,6 +370,8 @@ Only return found: false if you truly cannot identify what test they're asking a
                                             test={test} 
                                             onToggleFavorite={toggleFavoriteMutation.mutate}
                                             getTubeColor={getTubeColor}
+                                            onSyncTube={handleSyncTube}
+                                            syncing={syncTubeMutation.isPending}
                                         />
                                     ))}
                                 </div>
@@ -374,6 +390,8 @@ Only return found: false if you truly cannot identify what test they're asking a
                                             test={test} 
                                             onToggleFavorite={toggleFavoriteMutation.mutate}
                                             getTubeColor={getTubeColor}
+                                            onSyncTube={handleSyncTube}
+                                            syncing={syncTubeMutation.isPending}
                                         />
                                     ))}
                                 </div>
