@@ -154,8 +154,8 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
 
             <div className="inventory-print-only printable-document">
                 <div style={{borderBottom: '2px solid black', paddingBottom: '8px', marginBottom: '16px'}}>
-                    <div style={{fontSize: '18px', fontWeight: 'bold', color: 'black'}}>Daily Inventory Audit Form</div>
-                    <div style={{fontSize: '11px', marginTop: '4px', color: 'black'}}>
+                    <div style={{fontSize: '22px', fontWeight: 'bold', color: 'black'}}>Daily Inventory Audit Form</div>
+                    <div style={{fontSize: '13px', marginTop: '4px', color: 'black'}}>
                         Date: {new Date().toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: 'numeric'})} | Location: {selectedLocation?.name || 'All Locations'}
                     </div>
                 </div>
@@ -180,21 +180,21 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                         <table style={{
                             width: '100%',
                             borderCollapse: 'collapse',
-                            fontSize: '10px',
+                            fontSize: '12px',
                             color: 'black',
                             border: '1px solid #666',
                             marginBottom: '20px'
                         }}>
                             <thead>
                                 <tr style={{backgroundColor: '#e5e7eb'}}>
-                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'left', fontSize: '10px', fontWeight: 'bold'}}>Item</th>
-                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '70px'}}>Type</th>
-                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '60px'}}>Cond</th>
-                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '50px'}}>SKU</th>
-                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '55px'}}>Exp</th>
-                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '50px'}}>Unit</th>
-                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '45px'}}>Qty</th>
-                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '70px'}}>New</th>
+                                    <th style={{border: '1px solid #666', padding: '4px 8px', textAlign: 'left', fontSize: '13px', fontWeight: 'bold'}}>Item</th>
+                                    <th style={{border: '1px solid #666', padding: '4px 8px', textAlign: 'center', fontSize: '13px', fontWeight: 'bold', width: '80px'}}>Cond</th>
+                                    <th style={{border: '1px solid #666', padding: '4px 8px', textAlign: 'center', fontSize: '13px', fontWeight: 'bold', width: '60px'}}>Qty</th>
+                                    <th style={{border: '1px solid #666', padding: '4px 8px', textAlign: 'center', fontSize: '13px', fontWeight: 'bold', width: '70px'}}>Type</th>
+                                    <th style={{border: '1px solid #666', padding: '4px 8px', textAlign: 'center', fontSize: '13px', fontWeight: 'bold', width: '60px'}}>SKU</th>
+                                    <th style={{border: '1px solid #666', padding: '4px 8px', textAlign: 'center', fontSize: '13px', fontWeight: 'bold', width: '65px'}}>Exp</th>
+                                    <th style={{border: '1px solid #666', padding: '4px 8px', textAlign: 'center', fontSize: '13px', fontWeight: 'bold', width: '55px'}}>Unit</th>
+                                    <th style={{border: '1px solid #666', padding: '4px 8px', textAlign: 'center', fontSize: '13px', fontWeight: 'bold', width: '80px'}}>New</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -210,18 +210,18 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                     return Object.entries(itemsByName).sort(([a], [b]) => a.localeCompare(b)).flatMap(([name, items]) => 
                                         items.map(item => (
                                             <tr key={item.id}>
-                                                <td style={{border: '1px solid #999', padding: '3px 6px', fontSize: '10px'}}>{item.item_name}</td>
-                                                <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontSize: '10px'}}>{item.item_type}</td>
-                                                <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontSize: '9px'}}>
+                                                <td style={{border: '1px solid #999', padding: '4px 8px', fontSize: '12px'}}>{item.item_name}</td>
+                                                <td style={{border: '1px solid #999', padding: '4px 8px', textAlign: 'center', fontSize: '11px'}}>
                                                     {item.item_condition === 'unopened' ? 'New' : item.item_condition === 'opened' ? 'Open' : 'Part'}
                                                 </td>
-                                                <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontSize: '10px'}}>{item.sku || '-'}</td>
-                                                <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontSize: '10px'}}>
+                                                <td style={{border: '1px solid #999', padding: '4px 8px', textAlign: 'center', fontWeight: 'bold', fontSize: '13px'}}>{item.quantity}</td>
+                                                <td style={{border: '1px solid #999', padding: '4px 8px', textAlign: 'center', fontSize: '11px'}}>{item.item_type}</td>
+                                                <td style={{border: '1px solid #999', padding: '4px 8px', textAlign: 'center', fontSize: '11px'}}>{item.sku || '-'}</td>
+                                                <td style={{border: '1px solid #999', padding: '4px 8px', textAlign: 'center', fontSize: '11px'}}>
                                                     {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: '2-digit'}) : '-'}
                                                 </td>
-                                                <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontSize: '10px'}}>{item.unit}</td>
-                                                <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontWeight: 'bold', fontSize: '10px'}}>{item.quantity}</td>
-                                                <td style={{border: '1px solid #999', padding: '3px 6px', background: 'white'}}></td>
+                                                <td style={{border: '1px solid #999', padding: '4px 8px', textAlign: 'center', fontSize: '11px'}}>{item.unit}</td>
+                                                <td style={{border: '1px solid #999', padding: '4px 8px', background: 'white'}}></td>
                                             </tr>
                                         ))
                                     );
@@ -231,7 +231,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                     </div>
                 ))}
 
-                <div style={{marginTop: '20px', paddingTop: '8px', borderTop: '1px solid #999', fontSize: '10px', color: 'black'}}>
+                <div style={{marginTop: '20px', paddingTop: '8px', borderTop: '1px solid #999', fontSize: '12px', color: 'black'}}>
                     Audited by: _________________ Signature: _________________ Date: _________________
                 </div>
             </div>
