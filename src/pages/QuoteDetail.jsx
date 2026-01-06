@@ -23,9 +23,19 @@ export default function QuoteDetail() {
     const [showEditDialog, setShowEditDialog] = useState(false);
 
     const { data: quote, isLoading: quoteLoading } = useQuery({
-        queryKey: ['quote', quoteId],
-        queryFn: () => base44.entities.Quote.filter({ id: quoteId }).then(quotes => quotes[0]),
-        enabled: !!quoteId,
+        queryKey: ['quote', quoteId || quoteNumber],
+        queryFn: async () => {
+            if (quoteId) {
+                const byId = await base44.entities.Quote.filter({ id: quoteId });
+                return byId[0];
+            }
+            if (quoteNumber) {
+                const byNumber = await base44.entities.Quote.filter({ quote_number: quoteNumber });
+                return byNumber[0];
+            }
+            return null;
+        },
+        enabled: !!(quoteId || quoteNumber),
     });
 
     const { data: locations = [] } = useQuery({
