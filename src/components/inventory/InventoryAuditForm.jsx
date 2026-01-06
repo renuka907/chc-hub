@@ -198,22 +198,34 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {storageItems.map(item => (
-                                    <tr key={item.id}>
-                                        <td style={{border: '1px solid #999', padding: '3px 6px', fontSize: '10px'}}>{item.item_name}</td>
-                                        <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontSize: '10px'}}>{item.item_type}</td>
-                                        <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontSize: '9px'}}>
-                                            {item.item_condition === 'unopened' ? 'New' : item.item_condition === 'opened' ? 'Open' : 'Part'}
-                                        </td>
-                                        <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontSize: '10px'}}>{item.sku || '-'}</td>
-                                        <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontSize: '10px'}}>
-                                            {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: '2-digit'}) : '-'}
-                                        </td>
-                                        <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontSize: '10px'}}>{item.unit}</td>
-                                        <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontWeight: 'bold', fontSize: '10px'}}>{item.quantity}</td>
-                                        <td style={{border: '1px solid #999', padding: '3px 6px', background: 'white'}}></td>
-                                    </tr>
-                                ))}
+                                {(() => {
+                                    const itemsByName = {};
+                                    storageItems.forEach(item => {
+                                        if (!itemsByName[item.item_name]) {
+                                            itemsByName[item.item_name] = [];
+                                        }
+                                        itemsByName[item.item_name].push(item);
+                                    });
+                                    
+                                    return Object.entries(itemsByName).sort(([a], [b]) => a.localeCompare(b)).flatMap(([name, items]) => 
+                                        items.map(item => (
+                                            <tr key={item.id}>
+                                                <td style={{border: '1px solid #999', padding: '3px 6px', fontSize: '10px'}}>{item.item_name}</td>
+                                                <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontSize: '10px'}}>{item.item_type}</td>
+                                                <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontSize: '9px'}}>
+                                                    {item.item_condition === 'unopened' ? 'New' : item.item_condition === 'opened' ? 'Open' : 'Part'}
+                                                </td>
+                                                <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontSize: '10px'}}>{item.sku || '-'}</td>
+                                                <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontSize: '10px'}}>
+                                                    {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: '2-digit'}) : '-'}
+                                                </td>
+                                                <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontSize: '10px'}}>{item.unit}</td>
+                                                <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontWeight: 'bold', fontSize: '10px'}}>{item.quantity}</td>
+                                                <td style={{border: '1px solid #999', padding: '3px 6px', background: 'white'}}></td>
+                                            </tr>
+                                        ))
+                                    );
+                                })()}
                             </tbody>
                         </table>
                     </div>
@@ -318,7 +330,17 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
 
                                 {/* Items List */}
                                 <div className="bg-white divide-y">
-                                    {storageItems.map(item => {
+                                    {(() => {
+                                        const itemsByName = {};
+                                        storageItems.forEach(item => {
+                                            if (!itemsByName[item.item_name]) {
+                                                itemsByName[item.item_name] = [];
+                                            }
+                                            itemsByName[item.item_name].push(item);
+                                        });
+                                        
+                                        return Object.entries(itemsByName).sort(([a], [b]) => a.localeCompare(b)).flatMap(([name, items]) => 
+                                            items.map(item => {
                                         const currentQty = quantities[item.id] || 0;
                                         const originalQty = item.quantity;
                                         const currentExpiry = expiryDates[item.id] || '';
@@ -409,8 +431,9 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                                     </div>
                                                 </div>
                                             </div>
-                                        );
-                                    })}
+                                        ))
+                                    );
+                                    })()}
                                 </div>
                             </div>
                         ))}
