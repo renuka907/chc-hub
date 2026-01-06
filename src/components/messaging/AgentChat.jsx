@@ -377,7 +377,7 @@ export default function AgentChat({ agentName }) {
                                                 variant="ghost"
                                                 size="icon"
                                                 onClick={() => handlePrint(msg.content)}
-                                                className="h-8 w-8 opacity-0 hover:opacity-100 transition-opacity"
+                                                className="h-8 w-8 opacity-0 group-hover:opacity-100 hover:opacity-100 transition-opacity"
                                                 title="Print this response"
                                             >
                                                 <Printer className="w-4 h-4 text-gray-600" />
