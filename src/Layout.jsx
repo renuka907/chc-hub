@@ -19,7 +19,8 @@ import {
             LogOut,
             ChevronDown,
             Sparkles,
-            Bell
+            Bell,
+            Calendar
         } from "lucide-react";
 
 export default function Layout({ children, currentPageName }) {
