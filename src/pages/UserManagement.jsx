@@ -8,9 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Users, Mail, Shield, UserPlus, Calendar, Trash2, Edit, UserX, UserCheck, FileDown } from "lucide-react";
+import { Users, Mail, Shield, UserPlus, Calendar, Trash2, Edit, UserX, UserCheck, FileDown, CheckCircle2 } from "lucide-react";
 import EditUserDialog from "../components/users/EditUserDialog";
 import RoleManagementDialog from "../components/users/RoleManagementDialog";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ROLE_LABELS } from "../components/permissions/usePermissions";
 import {
     AlertDialog,
@@ -37,6 +38,7 @@ export default function UserManagement() {
     const [roleFilter, setRoleFilter] = useState("all");
     const [statusFilter, setStatusFilter] = useState("all");
     const [sortBy, setSortBy] = useState("newest");
+    const [inviteSuccessEmail, setInviteSuccessEmail] = useState(null);
     const queryClient = useQueryClient();
 
     const { data: users = [], isLoading } = useQuery({
@@ -53,6 +55,7 @@ export default function UserManagement() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['users'] });
             setShowInviteDialog(false);
+            setInviteSuccessEmail(inviteEmail);
             setInviteEmail("");
             setInviteRole("user");
         },
@@ -167,6 +170,7 @@ export default function UserManagement() {
                             onClick={handleExportCSV}
                             variant="outline"
                             className="gap-2"
+                            title="Export users to CSV"
                         >
                             <FileDown className="w-4 h-4" />
                             Export CSV
@@ -181,6 +185,16 @@ export default function UserManagement() {
                     </div>
                 </div>
             </div>
+{/* Invitation Status */}
+{inviteSuccessEmail && (
+    <Alert className="bg-green-50 border-green-200">
+        <CheckCircle2 className="h-4 w-4 text-green-600" />
+        <AlertDescription>
+            Invitation sent to {inviteSuccessEmail}
+        </AlertDescription>
+    </Alert>
+)}
+
 {/* Filters */}
 <div className="bg-white rounded-3xl p-4 shadow-md">
     <div className="grid md:grid-cols-4 gap-3">
@@ -253,6 +267,11 @@ export default function UserManagement() {
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3">
+                                        {!user.full_name && (
+                                            <Badge className="bg-yellow-100 text-yellow-800">
+                                                Invited
+                                            </Badge>
+                                        )}
                                         <Badge className={
                                             user.role === 'admin' 
                                                 ? 'bg-purple-100 text-purple-800' 
