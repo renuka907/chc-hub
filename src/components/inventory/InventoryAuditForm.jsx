@@ -212,7 +212,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                             <tr key={item.id}>
                                                 <td style={{border: '1px solid #999', padding: '4px 8px', fontSize: '12px'}}>{item.item_name}</td>
                                                 <td style={{border: '1px solid #999', padding: '4px 8px', textAlign: 'center', fontSize: '11px'}}>
-                                                    {item.item_condition === 'unopened' ? 'New' : item.item_condition === 'opened' ? 'Open' : 'Part'}
+                                                    {item.item_condition === 'unopened' ? 'New' : item.item_condition === 'opened' ? 'Open' : 'New'}
                                                 </td>
                                                 <td style={{border: '1px solid #999', padding: '4px 8px', textAlign: 'center', fontWeight: 'bold', fontSize: '13px'}}>{item.quantity}</td>
                                                 <td style={{border: '1px solid #999', padding: '4px 8px', textAlign: 'center', fontSize: '11px'}}>{item.item_type}</td>
