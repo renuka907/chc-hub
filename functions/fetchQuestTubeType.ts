@@ -11,12 +11,13 @@ function stripTags(html) {
 
 function extractPreferredRaw(html) {
   const patterns = [
+    /<dt[^>]*>\s*(?:<strong[^>]*>)?\s*Preferred\s*Specimen\s*(?:<\/strong>)?\s*<\/dt>\s*<dd[^>]*>\s*([\s\S]*?)<\/dd>/i,
     /<li[^>]*>\s*(?:<strong[^>]*>)?\s*Preferred\s*Specimen\s*(?:<\/strong>)?\s*[:\-]?\s*([^<]+)<\/li>/i,
-    /Preferred\s*Specimen[^<:]*[:\-]?\s*(?:<[^>]+>\s*)*([^<\n\r]+)</i,
+    /Preferred\s*Specimen[^<:]*[:\-]?\s*(?:<[^>]+>\s*)*([^<\n\r]+)/i,
   ];
   for (const re of patterns) {
     const m = re.exec(html);
-    if (m && m[1]) return m[1].trim();
+    if (m && m[1]) return stripTags(m[1]).trim();
   }
   const idx = html.search(/Preferred\s*Specimen/i);
   if (idx !== -1) {
@@ -32,21 +33,17 @@ function extractPreferredRaw(html) {
 function normalizeTubeType(raw) {
   if (!raw) return '';
   const s = raw.toLowerCase();
-  const rules = [
-    { re: /(lavender|purple).*edta|edta.*(lavender|purple)/i, label: 'Lavender-top EDTA' },
-    { re: /(gold|yellow).*sst|sst.*(gold|yellow)/i, label: 'Gold-top SST' },
-    { re: /(red)(?!.*(gray|gold)).*(plain|serum)?/i, label: 'Red-top' },
-    { re: /(light\s*blue|blue).*citrate|citrate.*(light\s*blue|blue)/i, label: 'Light Blue-top Sodium Citrate' },
-    { re: /(green).*heparin|heparin.*(green)|lithium\s*heparin/i, label: 'Green-top Lithium Heparin' },
-    { re: /(gray|grey).*fluoride|fluoride.*(gray|grey)|oxalate/i, label: 'Gray-top Sodium Fluoride' },
-    { re: /pink.*edta|edta.*pink/i, label: 'Pink-top EDTA' },
-    { re: /black/i, label: 'Black-top' },
-    { re: /yellow.*acd|acd.*yellow/i, label: 'Yellow-top ACD' },
-  ];
-  for (const r of rules) {
-    if (r.re.test(raw)) return r.label;
-    if (r.re.test(s)) return r.label;
-  }
+
+  if (/(lithium\s*heparin|\bheparin\b)/i.test(s)) return 'Green-top Lithium Heparin';
+  if (/(light\s*blue|\bblue\b).*citrate|citrate.*(light\s*blue|\bblue\b)/i.test(s)) return 'Light Blue-top Sodium Citrate';
+  if (/(lavender|purple).*edta|edta.*(lavender|purple)/i.test(s)) return 'Lavender-top EDTA';
+  if (/(gray|grey).*fluoride|fluoride.*(gray|grey)|oxalate/i.test(s)) return 'Gray-top Sodium Fluoride';
+  if (/pink.*edta|edta.*pink/i.test(s)) return 'Pink-top EDTA';
+  if (/yellow.*acd|acd.*yellow/i.test(s)) return 'Yellow-top ACD';
+  if (/(gold|yellow).*sst|sst.*(gold|yellow)/i.test(s)) return 'Gold-top SST';
+  if (/(red)(?!.*(gray|gold))/i.test(s)) return 'Red-top';
+  if (/green/.test(s)) return 'Green-top';
+
   const fallback = raw.replace(/^[\s:\-]+/, '').trim();
   return fallback ? fallback.charAt(0).toUpperCase() + fallback.slice(1) : '';
 }
