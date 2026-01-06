@@ -39,6 +39,8 @@ export default function UserManagement() {
     const [statusFilter, setStatusFilter] = useState("all");
     const [sortBy, setSortBy] = useState("newest");
     const [inviteSuccessEmail, setInviteSuccessEmail] = useState(null);
+    const [inviteError, setInviteError] = useState(null);
+    const [resendingId, setResendingId] = useState(null);
     const queryClient = useQueryClient();
 
     const { data: users = [], isLoading } = useQuery({
@@ -58,7 +60,12 @@ export default function UserManagement() {
             setInviteSuccessEmail(inviteEmail);
             setInviteEmail("");
             setInviteRole("user");
+            setInviteError(null);
         },
+        onError: (error) => {
+            const msg = error?.response?.data?.error || error?.message || 'Failed to send invitation';
+            setInviteError(msg);
+        }
     });
 
     const deleteMutation = useMutation({
@@ -76,8 +83,27 @@ export default function UserManagement() {
         },
     });
 
+    const resendInviteMutation = useMutation({
+        mutationFn: ({ email, role }) => base44.users.inviteUser(email, role),
+        onSuccess: (_, vars) => {
+            setInviteSuccessEmail(vars.email);
+        }
+    });
+
     const handleToggleActive = (user) => {
         updateUserMutation.mutate({ id: user.id, data: { is_active: !user.is_active } });
+    };
+
+    const handleResend = (user) => {
+        setInviteError(null);
+        setResendingId(user.id);
+        resendInviteMutation.mutate(
+            { email: user.email, role: user.role || 'user' },
+            {
+                onSettled: () => setResendingId(null),
+                onError: (error) => setInviteError(error?.response?.data?.error || error?.message || 'Failed to resend invitation')
+            }
+        );
     };
 
     const handleExportCSV = () => {
@@ -125,6 +151,7 @@ export default function UserManagement() {
 
     const handleInvite = () => {
         if (inviteEmail) {
+            setInviteError(null);
             inviteMutation.mutate({ email: inviteEmail, role: inviteRole });
         }
     };
@@ -319,6 +346,17 @@ export default function UserManagement() {
                                                 >
                                                     Change Role
                                                 </Button>
+                                                {!user.full_name && (
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        onClick={() => handleResend(user)}
+                                                        disabled={resendingId === user.id || resendInviteMutation.isPending}
+                                                    >
+                                                        <Mail className="w-3 h-3 mr-1" />
+                                                        {resendingId === user.id ? 'Resending...' : 'Resend Invite'}
+                                                    </Button>
+                                                )}
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
@@ -378,6 +416,9 @@ export default function UserManagement() {
                             </p>
                         </div>
                     </div>
+                    {inviteError && (
+                        <p className="text-sm text-red-600">{inviteError}</p>
+                    )}
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setShowInviteDialog(false)}>
                             Cancel
