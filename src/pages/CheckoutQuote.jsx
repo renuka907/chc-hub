@@ -608,14 +608,14 @@ export default function CheckoutQuote() {
                                             No items selected
                                         </div>
                                     ) : (
-                                        <div className="space-y-2 max-h-64 overflow-y-auto">
+                                        <div className="space-y-3 max-h-[500px] overflow-y-auto">
                                             {selectedItems.map((item, index) => (
                                                <Card key={index} className="bg-slate-50">
-                                                   <CardContent className="p-3">
-                                                       <div className="flex items-center justify-between mb-2">
+                                                   <CardContent className="p-4">
+                                                       <div className="flex items-start justify-between mb-3">
                                                            <div className="flex-1">
-                                                               <div className="font-medium">{item.name}</div>
-                                                               <div className="text-xs text-gray-600">
+                                                               <div className="font-semibold text-base">{item.name}</div>
+                                                               <div className="text-sm text-gray-600 mt-1">
                                                                    {item.tier_name}
                                                                </div>
                                                            </div>
@@ -627,36 +627,36 @@ export default function CheckoutQuote() {
                                                                <Trash2 className="w-4 h-4 text-red-500" />
                                                            </Button>
                                                        </div>
-                                                       <div className="grid grid-cols-3 gap-2 mb-2">
+                                                       <div className="grid grid-cols-3 gap-3">
                                                            <div>
-                                                               <Label className="text-xs">Price</Label>
+                                                               <Label className="text-sm mb-1.5 block">Price</Label>
                                                                <Input
                                                                    type="number"
                                                                    min="0"
                                                                    step="0.01"
                                                                    value={item.price}
                                                                    onChange={(e) => updatePrice(index, e.target.value)}
-                                                                   className="h-8"
+                                                                   className="h-10"
                                                                />
                                                            </div>
                                                            <div>
-                                                               <Label className="text-xs">Qty</Label>
+                                                               <Label className="text-sm mb-1.5 block">Qty</Label>
                                                                <Input
                                                                    type="number"
                                                                    min="1"
                                                                    value={item.quantity}
                                                                    onChange={(e) => updateQuantity(index, e.target.value)}
-                                                                   className="h-8"
+                                                                   className="h-10"
                                                                />
                                                            </div>
                                                            <div>
-                                                               <Label className="text-xs">Total</Label>
-                                                               <div className="h-8 flex items-center font-semibold text-sm">
+                                                               <Label className="text-sm mb-1.5 block">Total</Label>
+                                                               <div className="h-10 flex items-center font-bold text-base text-blue-600">
                                                                    ${(item.price * item.quantity).toFixed(2)}
                                                                </div>
                                                            </div>
                                                        </div>
-                                                       <div className="flex items-center gap-2">
+                                                       <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-200">
                                                            <input
                                                                type="checkbox"
                                                                id={`tax-${index}`}
@@ -664,8 +664,8 @@ export default function CheckoutQuote() {
                                                                onChange={() => toggleTaxable(index)}
                                                                className="w-4 h-4 rounded"
                                                            />
-                                                           <Label htmlFor={`tax-${index}`} className="text-xs cursor-pointer">
-                                                               Taxable
+                                                           <Label htmlFor={`tax-${index}`} className="text-sm cursor-pointer">
+                                                               Taxable Item
                                                            </Label>
                                                        </div>
                                                    </CardContent>
