@@ -99,6 +99,11 @@ export default function Layout({ children, currentPageName }) {
         <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-cyan-100">
             <style>
                 {`
+                    /* Prevent layout shift while user loads */
+                    body { overflow-y: scroll; }
+                `}
+            </style>
+                {`
                     :root {
                         --primary: #8b5cf6;
                         --primary-light: #ede9fe;
