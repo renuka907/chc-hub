@@ -59,13 +59,13 @@ Deno.serve(async (req) => {
 
     const res = await fetch(questUrl, { headers: { 'User-Agent': 'CHC Hub Fetcher' } });
     if (!res.ok) {
-      return Response.json({ error: 'Failed to fetch Quest page', status: res.status }, { status: 502 });
+      return Response.json({ success: false, error: 'Failed to fetch Quest page', status: res.status });
     }
     const html = await res.text();
 
     const rawPreferred = extractPreferredRaw(html);
     if (!rawPreferred) {
-      return Response.json({ error: 'Preferred Specimen not found on page' }, { status: 422 });
+      return Response.json({ success: false, error: 'Preferred Specimen not found on page' });
     }
 
     const tube_type = normalizeTubeType(rawPreferred);

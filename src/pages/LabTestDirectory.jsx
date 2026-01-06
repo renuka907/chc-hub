@@ -39,10 +39,17 @@ export default function LabTestDirectory() {
     });
 
     const syncTubeMutation = useMutation({
-        mutationFn: ({ id }) => base44.functions.invoke('syncQuestTubeType', { testId: id }),
-        onSuccess: () => {
+        mutationFn: async ({ id }) => {
+            const res = await base44.functions.invoke('syncQuestTubeType', { testId: id });
+            return res.data;
+        },
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['labTests'] });
-            toast.success('Synced tube type from Quest');
+            if (data?.success && data?.tube_type) {
+                toast.success(`Tube type updated: ${data.tube_type}`);
+            } else {
+                toast.error(data?.error || 'Could not find Preferred Specimen on Quest');
+            }
         },
         onError: () => {
             toast.error('Failed to sync tube type');
@@ -142,6 +149,8 @@ Only return found: false if you truly cannot identify what test they're asking a
                     const { data } = await base44.functions.invoke('fetchQuestTubeType', { questUrl: response.quest_url });
                     if (data?.tube_type) {
                         setSearchResults({ ...response, tube_type: data.tube_type });
+                    } else if (data?.error) {
+                        console.log('Quest verification:', data.error);
                     }
                 } catch (e) {
                     console.log('Verification via Quest failed', e);
