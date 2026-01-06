@@ -215,13 +215,13 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                                     {item.item_condition === 'unopened' ? 'New' : item.item_condition === 'opened' ? 'Open' : 'New'}
                                                 </td>
                                                 <td style={{border: '1px solid #999', padding: '4px 8px', textAlign: 'center', fontWeight: 'bold', fontSize: '13px'}}>{item.quantity}</td>
+                                                <td style={{border: '1px solid #999', padding: '4px 8px', background: 'white'}}></td>
                                                 <td style={{border: '1px solid #999', padding: '4px 8px', textAlign: 'center', fontSize: '11px'}}>{item.item_type}</td>
                                                 <td style={{border: '1px solid #999', padding: '4px 8px', textAlign: 'center', fontSize: '11px'}}>{item.sku || '-'}</td>
                                                 <td style={{border: '1px solid #999', padding: '4px 8px', textAlign: 'center', fontSize: '11px'}}>
                                                     {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: '2-digit'}) : '-'}
                                                 </td>
                                                 <td style={{border: '1px solid #999', padding: '4px 8px', textAlign: 'center', fontSize: '11px'}}>{item.unit}</td>
-                                                <td style={{border: '1px solid #999', padding: '4px 8px', background: 'white'}}></td>
                                             </tr>
                                         ))
                                     );
