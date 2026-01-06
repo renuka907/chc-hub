@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "./utils";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
 import { 
             BookOpen, 
             FileText, 
@@ -36,14 +35,20 @@ export default function Layout({ children, currentPageName }) {
     }
     
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+    const [currentUser, setCurrentUser] = React.useState(null);
+    const [isLoading, setIsLoading] = React.useState(true);
     const [openDropdown, setOpenDropdown] = React.useState(null);
 
-    const { data: currentUser } = useQuery({
-        queryKey: ['currentUser'],
-        queryFn: () => base44.auth.me(),
-        staleTime: 1000 * 60 * 5, // 5 minutes
-        retry: false
-    });
+    React.useEffect(() => {
+        base44.auth.me()
+            .then(user => {
+                setCurrentUser(user);
+                setIsLoading(false);
+            })
+            .catch(() => {
+                base44.auth.redirectToLogin();
+            });
+    }, []);
 
     const menuGroups = [
         {
@@ -95,12 +100,18 @@ export default function Layout({ children, currentPageName }) {
         }] : []),
     ];
 
+    if (isLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-100 via-blue-50 to-cyan-100">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-cyan-100">
             <style>
                 {`
-                    /* Prevent layout shift while user loads */
-                    body { overflow-y: scroll; }
                     :root {
                         --primary: #8b5cf6;
                         --primary-light: #ede9fe;

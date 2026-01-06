@@ -18,28 +18,20 @@ export default function QuoteDetail() {
     const queryClient = useQueryClient();
     const [showEditDialog, setShowEditDialog] = useState(false);
 
-    const { data: allQuotes = [], isLoading: quotesLoading } = useQuery({
-        queryKey: ['quotes'],
-        queryFn: () => base44.entities.Quote.list('-created_date', 200),
-        staleTime: Infinity,
-        cacheTime: Infinity,
-        refetchOnWindowFocus: false,
-        refetchOnMount: false,
-        refetchInterval: false,
+    const { data: quote, isLoading: quoteLoading } = useQuery({
+        queryKey: ['quote', quoteId],
+        queryFn: () => base44.entities.Quote.filter({ id: quoteId }).then(quotes => quotes[0]),
+        enabled: !!quoteId,
     });
-
-    const quote = allQuotes.find(q => q.id === quoteId);
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
         queryFn: () => base44.entities.ClinicLocation.list(),
-        staleTime: 5 * 60 * 1000,
     });
 
     const { data: discounts = [] } = useQuery({
         queryKey: ['discounts'],
         queryFn: () => base44.entities.Discount.list(),
-        staleTime: 5 * 60 * 1000,
     });
 
     const updateStatusMutation = useMutation({
@@ -50,7 +42,7 @@ export default function QuoteDetail() {
         },
     });
     const location = quote ? locations.find(l => l.id === quote.clinic_location_id) : null;
-    const items = quote ? (quote.items ? JSON.parse(quote.items) : []) : [];
+    const items = quote ? JSON.parse(quote.items) : [];
     const appliedDiscount = quote?.discount_id ? discounts.find(d => d.id === quote.discount_id) : null;
 
     const getStatusColor = (status) => {
@@ -64,9 +56,7 @@ export default function QuoteDetail() {
     };
 
     const handleStatusChange = (newStatus) => {
-        if (quote) {
-            updateStatusMutation.mutate({ id: quoteId, status: newStatus });
-        }
+        updateStatusMutation.mutate({ id: quoteId, status: newStatus });
     };
 
     // Auto-trigger print when quote loads
@@ -79,11 +69,12 @@ export default function QuoteDetail() {
         }
     }, [quote, autoPrint]);
 
-    if (!quote && !quotesLoading) {
+    if (quoteLoading || !quote) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                    <p className="text-gray-500">Quote not found</p>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <p className="text-gray-500">Loading quote...</p>
                 </div>
             </div>
         );
@@ -193,7 +184,7 @@ export default function QuoteDetail() {
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
                         <span className="text-sm font-medium text-gray-700">Status:</span>
-                        <Select value={quote?.status || 'draft'} onValueChange={handleStatusChange}>
+                        <Select value={quote.status} onValueChange={handleStatusChange}>
                             <SelectTrigger className="w-32">
                                 <SelectValue />
                             </SelectTrigger>
@@ -218,7 +209,6 @@ export default function QuoteDetail() {
             </div>
 
             {/* Printable Content */}
-            {quote && (
             <PrintableDocument title="Price Quote">
                 <div className="space-y-6">
                     {/* Header Info */}
@@ -337,9 +327,7 @@ export default function QuoteDetail() {
                     </div>
                 </div>
             </PrintableDocument>
-            )}
 
-            {quote && (
             <EditQuoteDialog
                 open={showEditDialog}
                 onOpenChange={setShowEditDialog}
@@ -349,7 +337,7 @@ export default function QuoteDetail() {
                     queryClient.invalidateQueries(['quotes']);
                 }}
             />
-            )}
+
 
         </div>
     );

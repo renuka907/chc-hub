@@ -1,5 +1,5 @@
+import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
 
 // Permission definitions by role
 const PERMISSIONS = {
@@ -58,12 +58,19 @@ const PERMISSIONS = {
 };
 
 export function usePermissions() {
-    const { data: user, isLoading } = useQuery({
-        queryKey: ['currentUser'],
-        queryFn: () => base44.auth.me(),
-        staleTime: 1000 * 60 * 5, // 5 minutes
-        retry: false
-    });
+    const [user, setUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        base44.auth.me()
+            .then(currentUser => {
+                setUser(currentUser);
+                setIsLoading(false);
+            })
+            .catch(() => {
+                setIsLoading(false);
+            });
+    }, []);
 
     const can = (resource, action) => {
         if (!user) return false;
