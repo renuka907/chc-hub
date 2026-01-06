@@ -43,17 +43,21 @@ export default function QuoteDetail() {
     const { data: quote, isLoading: quoteLoading } = useQuery({
         queryKey: ['quote', quoteId || quoteNumber],
         queryFn: async () => {
+            // Try by id, then by number; also attempt list + find as fallback
             if (quoteId) {
                 const byId = await base44.entities.Quote.filter({ id: quoteId });
-                return byId[0];
+                if (byId?.[0]) return byId[0];
             }
             if (quoteNumber) {
                 const byNumber = await base44.entities.Quote.filter({ quote_number: quoteNumber });
-                return byNumber[0];
+                if (byNumber?.[0]) return byNumber[0];
             }
-            return null;
+            // Last resort: try listing a few and check
+            const recent = await base44.entities.Quote.list('-updated_date', 50);
+            const found = recent.find(q => q.id === quoteId || q.quote_number === quoteNumber);
+            return found || null;
         },
-        enabled: !!(quoteId || quoteNumber),
+        enabled: true,
     });
 
     const { data: locations = [] } = useQuery({
