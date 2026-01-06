@@ -129,23 +129,23 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                     @media print {
                         @page {
                             margin: 0.5in;
-                            size: letter;
                         }
 
-                        html, body {
-                            height: auto !important;
-                            overflow: visible !important;
+                        body * {
+                            visibility: hidden;
                         }
 
-                        body > div:not(.inventory-print-only) {
-                            display: none !important;
+                        .inventory-print-only,
+                        .inventory-print-only * {
+                            visibility: visible !important;
                         }
 
                         .inventory-print-only {
                             display: block !important;
-                            position: static !important;
+                            position: absolute;
+                            left: 0;
+                            top: 0;
                             width: 100%;
-                            height: auto !important;
                         }
 
                         .storage-group {
