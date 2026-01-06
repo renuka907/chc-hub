@@ -318,17 +318,16 @@ export default function AgentChat({ agentName }) {
                             <RefreshCw className="w-4 h-4" />
                             New Chat
                         </Button>
-                        {messages.length > 0 && (
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={handleSaveChat}
-                                className="gap-2"
-                            >
-                                <Download className="w-4 h-4" />
-                                Save Chat
-                            </Button>
-                        )}
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handleSaveChat}
+                            className="gap-2"
+                            disabled={messages.length === 0}
+                        >
+                            <Download className="w-4 h-4" />
+                            Save Chat
+                        </Button>
                     </div>
                 </div>
             </div>
