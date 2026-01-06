@@ -36,14 +36,12 @@ export default function Layout({ children, currentPageName }) {
     
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
     const [currentUser, setCurrentUser] = React.useState(null);
-    const [isLoading, setIsLoading] = React.useState(true);
     const [openDropdown, setOpenDropdown] = React.useState(null);
 
     React.useEffect(() => {
         base44.auth.me()
             .then(user => {
                 setCurrentUser(user);
-                setIsLoading(false);
             })
             .catch(() => {
                 base44.auth.redirectToLogin();
