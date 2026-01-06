@@ -694,7 +694,7 @@ export default function CheckoutQuote() {
                                 </div>
 
                                 {/* Totals */}
-                                {selectedItems.length > 0 && showTotals && (
+                                {selectedItems.length > 0 && (
                                     <div className="border-t pt-4 space-y-2">
                                         <div className="flex justify-between text-base">
                                             <span>Subtotal:</span>
