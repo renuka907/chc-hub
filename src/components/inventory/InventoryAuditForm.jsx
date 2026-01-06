@@ -129,6 +129,14 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                     @media print {
                         @page {
                             margin: 0.5in;
+                            size: auto;
+                        }
+
+                        html, body {
+                            height: auto !important;
+                            overflow: visible !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
                         }
 
                         body * {
@@ -142,6 +150,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                             left: 0;
                             top: 0;
                             width: 100%;
+                            height: auto !important;
                         }
 
                         .inventory-print-only * {
