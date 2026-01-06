@@ -48,6 +48,9 @@ export default function CheckoutQuote() {
         onSuccess: (data) => {
             queryClient.invalidateQueries(['quotes']);
             setSavedQuote(data);
+            // Also open the quote detail page with autoprint for reliability
+            const url = createPageUrl(`QuoteDetail?id=${data.id}&autoprint=true`);
+            window.open(url, '_blank');
             setTimeout(() => {
                 window.print();
             }, 100);
