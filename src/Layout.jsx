@@ -37,19 +37,18 @@ export default function Layout({ children, currentPageName }) {
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
     const [currentUser, setCurrentUser] = React.useState(null);
     const [openDropdown, setOpenDropdown] = React.useState(null);
+    const authCheckRef = React.useRef(false);
 
     React.useEffect(() => {
+        if (authCheckRef.current) return;
+        authCheckRef.current = true;
+
         base44.auth.me()
             .then(user => {
                 setCurrentUser(user);
             })
             .catch(() => {
-                // Only redirect if not already authenticated
-                base44.auth.isAuthenticated().then(isAuth => {
-                    if (!isAuth) {
-                        base44.auth.redirectToLogin();
-                    }
-                });
+                base44.auth.redirectToLogin();
             });
     }, []);
 
