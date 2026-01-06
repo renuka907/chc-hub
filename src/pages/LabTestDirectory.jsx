@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { usePermissions } from "../components/permissions/usePermissions";
-import { Search, Loader2, TestTube, Star, ExternalLink, Plus, AlertCircle } from "lucide-react";
+import { Search, Loader2, TestTube, Star, ExternalLink, Plus, AlertCircle, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
 export default function LabTestDirectory() {
@@ -37,6 +37,19 @@ export default function LabTestDirectory() {
             toast.success("Test information saved");
         }
     });
+
+    const syncTubeMutation = useMutation({
+        mutationFn: ({ id }) => base44.functions.invoke('syncQuestTubeType', { testId: id }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['labTests'] });
+            toast.success('Synced tube type from Quest');
+        },
+        onError: () => {
+            toast.error('Failed to sync tube type');
+        }
+    });
+
+    const handleSyncTube = (id) => syncTubeMutation.mutate({ id });
 
     const handleSearch = async () => {
         if (!searchQuery.trim()) {
@@ -373,7 +386,7 @@ Only return found: false if you truly cannot identify what test they're asking a
     );
 }
 
-function TestCard({ test, onToggleFavorite, getTubeColor }) {
+function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing }) {
     return (
         <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
