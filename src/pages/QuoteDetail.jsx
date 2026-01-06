@@ -218,6 +218,7 @@ export default function QuoteDetail() {
             </div>
 
             {/* Printable Content */}
+            {quote && (
             <PrintableDocument title="Price Quote">
                 <div className="space-y-6">
                     {/* Header Info */}
