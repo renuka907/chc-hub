@@ -69,12 +69,25 @@ export default function QuoteDetail() {
         }
     }, [quote, autoPrint]);
 
-    if (quoteLoading || !quote) {
+    if (quoteLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
                     <p className="text-gray-500">Loading quote...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (!quote) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center space-y-4">
+                    <p className="text-gray-600">Quote not found or the link is invalid.</p>
+                    <Link to={createPageUrl("QuotesManagement")}>
+                        <Button variant="outline">Return to Quotes</Button>
+                    </Link>
                 </div>
             </div>
         );

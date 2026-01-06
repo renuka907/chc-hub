@@ -16,10 +16,10 @@ import Messaging from './pages/Messaging';
 import PricingManagement from './pages/PricingManagement';
 import ProcedureDetail from './pages/ProcedureDetail';
 import ProceduresManagement from './pages/ProceduresManagement';
-import QuoteDetail from './pages/QuoteDetail';
-import QuotesManagement from './pages/QuotesManagement';
 import UserManagement from './pages/UserManagement';
 import ViewSharedForm from './pages/ViewSharedForm';
+import QuotesManagement from './pages/QuotesManagement';
+import QuoteDetail from './pages/QuoteDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -42,10 +42,10 @@ export const PAGES = {
     "PricingManagement": PricingManagement,
     "ProcedureDetail": ProcedureDetail,
     "ProceduresManagement": ProceduresManagement,
-    "QuoteDetail": QuoteDetail,
-    "QuotesManagement": QuotesManagement,
     "UserManagement": UserManagement,
     "ViewSharedForm": ViewSharedForm,
+    "QuotesManagement": QuotesManagement,
+    "QuoteDetail": QuoteDetail,
 }
 
 export const pagesConfig = {
