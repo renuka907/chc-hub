@@ -77,7 +77,7 @@ export default function QuoteDetail() {
         }
     }, [quote, autoPrint]);
 
-    if (isLoadingQuote) {
+    if (quotesLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
