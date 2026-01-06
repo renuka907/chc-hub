@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Users, Mail, Shield, UserPlus, Calendar, Trash2, Edit } from "lucide-react";
+import { Users, Mail, Shield, UserPlus, Calendar, Trash2, Edit, UserX, UserCheck, FileDown } from "lucide-react";
+import EditUserDialog from "../components/users/EditUserDialog";
 import RoleManagementDialog from "../components/users/RoleManagementDialog";
 import { ROLE_LABELS } from "../components/permissions/usePermissions";
 import {
@@ -30,6 +31,12 @@ export default function UserManagement() {
     const [deleteConfirm, setDeleteConfirm] = useState(null);
     const [showRoleDialog, setShowRoleDialog] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [showEditDialog, setShowEditDialog] = useState(false);
+    const [editUser, setEditUser] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [roleFilter, setRoleFilter] = useState("all");
+    const [statusFilter, setStatusFilter] = useState("all");
+    const [sortBy, setSortBy] = useState("newest");
     const queryClient = useQueryClient();
 
     const { data: users = [], isLoading } = useQuery({
@@ -58,6 +65,60 @@ export default function UserManagement() {
             setDeleteConfirm(null);
         },
     });
+
+    const updateUserMutation = useMutation({
+        mutationFn: ({ id, data }) => base44.entities.User.update(id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['users'] });
+        },
+    });
+
+    const handleToggleActive = (user) => {
+        updateUserMutation.mutate({ id: user.id, data: { is_active: !user.is_active } });
+    };
+
+    const handleExportCSV = () => {
+        const rows = users.map(u => ({
+            name: u.full_name || '',
+            email: u.email,
+            role: u.role,
+            phone: u.phone || '',
+            department: u.department || '',
+            is_active: u.is_active !== false ? 'true' : 'false',
+            created_date: new Date(u.created_date).toISOString()
+        }));
+        const header = Object.keys(rows[0] || { name: '', email: '', role: '', phone: '', department: '', is_active: '', created_date: '' });
+        const csv = [header.join(','), ...rows.map(r => header.map(h => `"${String(r[h] ?? '').replace(/"/g, '""')}"`).join(','))].join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'users.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+
+    const filteredSortedUsers = React.useMemo(() => {
+        let list = [...users];
+        if (searchTerm.trim()) {
+            const q = searchTerm.toLowerCase();
+            list = list.filter(u => (u.full_name || '').toLowerCase().includes(q) || (u.email || '').toLowerCase().includes(q));
+        }
+        if (roleFilter !== 'all') {
+            list = list.filter(u => u.role === roleFilter);
+        }
+        if (statusFilter !== 'all') {
+            list = list.filter(u => (u.is_active !== false) === (statusFilter === 'active'));
+        }
+        if (sortBy === 'name') {
+            list.sort((a,b) => (a.full_name || a.email).localeCompare(b.full_name || b.email));
+        } else {
+            list.sort((a,b) => new Date(b.created_date) - new Date(a.created_date));
+        }
+        return list;
+    }, [users, searchTerm, roleFilter, statusFilter, sortBy]);
 
     const handleInvite = () => {
         if (inviteEmail) {
@@ -101,24 +162,65 @@ export default function UserManagement() {
                             <p className="text-gray-600">Invite and manage app users</p>
                         </div>
                     </div>
-                    <Button 
-                        onClick={() => setShowInviteDialog(true)}
-                        className="bg-purple-600 hover:bg-purple-700"
-                    >
-                        <UserPlus className="w-4 h-4 mr-2" />
-                        Invite User
-                    </Button>
+                    <div className="flex items-center gap-2">
+                        <Button 
+                            onClick={handleExportCSV}
+                            variant="outline"
+                            className="gap-2"
+                        >
+                            <FileDown className="w-4 h-4" />
+                            Export CSV
+                        </Button>
+                        <Button 
+                            onClick={() => setShowInviteDialog(true)}
+                            className="bg-purple-600 hover:bg-purple-700"
+                        >
+                            <UserPlus className="w-4 h-4 mr-2" />
+                            Invite User
+                        </Button>
+                    </div>
                 </div>
             </div>
+{/* Filters */}
+<div className="bg-white rounded-3xl p-4 shadow-md">
+    <div className="grid md:grid-cols-4 gap-3">
+        <Input placeholder="Search name or email" value={searchTerm} onChange={(e)=>setSearchTerm(e.target.value)} />
+        <Select value={roleFilter} onValueChange={setRoleFilter}>
+            <SelectTrigger><SelectValue placeholder="Role" /></SelectTrigger>
+            <SelectContent>
+                <SelectItem value="all">All Roles</SelectItem>
+                <SelectItem value="read_only">Read-Only</SelectItem>
+                <SelectItem value="staff">Staff</SelectItem>
+                <SelectItem value="manager">Manager</SelectItem>
+                <SelectItem value="admin">Administrator</SelectItem>
+            </SelectContent>
+        </Select>
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger><SelectValue placeholder="Status" /></SelectTrigger>
+            <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="inactive">Inactive</SelectItem>
+            </SelectContent>
+        </Select>
+        <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger><SelectValue placeholder="Sort" /></SelectTrigger>
+            <SelectContent>
+                <SelectItem value="newest">Newest</SelectItem>
+                <SelectItem value="name">Name</SelectItem>
+            </SelectContent>
+        </Select>
+    </div>
+</div>
 
-            {/* Users List */}
+{/* Users List */}
             {isLoading ? (
                 <div className="text-center py-12">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
                 </div>
             ) : (
                 <div className="grid gap-4">
-                    {users.map(user => (
+                    {filteredSortedUsers.map(user => (
                         <Card key={user.id} className="hover:shadow-lg transition-shadow">
                             <CardContent className="p-6">
                                 <div className="flex items-center justify-between">
@@ -142,6 +244,12 @@ export default function UserManagement() {
                                                     Joined {new Date(user.created_date).toLocaleDateString()}
                                                 </span>
                                             </div>
+                                            {(user.phone || user.department) && (
+                                                <div className="mt-1 text-xs text-gray-600">
+                                                    {user.phone && <span className="mr-3">📞 {user.phone}</span>}
+                                                    {user.department && <span>🏷️ {user.department}</span>}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3">
@@ -163,11 +271,33 @@ export default function UserManagement() {
                                                     variant="outline"
                                                     size="sm"
                                                     onClick={() => {
+                                                        setEditUser(user);
+                                                        setShowEditDialog(true);
+                                                    }}
+                                                >
+                                                    <Edit className="w-3 h-3 mr-1" />
+                                                    Edit Details
+                                                </Button>
+                                                <Button
+                                                    variant={user.is_active !== false ? "outline" : "default"}
+                                                    size="sm"
+                                                    onClick={() => handleToggleActive(user)}
+                                                    className={user.is_active !== false ? "border-red-300 text-red-700" : "bg-green-600 hover:bg-green-700"}
+                                                >
+                                                    {user.is_active !== false ? (
+                                                        <><UserX className="w-3 h-3 mr-1" /> Deactivate</>
+                                                    ) : (
+                                                        <><UserCheck className="w-3 h-3 mr-1" /> Activate</>
+                                                    )}
+                                                </Button>
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => {
                                                         setSelectedUser(user);
                                                         setShowRoleDialog(true);
                                                     }}
                                                 >
-                                                    <Edit className="w-3 h-3 mr-1" />
                                                     Change Role
                                                 </Button>
                                                 <Button
@@ -268,6 +398,12 @@ export default function UserManagement() {
                 open={showRoleDialog}
                 onOpenChange={setShowRoleDialog}
                 user={selectedUser}
+            />
+
+            <EditUserDialog
+                open={showEditDialog}
+                onOpenChange={setShowEditDialog}
+                user={editUser}
             />
         </div>
     );
