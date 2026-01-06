@@ -335,12 +335,12 @@ export default function QuoteDetail() {
                         <p className="mt-2">Payment is due at the time of service unless other arrangements have been made.</p>
                         <p className="mt-3 font-semibold text-gray-700">Cherry Financing and CareCredit Available</p>
                     </div>
-                    </div>
-                    </PrintableDocument>
-                    )}
+                </div>
+            </PrintableDocument>
+            )}
 
-                    {quote && (
-                    <EditQuoteDialog
+            {quote && (
+            <EditQuoteDialog
                 open={showEditDialog}
                 onOpenChange={setShowEditDialog}
                 quote={quote}
@@ -348,9 +348,9 @@ export default function QuoteDetail() {
                     queryClient.invalidateQueries(['quote', quoteId]);
                     queryClient.invalidateQueries(['quotes']);
                 }}
-                />
-                )}
+            />
+            )}
 
-                </div>
+        </div>
     );
 }
