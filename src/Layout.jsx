@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "./utils";
 import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
 import { 
             BookOpen, 
             FileText, 
@@ -35,12 +36,14 @@ export default function Layout({ children, currentPageName }) {
     }
     
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
-    const [currentUser, setCurrentUser] = React.useState(null);
     const [openDropdown, setOpenDropdown] = React.useState(null);
 
-    React.useEffect(() => {
-        base44.auth.me().then(setCurrentUser).catch(() => {});
-    }, []);
+    const { data: currentUser } = useQuery({
+        queryKey: ['currentUser'],
+        queryFn: () => base44.auth.me(),
+        staleTime: 1000 * 60 * 5, // 5 minutes
+        retry: false
+    });
 
     const menuGroups = [
         {
