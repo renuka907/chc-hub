@@ -19,12 +19,17 @@ export default function FollowUpDates() {
     { label: "2 weeks", date: addWeeks(today, 2) },
     { label: "4 weeks", date: addWeeks(today, 4) },
     { label: "6 weeks", date: addWeeks(today, 6) },
+    { label: "10 weeks", date: addWeeks(today, 10) },
+    { label: "11 weeks", date: addWeeks(today, 11) },
+    { label: "12 weeks", date: addWeeks(today, 12) },
     { label: "14 weeks", date: addWeeks(today, 14) },
+    { label: "16 weeks", date: addWeeks(today, 16) },
     // Half-months approximated as +15 days after whole months
     { label: "2 1/2 months", date: addDays(addMonths(today, 2), 15) },
     { label: "3 months", date: addMonths(today, 3) },
     { label: "3 1/2 months", date: addDays(addMonths(today, 3), 15) },
     { label: "5 months", date: addMonths(today, 5) },
+    { label: "5 1/2 months", date: addDays(addMonths(today, 5), 15) },
     { label: "22 weeks", date: addWeeks(today, 22) },
     { label: "6 months", date: addMonths(today, 6) },
   ];
