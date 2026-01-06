@@ -101,9 +101,6 @@ export default function Layout({ children, currentPageName }) {
                 {`
                     /* Prevent layout shift while user loads */
                     body { overflow-y: scroll; }
-                `}
-            </style>
-                {`
                     :root {
                         --primary: #8b5cf6;
                         --primary-light: #ede9fe;
