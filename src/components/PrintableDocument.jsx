@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function PrintableDocument({ title, children, showLogo = true }) {
+export default function PrintableDocument({ title, children, showLogo = true, logoUrl = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png" }) {
     return (
         <div className="printable-document w-full max-w-[8.5in] mx-auto bg-white p-8 border-2 border-black" style={{fontFamily: 'Times New Roman, serif'}}>
             <style>
@@ -152,11 +152,12 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
             {/* Yellow Logo at top */}
             <div className="mb-4 text-center">
                 <img 
-                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png" 
-                    alt="Contemporary Health Center"
+                    src={logoUrl}
+                    alt="Logo"
                     className="h-16 mx-auto"
                     loading="eager"
                     decoding="sync"
+                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
                 />
             </div>
 

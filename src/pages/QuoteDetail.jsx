@@ -250,7 +250,7 @@ export default function QuoteDetail() {
             </div>
 
             {/* Printable Content */}
-            <PrintableDocument title="Price Quote">
+            <PrintableDocument title="Price Quote" logoUrl={quote?.image_url || undefined}>
                 <div className="space-y-6">
                     {/* Header Info */}
                     <div className="grid md:grid-cols-2 gap-6 pb-6 border-b">
