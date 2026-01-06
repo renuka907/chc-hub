@@ -470,7 +470,7 @@ export default function CheckoutQuote() {
             </Card>
 
             {(
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 no-print">
+                <div className="grid grid-cols-2 gap-6 no-print">
                     {/* Left: Item Selection */}
                     <div className="space-y-4">
                         <Card>
