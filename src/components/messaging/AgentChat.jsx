@@ -360,7 +360,7 @@ export default function AgentChat({ agentName }) {
                                     {isUser && messageTime && (
                                         <span className="text-xs text-gray-500 mb-1">{messageTime}</span>
                                     )}
-                                    <div className="flex items-start gap-2">
+                                    <div className="flex items-start gap-2 group">
                                         <div
                                             className={`rounded-2xl px-4 py-2 ${
                                                 isUser
