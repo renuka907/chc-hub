@@ -335,10 +335,20 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                                 <div className="flex items-center gap-4">
                                                     <div className="flex-1">
                                                         <div className="font-semibold text-gray-900">{item.item_name}</div>
-                                                        <div className="flex gap-2 mt-1">
+                                                        <div className="flex gap-2 mt-1 flex-wrap">
                                                             <Badge variant="outline" className="text-xs">
                                                                 {item.item_type}
                                                             </Badge>
+                                                            {item.item_condition && (
+                                                                <Badge variant="outline" className={`text-xs ${
+                                                                    item.item_condition === 'unopened' ? 'border-green-300 text-green-700 bg-green-50' :
+                                                                    item.item_condition === 'opened' ? 'border-blue-300 text-blue-700 bg-blue-50' :
+                                                                    'border-amber-300 text-amber-700 bg-amber-50'
+                                                                }`}>
+                                                                    {item.item_condition === 'unopened' ? '🔒 Unopened' :
+                                                                     item.item_condition === 'opened' ? '📦 Opened' : '⚠️ Partial'}
+                                                                </Badge>
+                                                            )}
                                                             {item.sku && (
                                                                 <span className="text-xs text-gray-500">SKU: {item.sku}</span>
                                                             )}
