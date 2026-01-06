@@ -16,6 +16,10 @@ export default function QuotesManagement() {
     const { data: quotes = [], isLoading } = useQuery({
         queryKey: ['quotes'],
         queryFn: () => base44.entities.Quote.list('-created_date', 200),
+        staleTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchInterval: false,
     });
 
     const { data: locations = [] } = useQuery({
