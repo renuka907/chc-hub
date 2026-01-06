@@ -122,36 +122,35 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
         <>
             <style>
                 {`
-                    @media screen {
-                        .inventory-print-only {
-                            display: none;
-                        }
+                    .inventory-print-only {
+                        display: none;
                     }
 
                     @media print {
                         @page {
                             margin: 0.5in;
-                            size: letter portrait;
                         }
 
-                        body {
-                            margin: 0;
-                            padding: 0;
+                        * {
+                            overflow: visible !important;
                         }
 
-                        body > div > div,
-                        header,
-                        footer,
-                        nav,
-                        [role="dialog"] {
-                            display: none !important;
+                        body * {
+                            visibility: hidden;
                         }
 
                         .inventory-print-only {
+                            visibility: visible !important;
                             display: block !important;
-                            position: relative !important;
-                            margin: 0 !important;
-                            padding: 0 !important;
+                            position: fixed;
+                            left: 0;
+                            top: 0;
+                            width: 100%;
+                            height: auto;
+                        }
+
+                        .inventory-print-only * {
+                            visibility: visible !important;
                         }
 
                         .storage-group {
