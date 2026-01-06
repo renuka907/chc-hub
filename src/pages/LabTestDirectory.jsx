@@ -51,20 +51,24 @@ export default function LabTestDirectory() {
 
     const handleSyncTube = (id) => syncTubeMutation.mutate({ id });
 
-    // Auto-sync tube types for saved tests missing tube_type when quest_url exists
-    // This useEffect block was removed as per the changes.
-    // const syncedRef = useRef(new Set());
-    // useEffect(() => {
-    //     const toSync = (savedTests || []).filter(t => !t.tube_type && t.quest_url);
-    //     toSync.forEach(t => {
-    //         if (!syncedRef.current.has(t.id)) {
-    //             syncedRef.current.add(t.id);
-    //             base44.functions.invoke('syncQuestTubeType', { testId: t.id })
-    //                 .then(() => queryClient.invalidateQueries({ queryKey: ['labTests'] }))
-    //                 .catch(() => {/* ignore per-item errors */});
-    //         }
-    //     });
-    // }, [savedTests]);
+    // Auto-sync tube types from Quest for saved tests (runs once per test id)
+    const syncedRef = useRef(new Set());
+    useEffect(() => {
+        const list = Array.isArray(savedTests) ? savedTests : [];
+        const toSync = list.filter(t => {
+            if (!t?.quest_url || syncedRef.current.has(t.id)) return false;
+            const tube = (t.tube_type || '').toLowerCase();
+            const name = (t.test_name || '').toLowerCase();
+            // Sync if missing tube, looks like SST/Gold, or is a QuantiFERON test
+            return !tube || /\bsst\b|gold/.test(tube) || /quantiferon|tb gold/.test(name);
+        });
+        toSync.forEach(t => {
+            syncedRef.current.add(t.id);
+            base44.functions.invoke('syncQuestTubeType', { testId: t.id })
+                .then(() => queryClient.invalidateQueries({ queryKey: ['labTests'] }))
+                .catch(() => {/* ignore per-item errors */});
+        });
+    }, [savedTests]);
 
     const handleSearch = async () => {
         if (!searchQuery.trim()) {
