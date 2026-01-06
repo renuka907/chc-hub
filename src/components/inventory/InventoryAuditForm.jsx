@@ -459,8 +459,8 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                 {isSaving ? 'Saving...' : 'Save Audit'}
                             </Button>
                         </div>
-                        </div>
                     </div>
+                </div>
                 </DialogContent>
             </Dialog>
         </>
