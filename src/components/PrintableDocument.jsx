@@ -155,6 +155,8 @@ export default function PrintableDocument({ title, children, showLogo = true }) 
                     src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png" 
                     alt="Contemporary Health Center"
                     className="h-16 mx-auto"
+                    loading="eager"
+                    decoding="sync"
                 />
             </div>
 

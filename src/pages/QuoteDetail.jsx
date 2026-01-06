@@ -59,13 +59,41 @@ export default function QuoteDetail() {
         updateStatusMutation.mutate({ id: quoteId, status: newStatus });
     };
 
+    const waitForImages = (containerSelector = '.printable-document', timeoutMs = 3000) => {
+        const container = document.querySelector(containerSelector);
+        if (!container) return Promise.resolve();
+        const imgs = Array.from(container.querySelectorAll('img'));
+        const pending = imgs.filter(img => !img.complete || img.naturalWidth === 0);
+        if (pending.length === 0) return Promise.resolve();
+        return new Promise(resolve => {
+            let done = false;
+            const finish = () => { if (!done) { done = true; resolve(); } };
+            const timer = setTimeout(finish, timeoutMs);
+            let remaining = pending.length;
+            pending.forEach(img => {
+                const onEvent = () => {
+                    img.removeEventListener('load', onEvent);
+                    img.removeEventListener('error', onEvent);
+                    if (--remaining === 0) {
+                        clearTimeout(timer);
+                        finish();
+                    }
+                };
+                img.addEventListener('load', onEvent);
+                img.addEventListener('error', onEvent);
+            });
+        });
+    };
+
+    const triggerPrint = async () => {
+        await waitForImages();
+        setTimeout(() => window.print(), 50);
+    };
+
     // Auto-trigger print when quote loads
     React.useEffect(() => {
         if (quote && autoPrint) {
-            // Wait a bit for rendering to complete
-            setTimeout(() => {
-                window.print();
-            }, 500);
+            triggerPrint();
         }
     }, [quote, autoPrint]);
 
@@ -214,7 +242,7 @@ export default function QuoteDetail() {
                         <Edit className="w-4 h-4 mr-2" />
                         Edit Items
                     </Button>
-                    <Button onClick={() => window.print()} className="bg-blue-600 hover:bg-blue-700">
+                    <Button onClick={triggerPrint} className="bg-blue-600 hover:bg-blue-700">
                         <Printer className="w-4 h-4 mr-2" />
                         Print / PDF
                     </Button>
