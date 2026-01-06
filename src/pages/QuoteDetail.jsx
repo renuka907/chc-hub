@@ -64,7 +64,9 @@ export default function QuoteDetail() {
     };
 
     const handleStatusChange = (newStatus) => {
-        updateStatusMutation.mutate({ id: quoteId, status: newStatus });
+        if (quote) {
+            updateStatusMutation.mutate({ id: quoteId, status: newStatus });
+        }
     };
 
     // Auto-trigger print when quote loads
