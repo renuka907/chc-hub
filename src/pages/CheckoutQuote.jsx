@@ -396,28 +396,30 @@ export default function CheckoutQuote() {
                             </div>
 
                             {/* Totals */}
-                            <div className="flex justify-end">
-                                <div className="w-64 space-y-2">
-                                    <div className="flex justify-between pb-2">
-                                        <span>Subtotal:</span>
-                                        <span className="font-semibold">${savedQuote.subtotal.toFixed(2)}</span>
-                                    </div>
-                                    {savedQuote.discount_amount > 0 && (
-                                        <div className="flex justify-between pb-2 text-green-600">
-                                            <span>Discount:</span>
-                                            <span className="font-semibold">-${savedQuote.discount_amount.toFixed(2)}</span>
+                            {savedQuote.show_totals && (
+                                <div className="flex justify-end">
+                                    <div className="w-64 space-y-2">
+                                        <div className="flex justify-between pb-2">
+                                            <span>Subtotal:</span>
+                                            <span className="font-semibold">${savedQuote.subtotal.toFixed(2)}</span>
                                         </div>
-                                    )}
-                                    <div className="flex justify-between pb-2">
-                                        <span>Tax ({selectedLocation?.tax_rate || 0}%):</span>
-                                        <span className="font-semibold">${savedQuote.tax_amount.toFixed(2)}</span>
-                                    </div>
-                                    <div className="flex justify-between text-xl font-bold text-blue-900 pt-2 border-t-2">
-                                        <span>Total:</span>
-                                        <span>${savedQuote.total.toFixed(2)}</span>
+                                        {savedQuote.discount_amount > 0 && (
+                                            <div className="flex justify-between pb-2 text-green-600">
+                                                <span>Discount:</span>
+                                                <span className="font-semibold">-${savedQuote.discount_amount.toFixed(2)}</span>
+                                            </div>
+                                        )}
+                                        <div className="flex justify-between pb-2">
+                                            <span>Tax ({selectedLocation?.tax_rate || 0}%):</span>
+                                            <span className="font-semibold">${savedQuote.tax_amount.toFixed(2)}</span>
+                                        </div>
+                                        <div className="flex justify-between text-xl font-bold text-blue-900 pt-2 border-t-2">
+                                            <span>Total:</span>
+                                            <span>${savedQuote.total.toFixed(2)}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            )}
 
                             {/* Notes */}
                             {savedQuote.notes && (
