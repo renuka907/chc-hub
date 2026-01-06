@@ -138,6 +138,13 @@ export default function Layout({ children, currentPageName }) {
                         {/* Quick Action Buttons and Menu */}
                         <div className="hidden md:flex items-center gap-2">
                             <Link 
+                                to={createPageUrl("Home")} 
+                                className="flex items-center gap-2 bg-white border-2 border-purple-300 text-purple-700 px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
+                            >
+                                <Home className="w-4 h-4" />
+                                <span>Home</span>
+                            </Link>
+                            <Link 
                                 to={createPageUrl("Messaging")} 
                                 className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
                             >
