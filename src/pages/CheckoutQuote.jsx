@@ -595,11 +595,11 @@ export default function CheckoutQuote() {
                                 </div>
 
                                 <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                                    <Label htmlFor="show-totals" className="cursor-pointer">Show Total Price</Label>
+                                    <Label htmlFor="show-totals" className="cursor-pointer">Hide Total Price on Printed Quote</Label>
                                     <Switch
                                         id="show-totals"
-                                        checked={showTotals}
-                                        onCheckedChange={setShowTotals}
+                                        checked={!showTotals}
+                                        onCheckedChange={(checked) => setShowTotals(!checked)}
                                     />
                                 </div>
 
