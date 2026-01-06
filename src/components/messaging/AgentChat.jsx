@@ -15,6 +15,8 @@ export default function AgentChat({ agentName }) {
     const [isRecording, setIsRecording] = useState(false);
     const messagesEndRef = useRef(null);
     const recognitionRef = useRef(null);
+    const timeoutRef = useRef(null);
+    const [noResponse, setNoResponse] = useState(false);
     const queryClient = useQueryClient();
 
     const { data: user } = useQuery({
@@ -71,6 +73,8 @@ export default function AgentChat({ agentName }) {
             const lastMessage = data.messages?.[data.messages.length - 1];
             if (lastMessage?.role === 'assistant') {
                 setIsProcessing(false);
+                if (timeoutRef.current) clearTimeout(timeoutRef.current);
+                setNoResponse(false);
             }
         });
 
@@ -84,6 +88,13 @@ export default function AgentChat({ agentName }) {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
+    // Cleanup timer on unmount
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        };
+    }, []);
+
     const handleSend = async (e) => {
         e.preventDefault();
         if (!message.trim() || !conversationId || isProcessing) return;
@@ -91,6 +102,12 @@ export default function AgentChat({ agentName }) {
         const userMessage = message.trim();
         setMessage("");
         setIsProcessing(true);
+        setNoResponse(false);
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        timeoutRef.current = setTimeout(() => {
+            setIsProcessing(false);
+            setNoResponse(true);
+        }, 25000);
 
         try {
             const conv = await base44.agents.getConversation(conversationId);
@@ -338,6 +355,13 @@ export default function AgentChat({ agentName }) {
                             <div className="bg-gray-100 rounded-2xl px-4 py-2 flex items-center gap-2">
                                 <Loader2 className="w-4 h-4 animate-spin text-purple-600" />
                                 <span className="text-sm text-gray-600">Assistant is thinking...</span>
+                            </div>
+                        </div>
+                    )}
+                    {noResponse && (
+                        <div className="flex justify-start">
+                            <div className="bg-yellow-50 text-yellow-800 border border-yellow-200 rounded-2xl px-4 py-2 text-sm">
+                                No reply yet. Try New Chat and send again.
                             </div>
                         </div>
                     )}
