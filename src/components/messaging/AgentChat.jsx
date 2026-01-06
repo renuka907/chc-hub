@@ -164,6 +164,41 @@ export default function AgentChat({ agentName }) {
         }
     };
 
+    const toChecklistHTML = (raw) => {
+        if (!raw) return '<div class="content"></div>';
+        const escapeHtml = (s) => s
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+
+        const lines = String(raw).split(/\r?\n/);
+        let html = [];
+        let inList = false;
+        let foundBullet = false;
+
+        for (const line of lines) {
+            const m = line.match(/^\s*(?:[-*]|\d+[\.)])\s+(.*)$/);
+            if (m) {
+                if (!inList) { inList = true; html.push('<ul class="checklist">'); }
+                foundBullet = true;
+                html.push(`<li><label><input type="checkbox" /> ${escapeHtml(m[1])}</label></li>`);
+            } else {
+                if (inList) { html.push('</ul>'); inList = false; }
+                if (line.trim().length) {
+                    html.push(`<p>${escapeHtml(line)}</p>`);
+                } else {
+                    html.push('');
+                }
+            }
+        }
+        if (inList) html.push('</ul>');
+
+        if (!foundBullet) {
+            return `<div class="content">${escapeHtml(raw).replace(/\n/g, '<br/>')}</div>`;
+        }
+        return `<div class="content">${html.join('\n')}</div>`;
+    };
+
     const handlePrint = (content) => {
         const printWindow = window.open('', '_blank');
         printWindow.document.write(`
@@ -185,9 +220,12 @@ export default function AgentChat({ agentName }) {
                     }
                     .content {
                         line-height: 1.6;
-                        white-space: pre-wrap;
+                        white-space: normal;
                         font-size: 12pt;
                     }
+                    .checklist { list-style: none; padding-left: 0; }
+                    .checklist li { margin: 6px 0; }
+                    .checklist input[type=checkbox] { width: 14px; height: 14px; margin-right: 8px; vertical-align: middle; }
                     .footer {
                         margin-top: 40px;
                         padding-top: 20px;
@@ -204,7 +242,7 @@ export default function AgentChat({ agentName }) {
             <body>
                 <h1>Peach Assistant Response</h1>
                 <p style="color: #666; font-size: 10pt;">Generated: ${new Date().toLocaleString()}</p>
-                <div class="content">${content}</div>
+                ${toChecklistHTML(content)}
                 <div class="footer">
                     Contemporary Health Center | CHC Hub
                 </div>
