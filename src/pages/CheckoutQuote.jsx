@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import SearchBar from "../components/SearchBar";
 import PrintableDocument from "../components/PrintableDocument";
 import { Plus, Trash2, Printer, Calculator, ShoppingCart } from "lucide-react";
+import { createPageUrl } from "../utils";
 import { Switch } from "@/components/ui/switch";
 
 export default function CheckoutQuote() {
