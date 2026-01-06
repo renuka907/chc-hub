@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -134,6 +133,16 @@ Only return found: false if you truly cannot identify what test they're asking a
             });
 
             setSearchResults(response);
+            if (response?.quest_url) {
+                try {
+                    const { data } = await base44.functions.invoke('fetchQuestTubeType', { questUrl: response.quest_url });
+                    if (data?.tube_type) {
+                        setSearchResults({ ...response, tube_type: data.tube_type });
+                    }
+                } catch (e) {
+                    console.log('Verification via Quest failed', e);
+                }
+            }
         } catch (error) {
             toast.error("Failed to search Quest Diagnostics");
             console.error(error);
