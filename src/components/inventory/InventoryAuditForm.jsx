@@ -119,7 +119,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
     };
 
     return (
-        <div className="inventory-print-wrapper">
+        <>
             <style>
                 {`
                     .inventory-print-only {
@@ -131,16 +131,21 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                             margin: 0.5in;
                         }
 
-                        body > *:not(.inventory-print-wrapper) {
-                            display: none !important;
-                        }
-
-                        .inventory-print-wrapper {
-                            display: block !important;
+                        body * {
+                            visibility: hidden;
                         }
 
                         .inventory-print-only {
+                            visibility: visible !important;
                             display: block !important;
+                            position: absolute;
+                            left: 0;
+                            top: 0;
+                            width: 100%;
+                        }
+
+                        .inventory-print-only * {
+                            visibility: visible !important;
                         }
 
                         .storage-group {
