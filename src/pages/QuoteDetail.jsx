@@ -12,30 +12,16 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 
 export default function QuoteDetail() {
-    const searchParams = new URLSearchParams(window.location.search);
-    const hashParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
-    const quoteId = searchParams.get('id') || searchParams.get('quoteId') || searchParams.get('quote_id') ||
-        hashParams.get('id') || hashParams.get('quoteId') || hashParams.get('quote_id');
-    const quoteNumber = searchParams.get('number') || searchParams.get('quote_number') ||
-        hashParams.get('number') || hashParams.get('quote_number');
-    const autoPrint = (searchParams.get('autoprint') || hashParams.get('autoprint')) === 'true';
+    const urlParams = new URLSearchParams(window.location.search);
+    const quoteId = urlParams.get('id');
+    const autoPrint = urlParams.get('autoprint') === 'true';
     const queryClient = useQueryClient();
     const [showEditDialog, setShowEditDialog] = useState(false);
 
     const { data: quote, isLoading: quoteLoading } = useQuery({
-        queryKey: ['quote', quoteId || quoteNumber],
-        queryFn: async () => {
-            if (quoteId) {
-                const byId = await base44.entities.Quote.filter({ id: quoteId });
-                return byId[0];
-            }
-            if (quoteNumber) {
-                const byNumber = await base44.entities.Quote.filter({ quote_number: quoteNumber });
-                return byNumber[0];
-            }
-            return null;
-        },
-        enabled: !!(quoteId || quoteNumber),
+        queryKey: ['quote', quoteId],
+        queryFn: () => base44.entities.Quote.filter({ id: quoteId }).then(quotes => quotes[0]),
+        enabled: !!quoteId,
     });
 
     const { data: locations = [] } = useQuery({

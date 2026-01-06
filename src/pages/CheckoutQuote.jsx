@@ -11,7 +11,6 @@ import { Badge } from "@/components/ui/badge";
 import SearchBar from "../components/SearchBar";
 import PrintableDocument from "../components/PrintableDocument";
 import { Plus, Trash2, Printer, Calculator, ShoppingCart } from "lucide-react";
-import { createPageUrl } from "../utils";
 import { Switch } from "@/components/ui/switch";
 
 export default function CheckoutQuote() {
@@ -49,9 +48,6 @@ export default function CheckoutQuote() {
         onSuccess: (data) => {
             queryClient.invalidateQueries(['quotes']);
             setSavedQuote(data);
-            // Also open the quote detail page with autoprint for reliability
-            const url = createPageUrl(`QuoteDetail?id=${data.id}&autoprint=true`);
-            window.open(url, '_blank');
             setTimeout(() => {
                 window.print();
             }, 100);
