@@ -12,9 +12,13 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 
 export default function QuoteDetail() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const quoteId = urlParams.get('id');
-    const autoPrint = urlParams.get('autoprint') === 'true';
+    const searchParams = new URLSearchParams(window.location.search);
+    const hashParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+    const quoteId = searchParams.get('id') || searchParams.get('quoteId') || searchParams.get('quote_id') ||
+        hashParams.get('id') || hashParams.get('quoteId') || hashParams.get('quote_id');
+    const quoteNumber = searchParams.get('number') || searchParams.get('quote_number') ||
+        hashParams.get('number') || hashParams.get('quote_number');
+    const autoPrint = (searchParams.get('autoprint') || hashParams.get('autoprint')) === 'true';
     const queryClient = useQueryClient();
     const [showEditDialog, setShowEditDialog] = useState(false);
 
