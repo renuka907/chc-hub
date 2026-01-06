@@ -190,11 +190,11 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                     <th style={{border: '1px solid #666', padding: '4px 8px', textAlign: 'left', fontSize: '13px', fontWeight: 'bold'}}>Item</th>
                                     <th style={{border: '1px solid #666', padding: '4px 8px', textAlign: 'center', fontSize: '13px', fontWeight: 'bold', width: '80px'}}>Cond</th>
                                     <th style={{border: '1px solid #666', padding: '4px 8px', textAlign: 'center', fontSize: '13px', fontWeight: 'bold', width: '60px'}}>Qty</th>
+                                    <th style={{border: '1px solid #666', padding: '4px 8px', textAlign: 'center', fontSize: '13px', fontWeight: 'bold', width: '80px'}}>New</th>
                                     <th style={{border: '1px solid #666', padding: '4px 8px', textAlign: 'center', fontSize: '13px', fontWeight: 'bold', width: '70px'}}>Type</th>
                                     <th style={{border: '1px solid #666', padding: '4px 8px', textAlign: 'center', fontSize: '13px', fontWeight: 'bold', width: '60px'}}>SKU</th>
                                     <th style={{border: '1px solid #666', padding: '4px 8px', textAlign: 'center', fontSize: '13px', fontWeight: 'bold', width: '65px'}}>Exp</th>
                                     <th style={{border: '1px solid #666', padding: '4px 8px', textAlign: 'center', fontSize: '13px', fontWeight: 'bold', width: '55px'}}>Unit</th>
-                                    <th style={{border: '1px solid #666', padding: '4px 8px', textAlign: 'center', fontSize: '13px', fontWeight: 'bold', width: '80px'}}>New</th>
                                 </tr>
                             </thead>
                             <tbody>
