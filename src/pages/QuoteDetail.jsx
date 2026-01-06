@@ -27,11 +27,13 @@ export default function QuoteDetail() {
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
         queryFn: () => base44.entities.ClinicLocation.list(),
+        staleTime: 5 * 60 * 1000,
     });
 
     const { data: discounts = [] } = useQuery({
         queryKey: ['discounts'],
         queryFn: () => base44.entities.Discount.list(),
+        staleTime: 5 * 60 * 1000,
     });
 
     const updateStatusMutation = useMutation({
