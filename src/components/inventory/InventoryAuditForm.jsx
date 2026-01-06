@@ -341,98 +341,99 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                         
                                         return Object.entries(itemsByName).sort(([a], [b]) => a.localeCompare(b)).flatMap(([name, items]) => 
                                             items.map(item => {
-                                        const currentQty = quantities[item.id] || 0;
-                                        const originalQty = item.quantity;
-                                        const currentExpiry = expiryDates[item.id] || '';
-                                        const originalExpiry = item.expiry_date || '';
-                                        const hasChanged = currentQty !== originalQty || currentExpiry !== originalExpiry;
-                                        
-                                        return (
-                                            <div 
-                                                key={item.id} 
-                                                className={`p-4 hover:bg-gray-50 transition-colors ${
-                                                    hasChanged ? 'bg-orange-50 border-l-4 border-orange-500' : ''
-                                                }`}
-                                            >
-                                                <div className="flex items-center gap-4">
-                                                    <div className="flex-1">
-                                                        <div className="font-semibold text-gray-900">{item.item_name}</div>
-                                                        <div className="flex gap-2 mt-1 flex-wrap">
-                                                            <Badge variant="outline" className="text-xs">
-                                                                {item.item_type}
-                                                            </Badge>
-                                                            {item.item_condition && (
-                                                                <Badge variant="outline" className={`text-xs ${
-                                                                    item.item_condition === 'unopened' ? 'border-green-300 text-green-700 bg-green-50' :
-                                                                    item.item_condition === 'opened' ? 'border-blue-300 text-blue-700 bg-blue-50' :
-                                                                    'border-amber-300 text-amber-700 bg-amber-50'
-                                                                }`}>
-                                                                    {item.item_condition === 'unopened' ? '🔒 Unopened' :
-                                                                     item.item_condition === 'opened' ? '📦 Opened' : '⚠️ Partial'}
-                                                                </Badge>
-                                                            )}
-                                                            {item.sku && (
-                                                                <span className="text-xs text-gray-500">SKU: {item.sku}</span>
-                                                            )}
-                                                            {item.expiry_date && (
-                                                                <span className="text-xs text-gray-500">
-                                                                    Exp: {new Date(item.expiry_date).toLocaleDateString()}
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div className="flex items-center gap-6 flex-1 justify-end">
-                                                        <div className="text-center bg-gray-50 rounded-lg px-4 py-2">
-                                                            <div className="text-xs text-gray-500 mb-1">Current Stock</div>
-                                                            <div className="text-2xl font-bold text-gray-900">
-                                                                {originalQty}
-                                                            </div>
-                                                            <div className="text-xs text-gray-500 mt-1">{item.unit}</div>
-                                                        </div>
-                                                        
-                                                        <div className="w-48">
-                                                            <Label className="text-sm font-semibold mb-2 block">New Count</Label>
-                                                            <Input
-                                                                type="number"
-                                                                min="0"
-                                                                step="1"
-                                                                value={currentQty}
-                                                                onChange={(e) => handleQuantityChange(item.id, e.target.value)}
-                                                                className={`h-14 text-2xl font-bold text-center ${
-                                                                    hasChanged ? 'border-orange-500 border-3 bg-orange-50' : ''
-                                                                }`}
-                                                            />
-                                                        </div>
-
-                                                        <div className="w-48">
-                                                            <Label className="text-sm font-semibold mb-2 block">Expiry Date</Label>
-                                                            <Input
-                                                                type="date"
-                                                                value={currentExpiry}
-                                                                onChange={(e) => handleExpiryDateChange(item.id, e.target.value)}
-                                                                className={`h-14 text-center ${
-                                                                    currentExpiry !== originalExpiry ? 'border-orange-500 border-3 bg-orange-50' : ''
-                                                                }`}
-                                                            />
-                                                        </div>
-
-                                                        {hasChanged && (
-                                                            <div className="text-center bg-green-50 rounded-lg px-4 py-2 min-w-[80px]">
-                                                                <div className="text-xs text-gray-500 mb-1">Difference</div>
-                                                                <div className={`text-2xl font-bold ${
-                                                                    currentQty > originalQty ? 'text-green-600' : 'text-red-600'
-                                                                }`}>
-                                                                    {currentQty > originalQty ? '+' : ''}
-                                                                    {currentQty - originalQty}
+                                                const currentQty = quantities[item.id] || 0;
+                                                const originalQty = item.quantity;
+                                                const currentExpiry = expiryDates[item.id] || '';
+                                                const originalExpiry = item.expiry_date || '';
+                                                const hasChanged = currentQty !== originalQty || currentExpiry !== originalExpiry;
+                                                
+                                                return (
+                                                    <div 
+                                                        key={item.id} 
+                                                        className={`p-4 hover:bg-gray-50 transition-colors ${
+                                                            hasChanged ? 'bg-orange-50 border-l-4 border-orange-500' : ''
+                                                        }`}
+                                                    >
+                                                        <div className="flex items-center gap-4">
+                                                            <div className="flex-1">
+                                                                <div className="font-semibold text-gray-900">{item.item_name}</div>
+                                                                <div className="flex gap-2 mt-1 flex-wrap">
+                                                                    <Badge variant="outline" className="text-xs">
+                                                                        {item.item_type}
+                                                                    </Badge>
+                                                                    {item.item_condition && (
+                                                                        <Badge variant="outline" className={`text-xs ${
+                                                                            item.item_condition === 'unopened' ? 'border-green-300 text-green-700 bg-green-50' :
+                                                                            item.item_condition === 'opened' ? 'border-blue-300 text-blue-700 bg-blue-50' :
+                                                                            'border-amber-300 text-amber-700 bg-amber-50'
+                                                                        }`}>
+                                                                            {item.item_condition === 'unopened' ? '🔒 Unopened' :
+                                                                             item.item_condition === 'opened' ? '📦 Opened' : '⚠️ Partial'}
+                                                                        </Badge>
+                                                                    )}
+                                                                    {item.sku && (
+                                                                        <span className="text-xs text-gray-500">SKU: {item.sku}</span>
+                                                                    )}
+                                                                    {item.expiry_date && (
+                                                                        <span className="text-xs text-gray-500">
+                                                                            Exp: {new Date(item.expiry_date).toLocaleDateString()}
+                                                                        </span>
+                                                                    )}
                                                                 </div>
                                                             </div>
-                                                        )}
+                                                            
+                                                            <div className="flex items-center gap-6 flex-1 justify-end">
+                                                                <div className="text-center bg-gray-50 rounded-lg px-4 py-2">
+                                                                    <div className="text-xs text-gray-500 mb-1">Current Stock</div>
+                                                                    <div className="text-2xl font-bold text-gray-900">
+                                                                        {originalQty}
+                                                                    </div>
+                                                                    <div className="text-xs text-gray-500 mt-1">{item.unit}</div>
+                                                                </div>
+                                                                
+                                                                <div className="w-48">
+                                                                    <Label className="text-sm font-semibold mb-2 block">New Count</Label>
+                                                                    <Input
+                                                                        type="number"
+                                                                        min="0"
+                                                                        step="1"
+                                                                        value={currentQty}
+                                                                        onChange={(e) => handleQuantityChange(item.id, e.target.value)}
+                                                                        className={`h-14 text-2xl font-bold text-center ${
+                                                                            hasChanged ? 'border-orange-500 border-3 bg-orange-50' : ''
+                                                                        }`}
+                                                                    />
+                                                                </div>
+
+                                                                <div className="w-48">
+                                                                    <Label className="text-sm font-semibold mb-2 block">Expiry Date</Label>
+                                                                    <Input
+                                                                        type="date"
+                                                                        value={currentExpiry}
+                                                                        onChange={(e) => handleExpiryDateChange(item.id, e.target.value)}
+                                                                        className={`h-14 text-center ${
+                                                                            currentExpiry !== originalExpiry ? 'border-orange-500 border-3 bg-orange-50' : ''
+                                                                        }`}
+                                                                    />
+                                                                </div>
+
+                                                                {hasChanged && (
+                                                                    <div className="text-center bg-green-50 rounded-lg px-4 py-2 min-w-[80px]">
+                                                                        <div className="text-xs text-gray-500 mb-1">Difference</div>
+                                                                        <div className={`text-2xl font-bold ${
+                                                                            currentQty > originalQty ? 'text-green-600' : 'text-red-600'
+                                                                        }`}>
+                                                                            {currentQty > originalQty ? '+' : ''}
+                                                                            {currentQty - originalQty}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        ))
-                                    );
+                                                );
+                                            })
+                                        );
                                     })()}
                                 </div>
                             </div>
