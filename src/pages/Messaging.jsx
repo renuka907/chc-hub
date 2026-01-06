@@ -8,13 +8,15 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Send, Users, Bot, CheckCircle2, Circle, Trash2, Mic, MicOff } from "lucide-react";
+import { Send, Users, Bot, CheckCircle2, Circle, Trash2, Mic, MicOff, Edit } from "lucide-react";
 import { format } from "date-fns";
 import AgentChat from "../components/messaging/AgentChat";
+import ReminderEditDialog from "../components/reminders/ReminderEditDialog";
 
 export default function Messaging() {
     const [message, setMessage] = useState("");
     const [isRecording, setIsRecording] = useState(false);
+    const [editingReminder, setEditingReminder] = useState(null);
     const messagesEndRef = useRef(null);
     const recognitionRef = useRef(null);
     const queryClient = useQueryClient();
@@ -175,6 +177,16 @@ export default function Messaging() {
                                                     {format(new Date(reminder.due_date), 'MMM d, h:mm a')}
                                                 </Badge>
                                             )}
+                                            {reminder.assigned_to && (
+                                                <Badge variant="outline" className="text-xs">
+                                                    Assigned: {reminder.assigned_to}
+                                                </Badge>
+                                            )}
+                                            {reminder.recurrence_type && reminder.recurrence_type !== 'none' && (
+                                                <Badge className="bg-purple-100 text-purple-700 text-xs">
+                                                    {`${reminder.recurrence_type}${reminder.recurrence_interval && reminder.recurrence_interval > 1 ? ` x${reminder.recurrence_interval}` : ''}`}
+                                                </Badge>
+                                            )}
                                             {reminder.priority && reminder.priority !== 'medium' && (
                                                 <Badge className={reminder.priority === 'high' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}>
                                                     {reminder.priority}
@@ -182,6 +194,13 @@ export default function Messaging() {
                                             )}
                                         </div>
                                     </div>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => setEditingReminder(reminder)}
+                                    >
+                                        <Edit className="w-4 h-4 text-gray-400" />
+                                    </Button>
                                     <Button
                                         variant="ghost"
                                         size="icon"
@@ -317,7 +336,20 @@ export default function Messaging() {
                         </CardContent>
                     </Card>
                 </TabsContent>
-            </Tabs>
-        </div>
-    );
+                </Tabs>
+
+                <ReminderEditDialog
+                open={!!editingReminder}
+                onOpenChange={(open) => {
+                if (!open) setEditingReminder(null);
+                }}
+                reminder={editingReminder}
+                users={allUsers}
+                onSaved={() => {
+                setEditingReminder(null);
+                queryClient.invalidateQueries({ queryKey: ['reminders'] });
+                }}
+                />
+                </div>
+                );
 }
