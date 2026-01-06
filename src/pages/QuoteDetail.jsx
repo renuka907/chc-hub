@@ -348,9 +348,9 @@ export default function QuoteDetail() {
                     queryClient.invalidateQueries(['quote', quoteId]);
                     queryClient.invalidateQueries(['quotes']);
                 }}
-            />
+                />
+                )}
 
-
-        </div>
+                </div>
     );
 }
