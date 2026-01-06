@@ -125,49 +125,53 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                     .inventory-print-only {
                         display: none;
                     }
-                    
+
                     @media print {
                         @page {
                             margin: 0.5in;
                             size: portrait;
                         }
-                        
+
                         body * {
                             visibility: hidden;
+                            overflow: hidden;
                         }
-                        
+
                         .inventory-print-only,
                         .inventory-print-only * {
                             visibility: visible !important;
                         }
-                        
+
                         .inventory-print-only {
                             display: block !important;
-                            position: absolute;
+                            position: fixed;
                             left: 0;
                             top: 0;
                             width: 100%;
+                            height: auto;
                             background: white !important;
-                            padding: 20px;
+                            padding: 0;
+                            margin: 0;
+                            overflow: visible;
                         }
-                        
+
                         .storage-group {
                             page-break-inside: avoid;
-                            margin-bottom: 20px;
+                            margin-bottom: 15px;
                         }
-                        
+
                         .dark-banner {
                             background: #1a1a1a !important;
                             -webkit-print-color-adjust: exact !important;
                             print-color-adjust: exact !important;
                             color: white !important;
                         }
-                        
+
                         table {
                             width: 100%;
                             border-collapse: collapse;
                         }
-                        
+
                         thead {
                             background: #e5e7eb !important;
                             -webkit-print-color-adjust: exact !important;
