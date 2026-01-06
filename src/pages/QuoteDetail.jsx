@@ -12,13 +12,31 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 
 export default function QuoteDetail() {
+    // Robust URL param extraction (supports search, hash, and raw href)
+    const href = window.location.href;
     const searchParams = new URLSearchParams(window.location.search);
-    const hashParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
-    const quoteId = searchParams.get('id') || searchParams.get('quoteId') || searchParams.get('quote_id') ||
-        hashParams.get('id') || hashParams.get('quoteId') || hashParams.get('quote_id');
-    const quoteNumber = searchParams.get('number') || searchParams.get('quote_number') ||
-        hashParams.get('number') || hashParams.get('quote_number');
-    const autoPrint = (searchParams.get('autoprint') || hashParams.get('autoprint')) === 'true';
+    const hashQuery = window.location.hash.includes('?') ? window.location.hash.split('?')[1] : '';
+    const hashParams = new URLSearchParams(hashQuery);
+    const regexParam = (name) => {
+        const m = href.match(new RegExp(`[?&#]${name}=([^&#]+)`, 'i'));
+        return m ? decodeURIComponent(m[1]) : null;
+    };
+
+    const quoteId = (
+        searchParams.get('id') || searchParams.get('quoteId') || searchParams.get('quote_id') ||
+        hashParams.get('id') || hashParams.get('quoteId') || hashParams.get('quote_id') ||
+        regexParam('id') || regexParam('quoteId') || regexParam('quote_id')
+    );
+
+    const quoteNumber = (
+        searchParams.get('number') || searchParams.get('quote_number') ||
+        hashParams.get('number') || hashParams.get('quote_number') ||
+        regexParam('number') || regexParam('quote_number')
+    );
+
+    const autoPrint = (
+        (searchParams.get('autoprint') || hashParams.get('autoprint') || regexParam('autoprint')) === 'true'
+    );
     const queryClient = useQueryClient();
     const [showEditDialog, setShowEditDialog] = useState(false);
 
