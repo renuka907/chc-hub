@@ -35,17 +35,35 @@ export default function Layout({ children, currentPageName }) {
     }
     
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
-    const [currentUser, setCurrentUser] = React.useState(null);
-    const [isLoading, setIsLoading] = React.useState(true);
+    const [currentUser, setCurrentUser] = React.useState(() => {
+        // Try to get cached user from session storage
+        try {
+            const cached = sessionStorage.getItem('chc_user');
+            return cached ? JSON.parse(cached) : null;
+        } catch {
+            return null;
+        }
+    });
+    const [isLoading, setIsLoading] = React.useState(!currentUser);
     const [openDropdown, setOpenDropdown] = React.useState(null);
 
     React.useEffect(() => {
+        // If we have cached user, skip loading state
+        if (currentUser) {
+            setIsLoading(false);
+        }
+        
         base44.auth.me()
             .then(user => {
                 setCurrentUser(user);
                 setIsLoading(false);
+                // Cache user in session storage
+                try {
+                    sessionStorage.setItem('chc_user', JSON.stringify(user));
+                } catch {}
             })
             .catch(() => {
+                sessionStorage.removeItem('chc_user');
                 base44.auth.redirectToLogin();
             });
     }, []);
