@@ -193,7 +193,7 @@ export default function QuoteDetail() {
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
                         <span className="text-sm font-medium text-gray-700">Status:</span>
-                        <Select value={quote.status} onValueChange={handleStatusChange}>
+                        <Select value={quote?.status || 'draft'} onValueChange={handleStatusChange}>
                             <SelectTrigger className="w-32">
                                 <SelectValue />
                             </SelectTrigger>
