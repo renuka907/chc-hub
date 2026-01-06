@@ -18,15 +18,17 @@ export default function QuoteDetail() {
     const queryClient = useQueryClient();
     const [showEditDialog, setShowEditDialog] = useState(false);
 
-    const { data: allQuotes = [], isLoading: quotesLoading, isFetching } = useQuery({
+    const { data: allQuotes = [], isLoading: quotesLoading } = useQuery({
         queryKey: ['quotes'],
         queryFn: () => base44.entities.Quote.list('-created_date', 200),
-        staleTime: 5 * 60 * 1000,
+        staleTime: Infinity,
+        cacheTime: Infinity,
         refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchInterval: false,
     });
 
     const quote = allQuotes.find(q => q.id === quoteId);
-    const isLoadingQuote = quotesLoading || (isFetching && !quote);
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
