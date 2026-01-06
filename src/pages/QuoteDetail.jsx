@@ -50,7 +50,7 @@ export default function QuoteDetail() {
         },
     });
     const location = quote ? locations.find(l => l.id === quote.clinic_location_id) : null;
-    const items = quote ? JSON.parse(quote.items) : [];
+    const items = quote ? (quote.items ? JSON.parse(quote.items) : []) : [];
     const appliedDiscount = quote?.discount_id ? discounts.find(d => d.id === quote.discount_id) : null;
 
     const getStatusColor = (status) => {
