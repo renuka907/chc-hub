@@ -135,7 +135,7 @@ export default function Layout({ children, currentPageName }) {
                             </div>
                         </Link>
 
-                        {/* Quick Action Buttons */}
+                        {/* Quick Action Buttons and Menu */}
                         <div className="hidden md:flex items-center gap-2">
                             <Link 
                                 to={createPageUrl("Messaging")} 
@@ -151,87 +151,84 @@ export default function Layout({ children, currentPageName }) {
                                 <Bell className="w-4 h-4" />
                                 <span>Reminders</span>
                             </Link>
-                        </div>
-
-                        {/* Desktop Navigation */}
-                        <nav className="hidden lg:flex items-center space-x-1">
-                            {menuGroups.map((group, idx) => {
-                                if (group.single) {
-                                    const Icon = group.icon;
-                                    const isActive = currentPageName === group.path;
-                                    return (
-                                        <Link
-                                            key={group.path}
-                                            to={createPageUrl(group.path)}
-                                            className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                                                isActive
-                                                    ? "bg-white shadow-sm text-purple-900"
-                                                    : "text-gray-600 hover:bg-white/50 hover:text-gray-900"
-                                            }`}
-                                        >
-                                            <Icon className="w-4 h-4" />
-                                            <span>{group.name}</span>
-                                        </Link>
-                                    );
-                                }
+                            
+                            {/* Single Dropdown Menu */}
+                            <div className="relative">
+                                <button
+                                    onMouseEnter={() => setOpenDropdown(0)}
+                                    onMouseLeave={() => setOpenDropdown(null)}
+                                    className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
+                                >
+                                    <Menu className="w-4 h-4" />
+                                    <span>Menu</span>
+                                    <ChevronDown className={`w-3 h-3 transition-transform ${openDropdown === 0 ? 'rotate-180' : ''}`} />
+                                </button>
                                 
-                                const Icon = group.icon;
-                                const isGroupActive = group.items.some(item => item.path === currentPageName);
-                                const isOpen = openDropdown === idx;
-                                
-                                return (
-                                    <div key={idx} className="relative">
-                                        <button
-                                            onMouseEnter={() => setOpenDropdown(idx)}
-                                            onMouseLeave={() => setOpenDropdown(null)}
-                                            className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                                                isGroupActive
-                                                    ? "bg-white shadow-sm text-purple-900"
-                                                    : "text-gray-600 hover:bg-white/50 hover:text-gray-900"
-                                            }`}
-                                        >
-                                            <Icon className="w-4 h-4" />
-                                            <span>{group.name}</span>
-                                            <ChevronDown className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                                        </button>
-                                        
-                                        {isOpen && (
-                                            <div 
-                                                onMouseEnter={() => setOpenDropdown(idx)}
-                                                onMouseLeave={() => setOpenDropdown(null)}
-                                                className="absolute top-full left-0 mt-1 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
+                                {openDropdown === 0 && (
+                                    <div 
+                                        onMouseEnter={() => setOpenDropdown(0)}
+                                        onMouseLeave={() => setOpenDropdown(null)}
+                                        className="absolute top-full right-0 mt-1 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
+                                    >
+                                        {menuGroups.map((group, idx) => {
+                                            if (group.single) {
+                                                const Icon = group.icon;
+                                                const isActive = currentPageName === group.path;
+                                                return (
+                                                    <Link
+                                                        key={group.path}
+                                                        to={createPageUrl(group.path)}
+                                                        className={`flex items-center space-x-3 px-4 py-2 text-sm transition-colors ${
+                                                            isActive
+                                                                ? "bg-purple-50 text-purple-900 font-medium"
+                                                                : "text-gray-700 hover:bg-gray-50"
+                                                        }`}
+                                                    >
+                                                        <Icon className="w-4 h-4" />
+                                                        <span>{group.name}</span>
+                                                    </Link>
+                                                );
+                                            }
+                                            
+                                            return (
+                                                <div key={idx}>
+                                                    <div className="px-4 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider mt-2">
+                                                        {group.name}
+                                                    </div>
+                                                    {group.items.map((item) => {
+                                                        const ItemIcon = item.icon;
+                                                        const isActive = currentPageName === item.path;
+                                                        return (
+                                                            <Link
+                                                                key={item.path}
+                                                                to={createPageUrl(item.path)}
+                                                                className={`flex items-center space-x-3 px-6 py-2 text-sm transition-colors ${
+                                                                    isActive
+                                                                        ? "bg-purple-50 text-purple-900 font-medium"
+                                                                        : "text-gray-700 hover:bg-gray-50"
+                                                                }`}
+                                                            >
+                                                                <ItemIcon className="w-4 h-4" />
+                                                                <span>{item.name}</span>
+                                                            </Link>
+                                                        );
+                                                    })}
+                                                </div>
+                                            );
+                                        })}
+                                        <div className="border-t mt-2 pt-2">
+                                            <button
+                                                onClick={() => base44.auth.logout()}
+                                                className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full transition-colors"
                                             >
-                                                {group.items.map((item) => {
-                                                    const ItemIcon = item.icon;
-                                                    const isActive = currentPageName === item.path;
-                                                    return (
-                                                        <Link
-                                                            key={item.path}
-                                                            to={createPageUrl(item.path)}
-                                                            className={`flex items-center space-x-3 px-4 py-2 text-sm transition-colors ${
-                                                                isActive
-                                                                    ? "bg-purple-50 text-purple-900 font-medium"
-                                                                    : "text-gray-700 hover:bg-gray-50"
-                                                            }`}
-                                                        >
-                                                            <ItemIcon className="w-4 h-4" />
-                                                            <span>{item.name}</span>
-                                                        </Link>
-                                                    );
-                                                })}
-                                            </div>
-                                        )}
+                                                <LogOut className="w-4 h-4" />
+                                                <span>Sign Out</span>
+                                            </button>
+                                        </div>
                                     </div>
-                                );
-                            })}
-                            <button
-                                onClick={() => base44.auth.logout()}
-                                className="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all text-gray-600 hover:bg-white/50 hover:text-gray-900"
-                            >
-                                <LogOut className="w-4 h-4" />
-                                <span>Sign Out</span>
-                            </button>
-                        </nav>
+                                )}
+                            </div>
+                        </div>
 
                         {/* Mobile menu button */}
                         <button
