@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ClipboardCheck, Save, MapPin, Package, Printer } from "lucide-react";
+import { openPrintWindow } from "../PrintHelper";
 
 export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
     const [selectedLocationId, setSelectedLocationId] = useState("");
@@ -115,7 +116,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
     const selectedLocation = locations.find(loc => loc.id === selectedLocationId);
 
     const handlePrint = () => {
-        window.print();
+        openPrintWindow();
     };
 
     return (
@@ -126,60 +127,32 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                         display: none;
                     }
 
-                    @media print {
-                        @page {
-                            margin: 0.5in;
-                        }
+                    .storage-group {
+                        page-break-inside: avoid;
+                        margin-bottom: 15px;
+                    }
 
-                        * {
-                            overflow: visible !important;
-                        }
+                    .dark-banner {
+                        background: #1a1a1a !important;
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                        color: white !important;
+                    }
 
-                        body * {
-                            visibility: hidden;
-                        }
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                    }
 
-                        .inventory-print-only {
-                            visibility: visible !important;
-                            display: block !important;
-                            position: fixed;
-                            left: 0;
-                            top: 0;
-                            width: 100%;
-                            height: auto;
-                        }
-
-                        .inventory-print-only * {
-                            visibility: visible !important;
-                        }
-
-                        .storage-group {
-                            page-break-inside: avoid;
-                            margin-bottom: 15px;
-                        }
-
-                        .dark-banner {
-                            background: #1a1a1a !important;
-                            -webkit-print-color-adjust: exact !important;
-                            print-color-adjust: exact !important;
-                            color: white !important;
-                        }
-
-                        table {
-                            width: 100%;
-                            border-collapse: collapse;
-                        }
-
-                        thead {
-                            background: #e5e7eb !important;
-                            -webkit-print-color-adjust: exact !important;
-                            print-color-adjust: exact !important;
-                        }
+                    thead {
+                        background: #e5e7eb !important;
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
                     }
                 `}
             </style>
 
-            <div className="inventory-print-only">
+            <div className="inventory-print-only printable-document">
                 <div style={{borderBottom: '2px solid black', paddingBottom: '8px', marginBottom: '16px'}}>
                     <div style={{fontSize: '18px', fontWeight: 'bold', color: 'black'}}>Daily Inventory Audit Form</div>
                     <div style={{fontSize: '11px', marginTop: '4px', color: 'black'}}>
