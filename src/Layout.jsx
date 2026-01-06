@@ -39,17 +39,18 @@ export default function Layout({ children, currentPageName }) {
     const [openDropdown, setOpenDropdown] = React.useState(null);
 
     React.useEffect(() => {
-        let mounted = true;
-        
         base44.auth.me()
             .then(user => {
-                if (mounted) setCurrentUser(user);
+                setCurrentUser(user);
             })
             .catch(() => {
-                if (mounted) base44.auth.redirectToLogin();
+                // Only redirect if not already authenticated
+                base44.auth.isAuthenticated().then(isAuth => {
+                    if (!isAuth) {
+                        base44.auth.redirectToLogin();
+                    }
+                });
             });
-
-        return () => { mounted = false; };
     }, []);
 
     const menuGroups = [
