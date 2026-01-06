@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, Bot, Loader2, Mic, MicOff, Printer, Download } from "lucide-react";
+import { Send, Bot, Loader2, Mic, MicOff, Printer, Download, RefreshCw } from "lucide-react";
 import { format } from "date-fns";
 
 export default function AgentChat({ agentName }) {
@@ -106,7 +106,7 @@ export default function AgentChat({ agentName }) {
 
     const handleSaveChat = () => {
         if (!messages.length) return;
-        
+
         const chatHistory = messages.map(msg => {
             const timestamp = msg.created_date 
                 ? format(new Date(msg.created_date), 'MMM d, yyyy h:mm a')
@@ -114,9 +114,9 @@ export default function AgentChat({ agentName }) {
             const role = msg.role === 'user' ? 'You' : 'Peach';
             return `[${timestamp}] ${role}:\n${msg.content}\n`;
         }).join('\n---\n\n');
-        
+
         const fullText = `Peach Chat History\nContemporary Health Center\nSaved: ${new Date().toLocaleString()}\n\n${'='.repeat(60)}\n\n${chatHistory}`;
-        
+
         const blob = new Blob([fullText], { type: 'text/plain' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -126,6 +126,25 @@ export default function AgentChat({ agentName }) {
         a.click();
         window.URL.revokeObjectURL(url);
         a.remove();
+    };
+
+    const handleNewChat = async () => {
+        try {
+            setIsProcessing(false);
+            localStorage.removeItem(`agent_conv_${agentName}`);
+            const conv = await base44.agents.createConversation({
+                agent_name: agentName,
+                metadata: {
+                    name: "Messaging Chat",
+                    description: "Quick assistant chat from messaging"
+                }
+            });
+            setConversationId(conv.id);
+            setMessages(conv.messages || []);
+            localStorage.setItem(`agent_conv_${agentName}`, conv.id);
+        } catch (error) {
+            console.error("Failed to start new chat:", error);
+        }
     };
 
     const handlePrint = (content) => {
@@ -233,17 +252,29 @@ export default function AgentChat({ agentName }) {
                             </p>
                         </div>
                     </div>
-                    {messages.length > 0 && (
+                    <div className="flex items-center gap-2">
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={handleSaveChat}
+                            onClick={handleNewChat}
                             className="gap-2"
+                            disabled={isProcessing}
                         >
-                            <Download className="w-4 h-4" />
-                            Save Chat
+                            <RefreshCw className="w-4 h-4" />
+                            New Chat
                         </Button>
-                    )}
+                        {messages.length > 0 && (
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={handleSaveChat}
+                                className="gap-2"
+                            >
+                                <Download className="w-4 h-4" />
+                                Save Chat
+                            </Button>
+                        )}
+                    </div>
                 </div>
             </div>
 
