@@ -58,6 +58,12 @@ export default function Layout({ children, currentPageName }) {
             single: true
         },
         {
+            name: "Follow-up Dates",
+            path: "FollowUpDates",
+            icon: Calendar,
+            single: true
+        },
+        {
             name: "Messaging",
             path: "Messaging",
             icon: MessageSquare,
