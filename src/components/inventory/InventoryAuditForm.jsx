@@ -119,7 +119,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
     };
 
     return (
-        <>
+        <div className="inventory-print-wrapper">
             <style>
                 {`
                     .inventory-print-only {
