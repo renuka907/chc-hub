@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -52,18 +53,19 @@ export default function LabTestDirectory() {
     const handleSyncTube = (id) => syncTubeMutation.mutate({ id });
 
     // Auto-sync tube types for saved tests missing tube_type when quest_url exists
-    const syncedRef = useRef(new Set());
-    useEffect(() => {
-        const toSync = (savedTests || []).filter(t => !t.tube_type && t.quest_url);
-        toSync.forEach(t => {
-            if (!syncedRef.current.has(t.id)) {
-                syncedRef.current.add(t.id);
-                base44.functions.invoke('syncQuestTubeType', { testId: t.id })
-                    .then(() => queryClient.invalidateQueries({ queryKey: ['labTests'] }))
-                    .catch(() => {/* ignore per-item errors */});
-            }
-        });
-    }, [savedTests]);
+    // This useEffect block was removed as per the changes.
+    // const syncedRef = useRef(new Set());
+    // useEffect(() => {
+    //     const toSync = (savedTests || []).filter(t => !t.tube_type && t.quest_url);
+    //     toSync.forEach(t => {
+    //         if (!syncedRef.current.has(t.id)) {
+    //             syncedRef.current.add(t.id);
+    //             base44.functions.invoke('syncQuestTubeType', { testId: t.id })
+    //                 .then(() => queryClient.invalidateQueries({ queryKey: ['labTests'] }))
+    //                 .catch(() => {/* ignore per-item errors */});
+    //         }
+    //     });
+    // }, [savedTests]);
 
     const handleSearch = async () => {
         if (!searchQuery.trim()) {
@@ -141,7 +143,7 @@ Only return found: false if you truly cannot identify what test they're asking a
     };
 
     const handleSaveTest = (testData) => {
-        saveTestMutation.mutate({
+        const payload = {
             test_name: testData.test_name,
             test_code: testData.test_code || "",
             tube_type: testData.tube_type,
@@ -153,6 +155,15 @@ Only return found: false if you truly cannot identify what test they're asking a
             category: testData.category || "General",
             notes: testData.notes || "",
             is_favorite: false
+        };
+        saveTestMutation.mutate(payload, {
+            onSuccess: async (created) => {
+                // Also trigger tube sync if quest_url is present, and only if a new item was created
+                if (testData.quest_url && created?.id) {
+                    await base44.functions.invoke('syncQuestTubeType', { testId: created.id });
+                    queryClient.invalidateQueries({ queryKey: ['labTests'] });
+                }
+            }
         });
     };
 
@@ -410,12 +421,25 @@ function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing })
             <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                     <CardTitle className="text-base">{test.test_name}</CardTitle>
-                    <button
-                        onClick={() => onToggleFavorite({ id: test.id, isFavorite: test.is_favorite })}
-                        className="text-gray-400 hover:text-yellow-500"
-                    >
-                        <Star className={`w-4 h-4 ${test.is_favorite ? 'fill-yellow-500 text-yellow-500' : ''}`} />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        {test.quest_url && (
+                            <button
+                                onClick={() => onSyncTube?.(test.id)}
+                                disabled={syncing}
+                                className="text-gray-400 hover:text-blue-600"
+                                title="Sync tube from Quest"
+                            >
+                                <RefreshCw className={`w-4 h-4 ${syncing ? 'animate-spin' : ''}`} />
+                            </button>
+                        )}
+                        <button
+                            onClick={() => onToggleFavorite({ id: test.id, isFavorite: test.is_favorite })}
+                            className="text-gray-400 hover:text-yellow-500"
+                            title={test.is_favorite ? 'Unfavorite' : 'Favorite'}
+                        >
+                            <Star className={`w-4 h-4 ${test.is_favorite ? 'fill-yellow-500 text-yellow-500' : ''}`} />
+                        </button>
+                    </div>
                 </div>
                 {test.test_code && (
                     <Badge variant="outline" className="w-fit text-xs">
