@@ -32,6 +32,7 @@ export default function InventoryManagement() {
     const [editingItem, setEditingItem] = useState(null);
     const [deleteConfirm, setDeleteConfirm] = useState(null);
     const [showAI, setShowAI] = useState(false);
+    const [showArchived, setShowArchived] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
     const queryClient = useQueryClient();
 
@@ -62,6 +63,20 @@ export default function InventoryManagement() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['inventoryItems'] });
             setDeleteConfirm(null);
+        },
+    });
+
+    const archiveMutation = useMutation({
+        mutationFn: (id) => base44.entities.InventoryItem.update(id, { status: 'archived' }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['inventoryItems'] });
+        },
+    });
+
+    const unarchiveMutation = useMutation({
+        mutationFn: (id) => base44.entities.InventoryItem.update(id, { status: 'active' }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['inventoryItems'] });
         },
     });
 
@@ -99,9 +114,9 @@ export default function InventoryManagement() {
         const matchesLocation = selectedLocation === "all" || item.location_id === selectedLocation;
         const matchesLowStock = !showLowStockOnly || (item.quantity <= item.low_stock_threshold);
         const matchesExpiring = !showExpiringOnly || isExpiringSoon(item.expiry_date);
-        const isActive = item.status === 'active';
-        
-        return matchesSearch && matchesType && matchesLocation && matchesLowStock && matchesExpiring && isActive;
+        const matchesStatus = showArchived ? item.status === 'archived' : item.status === 'active';
+
+        return matchesSearch && matchesType && matchesLocation && matchesLowStock && matchesExpiring && matchesStatus;
     });
 
     const lowStockCount = inventoryItems.filter(item => 
@@ -275,6 +290,18 @@ export default function InventoryManagement() {
             {/* Filters */}
             <div className="bg-white rounded-3xl p-6 shadow-md">
                 <div className="flex flex-wrap gap-3 items-center">
+                    <button
+                        onClick={() => setShowArchived(!showArchived)}
+                        className={`px-6 py-2.5 rounded-2xl text-sm font-medium transition-all flex items-center gap-2 ${
+                            showArchived 
+                                ? "bg-gray-700 text-white shadow-md" 
+                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        }`}
+                    >
+                        <Package className="w-4 h-4" />
+                        {showArchived ? 'Archived Items' : 'View Archived'}
+                    </button>
+                    <div className="w-px h-6 bg-gray-300" />
                     <button
                         onClick={() => setShowLowStockOnly(!showLowStockOnly)}
                         className={`px-6 py-2.5 rounded-2xl text-sm font-medium transition-all flex items-center gap-2 ${
@@ -498,15 +525,37 @@ export default function InventoryManagement() {
 
                                                         {canEdit && (
                                                             <div className="flex gap-2 pt-2 border-t">
-                                                                <Button 
-                                                                    variant="outline" 
-                                                                    size="sm"
-                                                                    className="flex-1"
-                                                                    onClick={() => handleEdit(item)}
-                                                                >
-                                                                    <Pencil className="w-3 h-3 mr-1" />
-                                                                    Edit
-                                                                </Button>
+                                                                {item.status === 'archived' ? (
+                                                                    <Button 
+                                                                        variant="outline" 
+                                                                        size="sm"
+                                                                        className="flex-1 text-green-600 hover:text-green-700 hover:bg-green-50"
+                                                                        onClick={() => unarchiveMutation.mutate(item.id)}
+                                                                    >
+                                                                        <Package className="w-3 h-3 mr-1" />
+                                                                        Restore
+                                                                    </Button>
+                                                                ) : (
+                                                                    <>
+                                                                        <Button 
+                                                                            variant="outline" 
+                                                                            size="sm"
+                                                                            className="flex-1"
+                                                                            onClick={() => handleEdit(item)}
+                                                                        >
+                                                                            <Pencil className="w-3 h-3 mr-1" />
+                                                                            Edit
+                                                                        </Button>
+                                                                        <Button 
+                                                                            variant="outline"
+                                                                            size="sm"
+                                                                            className="text-gray-600 hover:text-gray-700 hover:bg-gray-50"
+                                                                            onClick={() => archiveMutation.mutate(item.id)}
+                                                                        >
+                                                                            <Package className="w-3 h-3" />
+                                                                        </Button>
+                                                                    </>
+                                                                )}
                                                                 <Button 
                                                                     variant="outline"
                                                                     size="sm"
