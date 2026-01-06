@@ -12,52 +12,30 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 
 export default function QuoteDetail() {
-    // Robust URL param extraction (supports search, hash, and raw href)
-    const href = window.location.href;
     const searchParams = new URLSearchParams(window.location.search);
-    const hashQuery = window.location.hash.includes('?') ? window.location.hash.split('?')[1] : '';
-    const hashParams = new URLSearchParams(hashQuery);
-    const regexParam = (name) => {
-        const m = href.match(new RegExp(`[?&#]${name}=([^&#]+)`, 'i'));
-        return m ? decodeURIComponent(m[1]) : null;
-    };
-
-    const quoteId = (
-        searchParams.get('id') || searchParams.get('quoteId') || searchParams.get('quote_id') ||
-        hashParams.get('id') || hashParams.get('quoteId') || hashParams.get('quote_id') ||
-        regexParam('id') || regexParam('quoteId') || regexParam('quote_id')
-    );
-
-    const quoteNumber = (
-        searchParams.get('number') || searchParams.get('quote_number') ||
-        hashParams.get('number') || hashParams.get('quote_number') ||
-        regexParam('number') || regexParam('quote_number')
-    );
-
-    const autoPrint = (
-        (searchParams.get('autoprint') || hashParams.get('autoprint') || regexParam('autoprint')) === 'true'
-    );
+    const hashParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+    const quoteId = searchParams.get('id') || searchParams.get('quoteId') || searchParams.get('quote_id') ||
+        hashParams.get('id') || hashParams.get('quoteId') || hashParams.get('quote_id');
+    const quoteNumber = searchParams.get('number') || searchParams.get('quote_number') ||
+        hashParams.get('number') || hashParams.get('quote_number');
+    const autoPrint = (searchParams.get('autoprint') || hashParams.get('autoprint')) === 'true';
     const queryClient = useQueryClient();
     const [showEditDialog, setShowEditDialog] = useState(false);
 
     const { data: quote, isLoading: quoteLoading } = useQuery({
         queryKey: ['quote', quoteId || quoteNumber],
         queryFn: async () => {
-            // Try by id, then by number; also attempt list + find as fallback
             if (quoteId) {
                 const byId = await base44.entities.Quote.filter({ id: quoteId });
-                if (byId?.[0]) return byId[0];
+                return byId[0];
             }
             if (quoteNumber) {
                 const byNumber = await base44.entities.Quote.filter({ quote_number: quoteNumber });
-                if (byNumber?.[0]) return byNumber[0];
+                return byNumber[0];
             }
-            // Last resort: try listing a few and check
-            const recent = await base44.entities.Quote.list('-updated_date', 50);
-            const found = recent.find(q => q.id === quoteId || q.quote_number === quoteNumber);
-            return found || null;
+            return null;
         },
-        enabled: true,
+        enabled: !!(quoteId || quoteNumber),
     });
 
     const { data: locations = [] } = useQuery({
