@@ -25,6 +25,10 @@ export default function QuotesManagement() {
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
         queryFn: () => base44.entities.ClinicLocation.list(),
+        staleTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchInterval: false,
     });
 
     const filteredQuotes = quotes.filter(quote => {
