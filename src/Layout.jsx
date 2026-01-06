@@ -37,16 +37,21 @@ export default function Layout({ children, currentPageName }) {
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
     const [currentUser, setCurrentUser] = React.useState(null);
     const [openDropdown, setOpenDropdown] = React.useState(null);
+    const [authChecked, setAuthChecked] = React.useState(false);
 
     React.useEffect(() => {
-        base44.auth.me()
-            .then(user => {
-                setCurrentUser(user);
-            })
-            .catch(() => {
-                base44.auth.redirectToLogin();
-            });
-    }, []);
+        if (!authChecked) {
+            base44.auth.me()
+                .then(user => {
+                    setCurrentUser(user);
+                    setAuthChecked(true);
+                })
+                .catch(() => {
+                    setAuthChecked(true);
+                    base44.auth.redirectToLogin();
+                });
+        }
+    }, [authChecked]);
 
     const menuGroups = [
         {
