@@ -188,12 +188,13 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                             <thead>
                                 <tr style={{backgroundColor: '#e5e7eb'}}>
                                     <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'left', fontSize: '10px', fontWeight: 'bold'}}>Item</th>
-                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '80px'}}>Type</th>
-                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '60px'}}>SKU</th>
-                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '60px'}}>Exp</th>
-                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '60px'}}>Unit</th>
-                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '50px'}}>Qty</th>
-                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '90px'}}>New</th>
+                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '70px'}}>Type</th>
+                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '60px'}}>Cond</th>
+                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '50px'}}>SKU</th>
+                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '55px'}}>Exp</th>
+                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '50px'}}>Unit</th>
+                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '45px'}}>Qty</th>
+                                    <th style={{border: '1px solid #666', padding: '3px 6px', textAlign: 'center', fontSize: '10px', fontWeight: 'bold', width: '70px'}}>New</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -201,6 +202,9 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                                     <tr key={item.id}>
                                         <td style={{border: '1px solid #999', padding: '3px 6px', fontSize: '10px'}}>{item.item_name}</td>
                                         <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontSize: '10px'}}>{item.item_type}</td>
+                                        <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontSize: '9px'}}>
+                                            {item.item_condition === 'unopened' ? 'New' : item.item_condition === 'opened' ? 'Open' : 'Part'}
+                                        </td>
                                         <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontSize: '10px'}}>{item.sku || '-'}</td>
                                         <td style={{border: '1px solid #999', padding: '3px 6px', textAlign: 'center', fontSize: '10px'}}>
                                             {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString('en-US', {month: '2-digit', day: '2-digit', year: '2-digit'}) : '-'}

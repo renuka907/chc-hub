@@ -17,6 +17,7 @@ export default function InventoryForm({ open, onOpenChange, onSuccess, editItem 
     const [formData, setFormData] = React.useState({
         item_name: "",
         item_type: "Supply",
+        item_condition: "unopened",
         sku: "",
         quantity: 0,
         unit: "units",
@@ -44,6 +45,7 @@ export default function InventoryForm({ open, onOpenChange, onSuccess, editItem 
             setFormData({
                 item_name: "",
                 item_type: "Supply",
+                item_condition: "unopened",
                 sku: "",
                 quantity: 0,
                 unit: "units",
@@ -132,7 +134,7 @@ export default function InventoryForm({ open, onOpenChange, onSuccess, editItem 
                 </DialogHeader>
 
                 <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                         <div className="space-y-2">
                             <Label>Item Name *</Label>
                             <Input
@@ -156,6 +158,23 @@ export default function InventoryForm({ open, onOpenChange, onSuccess, editItem 
                                     <SelectItem value="Supply">Supply</SelectItem>
                                     <SelectItem value="Equipment">Equipment</SelectItem>
                                     <SelectItem value="Medication">Medication</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label>Condition *</Label>
+                            <Select
+                                value={formData.item_condition}
+                                onValueChange={(value) => setFormData({...formData, item_condition: value})}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="unopened">Unopened</SelectItem>
+                                    <SelectItem value="opened">Opened</SelectItem>
+                                    <SelectItem value="partial">Partial</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>

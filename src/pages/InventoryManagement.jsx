@@ -405,6 +405,16 @@ export default function InventoryManagement() {
                                                             <Badge className={typeColors[item.item_type]}>
                                                                 {item.item_type}
                                                             </Badge>
+                                                            {item.item_condition && (
+                                                                <Badge variant="outline" className={
+                                                                    item.item_condition === 'unopened' ? 'border-green-300 text-green-700 bg-green-50' :
+                                                                    item.item_condition === 'opened' ? 'border-blue-300 text-blue-700 bg-blue-50' :
+                                                                    'border-amber-300 text-amber-700 bg-amber-50'
+                                                                }>
+                                                                    {item.item_condition === 'unopened' ? '🔒 Unopened' :
+                                                                     item.item_condition === 'opened' ? '📦 Opened' : '⚠️ Partial'}
+                                                                </Badge>
+                                                            )}
                                                             {isLowStock && (
                                                                 <Badge className="bg-red-500 text-white">
                                                                     <AlertTriangle className="w-3 h-3 mr-1" />
