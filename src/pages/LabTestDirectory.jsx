@@ -63,17 +63,27 @@ export default function LabTestDirectory() {
     useEffect(() => {
         const list = Array.isArray(savedTests) ? savedTests : [];
         const toSync = list.filter(t => {
-            if (!t?.quest_url || syncedRef.current.has(t.id)) return false;
+            if (syncedRef.current.has(t.id)) return false;
             const tube = (t.tube_type || '').toLowerCase();
             const name = (t.test_name || '').toLowerCase();
             // Sync if missing tube, looks like SST/Gold, or is a QuantiFERON test
-            return !tube || /\bsst\b|gold/.test(tube) || /quantiferon|tb gold/.test(name);
+            // Allow sync if we have either a quest_url or a known test_code (e.g., 36970)
+            const needsSync = !tube || /\bsst\b|gold/.test(tube) || /quantiferon|tb gold/.test(name);
+            return needsSync && (t.quest_url || t.test_code);
         });
-        toSync.forEach(t => {
+        toSync.forEach(async (t) => {
             syncedRef.current.add(t.id);
-            base44.functions.invoke('syncQuestTubeType', { testId: t.id })
-                .then(() => queryClient.invalidateQueries({ queryKey: ['labTests'] }))
-                .catch(() => {/* ignore per-item errors */});
+            try {
+                if (t.quest_url) {
+                    await base44.functions.invoke('syncQuestTubeType', { testId: t.id });
+                } else if (t.test_code) {
+                    const questUrl = `https://testdirectory.questdiagnostics.com/test/test-detail/${t.test_code}`;
+                    await base44.functions.invoke('fetchQuestTubeType', { questUrl, save: true });
+                }
+                queryClient.invalidateQueries({ queryKey: ['labTests'] });
+            } catch (e) {
+                // ignore per-item errors
+            }
         });
     }, [savedTests]);
 
