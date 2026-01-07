@@ -183,9 +183,12 @@ Only return found: false if you truly cannot identify what test they're asking a
             if (response?.quest_url) {
                 try {
                     const { data } = await base44.functions.invoke('fetchQuestTubeType', { questUrl: response.quest_url });
-                    if (data?.tube_type) {
-                        setSearchResults({ ...response, tube_type: data.tube_type });
-                    } else if (data?.error) {
+                    if (data) {
+                        const verifiedTube = data.tube_type || data.details?.tube_type || response.tube_type;
+                        const rawPreferred = data.rawPreferred || data.details?.rawPreferred || response.rawPreferred;
+                        setSearchResults({ ...response, tube_type: verifiedTube, rawPreferred });
+                    }
+                    if (data?.error) {
                         console.log('Quest verification:', data.error);
                     }
                 } catch (e) {
