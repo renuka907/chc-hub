@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { usePermissions } from "../components/permissions/usePermissions";
-import { Search, Loader2, TestTube, Star, ExternalLink, Plus, AlertCircle, RefreshCw } from "lucide-react";
+import { Search, Loader2, TestTube, Star, ExternalLink, Plus, AlertCircle, RefreshCw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function LabTestDirectory() {
@@ -38,6 +38,14 @@ export default function LabTestDirectory() {
         }
     });
 
+    const deleteTestMutation = useMutation({
+        mutationFn: (id) => base44.entities.LabTestInfo.delete(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['labTests'] });
+            toast.success("Test removed");
+        }
+    });
+
     const syncTubeMutation = useMutation({
         mutationFn: async ({ id }) => {
             const res = await base44.functions.invoke('syncQuestTubeType', { testId: id });
@@ -57,6 +65,12 @@ export default function LabTestDirectory() {
     });
 
     const handleSyncTube = (id) => syncTubeMutation.mutate({ id });
+    const handleDelete = (id, name) => {
+        if (!id) return;
+        if (window.confirm(`Remove "${name || 'this test'}" from saved tests?`)) {
+            deleteTestMutation.mutate(id);
+        }
+    };
 
     // Auto-sync tube types from Quest for saved tests (runs once per test id)
     const syncedRef = useRef(new Set());
@@ -427,6 +441,7 @@ Only return found: false if you truly cannot identify what test they're asking a
                                             getTubeColor={getTubeColor}
                                             onSyncTube={handleSyncTube}
                                             syncing={syncTubeMutation.isPending}
+                                            onDelete={() => handleDelete(test.id, test.test_name)}
                                         />
                                     ))}
                                 </div>
@@ -447,6 +462,7 @@ Only return found: false if you truly cannot identify what test they're asking a
                                             getTubeColor={getTubeColor}
                                             onSyncTube={handleSyncTube}
                                             syncing={syncTubeMutation.isPending}
+                                            onDelete={() => handleDelete(test.id, test.test_name)}
                                         />
                                     ))}
                                 </div>
@@ -459,7 +475,7 @@ Only return found: false if you truly cannot identify what test they're asking a
     );
 }
 
-function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing }) {
+function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, onDelete }) {
     return (
         <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
@@ -482,6 +498,13 @@ function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing })
                             title={test.is_favorite ? 'Unfavorite' : 'Favorite'}
                         >
                             <Star className={`w-4 h-4 ${test.is_favorite ? 'fill-yellow-500 text-yellow-500' : ''}`} />
+                        </button>
+                        <button
+                            onClick={() => onDelete?.(test.id)}
+                            className="text-gray-400 hover:text-red-600"
+                            title="Remove"
+                        >
+                            <Trash2 className="w-4 h-4" />
                         </button>
                     </div>
                 </div>
