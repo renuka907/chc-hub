@@ -67,18 +67,30 @@ export default function LabTestDirectory() {
             const tube = (t.tube_type || '').toLowerCase();
             const name = (t.test_name || '').toLowerCase();
             // Sync if missing tube, looks like SST/Gold, or is a QuantiFERON test
-            // Allow sync if we have either a quest_url or a known test_code (e.g., 36970)
             const needsSync = !tube || /\bsst\b|gold/.test(tube) || /quantiferon|tb gold/.test(name);
-            return needsSync && (t.quest_url || t.test_code);
+            // Proceed if we have quest_url, test_code, or a known QuantiFERON match
+            return needsSync && (t.quest_url || t.test_code || /quantiferon|tb gold/.test(name));
         });
         toSync.forEach(async (t) => {
             syncedRef.current.add(t.id);
             try {
                 if (t.quest_url) {
+                    // Update this exact record from its Quest URL
                     await base44.functions.invoke('syncQuestTubeType', { testId: t.id });
                 } else if (t.test_code) {
+                    // Build Quest URL from code and save details (updates by code if present)
                     const questUrl = `https://testdirectory.questdiagnostics.com/test/test-detail/${t.test_code}`;
                     await base44.functions.invoke('fetchQuestTubeType', { questUrl, save: true });
+                } else {
+                    // Fallback: known QuantiFERON TB Gold Plus code 36970
+                    const name = (t.test_name || '').toLowerCase();
+                    if (/quantiferon|tb gold/.test(name)) {
+                        // Update directly to match Preferred Specimen (lithium heparin green-top)
+                        await base44.entities.LabTestInfo.update(t.id, { tube_type: 'Green-top Lithium Heparin' });
+                        // Also attempt to fetch and save full details for future accuracy
+                        const questUrl = 'https://testdirectory.questdiagnostics.com/test/test-detail/36970';
+                        await base44.functions.invoke('fetchQuestTubeType', { questUrl, save: true });
+                    }
                 }
                 queryClient.invalidateQueries({ queryKey: ['labTests'] });
             } catch (e) {
