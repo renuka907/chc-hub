@@ -201,7 +201,7 @@ export default function Layout({ children, currentPageName }) {
                                     <div 
                                         onMouseEnter={() => openMenu(0)}
                                         onMouseLeave={() => closeMenuDelayed(300)}
-                                        className="absolute top-full right-0 mt-1 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
+                                        className="absolute top-full right-0 mt-1 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 max-h-[70vh] overflow-y-auto"
                                     >
                                         {menuGroups.map((group, idx) => {
                                             if (group.single) {
