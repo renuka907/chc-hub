@@ -118,30 +118,18 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                     }
 
                     @media print {
-                        body * {
-                            visibility: hidden;
-                            height: 0 !important;
-                            overflow: hidden !important;
-                        }
-                        .printable-document, .printable-document * {
-                            visibility: visible;
-                        }
+                        .no-print { display: none !important; }
                         .printable-document {
                             position: fixed;
-                            left: 0;
-                            top: 0;
+                            inset: 0;
                             width: 100%;
                             background: white;
                             padding: 0.5in;
                             border: 2px solid black;
                             max-width: 100%;
+                            z-index: 9999;
                         }
-                        .no-print {
-                            display: none !important;
-                        }
-                        .print-page-break {
-                            page-break-before: always;
-                        }
+                        .print-page-break { page-break-before: always; }
                         * {
                             -webkit-print-color-adjust: exact !important;
                             print-color-adjust: exact !important;

@@ -160,6 +160,7 @@ export default function ReferralDirectory() {
         initialData={editing}
         onSave={handleSave}
       />
+      </div>
 
       {printRecord && (
         <div className="fixed inset-0 pointer-events-none">
