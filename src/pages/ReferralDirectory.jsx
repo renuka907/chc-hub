@@ -44,6 +44,8 @@ export default function ReferralDirectory() {
     return Object.entries(bySpec).sort((a,b) => a[0].localeCompare(b[0]));
   }, [referrals]);
 
+  const slugify = (s) => (s || 'other').toString().toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
+
   const handleSave = async (form) => {
     if (editing) {
       await updateMutation.mutateAsync({ id: editing.id, data: form });
@@ -77,6 +79,26 @@ export default function ReferralDirectory() {
         </Button>
       </div>
 
+      {groups.length > 0 && (
+        <div className="mb-4 -mt-2 overflow-x-auto">
+          <div className="flex gap-2 pb-1">
+            {groups.map(([spec]) => (
+              <Button
+                key={spec}
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const el = document.getElementById(`spec-${slugify(spec)}`);
+                  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+              >
+                {spec}
+              </Button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {isLoading ? (
         <div className="text-gray-600">Loading referrals...</div>
       ) : groups.length === 0 ? (
@@ -85,7 +107,7 @@ export default function ReferralDirectory() {
         <div className="space-y-10">
           {groups.map(([specialty, items]) => (
             <div key={specialty}>
-              <h2 className="text-xl font-semibold text-gray-900 mb-3">{specialty}</h2>
+              <h2 id={`spec-${slugify(specialty)}`} className="text-xl font-semibold text-gray-900 mb-3">{specialty}</h2>
               <Separator className="mb-4" />
               <div className="grid gap-3">
                 {items.map((r) => (
