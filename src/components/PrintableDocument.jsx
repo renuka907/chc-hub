@@ -173,7 +173,7 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
 
             {/* Header with contact info */}
             {showLogo &&
-      <div className="mb-6 pb-3 border-b border-gray-400 text-center">
+      <div className="pb-3 text-center border-b border-gray-400">
                     <div className="text-xs text-gray-800 leading-relaxed">
                         <div className="font-semibold">6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
                         <div className="mt-0.5">Phone: 239-561-9191 | Fax: 239-561-9188</div>
