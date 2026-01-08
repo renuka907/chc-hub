@@ -278,6 +278,10 @@ export default function CheckoutQuote() {
                         .printable-quote table thead th {
                             border-bottom: 1.5px solid #333 !important;
                         }
+                        /* Remove any Tailwind row borders applied via className="border-b" */
+                        .printable-quote table tbody tr {
+                            border-bottom: none !important;
+                        }
                         .printable-quote table tbody td {
                             border-bottom: 1.5px solid #333 !important;
                         }
