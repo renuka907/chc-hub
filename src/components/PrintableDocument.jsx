@@ -135,8 +135,17 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                         .printable-document.one-page {
                             max-height: 100vh;
                             overflow: hidden;
-                            padding: 0.45in;
+                            padding: 0.35in;
+                            font-size: 12px;
+                            line-height: 1.35;
                         }
+                        .printable-document.one-page h1 { font-size: 16px; margin-bottom: 6px; }
+                        .printable-document.one-page h2 { font-size: 14px; margin-bottom: 4px; }
+                        .printable-document.one-page h3 { font-size: 13px; margin-bottom: 3px; }
+                        .printable-document.one-page table { font-size: 12px; }
+                        .printable-document.one-page table th,
+                        .printable-document.one-page table td { padding: 3px 4px; }
+                        .printable-document.one-page img { max-height: 40px; }
                         .printable-document.one-page, .printable-document.one-page * {
                             page-break-inside: avoid !important;
                             break-inside: avoid !important;

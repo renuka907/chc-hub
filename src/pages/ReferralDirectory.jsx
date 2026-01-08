@@ -163,7 +163,7 @@ export default function ReferralDirectory() {
 
       {printRecord && (
         <div className="fixed inset-0 pointer-events-none">
-          <PrintableDocument title="Referral Record" onePage>
+          <PrintableDocument title="Referral Record" onePage showLogo={false}>
             <div className="space-y-2 text-base">
               <div className="text-xl font-bold">{printRecord.doctor_name}</div>
               <div><span className="font-semibold">Specialty:</span> {printRecord.specialty}</div>
