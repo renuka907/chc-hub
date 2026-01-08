@@ -236,7 +236,7 @@ export default function CheckoutQuote() {
                 {`
                     @media print {
                         @page {
-                            margin: 0.3cm;
+                            margin: 0.5in;
                         }
                         body * {
                             visibility: hidden;
@@ -251,13 +251,15 @@ export default function CheckoutQuote() {
                             left: 0 !important;
                             top: 0 !important;
                             width: 100%;
-                            padding: 5px !important;
+                            padding: 0.5in !important;
                             font-size: 15px !important;
                             line-height: 1.5 !important;
                         }
                         .printable-quote h1 {
                             font-size: 20px !important;
                             margin-bottom: 4px !important;
+                            padding-bottom: 4px !important;
+                            border-bottom: 1px solid #333 !important;
                         }
                         .printable-quote h3 {
                             font-size: 16px !important;
