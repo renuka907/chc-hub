@@ -68,7 +68,7 @@ export default function ReferralDirectory() {
   }, [printRecord]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen no-print">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Referral Directory</h1>

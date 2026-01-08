@@ -125,7 +125,7 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                             visibility: visible;
                         }
                         .printable-document {
-                            position: absolute;
+                            position: fixed;
                             left: 0;
                             top: 0;
                             width: 100%;
