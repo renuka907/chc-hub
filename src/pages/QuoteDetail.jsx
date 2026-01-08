@@ -161,7 +161,14 @@ export default function QuoteDetail() {
                         .printable-document table {
                             font-size: 14px !important;
                             border-collapse: collapse !important;
+                            page-break-inside: auto !important;
+                            break-inside: auto !important;
                         }
+                        .printable-document thead { display: table-header-group !important; }
+                        .printable-document tfoot { display: table-footer-group !important; }
+                        .printable-document tr { page-break-inside: avoid !important; break-inside: avoid !important; }
+                        .printable-document th,
+                        .printable-document td { page-break-inside: avoid !important; break-inside: avoid !important; }
                         .printable-document table th,
                         .printable-document table td {
                             padding: 4px 6px !important;
@@ -211,6 +218,10 @@ export default function QuoteDetail() {
                         }
                         .printable-document .text-xs {
                             font-size: 12px !important;
+                        }
+                        .printable-document .avoid-break {
+                            break-inside: avoid !important;
+                            page-break-inside: avoid !important;
                         }
                         .no-print {
                             display: none !important;
@@ -332,7 +343,7 @@ export default function QuoteDetail() {
                     </div>
 
                     {/* Totals */}
-                    <div className="flex justify-end">
+                    <div className="flex justify-end avoid-break">
                         <div className="w-64 space-y-2">
                             {quote.show_totals !== false && (
                                 <div className="flex justify-between pb-2">
