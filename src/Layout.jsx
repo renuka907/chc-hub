@@ -39,6 +39,24 @@ export default function Layout({ children, currentPageName }) {
     const [currentUser, setCurrentUser] = React.useState(null);
     const [isLoading, setIsLoading] = React.useState(true);
     const [openDropdown, setOpenDropdown] = React.useState(null);
+    const dropdownCloseTimer = React.useRef(null);
+    const clearCloseTimer = () => {
+        if (dropdownCloseTimer.current) {
+            clearTimeout(dropdownCloseTimer.current);
+            dropdownCloseTimer.current = null;
+        }
+    };
+    const openMenu = (idx) => {
+        clearCloseTimer();
+        setOpenDropdown(idx);
+    };
+    const closeMenuDelayed = (delay = 250) => {
+        clearCloseTimer();
+        dropdownCloseTimer.current = setTimeout(() => {
+            setOpenDropdown(null);
+            dropdownCloseTimer.current = null;
+        }, delay);
+    };
 
     React.useEffect(() => {
         base44.auth.me()
@@ -170,8 +188,8 @@ export default function Layout({ children, currentPageName }) {
                             {/* Single Dropdown Menu */}
                             <div className="relative">
                                 <button
-                                    onMouseEnter={() => setOpenDropdown(0)}
-                                    onMouseLeave={() => setOpenDropdown(null)}
+                                    onMouseEnter={() => openMenu(0)}
+                                    onMouseLeave={() => closeMenuDelayed(300)}
                                     className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
                                 >
                                     <Menu className="w-4 h-4" />
@@ -181,8 +199,8 @@ export default function Layout({ children, currentPageName }) {
                                 
                                 {openDropdown === 0 && (
                                     <div 
-                                        onMouseEnter={() => setOpenDropdown(0)}
-                                        onMouseLeave={() => setOpenDropdown(null)}
+                                        onMouseEnter={() => openMenu(0)}
+                                        onMouseLeave={() => closeMenuDelayed(300)}
                                         className="absolute top-full right-0 mt-1 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
                                     >
                                         {menuGroups.map((group, idx) => {
