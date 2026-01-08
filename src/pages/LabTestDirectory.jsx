@@ -249,6 +249,13 @@ Only return found: false if you truly cannot identify what test they're asking a
         return "bg-gray-100 text-gray-800";
     };
 
+    // Ensure QuantiFERON/TB Gold tests always display the correct tube
+    const enforceQuantiFeronTube = (tubeType, testName) => {
+        const name = (testName || '').toLowerCase();
+        if (/quantiferon|tb gold/.test(name)) return 'Green-top Lithium Heparin';
+        return tubeType;
+    };
+
     const filteredTests = savedTests.filter(test =>
         test.test_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         test.test_code?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -330,9 +337,9 @@ Only return found: false if you truly cannot identify what test they're asking a
                                         <div className="grid md:grid-cols-2 gap-4">
                                             <div>
                                                 <p className="text-sm font-semibold text-gray-700 mb-1">Tube Type</p>
-                                                <Badge className={getTubeColor(searchResults.tube_type)}>
+                                                <Badge className={getTubeColor(enforceQuantiFeronTube(searchResults.tube_type, searchResults.test_name))}>
                                                     <TestTube className="w-3 h-3 mr-1" />
-                                                    {searchResults.tube_type}
+                                                    {enforceQuantiFeronTube(searchResults.tube_type, searchResults.test_name)}
                                                 </Badge>
                                             </div>
                                             {searchResults.specimen_type && (
@@ -519,9 +526,9 @@ function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, o
             </CardHeader>
             <CardContent className="space-y-3">
                 <div>
-                    <Badge className={getTubeColor(test.tube_type)}>
+                    <Badge className={getTubeColor(enforceQuantiFeronTube(test.tube_type, test.test_name))}>
                         <TestTube className="w-3 h-3 mr-1" />
-                        {test.tube_type}
+                        {enforceQuantiFeronTube(test.tube_type, test.test_name)}
                     </Badge>
                 </div>
                 {test.specimen_type && (
