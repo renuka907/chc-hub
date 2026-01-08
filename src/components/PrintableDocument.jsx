@@ -1,8 +1,8 @@
 import React from "react";
 
-export default function PrintableDocument({ title, children, showLogo = true, logoUrl = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png" }) {
+export default function PrintableDocument({ title, children, showLogo = true, logoUrl = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png", onePage = false }) {
     return (
-        <div className="printable-document w-full max-w-[8.5in] mx-auto bg-white p-8 border-2 border-black" style={{fontFamily: 'Times New Roman, serif'}}>
+        <div className={`${onePage ? 'one-page ' : ''}printable-document w-full max-w-[8.5in] mx-auto bg-white p-8 border-2 border-black`} style={{fontFamily: 'Times New Roman, serif'}}>
             <style>
                 {`
                     @page {
@@ -132,6 +132,15 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                             z-index: 9999;
                         }
                         .print-page-break { page-break-before: always; }
+                        .printable-document.one-page {
+                            max-height: 100vh;
+                            overflow: hidden;
+                            padding: 0.45in;
+                        }
+                        .printable-document.one-page, .printable-document.one-page * {
+                            page-break-inside: avoid !important;
+                            break-inside: avoid !important;
+                        }
                         * {
                             -webkit-print-color-adjust: exact !important;
                             print-color-adjust: exact !important;
