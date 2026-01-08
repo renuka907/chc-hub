@@ -286,7 +286,7 @@ export default function QuoteDetail() {
                         </div>
                         <div>
                             <div className="text-sm text-gray-500 mb-1">Date</div>
-                            <div className="font-semibold">{new Date().toLocaleDateString()}</div>
+                            <div className="font-semibold text-right">{new Date().toLocaleDateString()}</div>
                         </div>
 
                         {quote.patient_name &&
