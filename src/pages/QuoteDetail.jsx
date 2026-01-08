@@ -173,7 +173,16 @@ export default function QuoteDetail() {
                         .printable-document table td {
                             padding: 4px 6px !important;
                             line-height: 1.4 !important;
+                        }
+                        /* Add row dividers only between body rows, not after the last */
+                        .printable-document table thead th {
                             border-bottom: 1.5px solid #333 !important;
+                        }
+                        .printable-document table tbody td {
+                            border-bottom: 1.5px solid #333 !important;
+                        }
+                        .printable-document table tbody tr:last-child td {
+                            border-bottom: none !important;
                         }
                         .printable-document table thead tr {
                             background-color: #e5e7eb !important;
