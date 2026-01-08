@@ -269,7 +269,7 @@ export default function QuoteDetail() {
             <PrintableDocument title="Price Quote" logoUrl={quote?.image_url || undefined}>
                 <div className="space-y-6">
                     {/* Header Info */}
-                    <div className="grid md:grid-cols-2 gap-6 pb-6 border-b">
+                    <div className="grid md:grid-cols-2 gap-4 pb-3 border-b">
                         <div>
                             <div className="text-sm text-gray-500 mb-1">Quote Number</div>
                             <div className="font-bold text-lg">{quote.quote_number}</div>
