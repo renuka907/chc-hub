@@ -132,6 +132,16 @@ export default function ReferralDirectory() {
         <div className="text-gray-600">No referrals yet. Click "Add Referral" to create one.</div>
       ) : (
         <div className="space-y-10">
+          <div className="mb-4">
+            <div className="flex gap-2 overflow-x-auto py-2">
+              <Button variant="outline" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>All</Button>
+              {groups.map(([spec]) => (
+                <Button key={spec} variant="outline" className="whitespace-nowrap" onClick={() => scrollToSpecialty(spec)}>
+                  {spec}
+                </Button>
+              ))}
+            </div>
+          </div>
           {groups.map(([specialty, items]) => (
             <div key={specialty} id={`spec-${slugify(specialty)}`}>
               <h2 className="text-xl font-semibold text-gray-900 mb-3">{specialty}</h2>
