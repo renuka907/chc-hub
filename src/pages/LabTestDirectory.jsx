@@ -313,7 +313,7 @@ Only return found: false if you truly cannot identify what test they're asking a
                             {searchResults.found ? (
                                 <Card className="border-blue-200 bg-blue-50">
                                     <CardContent className="pt-6 space-y-4">
-                                        <div className="flex items-start justify-between">
+                                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
                                             <div className="flex-1">
                                                 <h3 className="text-xl font-bold text-gray-900 mb-2">
                                                     {searchResults.test_name}
@@ -328,6 +328,7 @@ Only return found: false if you truly cannot identify what test they're asking a
                                                 size="sm"
                                                 onClick={() => handleSaveTest(searchResults)}
                                                 disabled={saveTestMutation.isPending}
+                                                className="self-start bg-blue-600 hover:bg-blue-700"
                                             >
                                                 <Plus className="w-4 h-4 mr-2" />
                                                 Save to Directory
