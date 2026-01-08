@@ -381,11 +381,11 @@ export default function QuoteDetail() {
           }
 
                     {/* Footer */}
-                    <div className="text-sm text-gray-500 border-t pt-4 mt-8">
+                    <div className="text-gray-500 mt-8 text-sm border-t">
                         <p>This quote is valid for 30 days from the date of issue.</p>
                         <p className="mt-2">Payment is due at the time of service unless other arrangements have been made.</p>
                         <p className="mt-3 font-semibold text-gray-700">Cherry Financing and Care Credit Available</p>
-                        <div className="flex justify-center mt-6">
+                        <div className="flex justify-center">
                             <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/b101b52c2_CHCPaymentOptions.png"
                 alt="Scan for payment options"
