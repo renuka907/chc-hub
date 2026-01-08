@@ -161,14 +161,7 @@ export default function QuoteDetail() {
                         .printable-document table {
                             font-size: 14px !important;
                             border-collapse: collapse !important;
-                            page-break-inside: auto !important;
-                            break-inside: auto !important;
                         }
-                        .printable-document thead { display: table-header-group !important; }
-                        .printable-document tfoot { display: table-footer-group !important; }
-                        .printable-document tr { page-break-inside: avoid !important; break-inside: avoid !important; }
-                        .printable-document th,
-                        .printable-document td { page-break-inside: avoid !important; break-inside: avoid !important; }
                         .printable-document table th,
                         .printable-document table td {
                             padding: 4px 6px !important;
@@ -181,13 +174,6 @@ export default function QuoteDetail() {
                         .printable-document table tbody tr:nth-child(even) {
                             background-color: #f9fafb !important;
                         }
-                        /* Remove trailing border after last item and row-level borders in print */
-                        .printable-document table tbody tr {
-                            border-bottom: none !important;
-                        }
-                        .printable-document table tbody tr:last-child td {
-                            border-bottom: none !important;
-                        }
                         .printable-document .text-xl {
                             font-size: 18px !important;
                         }
@@ -196,11 +182,6 @@ export default function QuoteDetail() {
                         }
                         .printable-document img {
                             max-height: 50px !important;
-                        }
-                        .printable-document img.quote-qr {
-                            max-height: none !important;
-                            height: 1.75in !important;
-                            width: auto !important;
                         }
                         .printable-document .pb-6 {
                             padding-bottom: 4px !important;
@@ -225,10 +206,6 @@ export default function QuoteDetail() {
                         }
                         .printable-document .text-xs {
                             font-size: 12px !important;
-                        }
-                        .printable-document .avoid-break {
-                            break-inside: avoid !important;
-                            page-break-inside: avoid !important;
                         }
                         .no-print {
                             display: none !important;
@@ -276,7 +253,7 @@ export default function QuoteDetail() {
             <PrintableDocument title="Price Quote" logoUrl={quote?.image_url || undefined}>
                 <div className="space-y-6">
                     {/* Header Info */}
-                    <div className="grid md:grid-cols-2 gap-2 pb-2 border-b">
+                    <div className="grid md:grid-cols-2 gap-6 pb-6 border-b">
                         <div>
                             <div className="text-sm text-gray-500 mb-1">Quote Number</div>
                             <div className="font-bold text-lg">{quote.quote_number}</div>
@@ -285,7 +262,12 @@ export default function QuoteDetail() {
                             <div className="text-sm text-gray-500 mb-1">Date</div>
                             <div className="font-semibold">{new Date().toLocaleDateString()}</div>
                         </div>
-
+                        <div>
+                            <div className="text-sm text-gray-500 mb-1">Status</div>
+                            <Badge className={getStatusColor(quote.status)}>
+                                {quote.status.charAt(0).toUpperCase() + quote.status.slice(1)}
+                            </Badge>
+                        </div>
                         {quote.patient_name && (
                             <div>
                                 <div className="text-sm text-gray-500 mb-1">Patient Name</div>
@@ -345,7 +327,7 @@ export default function QuoteDetail() {
                     </div>
 
                     {/* Totals */}
-                    <div className="flex justify-end avoid-break">
+                    <div className="flex justify-end">
                         <div className="w-64 space-y-2">
                             {quote.show_totals !== false && (
                                 <div className="flex justify-between pb-2">
@@ -384,16 +366,8 @@ export default function QuoteDetail() {
                     <div className="text-sm text-gray-500 border-t pt-4 mt-8">
                         <p>This quote is valid for 30 days from the date of issue.</p>
                         <p className="mt-2">Payment is due at the time of service unless other arrangements have been made.</p>
-                        <p className="mt-3 font-semibold text-gray-700">Cherry Financing and Care Credit Available</p>
-                        <div className="flex justify-center mt-6">
-                            <img
-                                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/b101b52c2_CHCPaymentOptions.png"
-                                alt="Scan for payment options"
-                                className="quote-qr"
-                                style={{ height: '1.75in' }}
-                            />
-                        </div>
-                        </div>
+                        <p className="mt-3 font-semibold text-gray-700">Cherry Financing and CareCredit Available</p>
+                    </div>
                 </div>
             </PrintableDocument>
 
