@@ -128,7 +128,7 @@ export default function QuoteDetail() {
                 {`
                     @media print {
                         @page {
-                            margin: 0.3cm;
+                            margin: 0.5in;
                         }
                         body * {
                             visibility: hidden;
