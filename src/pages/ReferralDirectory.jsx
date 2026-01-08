@@ -44,6 +44,12 @@ export default function ReferralDirectory() {
     return Object.entries(bySpec).sort((a,b) => a[0].localeCompare(b[0]));
   }, [referrals]);
 
+  const slugify = (str) => (str || 'other').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const scrollToSpecialty = (spec) => {
+    const el = document.getElementById(`spec-${slugify(spec)}`);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   const handleSave = async (form) => {
     if (editing) {
       await updateMutation.mutateAsync({ id: editing.id, data: form });
@@ -127,7 +133,7 @@ export default function ReferralDirectory() {
       ) : (
         <div className="space-y-10">
           {groups.map(([specialty, items]) => (
-            <div key={specialty}>
+            <div key={specialty} id={`spec-${slugify(specialty)}`}>
               <h2 className="text-xl font-semibold text-gray-900 mb-3">{specialty}</h2>
               <Separator className="mb-4" />
               <div className="grid gap-3">
