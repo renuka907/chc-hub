@@ -99,12 +99,12 @@ export const ROLE_LABELS = {
     admin: 'Admin',
     manager: 'Manager',
     staff: 'Staff',
-    read_only: 'Read-Only'
+    read_only: 'Viewer'
 };
 
 export const ROLE_DESCRIPTIONS = {
     admin: 'Full access to all features and user management',
     manager: 'Can manage content and forms, view discounts and users',
     staff: 'Can create and edit forms, limited delete permissions',
-    read_only: 'View-only access to forms and content'
+    read_only: 'View-only access (inventory levels only)'
 };
