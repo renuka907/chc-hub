@@ -329,10 +329,14 @@ export default function QuoteDetail() {
                     {/* Totals */}
                     <div className="flex justify-end">
                         <div className="w-64 space-y-2">
-                            <div className="flex justify-between pb-2">
-                                <span>Subtotal:</span>
-                                <span className="font-semibold">${quote.subtotal.toFixed(2)}</span>
-                            </div>
+                            {quote.show_totals !== false && (
+                                {quote.show_totals !== false && (
+                                    <div className="flex justify-between pb-2">
+                                        <span>Subtotal:</span>
+                                        <span className="font-semibold">${quote.subtotal.toFixed(2)}</span>
+                                    </div>
+                                )}
+                            )}
                             {quote.discount_amount > 0 && appliedDiscount && (
                                 <div className="flex justify-between pb-2 text-green-600">
                                     <span>Discount ({appliedDiscount.name}):</span>
