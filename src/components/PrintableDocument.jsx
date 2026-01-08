@@ -120,6 +120,8 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                     @media print {
                         body * {
                             visibility: hidden;
+                            height: 0 !important;
+                            overflow: hidden !important;
                         }
                         .printable-document, .printable-document * {
                             visibility: visible;

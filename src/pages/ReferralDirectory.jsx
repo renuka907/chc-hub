@@ -68,7 +68,7 @@ export default function ReferralDirectory() {
   }, [printRecord]);
 
   return (
-    <div className="min-h-screen no-print">
+    <div className="min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Referral Directory</h1>
@@ -162,7 +162,7 @@ export default function ReferralDirectory() {
       />
 
       {printRecord && (
-        <div className="absolute -left-[9999px] top-0">
+        <div className="fixed inset-0 pointer-events-none">
           <PrintableDocument title="Referral Record">
             <div className="space-y-2 text-base">
               <div className="text-xl font-bold">{printRecord.doctor_name}</div>

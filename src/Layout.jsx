@@ -148,7 +148,7 @@ export default function Layout({ children, currentPageName }) {
             </style>
             
             {/* Header */}
-            <header className="bg-white/80 backdrop-blur-md border-b border-purple-200/50 sticky top-0 z-50 shadow-sm">
+            <header className="no-print bg-white/80 backdrop-blur-md border-b border-purple-200/50 sticky top-0 z-50 shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-20">
                         {/* Logo */}
@@ -346,7 +346,7 @@ export default function Layout({ children, currentPageName }) {
             </main>
 
             {/* Footer */}
-            <footer className="bg-white/80 backdrop-blur-md border-t border-purple-200/50 mt-20">
+            <footer className="no-print bg-white/80 backdrop-blur-md border-t border-purple-200/50 mt-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     <div className="text-center text-sm text-gray-600">
                         <div className="flex items-center justify-center space-x-2 mb-2">
