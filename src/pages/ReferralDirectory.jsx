@@ -162,7 +162,13 @@ export default function ReferralDirectory() {
       />
 
       {printRecord && (
-        <div className="fixed inset-0 pointer-events-none">
+        <div id="referral-print-root" className="fixed inset-0">
+          <style>{`
+            @media print {
+              body > *:not(#referral-print-root) { display: none !important; }
+              #referral-print-root { position: static !important; display: block !important; }
+            }
+          `}</style>
           <PrintableDocument title="Referral Record" onePage showLogo={false}>
             <div className="space-y-2 text-base">
               <div className="text-xl font-bold">{printRecord.doctor_name}</div>
