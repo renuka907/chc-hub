@@ -118,7 +118,9 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                     }
 
                     @media print {
+                        body * { visibility: hidden !important; }
                         .no-print { display: none !important; }
+                        .printable-document, .printable-document * { visibility: visible !important; }
                         .printable-document {
                             position: fixed;
                             inset: 0;
