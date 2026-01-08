@@ -174,29 +174,21 @@ export default function QuoteDetail() {
                             padding: 4px 6px !important;
                             line-height: 1.4 !important;
                         }
-                        /* Add row dividers only between body rows, not after the last */
+                        /* Row dividers only between body rows, not after the last */
                         .printable-document table thead th {
                             border-bottom: 1.5px solid #333 !important;
                         }
-                        .printable-document table tbody td {
+                        .printable-document table tbody tr:not(:last-child) td {
                             border-bottom: 1.5px solid #333 !important;
                         }
-                        .printable-document table tbody tr:last-child td {
-                            border-bottom: none !important;
-                        }
+                        .printable-document .border-b { border-bottom: 0 !important; }
                         .printable-document table thead tr {
                             background-color: #e5e7eb !important;
                         }
                         .printable-document table tbody tr:nth-child(even) {
                             background-color: #f9fafb !important;
                         }
-                        /* Remove trailing border after last item and row-level borders in print */
-                        .printable-document table tbody tr {
-                            border-bottom: none !important;
-                        }
-                        .printable-document table tbody tr:last-child td {
-                            border-bottom: none !important;
-                        }
+                        /* Row borders handled above via :not(:last-child); removed redundant overrides */
                         .printable-document .text-xl {
                             font-size: 18px !important;
                         }
