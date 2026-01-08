@@ -285,7 +285,7 @@ export default function QuoteDetail() {
                             <div className="font-bold text-lg">{quote.quote_number}</div>
                         </div>
                         <div>
-                            <div className="text-sm text-gray-500 mb-1">Date</div>
+                            <div className="text-sm text-gray-500 mb-1 text-right">Date</div>
                             <div className="font-semibold text-right">{new Date().toLocaleDateString()}</div>
                         </div>
 
