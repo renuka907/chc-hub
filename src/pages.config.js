@@ -19,9 +19,9 @@ import ProcedureDetail from './pages/ProcedureDetail';
 import ProceduresManagement from './pages/ProceduresManagement';
 import QuoteDetail from './pages/QuoteDetail';
 import QuotesManagement from './pages/QuotesManagement';
+import ReferralDirectory from './pages/ReferralDirectory';
 import UserManagement from './pages/UserManagement';
 import ViewSharedForm from './pages/ViewSharedForm';
-import ReferralDirectory from './pages/ReferralDirectory';
 import __Layout from './Layout.jsx';
 
 
@@ -47,9 +47,9 @@ export const PAGES = {
     "ProceduresManagement": ProceduresManagement,
     "QuoteDetail": QuoteDetail,
     "QuotesManagement": QuotesManagement,
+    "ReferralDirectory": ReferralDirectory,
     "UserManagement": UserManagement,
     "ViewSharedForm": ViewSharedForm,
-    "ReferralDirectory": ReferralDirectory,
 }
 
 export const pagesConfig = {
