@@ -139,18 +139,20 @@ export default function QuoteDetail() {
                             color: #000 !important;
                         }
                         .printable-document {
-                            position: absolute !important;
-                            left: 0 !important;
-                            top: 0 !important;
-                            width: 100%;
-                            padding: 5px !important;
-                            font-size: 15px !important;
-                            line-height: 1.5 !important;
-                        }
+                                position: absolute !important;
+                                left: 0 !important;
+                                top: 0 !important;
+                                width: 100%;
+                                padding: 0.5in !important;
+                                font-size: 15px !important;
+                                line-height: 1.5 !important;
+                            }
                         .printable-document h1 {
-                            font-size: 20px !important;
-                            margin-bottom: 4px !important;
-                        }
+                                font-size: 20px !important;
+                                margin-bottom: 4px !important;
+                                padding-bottom: 4px !important;
+                                border-bottom: 1px solid #333 !important;
+                            }
                         .printable-document h3 {
                             font-size: 16px !important;
                             margin-bottom: 4px !important;
