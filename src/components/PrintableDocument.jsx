@@ -2,7 +2,7 @@ import React from "react";
 
 export default function PrintableDocument({ title, children, showLogo = true, logoUrl = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png", onePage = false }) {
   return (
-    <div className={`${onePage ? 'one-page ' : ''}printable-document w-full max-w-[8.5in] mx-auto bg-white p-8 border-2 border-black`} style={{ fontFamily: 'Times New Roman, serif' }}>
+    <div className={`${onePage ? 'one-page ' : ''}printable-document w-full max-w-[8.5in] mx-auto bg-white p-8`} style={{ fontFamily: 'Times New Roman, serif' }}>
             <style>
                 {`
                     @page {
@@ -122,15 +122,14 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                         .no-print { display: none !important; }
                         .printable-document, .printable-document * { visibility: visible !important; }
                         .printable-document {
-                            position: fixed;
-                            inset: 0;
-                            width: 100%;
-                            background: white;
-                            padding: 0.5in;
-                            border: 2px solid black;
-                            max-width: 100%;
-                            z-index: 9999;
-                        }
+                                                          position: fixed;
+                                                          inset: 0;
+                                                          width: 100%;
+                                                          background: white;
+                                                          padding: 0.5in;
+                                                          max-width: 100%;
+                                                          z-index: 9999;
+                                                      }
                         .print-page-break { page-break-before: always; }
                         .printable-document.one-page {
                             max-height: 100vh;
