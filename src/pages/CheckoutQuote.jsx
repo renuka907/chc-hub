@@ -285,8 +285,12 @@ export default function CheckoutQuote() {
                         .printable-quote table tbody td {
                             border-bottom: 1.5px solid #333 !important;
                         }
-                        .printable-quote table tbody tr:last-child td {
+                        .printable-quote table tbody tr:last-child td,
+                        .printable-quote table tbody tr:last-of-type td {
                             border-bottom: none !important;
+                        }
+                        .printable-quote .border-b {
+                            border-bottom: 0 !important;
                         }
                         .printable-quote table thead tr {
                             background-color: #e5e7eb !important;
