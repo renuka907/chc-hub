@@ -181,6 +181,13 @@ export default function QuoteDetail() {
                         .printable-document table tbody tr:nth-child(even) {
                             background-color: #f9fafb !important;
                         }
+                        /* Remove trailing border after last item and row-level borders in print */
+                        .printable-document table tbody tr {
+                            border-bottom: none !important;
+                        }
+                        .printable-document table tbody tr:last-child td {
+                            border-bottom: none !important;
+                        }
                         .printable-document .text-xl {
                             font-size: 18px !important;
                         }
