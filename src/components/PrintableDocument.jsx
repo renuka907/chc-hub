@@ -1,8 +1,8 @@
 import React from "react";
 
 export default function PrintableDocument({ title, children, showLogo = true, logoUrl = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png", onePage = false }) {
-    return (
-        <div className={`${onePage ? 'one-page ' : ''}printable-document w-full max-w-[8.5in] mx-auto bg-white p-8 border-2 border-black`} style={{fontFamily: 'Times New Roman, serif'}}>
+  return (
+    <div className={`${onePage ? 'one-page ' : ''}printable-document w-full max-w-[8.5in] mx-auto bg-white p-8 border-2 border-black`} style={{ fontFamily: 'Times New Roman, serif' }}>
             <style>
                 {`
                     @page {
@@ -161,33 +161,33 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
 
             {/* Yellow Logo at top */}
             <div className="mb-4 text-center">
-                <img 
-                    src={logoUrl}
-                    alt="Logo"
-                    className="h-16 mx-auto"
-                    loading="eager"
-                    decoding="sync"
-                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                />
+                <img
+          src={logoUrl}
+          alt="Logo"
+          className="h-16 mx-auto"
+          loading="eager"
+          decoding="sync"
+          onError={(e) => {e.currentTarget.style.display = 'none';}} />
+
             </div>
 
             {/* Header with contact info */}
-            {showLogo && (
-                <div className="mb-6 pb-3 border-b border-gray-400 text-center">
+            {showLogo &&
+      <div className="mb-6 pb-3 border-b border-gray-400 text-center">
                     <div className="text-xs text-gray-800 leading-relaxed">
                         <div className="font-semibold">6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
                         <div className="mt-0.5">Phone: 239-561-9191 | Fax: 239-561-9188</div>
                         <div className="mt-0.5">contemporaryhealthcenter.com</div>
                     </div>
                 </div>
-            )}
+      }
 
             {/* Title */}
-            {title && (
-                <h1 className="text-xl font-bold text-gray-900 mb-4 text-center uppercase tracking-wide border-b pb-2">
+            {title &&
+      <h1 className="text-gray-900 text-lg font-bold text-center uppercase tracking-wide border-b">
                     {title}
                 </h1>
-            )}
+      }
 
             {/* Content */}
             <div className="text-gray-900">
@@ -199,6 +199,6 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                 <p className="font-medium">Contemporary Health Center | Phone: 239-561-9191 | Email: office@contemporaryhealthcenter.com</p>
                 <p className="mt-0.5">Document Generated: {new Date().toLocaleDateString()}</p>
             </div>
-        </div>
-    );
+        </div>);
+
 }
