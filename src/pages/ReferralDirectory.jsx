@@ -4,7 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Plus, Pencil, Printer, Phone, MapPin, Building2 } from "lucide-react";
+import { Plus, Pencil, Printer, Phone, MapPin, Building2, Trash2 } from "lucide-react";
 import PrintableDocument from "../components/PrintableDocument";
 import ReferralForm from "../components/referrals/ReferralForm";
 
@@ -26,6 +26,11 @@ export default function ReferralDirectory() {
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.Referral.update(id, data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['referrals'] })
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.Referral.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['referrals'] })
   });
 
@@ -106,6 +111,17 @@ export default function ReferralDirectory() {
                       </Button>
                       <Button variant="outline" onClick={() => setPrintRecord(r)} className="gap-2">
                         <Printer className="w-4 h-4" /> Print
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          if (window.confirm('Delete this referral? This cannot be undone.')) {
+                            deleteMutation.mutate(r.id);
+                          }
+                        }}
+                        className="gap-2 text-red-600 border-red-200 hover:bg-red-50"
+                      >
+                        <Trash2 className="w-4 h-4" /> Delete
                       </Button>
                     </div>
                   </div>
