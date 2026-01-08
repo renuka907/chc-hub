@@ -183,7 +183,7 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
 
             {/* Title */}
             {title &&
-      <h1 className="text-gray-900 text-lg font-bold text-center uppercase tracking-wide border-b">
+      <h1 className="text-gray-900 text-lg font-bold text-center uppercase tracking-wide border border-black">
                     {title}
                 </h1>
       }
