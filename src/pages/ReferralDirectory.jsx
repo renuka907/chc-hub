@@ -87,6 +87,14 @@ export default function ReferralDirectory() {
   };
 
   React.useEffect(() => {
+    if (!isLoading && referrals.length === 0 && !localStorage.getItem('referrals_seeded_v1')) {
+      handleBulkAdd().then(() => {
+        localStorage.setItem('referrals_seeded_v1', '1');
+      });
+    }
+  }, [isLoading, referrals]);
+
+  React.useEffect(() => {
     if (!printRecord) return;
     const t = setTimeout(() => {
       window.print();
