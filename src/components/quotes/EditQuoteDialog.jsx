@@ -383,12 +383,10 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
                                 {selectedItems.length > 0 && (
                                     <div className="border-t pt-4 space-y-2">
                                         {showTotals && (
-                                            {showTotals && (
-                                                <div className="flex justify-between text-base">
-                                                    <span>Subtotal:</span>
-                                                    <span className="font-semibold">${calculateSubtotal().toFixed(2)}</span>
-                                                </div>
-                                            )}
+                                            <div className="flex justify-between text-base">
+                                                <span>Subtotal:</span>
+                                                <span className="font-semibold">${calculateSubtotal().toFixed(2)}</span>
+                                            </div>
                                         )}
                                         {selectedDiscountId && calculateDiscountAmount() > 0 && (
                                             <div className="flex justify-between text-base text-green-600">
