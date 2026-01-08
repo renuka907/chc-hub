@@ -274,7 +274,15 @@ export default function CheckoutQuote() {
                         .printable-quote table td {
                             padding: 4px 6px !important;
                             line-height: 1.4 !important;
+                        }
+                        .printable-quote table thead th {
                             border-bottom: 1.5px solid #333 !important;
+                        }
+                        .printable-quote table tbody td {
+                            border-bottom: 1.5px solid #333 !important;
+                        }
+                        .printable-quote table tbody tr:last-child td {
+                            border-bottom: none !important;
                         }
                         .printable-quote table thead tr {
                             background-color: #e5e7eb !important;
