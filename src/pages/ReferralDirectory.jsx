@@ -4,7 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Plus, Pencil, Printer, Phone, MapPin, Building2, Trash2 } from "lucide-react";
+import { Plus, Pencil, Printer, Phone, MapPin, Building2 } from "lucide-react";
 import PrintableDocument from "../components/PrintableDocument";
 import ReferralForm from "../components/referrals/ReferralForm";
 
@@ -49,33 +49,7 @@ export default function ReferralDirectory() {
     setEditing(null);
   };
 
-  const handleDeleteDuplicates = async () => {
-    if (!referrals?.length) return;
-    if (!window.confirm('Delete duplicate providers? This cannot be undone.')) return;
-    const norm = (s) => (s || '').toString().trim().toLowerCase().replace(/\s+/g, ' ');
-    const digits = (s) => (s || '').replace(/\D+/g, '');
-    const groupsMap = new Map();
-    referrals.forEach(r => {
-      const key = `${norm(r.doctor_name)}|${norm(r.office_name)}|${digits(r.phone)}`;
-      const arr = groupsMap.get(key) || [];
-      arr.push(r);
-      groupsMap.set(key, arr);
-    });
-    const toDelete = [];
-    groupsMap.forEach(arr => {
-      if (arr.length > 1) {
-        arr.sort((a,b) => new Date(b.updated_date || b.created_date) - new Date(a.updated_date || a.created_date));
-        for (let i = 1; i < arr.length; i++) toDelete.push(arr[i].id);
-      }
-    });
-    if (toDelete.length === 0) {
-      alert('No duplicates found.');
-      return;
-    }
-    await Promise.all(toDelete.map(id => base44.entities.Referral.delete(id)));
-    queryClient.invalidateQueries({ queryKey: ['referrals'] });
-    alert(`Deleted ${toDelete.length} duplicate${toDelete.length > 1 ? 's' : ''}.`);
-  };
+
 
   React.useEffect(() => {
     if (!printRecord) return;
@@ -93,14 +67,9 @@ export default function ReferralDirectory() {
           <h1 className="text-3xl font-bold text-gray-900">Referral Directory</h1>
           <p className="text-gray-600">Referring doctors and practices grouped by specialty</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={handleDeleteDuplicates} className="gap-2">
-            <Trash2 className="w-4 h-4" /> Delete Duplicates
-          </Button>
-          <Button onClick={() => { setEditing(null); setOpenForm(true); }} className="bg-purple-600 hover:bg-purple-700">
-            <Plus className="w-4 h-4 mr-2" /> Add Referral
-          </Button>
-        </div>
+        <Button onClick={() => { setEditing(null); setOpenForm(true); }} className="bg-purple-600 hover:bg-purple-700">
+          <Plus className="w-4 h-4 mr-2" /> Add Referral
+        </Button>
       </div>
 
       {isLoading ? (
