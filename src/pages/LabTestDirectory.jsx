@@ -10,6 +10,12 @@ import { usePermissions } from "../components/permissions/usePermissions";
 import { Search, Loader2, TestTube, Star, ExternalLink, Plus, AlertCircle, RefreshCw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
+// Ensure QuantiFERON/TB Gold tests always display the correct tube (module scope)
+function enforceQuantiFeronTube(tubeType, testName) {
+  const name = (testName || '').toLowerCase();
+  return /quantiferon|tb gold/.test(name) ? 'Green-top Lithium Heparin' : (tubeType || '');
+}
+
 export default function LabTestDirectory() {
     const [searchQuery, setSearchQuery] = useState("");
     const [isSearching, setIsSearching] = useState(false);
@@ -249,12 +255,6 @@ Only return found: false if you truly cannot identify what test they're asking a
         return "bg-gray-100 text-gray-800";
     };
 
-    // Ensure QuantiFERON/TB Gold tests always display the correct tube
-    const enforceQuantiFeronTube = (tubeType, testName) => {
-        const name = (testName || '').toLowerCase();
-        if (/quantiferon|tb gold/.test(name)) return 'Green-top Lithium Heparin';
-        return tubeType;
-    };
 
     const filteredTests = savedTests.filter(test =>
         test.test_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
