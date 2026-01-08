@@ -183,6 +183,11 @@ export default function QuoteDetail() {
                         .printable-document img {
                             max-height: 50px !important;
                         }
+                        .printable-document img.quote-qr {
+                            max-height: none !important;
+                            height: 1.75in !important;
+                            width: auto !important;
+                        }
                         .printable-document .pb-6 {
                             padding-bottom: 4px !important;
                         }
@@ -361,6 +366,16 @@ export default function QuoteDetail() {
                             <div className="text-gray-700 whitespace-pre-wrap">{quote.notes}</div>
                         </div>
                     )}
+
+                    {/* Payment QR */}
+                    <div className="pt-6 mt-6 border-t flex flex-col items-center">
+                        <img
+                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/b101b52c2_CHCPaymentOptions.png"
+                            alt="Scan for payment options"
+                            className="quote-qr"
+                            style={{ height: '1.75in' }}
+                        />
+                    </div>
 
                     {/* Footer */}
                     <div className="text-sm text-gray-500 border-t pt-4 mt-8">
