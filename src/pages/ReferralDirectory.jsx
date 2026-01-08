@@ -29,6 +29,11 @@ export default function ReferralDirectory() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['referrals'] })
   });
 
+  const bulkCreateMutation = useMutation({
+    mutationFn: (records) => base44.entities.Referral.bulkCreate(records),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['referrals'] })
+  });
+
   const groups = React.useMemo(() => {
     const bySpec = referrals.reduce((acc, r) => {
       const key = (r.specialty || 'Other').trim() || 'Other';
@@ -49,6 +54,38 @@ export default function ReferralDirectory() {
     setEditing(null);
   };
 
+  const handleBulkAdd = async () => {
+    const records = [
+      { doctor_name: "Dr. Robert Brueck", specialty: "Medical Marijuana Card", office_name: "Emerald Medical Center", address: "6842 International Center Blvd, Fort Myers, FL 33912", phone: "(239) 939-5233" },
+      { doctor_name: "Dr. Hilany Sojdak", specialty: "Psychiatry", office_name: "Psychiatric Associates of Southwest Florida", address: "6800 Porto Fino Cir, Fort Myers, FL 33912", phone: "(239) 332-4700" },
+      { doctor_name: "Dr. Samith Sandadi", specialty: "GYN Oncology", office_name: "Genesis Care", address: "8931 Colonial Center Dr, Fort Myers, FL 33905", phone: "(239) 319-3714" },
+      { doctor_name: "Dr. Patricia Sarch", specialty: "Endocrinology", office_name: "Endocrine and Diabetes Care", address: "12559 New Brittany Blvd, Fort Myers, FL 33907", phone: "(239) 333-2580" },
+      { doctor_name: "Brian Feiock, MD", specialty: "GI", office_name: "Gastroenterology Associates of S.W. Florida - Fort Myers", address: "4790 Barkley Cir, Fort Myers, FL 33907", phone: "(239) 275-8882" },
+      { doctor_name: "Dr. Stephen J. Laquis", specialty: "Ophthalmologist/Oculofacial Plastic and Reconstructive Surgeon", office_name: "Laquis Ophthalmic Plastic and Orbital Surgery", address: "7331 College Pkwy, Fort Myers, FL 33907", phone: "(239) 947-4042" },
+      { doctor_name: "Dr. Kevin Lam", specialty: "Podiatry (NAPLES)", office_name: "Dr. Kevin Lam: Family Foot & Leg Center, PA", address: "730 Goodlette–Frank Rd Suite 102, Naples, FL 34102", phone: "(239) 430-3668" },
+      { doctor_name: "Dr. Joseph Magnant", specialty: "Vascular Surgeon", office_name: "Vein Specialists", address: "1500 Royal Palm Square Blvd #105, Fort Myers, FL 33919", phone: "(239) 694-8346" },
+      { doctor_name: "Dr. Ricardo Novoa", specialty: "PCP", office_name: "Millenium Physician Group", address: "13440 Parker Commons Blvd #101, Fort Myers, FL 33912", phone: "(239) 432-9383" },
+      { doctor_name: "Dr. Athan Drimoussis", specialty: "Endocrinology", office_name: "Millenium Physician Group", address: "8380 Riverwalk Park Blvd #200, Fort Myers, FL 33919", phone: "(239) 600-7808" },
+      { doctor_name: "Dr. Joseph Kandel", specialty: "Neurology", office_name: "Neurology Office: Joseph Kandel MD & Associates", address: "7250 College Pkwy #3, Fort Myers, FL 33907", phone: "(239) 231-1415" },
+      { doctor_name: "Dr. Anais Aurora Badia, MD", specialty: "Dermatology", office_name: "Advanced Dermatology and Cosmetic Surgery", address: "13691 Metropolis Ave, Fort Myers, FL 33912", phone: "(239) 561-3376" },
+      { doctor_name: "Dr. Shari Skinner", specialty: "Dermatology", office_name: "Associates in Dermatology", address: "8381 Riverwalk Park Blvd, Suite 101, Fort Myers, FL 33919", phone: "(239) 936-5425" },
+      { doctor_name: "Dr. Mark Farmer & Dr. Jeffery Kleinman", specialty: "Orthopedics", office_name: "Orthopedic Center of Florida", address: "12670 Creekside Ln #202, Fort Myers, FL 33919", phone: "(239) 482-2663" },
+      { doctor_name: "Dr. Peter Jaffe", specialty: "Physiatrist (NAPLES)", office_name: "Jaffe Sports Medicine", address: "1865 Veterans Park Dr #101, Naples, FL 34109", phone: "(239) 465-0527" },
+      { doctor_name: "Dr. Evelyn R. Kessel, MD, FACP", specialty: "GI", office_name: "Gastro Health", address: "7152 Coca Sabal Ln, Fort Myers, FL 33908", phone: "(239) 939-9939" },
+      { doctor_name: "Dr. Salvatore Lacagnina", specialty: "PCP - Concierge", office_name: "Dr. Sal Concierge Lifestyle Medicine", address: "9371 Cypress Lake Dr Suite 14, Fort Myers, FL 33919", phone: "(239) 989-9922" },
+      { doctor_name: "Dr. Audrey Farahmand", specialty: "Plastic Surgery", office_name: "Farahmand Plastic Surgery", address: "12411 Brantley Commons Ct, Fort Myers, FL 33907", phone: "(239) 332-2388" },
+      { doctor_name: "Dr. Ralph Garramone", specialty: "Plastic Surgery", office_name: "Garramone Plastic Surgery", address: "12998 S Cleveland Ave, Fort Myers, FL 33907", phone: "(239) 445-0591" },
+      { doctor_name: "Dr. Michael Weiss, MD", specialty: "GI", office_name: "Gastroenterology Associates of S.W. Florida - Fort Myers", address: "4790 Barkley Cir Ste A, Fort Myers, FL 33907", phone: "(239) 275-8882" },
+      { doctor_name: "Dr. Anthony J. Anfuso, M.D.", specialty: "ENT/Otolaryngologist", office_name: "Precision HealthCare Specialists", address: "13691 Metro Pkwy #300, Fort Myers, FL 33912", phone: "(239) 291-6970" },
+      { doctor_name: "Dr. Robert Allen", specialty: "Psychology/Mental Health", office_name: "Elite DNA Behavioral Health", address: "4310 Metro Pkwy Ste 205, Fort Myers, FL 33916", phone: "(239) 690-6906" },
+      { doctor_name: "Dr. Carolyn Langford", specialty: "GU", office_name: "Urologic Solutions", address: "9400 Gladiolus Dr Ste 30, Fort Myers, FL 33908", phone: "(239) 221-0992" },
+      { doctor_name: "Dr. Paul Liccini", specialty: "Cardiac", office_name: "Cardiology – Heart Institute at Bass Road (Lee Health)", address: "16261 Bass Rd Suite 300, Fort Myers, FL 33908", phone: "(239) 343-6410" },
+      { doctor_name: "Kenneth M. Towe, MD, FACC", specialty: "Cardiac", office_name: "Florida Heart Associates", address: "1550 Barkley Cir, Fort Myers, FL 33907", phone: "(239) 938-2000" }
+    ];
+
+    await bulkCreateMutation.mutateAsync(records);
+  };
+
   React.useEffect(() => {
     if (!printRecord) return;
     const t = setTimeout(() => {
@@ -65,9 +102,14 @@ export default function ReferralDirectory() {
           <h1 className="text-3xl font-bold text-gray-900">Referral Directory</h1>
           <p className="text-gray-600">Referring doctors and practices grouped by specialty</p>
         </div>
-        <Button onClick={() => { setEditing(null); setOpenForm(true); }} className="bg-purple-600 hover:bg-purple-700">
-          <Plus className="w-4 h-4 mr-2" /> Add Referral
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={() => { setEditing(null); setOpenForm(true); }} className="bg-purple-600 hover:bg-purple-700">
+            <Plus className="w-4 h-4 mr-2" /> Add Referral
+          </Button>
+          <Button variant="outline" onClick={handleBulkAdd} disabled={bulkCreateMutation.isPending}>
+            Quick Add Provided List
+          </Button>
+        </div>
       </div>
 
       {isLoading ? (
