@@ -48,13 +48,41 @@ export default function CheckoutQuote() {
         onSuccess: (data) => {
             queryClient.invalidateQueries(['quotes']);
             setSavedQuote(data);
-            setTimeout(() => {
+            setTimeout(async () => {
+                await waitForImages('.printable-quote');
                 window.print();
             }, 100);
         },
     });
 
     const selectedLocation = locations.find(loc => loc.id === selectedLocationId);
+
+    // Ensure images (like the logo) are loaded before triggering print
+    const waitForImages = (containerSelector = '.printable-quote', timeoutMs = 3000) => {
+        const container = document.querySelector(containerSelector);
+        if (!container) return Promise.resolve();
+        const imgs = Array.from(container.querySelectorAll('img'));
+        const pending = imgs.filter((img) => !img.complete || img.naturalWidth === 0);
+        if (pending.length === 0) return Promise.resolve();
+        return new Promise((resolve) => {
+            let done = false;
+            const finish = () => { if (!done) { done = true; resolve(); } };
+            const timer = setTimeout(finish, timeoutMs);
+            let remaining = pending.length;
+            pending.forEach((img) => {
+                const onEvent = () => {
+                    img.removeEventListener('load', onEvent);
+                    img.removeEventListener('error', onEvent);
+                    if (--remaining === 0) {
+                        clearTimeout(timer);
+                        finish();
+                    }
+                };
+                img.addEventListener('load', onEvent);
+                img.addEventListener('error', onEvent);
+            });
+        });
+    };
 
     // Get unique categories
     const availableCategories = React.useMemo(() => {
