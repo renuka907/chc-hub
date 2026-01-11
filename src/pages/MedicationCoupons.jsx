@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PrintableDocument from "../components/PrintableDocument";
-import { Printer, Plus, Trash2, Pill } from "lucide-react";
+import { Printer, Plus, Trash2, Pill, ExternalLink } from "lucide-react";
 
 export default function MedicationCoupons() {
     const [patientName, setPatientName] = useState("");
@@ -36,6 +36,11 @@ export default function MedicationCoupons() {
             window.print();
             setTimeout(() => setIsPrinting(false), 500);
         }, 100);
+    };
+
+    const openGoodRx = (medName) => {
+        const searchTerm = encodeURIComponent(medName);
+        window.open(`https://www.goodrx.com/${searchTerm}`, '_blank');
     };
 
     return (
@@ -143,7 +148,7 @@ export default function MedicationCoupons() {
             {/* Header */}
             <div className="no-print">
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">Medication Discount Coupons</h1>
-                <p className="text-gray-600">Generate printable discount coupons for patient medications</p>
+                <p className="text-gray-600">Search GoodRx for real medication prices and coupons</p>
             </div>
 
             {/* Input Form */}
@@ -217,14 +222,25 @@ export default function MedicationCoupons() {
                                     </Select>
                                 </div>
 
-                                <Button
-                                    onClick={addMedication}
-                                    disabled={!currentMed.name}
-                                    className="w-full bg-blue-600 hover:bg-blue-700"
-                                >
-                                    <Plus className="w-4 h-4 mr-2" />
-                                    Add Medication
-                                </Button>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <Button
+                                        onClick={addMedication}
+                                        disabled={!currentMed.name}
+                                        className="bg-blue-600 hover:bg-blue-700"
+                                    >
+                                        <Plus className="w-4 h-4 mr-2" />
+                                        Add to List
+                                    </Button>
+                                    <Button
+                                        onClick={() => openGoodRx(currentMed.name)}
+                                        disabled={!currentMed.name}
+                                        variant="outline"
+                                        className="border-2 border-orange-500 text-orange-700 hover:bg-orange-50"
+                                    >
+                                        <ExternalLink className="w-4 h-4 mr-2" />
+                                        Search GoodRx
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </CardContent>
@@ -247,7 +263,7 @@ export default function MedicationCoupons() {
                                     <Card key={med.id} className="bg-gradient-to-r from-blue-50 to-purple-50 border-2">
                                         <CardContent className="p-4">
                                             <div className="flex items-start justify-between">
-                                                <div className="flex-1">
+                                                                <div className="flex-1">
                                                     <div className="font-bold text-lg text-gray-900">{med.name}</div>
                                                     {med.dosage && (
                                                         <div className="text-sm text-gray-600 mt-1">Dosage: {med.dosage}</div>
@@ -258,6 +274,15 @@ export default function MedicationCoupons() {
                                                     <div className="text-lg font-bold text-green-600 mt-2">
                                                         {med.discount}% OFF
                                                     </div>
+                                                    <Button
+                                                        onClick={() => openGoodRx(med.name)}
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="mt-2 border-orange-500 text-orange-700 hover:bg-orange-50"
+                                                    >
+                                                        <ExternalLink className="w-3 h-3 mr-1" />
+                                                        View on GoodRx
+                                                    </Button>
                                                 </div>
                                                 <Button
                                                     variant="ghost"

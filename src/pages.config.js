@@ -13,6 +13,7 @@ import FormTemplates from './pages/FormTemplates';
 import Home from './pages/Home';
 import InventoryManagement from './pages/InventoryManagement';
 import LabTestDirectory from './pages/LabTestDirectory';
+import MedicationCoupons from './pages/MedicationCoupons';
 import Messaging from './pages/Messaging';
 import PricingManagement from './pages/PricingManagement';
 import ProcedureDetail from './pages/ProcedureDetail';
@@ -22,7 +23,6 @@ import QuotesManagement from './pages/QuotesManagement';
 import ReferralDirectory from './pages/ReferralDirectory';
 import UserManagement from './pages/UserManagement';
 import ViewSharedForm from './pages/ViewSharedForm';
-import MedicationCoupons from './pages/MedicationCoupons';
 import __Layout from './Layout.jsx';
 
 
@@ -42,6 +42,7 @@ export const PAGES = {
     "Home": Home,
     "InventoryManagement": InventoryManagement,
     "LabTestDirectory": LabTestDirectory,
+    "MedicationCoupons": MedicationCoupons,
     "Messaging": Messaging,
     "PricingManagement": PricingManagement,
     "ProcedureDetail": ProcedureDetail,
@@ -51,7 +52,6 @@ export const PAGES = {
     "ReferralDirectory": ReferralDirectory,
     "UserManagement": UserManagement,
     "ViewSharedForm": ViewSharedForm,
-    "MedicationCoupons": MedicationCoupons,
 }
 
 export const pagesConfig = {
