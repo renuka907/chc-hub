@@ -22,6 +22,7 @@ import QuotesManagement from './pages/QuotesManagement';
 import ReferralDirectory from './pages/ReferralDirectory';
 import UserManagement from './pages/UserManagement';
 import ViewSharedForm from './pages/ViewSharedForm';
+import MedicationCoupons from './pages/MedicationCoupons';
 import __Layout from './Layout.jsx';
 
 
@@ -50,6 +51,7 @@ export const PAGES = {
     "ReferralDirectory": ReferralDirectory,
     "UserManagement": UserManagement,
     "ViewSharedForm": ViewSharedForm,
+    "MedicationCoupons": MedicationCoupons,
 }
 
 export const pagesConfig = {
