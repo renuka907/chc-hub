@@ -365,7 +365,7 @@ export default function CheckoutQuote() {
 
             {/* Printable Quote (hidden on screen, shown when printing) */}
             {savedQuote && (
-                <div className="printable-quote fixed top-[-9999px] left-0 w-full bg-white">
+                <div className="printable-quote" style={{ position: 'fixed', left: '-9999px', top: 0 }}>
                     <PrintableDocument title="Price Quote">
                         <div className="space-y-6">
                             {/* Header Info */}
