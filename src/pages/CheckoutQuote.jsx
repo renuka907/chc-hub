@@ -267,21 +267,25 @@ export default function CheckoutQuote() {
                             margin: 0.5in;
                         }
                         body * {
-                            visibility: hidden;
+                            visibility: hidden !important;
+                        }
+                        .no-print {
+                            display: none !important;
                         }
                         .printable-quote,
                         .printable-quote * {
-                            visibility: visible;
-                            color: #000 !important;
+                            visibility: visible !important;
                         }
                         .printable-quote {
-                            position: absolute !important;
+                            position: fixed !important;
                             left: 0 !important;
                             top: 0 !important;
                             width: 100%;
                             padding: 0.5in !important;
                             font-size: 15px !important;
                             line-height: 1.5 !important;
+                            background: white !important;
+                            z-index: 9999;
                         }
                         .printable-quote h1 {
                             font-size: 20px !important;
