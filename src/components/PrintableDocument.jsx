@@ -119,7 +119,7 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
 
                     @media print {
                         @page {
-                            margin: 0.3cm;
+                            margin: 0.5cm;
                         }
                         body * {
                             visibility: hidden !important;
@@ -135,7 +135,7 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                             left: 0 !important;
                             top: 0 !important;
                             width: 100%;
-                            padding: 10px !important;
+                            padding: 15px 10px !important;
                             font-size: 15px !important;
                             line-height: 1.5 !important;
                             border: none !important;
