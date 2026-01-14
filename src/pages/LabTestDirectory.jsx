@@ -7,14 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { usePermissions } from "../components/permissions/usePermissions";
-import { Search, Loader2, TestTube, Star, ExternalLink, Plus, AlertCircle, RefreshCw, Trash2 } from "lucide-react";
+import { Search, Loader2, TestTube, Star, ExternalLink, Plus, AlertCircle, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
-
-// Ensure QuantiFERON/TB Gold tests always display the correct tube (module scope)
-function enforceQuantiFeronTube(tubeType, testName) {
-  const name = (testName || '').toLowerCase();
-  return /quantiferon|tb gold/.test(name) ? 'Green-top Lithium Heparin' : (tubeType || '');
-}
 
 export default function LabTestDirectory() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -44,14 +38,6 @@ export default function LabTestDirectory() {
         }
     });
 
-    const deleteTestMutation = useMutation({
-        mutationFn: (id) => base44.entities.LabTestInfo.delete(id),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['labTests'] });
-            toast.success("Test removed");
-        }
-    });
-
     const syncTubeMutation = useMutation({
         mutationFn: async ({ id }) => {
             const res = await base44.functions.invoke('syncQuestTubeType', { testId: id });
@@ -71,51 +57,23 @@ export default function LabTestDirectory() {
     });
 
     const handleSyncTube = (id) => syncTubeMutation.mutate({ id });
-    const handleDelete = (id, name) => {
-        if (!id) return;
-        if (window.confirm(`Remove "${name || 'this test'}" from saved tests?`)) {
-            deleteTestMutation.mutate(id);
-        }
-    };
 
     // Auto-sync tube types from Quest for saved tests (runs once per test id)
     const syncedRef = useRef(new Set());
     useEffect(() => {
         const list = Array.isArray(savedTests) ? savedTests : [];
         const toSync = list.filter(t => {
-            if (syncedRef.current.has(t.id)) return false;
+            if (!t?.quest_url || syncedRef.current.has(t.id)) return false;
             const tube = (t.tube_type || '').toLowerCase();
             const name = (t.test_name || '').toLowerCase();
             // Sync if missing tube, looks like SST/Gold, or is a QuantiFERON test
-            const needsSync = !tube || /\bsst\b|gold/.test(tube) || /quantiferon|tb gold/.test(name);
-            // Proceed if we have quest_url, test_code, or a known QuantiFERON match
-            return needsSync && (t.quest_url || t.test_code || /quantiferon|tb gold/.test(name));
+            return !tube || /\bsst\b|gold/.test(tube) || /quantiferon|tb gold/.test(name);
         });
-        toSync.forEach(async (t) => {
+        toSync.forEach(t => {
             syncedRef.current.add(t.id);
-            try {
-                if (t.quest_url) {
-                    // Update this exact record from its Quest URL
-                    await base44.functions.invoke('syncQuestTubeType', { testId: t.id });
-                } else if (t.test_code) {
-                    // Build Quest URL from code and save details (updates by code if present)
-                    const questUrl = `https://testdirectory.questdiagnostics.com/test/test-detail/${t.test_code}`;
-                    await base44.functions.invoke('fetchQuestTubeType', { questUrl, save: true });
-                } else {
-                    // Fallback: known QuantiFERON TB Gold Plus code 36970
-                    const name = (t.test_name || '').toLowerCase();
-                    if (/quantiferon|tb gold/.test(name)) {
-                        // Update directly to match Preferred Specimen (lithium heparin green-top)
-                        await base44.entities.LabTestInfo.update(t.id, { tube_type: 'Green-top Lithium Heparin' });
-                        // Also attempt to fetch and save full details for future accuracy
-                        const questUrl = 'https://testdirectory.questdiagnostics.com/test/test-detail/36970';
-                        await base44.functions.invoke('fetchQuestTubeType', { questUrl, save: true });
-                    }
-                }
-                queryClient.invalidateQueries({ queryKey: ['labTests'] });
-            } catch (e) {
-                // ignore per-item errors
-            }
+            base44.functions.invoke('syncQuestTubeType', { testId: t.id })
+                .then(() => queryClient.invalidateQueries({ queryKey: ['labTests'] }))
+                .catch(() => {/* ignore per-item errors */});
         });
     }, [savedTests]);
 
@@ -189,12 +147,9 @@ Only return found: false if you truly cannot identify what test they're asking a
             if (response?.quest_url) {
                 try {
                     const { data } = await base44.functions.invoke('fetchQuestTubeType', { questUrl: response.quest_url });
-                    if (data) {
-                        const verifiedTube = data.tube_type || data.details?.tube_type || response.tube_type;
-                        const rawPreferred = data.rawPreferred || data.details?.rawPreferred || response.rawPreferred;
-                        setSearchResults({ ...response, tube_type: verifiedTube, rawPreferred });
-                    }
-                    if (data?.error) {
+                    if (data?.tube_type) {
+                        setSearchResults({ ...response, tube_type: data.tube_type });
+                    } else if (data?.error) {
                         console.log('Quest verification:', data.error);
                     }
                 } catch (e) {
@@ -255,7 +210,6 @@ Only return found: false if you truly cannot identify what test they're asking a
         return "bg-gray-100 text-gray-800";
     };
 
-
     const filteredTests = savedTests.filter(test =>
         test.test_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         test.test_code?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -313,7 +267,7 @@ Only return found: false if you truly cannot identify what test they're asking a
                             {searchResults.found ? (
                                 <Card className="border-blue-200 bg-blue-50">
                                     <CardContent className="pt-6 space-y-4">
-                                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
+                                        <div className="flex items-start justify-between">
                                             <div className="flex-1">
                                                 <h3 className="text-xl font-bold text-gray-900 mb-2">
                                                     {searchResults.test_name}
@@ -328,7 +282,6 @@ Only return found: false if you truly cannot identify what test they're asking a
                                                 size="sm"
                                                 onClick={() => handleSaveTest(searchResults)}
                                                 disabled={saveTestMutation.isPending}
-                                                className="self-start bg-blue-600 hover:bg-blue-700"
                                             >
                                                 <Plus className="w-4 h-4 mr-2" />
                                                 Save to Directory
@@ -338,9 +291,9 @@ Only return found: false if you truly cannot identify what test they're asking a
                                         <div className="grid md:grid-cols-2 gap-4">
                                             <div>
                                                 <p className="text-sm font-semibold text-gray-700 mb-1">Tube Type</p>
-                                                <Badge className={getTubeColor(enforceQuantiFeronTube(searchResults.tube_type, searchResults.test_name))}>
+                                                <Badge className={getTubeColor(searchResults.tube_type)}>
                                                     <TestTube className="w-3 h-3 mr-1" />
-                                                    {enforceQuantiFeronTube(searchResults.tube_type, searchResults.test_name)}
+                                                    {searchResults.tube_type}
                                                 </Badge>
                                             </div>
                                             {searchResults.specimen_type && (
@@ -452,7 +405,6 @@ Only return found: false if you truly cannot identify what test they're asking a
                                             getTubeColor={getTubeColor}
                                             onSyncTube={handleSyncTube}
                                             syncing={syncTubeMutation.isPending}
-                                            onDelete={() => handleDelete(test.id, test.test_name)}
                                         />
                                     ))}
                                 </div>
@@ -473,7 +425,6 @@ Only return found: false if you truly cannot identify what test they're asking a
                                             getTubeColor={getTubeColor}
                                             onSyncTube={handleSyncTube}
                                             syncing={syncTubeMutation.isPending}
-                                            onDelete={() => handleDelete(test.id, test.test_name)}
                                         />
                                     ))}
                                 </div>
@@ -486,7 +437,7 @@ Only return found: false if you truly cannot identify what test they're asking a
     );
 }
 
-function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, onDelete }) {
+function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing }) {
     return (
         <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
@@ -510,13 +461,6 @@ function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, o
                         >
                             <Star className={`w-4 h-4 ${test.is_favorite ? 'fill-yellow-500 text-yellow-500' : ''}`} />
                         </button>
-                        <button
-                            onClick={() => onDelete?.(test.id)}
-                            className="text-gray-400 hover:text-red-600"
-                            title="Remove"
-                        >
-                            <Trash2 className="w-4 h-4" />
-                        </button>
                     </div>
                 </div>
                 {test.test_code && (
@@ -527,9 +471,9 @@ function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, o
             </CardHeader>
             <CardContent className="space-y-3">
                 <div>
-                    <Badge className={getTubeColor(enforceQuantiFeronTube(test.tube_type, test.test_name))}>
+                    <Badge className={getTubeColor(test.tube_type)}>
                         <TestTube className="w-3 h-3 mr-1" />
-                        {enforceQuantiFeronTube(test.tube_type, test.test_name)}
+                        {test.tube_type}
                     </Badge>
                 </div>
                 {test.specimen_type && (

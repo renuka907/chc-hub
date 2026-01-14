@@ -23,7 +23,6 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedLocationId, setSelectedLocationId] = React.useState("");
     const [selectedDiscountId, setSelectedDiscountId] = React.useState("");
-    const [showTotals, setShowTotals] = React.useState(true);
     const queryClient = useQueryClient();
 
     React.useEffect(() => {
@@ -34,7 +33,6 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
             setNotes(quote.notes || "");
             setSelectedLocationId(quote.clinic_location_id || "");
             setSelectedDiscountId(quote.discount_id || "");
-            setShowTotals(quote.show_totals !== false);
         }
     }, [quote, open]);
 
@@ -156,7 +154,6 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
             subtotal: calculateSubtotal(),
             tax_amount: calculateTax(),
             total: calculateTotal(),
-            show_totals: showTotals,
             notes: notes || undefined
         };
 
@@ -371,23 +368,15 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
                                             </option>
                                         ))}
                                     </select>
-                                    </div>
+                                </div>
 
-                                    <div className="flex justify-end">
-                                    <Button variant="outline" size="sm" onClick={() => setShowTotals(v => !v)}>
-                                        {showTotals ? 'Hide total price' : 'Show total price'}
-                                    </Button>
-                                    </div>
-
-                                    {/* Totals */}
+                                {/* Totals */}
                                 {selectedItems.length > 0 && (
                                     <div className="border-t pt-4 space-y-2">
-                                        {showTotals && (
-                                            <div className="flex justify-between text-base">
-                                                <span>Subtotal:</span>
-                                                <span className="font-semibold">${calculateSubtotal().toFixed(2)}</span>
-                                            </div>
-                                        )}
+                                        <div className="flex justify-between text-base">
+                                            <span>Subtotal:</span>
+                                            <span className="font-semibold">${calculateSubtotal().toFixed(2)}</span>
+                                        </div>
                                         {selectedDiscountId && calculateDiscountAmount() > 0 && (
                                             <div className="flex justify-between text-base text-green-600">
                                                 <span>Discount:</span>
@@ -398,12 +387,10 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
                                             <span>Tax ({selectedLocation?.tax_rate || 0}%):</span>
                                             <span className="font-semibold">${calculateTax().toFixed(2)}</span>
                                         </div>
-                                        {showTotals && (
-                                            <div className="flex justify-between text-xl font-bold text-blue-900 pt-2 border-t">
-                                                <span>Total:</span>
-                                                <span>${calculateTotal().toFixed(2)}</span>
-                                            </div>
-                                        )}
+                                        <div className="flex justify-between text-xl font-bold text-blue-900 pt-2 border-t">
+                                            <span>Total:</span>
+                                            <span>${calculateTotal().toFixed(2)}</span>
+                                        </div>
                                     </div>
                                 )}
 

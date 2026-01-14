@@ -1,8 +1,8 @@
 import React from "react";
 
-export default function PrintableDocument({ title, children, showLogo = true, logoUrl = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png", onePage = false }) {
+export default function PrintableDocument({ title, children, showLogo = true, logoUrl = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png" }) {
     return (
-        <div className={`${onePage ? 'one-page ' : ''}printable-document w-full max-w-[8.5in] mx-auto bg-white p-8 border-2 border-black`} style={{fontFamily: 'Times New Roman, serif'}}>
+        <div className="printable-document w-full max-w-[8.5in] mx-auto bg-white p-8 border-2 border-black" style={{fontFamily: 'Times New Roman, serif'}}>
             <style>
                 {`
                     @page {
@@ -118,99 +118,27 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                     }
 
                     @media print {
-                        @page {
-                            margin: 0.5cm;
-                        }
                         body * {
-                            visibility: hidden !important;
+                            visibility: hidden;
                         }
-                        .no-print { display: none !important; }
-                        .printable-document,
-                        .printable-document * {
-                            visibility: visible !important;
-                            color: #000 !important;
+                        .printable-document, .printable-document * {
+                            visibility: visible;
                         }
                         .printable-document {
-                            position: absolute !important;
-                            left: 0 !important;
-                            top: 0 !important;
+                            position: absolute;
+                            left: 0;
+                            top: 0;
                             width: 100%;
-                            padding: 15px 10px !important;
-                            font-size: 15px !important;
-                            line-height: 1.5 !important;
-                            border: none !important;
+                            background: white;
+                            padding: 0.5in;
+                            border: 2px solid black;
+                            max-width: 100%;
                         }
-                        .printable-document h1 {
-                            font-size: 20px !important;
-                            margin-bottom: 4px !important;
+                        .no-print {
+                            display: none !important;
                         }
-                        .printable-document h3 {
-                            font-size: 16px !important;
-                            margin-bottom: 4px !important;
-                        }
-                        .printable-document .space-y-6 > * + * {
-                            margin-top: 6px !important;
-                        }
-                        .printable-document table {
-                            font-size: 14px !important;
-                            border-collapse: collapse !important;
-                        }
-                        .printable-document table th,
-                        .printable-document table td {
-                            padding: 4px 6px !important;
-                            line-height: 1.4 !important;
-                            border-bottom: 1.5px solid #333 !important;
-                        }
-                        .printable-document table thead tr {
-                            background-color: #e5e7eb !important;
-                        }
-                        .printable-document table tbody tr:nth-child(even) {
-                            background-color: #f9fafb !important;
-                        }
-                        .printable-document .text-xl {
-                            font-size: 18px !important;
-                        }
-                        .printable-document .grid {
-                            gap: 4px !important;
-                        }
-                        .printable-document img {
-                            max-height: 60px !important;
-                        }
-                        .printable-document .pb-6 {
-                            padding-bottom: 4px !important;
-                        }
-                        .printable-document .mb-4 {
-                            margin-bottom: 4px !important;
-                        }
-                        .printable-document .p-3 {
-                            padding: 2px 4px !important;
-                        }
-                        .printable-document .p-4 {
-                            padding: 4px !important;
-                        }
-                        .printable-document .pt-4 {
-                            padding-top: 4px !important;
-                        }
-                        .printable-document .mt-8 {
-                            margin-top: 6px !important;
-                        }
-                        .printable-document .text-sm {
-                            font-size: 13px !important;
-                        }
-                        .printable-document .text-xs {
-                            font-size: 12px !important;
-                        }
-                        .print-page-break { page-break-before: always; }
-                        .printable-document.one-page {
-                            padding: 5px !important;
-                        }
-                        .printable-document.one-page img {
-                            max-height: 40px !important;
-                        }
-                        .printable-document.one-page,
-                        .printable-document.one-page * {
-                            page-break-inside: avoid !important;
-                            break-inside: avoid !important;
+                        .print-page-break {
+                            page-break-before: always;
                         }
                         * {
                             -webkit-print-color-adjust: exact !important;

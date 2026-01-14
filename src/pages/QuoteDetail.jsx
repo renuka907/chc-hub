@@ -327,32 +327,30 @@ export default function QuoteDetail() {
                     </div>
 
                     {/* Totals */}
-                    <div className="flex justify-end">
-                        <div className="w-64 space-y-2">
-                            {quote.show_totals !== false && (
+                    {quote.show_totals !== false && (
+                        <div className="flex justify-end">
+                            <div className="w-64 space-y-2">
                                 <div className="flex justify-between pb-2">
                                     <span>Subtotal:</span>
                                     <span className="font-semibold">${quote.subtotal.toFixed(2)}</span>
                                 </div>
-                            )}
-                            {quote.discount_amount > 0 && appliedDiscount && (
-                                <div className="flex justify-between pb-2 text-green-600">
-                                    <span>Discount ({appliedDiscount.name}):</span>
-                                    <span className="font-semibold">-${quote.discount_amount.toFixed(2)}</span>
+                                {quote.discount_amount > 0 && appliedDiscount && (
+                                    <div className="flex justify-between pb-2 text-green-600">
+                                        <span>Discount ({appliedDiscount.name}):</span>
+                                        <span className="font-semibold">-${quote.discount_amount.toFixed(2)}</span>
+                                    </div>
+                                )}
+                                <div className="flex justify-between pb-2">
+                                    <span>Tax ({location?.tax_rate}%):</span>
+                                    <span className="font-semibold">${quote.tax_amount.toFixed(2)}</span>
                                 </div>
-                            )}
-                            <div className="flex justify-between pb-2">
-                                <span>Tax ({location?.tax_rate}%):</span>
-                                <span className="font-semibold">${quote.tax_amount.toFixed(2)}</span>
-                            </div>
-                            {quote.show_totals !== false && (
                                 <div className="flex justify-between text-xl font-bold text-blue-900 pt-2 border-t-2">
                                     <span>Total:</span>
                                     <span>${quote.total.toFixed(2)}</span>
                                 </div>
-                            )}
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     {/* Notes */}
                     {quote.notes && (

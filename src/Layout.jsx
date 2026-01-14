@@ -39,24 +39,6 @@ export default function Layout({ children, currentPageName }) {
     const [currentUser, setCurrentUser] = React.useState(null);
     const [isLoading, setIsLoading] = React.useState(true);
     const [openDropdown, setOpenDropdown] = React.useState(null);
-    const dropdownCloseTimer = React.useRef(null);
-    const clearCloseTimer = () => {
-        if (dropdownCloseTimer.current) {
-            clearTimeout(dropdownCloseTimer.current);
-            dropdownCloseTimer.current = null;
-        }
-    };
-    const openMenu = (idx) => {
-        clearCloseTimer();
-        setOpenDropdown(idx);
-    };
-    const closeMenuDelayed = (delay = 250) => {
-        clearCloseTimer();
-        dropdownCloseTimer.current = setTimeout(() => {
-            setOpenDropdown(null);
-            dropdownCloseTimer.current = null;
-        }, delay);
-    };
 
     React.useEffect(() => {
         base44.auth.me()
@@ -94,7 +76,6 @@ export default function Layout({ children, currentPageName }) {
             items: [
                 { name: "Procedures", path: "ProceduresManagement", icon: Stethoscope },
                 { name: "Lab Tests", path: "LabTestDirectory", icon: Stethoscope },
-                { name: "Referral Directory", path: "ReferralDirectory", icon: Users },
                 { name: "Education Library", path: "EducationLibrary", icon: BookOpen },
             ]
         },
@@ -148,7 +129,7 @@ export default function Layout({ children, currentPageName }) {
             </style>
             
             {/* Header */}
-            <header className="no-print bg-white/80 backdrop-blur-md border-b border-purple-200/50 sticky top-0 z-50 shadow-sm">
+            <header className="bg-white/80 backdrop-blur-md border-b border-purple-200/50 sticky top-0 z-50 shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-20">
                         {/* Logo */}
@@ -188,8 +169,8 @@ export default function Layout({ children, currentPageName }) {
                             {/* Single Dropdown Menu */}
                             <div className="relative">
                                 <button
-                                    onMouseEnter={() => openMenu(0)}
-                                    onMouseLeave={() => closeMenuDelayed(300)}
+                                    onMouseEnter={() => setOpenDropdown(0)}
+                                    onMouseLeave={() => setOpenDropdown(null)}
                                     className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
                                 >
                                     <Menu className="w-4 h-4" />
@@ -199,8 +180,8 @@ export default function Layout({ children, currentPageName }) {
                                 
                                 {openDropdown === 0 && (
                                     <div 
-                                        onMouseEnter={() => openMenu(0)}
-                                        onMouseLeave={() => closeMenuDelayed(300)}
+                                        onMouseEnter={() => setOpenDropdown(0)}
+                                        onMouseLeave={() => setOpenDropdown(null)}
                                         className="absolute top-full right-0 mt-1 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
                                     >
                                         {menuGroups.map((group, idx) => {
@@ -346,7 +327,7 @@ export default function Layout({ children, currentPageName }) {
             </main>
 
             {/* Footer */}
-            <footer className="no-print bg-white/80 backdrop-blur-md border-t border-purple-200/50 mt-20">
+            <footer className="bg-white/80 backdrop-blur-md border-t border-purple-200/50 mt-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     <div className="text-center text-sm text-gray-600">
                         <div className="flex items-center justify-center space-x-2 mb-2">
