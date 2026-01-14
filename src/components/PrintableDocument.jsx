@@ -135,7 +135,7 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                             left: 0 !important;
                             top: 0 !important;
                             width: 100%;
-                            padding: 5px !important;
+                            padding: 10px !important;
                             font-size: 15px !important;
                             line-height: 1.5 !important;
                             border: none !important;
@@ -174,7 +174,7 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                             gap: 4px !important;
                         }
                         .printable-document img {
-                            max-height: 50px !important;
+                            max-height: 60px !important;
                         }
                         .printable-document .pb-6 {
                             padding-bottom: 4px !important;
