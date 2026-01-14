@@ -262,7 +262,7 @@ export default function QuoteDetail() {
                             <div className="text-sm text-gray-500 mb-1">Date</div>
                             <div className="font-semibold">{new Date().toLocaleDateString()}</div>
                         </div>
-                        <div>
+                        <div className="no-print">
                             <div className="text-sm text-gray-500 mb-1">Status</div>
                             <Badge className={getStatusColor(quote.status)}>
                                 {quote.status.charAt(0).toUpperCase() + quote.status.slice(1)}
