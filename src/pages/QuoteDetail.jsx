@@ -208,7 +208,9 @@ export default function QuoteDetail() {
                             font-size: 12px !important;
                         }
                         .no-print,
-                        .printable-document .no-print {
+                        .no-print *,
+                        .printable-document .no-print,
+                        .printable-document .no-print * {
                             display: none !important;
                             visibility: hidden !important;
                         }
