@@ -230,7 +230,7 @@ export default function UserManagement() {
             <SelectTrigger><SelectValue placeholder="Role" /></SelectTrigger>
             <SelectContent>
                 <SelectItem value="all">All Roles</SelectItem>
-                <SelectItem value="read_only">Viewer</SelectItem>
+                <SelectItem value="read_only">Read-Only</SelectItem>
                 <SelectItem value="staff">Staff</SelectItem>
                 <SelectItem value="manager">Manager</SelectItem>
                 <SelectItem value="admin">Administrator</SelectItem>
@@ -399,7 +399,7 @@ export default function UserManagement() {
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="read_only">Viewer</SelectItem>
+                                    <SelectItem value="read_only">Read-Only</SelectItem>
                                     <SelectItem value="staff">Staff</SelectItem>
                                     <SelectItem value="manager">Manager</SelectItem>
                                     <SelectItem value="admin">Administrator</SelectItem>

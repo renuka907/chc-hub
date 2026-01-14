@@ -43,26 +43,14 @@ export default function FollowUpDates() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-4">
-          {items.filter((i) => i.label.includes("week")).map((item) => (
-            <div key={item.label} className="rounded-lg border bg-white p-4 shadow-sm">
-              <div className="text-sm text-gray-500">{item.label}</div>
-              <div className="text-lg font-semibold text-gray-900 mt-1">
-                {format(item.date, "EEE, MMM d, yyyy")}
-              </div>
+        {items.map((item) => (
+          <div key={item.label} className="rounded-lg border bg-white p-4 shadow-sm">
+            <div className="text-sm text-gray-500">{item.label}</div>
+            <div className="text-lg font-semibold text-gray-900 mt-1">
+              {format(item.date, "EEE, MMM d, yyyy")}
             </div>
-          ))}
-        </div>
-        <div className="space-y-4">
-          {items.filter((i) => i.label.includes("month")).map((item) => (
-            <div key={item.label} className="rounded-lg border bg-white p-4 shadow-sm">
-              <div className="text-sm text-gray-500">{item.label}</div>
-              <div className="text-lg font-semibold text-gray-900 mt-1">
-                {format(item.date, "EEE, MMM d, yyyy")}
-              </div>
-            </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );

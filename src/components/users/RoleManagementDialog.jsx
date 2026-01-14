@@ -8,13 +8,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Shield, Loader2, CheckCircle2 } from "lucide-react";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { ROLE_LABELS, ROLE_DESCRIPTIONS } from "../permissions/usePermissions";
 
 export default function RoleManagementDialog({ open, onOpenChange, user: selectedUser }) {
     const [selectedRole, setSelectedRole] = useState(selectedUser?.role || 'staff');
-    const [confirmOpen, setConfirmOpen] = useState(false);
     const queryClient = useQueryClient();
 
     const updateRoleMutation = useMutation({
@@ -137,7 +135,7 @@ export default function RoleManagementDialog({ open, onOpenChange, user: selecte
                         Cancel
                     </Button>
                     <Button 
-                        onClick={() => setConfirmOpen(true)}
+                        onClick={() => updateRoleMutation.mutate()}
                         disabled={updateRoleMutation.isPending || selectedRole === selectedUser?.role}
                         className="bg-blue-600 hover:bg-blue-700"
                     >
@@ -151,21 +149,6 @@ export default function RoleManagementDialog({ open, onOpenChange, user: selecte
                         )}
                     </Button>
                 </DialogFooter>
-
-                <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Confirm Role Change</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                Are you sure you want to change {selectedUser?.full_name || selectedUser?.email}'s role to {ROLE_LABELS[selectedRole]}?
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => updateRoleMutation.mutate()} className="bg-blue-600 hover:bg-blue-700">Confirm</AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
             </DialogContent>
         </Dialog>
     );

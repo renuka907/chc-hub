@@ -48,41 +48,13 @@ export default function CheckoutQuote() {
         onSuccess: (data) => {
             queryClient.invalidateQueries(['quotes']);
             setSavedQuote(data);
-            setTimeout(async () => {
-                await waitForImages('.printable-quote');
+            setTimeout(() => {
                 window.print();
             }, 100);
         },
     });
 
     const selectedLocation = locations.find(loc => loc.id === selectedLocationId);
-
-    // Ensure images (like the logo) are loaded before triggering print
-    const waitForImages = (containerSelector = '.printable-quote', timeoutMs = 3000) => {
-        const container = document.querySelector(containerSelector);
-        if (!container) return Promise.resolve();
-        const imgs = Array.from(container.querySelectorAll('img'));
-        const pending = imgs.filter((img) => !img.complete || img.naturalWidth === 0);
-        if (pending.length === 0) return Promise.resolve();
-        return new Promise((resolve) => {
-            let done = false;
-            const finish = () => { if (!done) { done = true; resolve(); } };
-            const timer = setTimeout(finish, timeoutMs);
-            let remaining = pending.length;
-            pending.forEach((img) => {
-                const onEvent = () => {
-                    img.removeEventListener('load', onEvent);
-                    img.removeEventListener('error', onEvent);
-                    if (--remaining === 0) {
-                        clearTimeout(timer);
-                        finish();
-                    }
-                };
-                img.addEventListener('load', onEvent);
-                img.addEventListener('error', onEvent);
-            });
-        });
-    };
 
     // Get unique categories
     const availableCategories = React.useMemo(() => {
@@ -264,34 +236,28 @@ export default function CheckoutQuote() {
                 {`
                     @media print {
                         @page {
-                            margin: 0.5in;
+                            margin: 0.3cm;
                         }
                         body * {
-                            visibility: hidden !important;
-                        }
-                        .no-print {
-                            display: none !important;
+                            visibility: hidden;
                         }
                         .printable-quote,
                         .printable-quote * {
-                            visibility: visible !important;
+                            visibility: visible;
+                            color: #000 !important;
                         }
                         .printable-quote {
-                            position: fixed !important;
+                            position: absolute !important;
                             left: 0 !important;
                             top: 0 !important;
                             width: 100%;
-                            padding: 0.5in !important;
+                            padding: 5px !important;
                             font-size: 15px !important;
                             line-height: 1.5 !important;
-                            background: white !important;
-                            z-index: 9999;
                         }
                         .printable-quote h1 {
                             font-size: 20px !important;
                             margin-bottom: 4px !important;
-                            padding-bottom: 4px !important;
-                            border-bottom: 1px solid #333 !important;
                         }
                         .printable-quote h3 {
                             font-size: 16px !important;
@@ -308,14 +274,8 @@ export default function CheckoutQuote() {
                         .printable-quote table td {
                             padding: 4px 6px !important;
                             line-height: 1.4 !important;
-                        }
-                        .printable-quote table thead th {
                             border-bottom: 1.5px solid #333 !important;
                         }
-                        .printable-quote table tbody tr:not(:last-child) td {
-                            border-bottom: 1.5px solid #333 !important;
-                        }
-                        .printable-quote .border-b { border-bottom: 0 !important; }
                         .printable-quote table thead tr {
                             background-color: #e5e7eb !important;
                         }
@@ -330,11 +290,6 @@ export default function CheckoutQuote() {
                         }
                         .printable-quote img {
                             max-height: 50px !important;
-                        }
-                        .printable-quote img.quote-qr {
-                            max-height: none !important;
-                            height: 1.75in !important;
-                            width: auto !important;
                         }
                         .printable-quote .pb-6 {
                             padding-bottom: 4px !important;
@@ -369,7 +324,7 @@ export default function CheckoutQuote() {
 
             {/* Printable Quote (hidden on screen, shown when printing) */}
             {savedQuote && (
-                <div className="printable-quote" style={{ position: 'fixed', left: '-9999px', top: 0 }}>
+                <div className="printable-quote fixed top-0 left-[-9999px] w-full bg-white">
                     <PrintableDocument title="Price Quote">
                         <div className="space-y-6">
                             {/* Header Info */}
@@ -473,16 +428,6 @@ export default function CheckoutQuote() {
                                     <div className="text-gray-700 whitespace-pre-wrap">{savedQuote.notes}</div>
                                 </div>
                             )}
-
-                            {/* Payment QR */}
-                            <div className="pt-6 mt-6 border-t flex flex-col items-center">
-                                <img
-                                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/b101b52c2_CHCPaymentOptions.png"
-                                    alt="Scan for payment options"
-                                    className="quote-qr"
-                                    style={{ height: '1.75in' }}
-                                />
-                            </div>
 
                             {/* Footer */}
                             <div className="text-sm text-gray-500 border-t pt-4 mt-8">

@@ -12,123 +12,123 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 
 export default function QuoteDetail() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const quoteId = urlParams.get('id');
-  const autoPrint = urlParams.get('autoprint') === 'true';
-  const queryClient = useQueryClient();
-  const [showEditDialog, setShowEditDialog] = useState(false);
+    const urlParams = new URLSearchParams(window.location.search);
+    const quoteId = urlParams.get('id');
+    const autoPrint = urlParams.get('autoprint') === 'true';
+    const queryClient = useQueryClient();
+    const [showEditDialog, setShowEditDialog] = useState(false);
 
-  const { data: quote, isLoading: quoteLoading } = useQuery({
-    queryKey: ['quote', quoteId],
-    queryFn: () => base44.entities.Quote.filter({ id: quoteId }).then((quotes) => quotes[0]),
-    enabled: !!quoteId
-  });
-
-  const { data: locations = [] } = useQuery({
-    queryKey: ['clinicLocations'],
-    queryFn: () => base44.entities.ClinicLocation.list()
-  });
-
-  const { data: discounts = [] } = useQuery({
-    queryKey: ['discounts'],
-    queryFn: () => base44.entities.Discount.list()
-  });
-
-  const updateStatusMutation = useMutation({
-    mutationFn: ({ id, status }) => base44.entities.Quote.update(id, { status }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['quote', quoteId] });
-      queryClient.invalidateQueries({ queryKey: ['quotes'] });
-    }
-  });
-  const location = quote ? locations.find((l) => l.id === quote.clinic_location_id) : null;
-  const items = quote ? JSON.parse(quote.items) : [];
-  const appliedDiscount = quote?.discount_id ? discounts.find((d) => d.id === quote.discount_id) : null;
-
-  const getStatusColor = (status) => {
-    const colors = {
-      'draft': 'bg-gray-100 text-gray-800',
-      'sent': 'bg-blue-100 text-blue-800',
-      'accepted': 'bg-green-100 text-green-800',
-      'expired': 'bg-red-100 text-red-800'
-    };
-    return colors[status] || 'bg-gray-100 text-gray-800';
-  };
-
-  const handleStatusChange = (newStatus) => {
-    updateStatusMutation.mutate({ id: quoteId, status: newStatus });
-  };
-
-  const waitForImages = (containerSelector = '.printable-document', timeoutMs = 3000) => {
-    const container = document.querySelector(containerSelector);
-    if (!container) return Promise.resolve();
-    const imgs = Array.from(container.querySelectorAll('img'));
-    const pending = imgs.filter((img) => !img.complete || img.naturalWidth === 0);
-    if (pending.length === 0) return Promise.resolve();
-    return new Promise((resolve) => {
-      let done = false;
-      const finish = () => {if (!done) {done = true;resolve();}};
-      const timer = setTimeout(finish, timeoutMs);
-      let remaining = pending.length;
-      pending.forEach((img) => {
-        const onEvent = () => {
-          img.removeEventListener('load', onEvent);
-          img.removeEventListener('error', onEvent);
-          if (--remaining === 0) {
-            clearTimeout(timer);
-            finish();
-          }
-        };
-        img.addEventListener('load', onEvent);
-        img.addEventListener('error', onEvent);
-      });
+    const { data: quote, isLoading: quoteLoading } = useQuery({
+        queryKey: ['quote', quoteId],
+        queryFn: () => base44.entities.Quote.filter({ id: quoteId }).then(quotes => quotes[0]),
+        enabled: !!quoteId,
     });
-  };
 
-  const triggerPrint = async () => {
-    await waitForImages();
-    setTimeout(() => window.print(), 50);
-  };
+    const { data: locations = [] } = useQuery({
+        queryKey: ['clinicLocations'],
+        queryFn: () => base44.entities.ClinicLocation.list(),
+    });
 
-  // Auto-trigger print when quote loads
-  React.useEffect(() => {
-    if (quote && autoPrint) {
-      triggerPrint();
-    }
-  }, [quote, autoPrint]);
+    const { data: discounts = [] } = useQuery({
+        queryKey: ['discounts'],
+        queryFn: () => base44.entities.Discount.list(),
+    });
 
-  if (quoteLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
+    const updateStatusMutation = useMutation({
+        mutationFn: ({ id, status }) => base44.entities.Quote.update(id, { status }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['quote', quoteId] });
+            queryClient.invalidateQueries({ queryKey: ['quotes'] });
+        },
+    });
+    const location = quote ? locations.find(l => l.id === quote.clinic_location_id) : null;
+    const items = quote ? JSON.parse(quote.items) : [];
+    const appliedDiscount = quote?.discount_id ? discounts.find(d => d.id === quote.discount_id) : null;
+
+    const getStatusColor = (status) => {
+        const colors = {
+            'draft': 'bg-gray-100 text-gray-800',
+            'sent': 'bg-blue-100 text-blue-800',
+            'accepted': 'bg-green-100 text-green-800',
+            'expired': 'bg-red-100 text-red-800'
+        };
+        return colors[status] || 'bg-gray-100 text-gray-800';
+    };
+
+    const handleStatusChange = (newStatus) => {
+        updateStatusMutation.mutate({ id: quoteId, status: newStatus });
+    };
+
+    const waitForImages = (containerSelector = '.printable-document', timeoutMs = 3000) => {
+        const container = document.querySelector(containerSelector);
+        if (!container) return Promise.resolve();
+        const imgs = Array.from(container.querySelectorAll('img'));
+        const pending = imgs.filter(img => !img.complete || img.naturalWidth === 0);
+        if (pending.length === 0) return Promise.resolve();
+        return new Promise(resolve => {
+            let done = false;
+            const finish = () => { if (!done) { done = true; resolve(); } };
+            const timer = setTimeout(finish, timeoutMs);
+            let remaining = pending.length;
+            pending.forEach(img => {
+                const onEvent = () => {
+                    img.removeEventListener('load', onEvent);
+                    img.removeEventListener('error', onEvent);
+                    if (--remaining === 0) {
+                        clearTimeout(timer);
+                        finish();
+                    }
+                };
+                img.addEventListener('load', onEvent);
+                img.addEventListener('error', onEvent);
+            });
+        });
+    };
+
+    const triggerPrint = async () => {
+        await waitForImages();
+        setTimeout(() => window.print(), 50);
+    };
+
+    // Auto-trigger print when quote loads
+    React.useEffect(() => {
+        if (quote && autoPrint) {
+            triggerPrint();
+        }
+    }, [quote, autoPrint]);
+
+    if (quoteLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
                     <p className="text-gray-500">Loading quote...</p>
                 </div>
-            </div>);
+            </div>
+        );
+    }
 
-  }
-
-  if (!quote) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
+    if (!quote) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center space-y-4">
                     <p className="text-gray-600">Quote not found or the link is invalid.</p>
                     <Link to={createPageUrl("QuotesManagement")}>
                         <Button variant="outline">Return to Quotes</Button>
                     </Link>
                 </div>
-            </div>);
+            </div>
+        );
+    }
 
-  }
-
-  return (
-    <div className="space-y-6">
+    return (
+        <div className="space-y-6">
             {/* Print Styles */}
             <style>
                 {`
                     @media print {
                         @page {
-                            margin: 0.5in;
+                            margin: 0.3cm;
                         }
                         body * {
                             visibility: hidden;
@@ -139,20 +139,18 @@ export default function QuoteDetail() {
                             color: #000 !important;
                         }
                         .printable-document {
-                                position: absolute !important;
-                                left: 0 !important;
-                                top: 0 !important;
-                                width: 100%;
-                                padding: 0.5in !important;
-                                font-size: 15px !important;
-                                line-height: 1.5 !important;
-                            }
+                            position: absolute !important;
+                            left: 0 !important;
+                            top: 0 !important;
+                            width: 100%;
+                            padding: 5px !important;
+                            font-size: 15px !important;
+                            line-height: 1.5 !important;
+                        }
                         .printable-document h1 {
-                                font-size: 20px !important;
-                                margin-bottom: 4px !important;
-                                padding-bottom: 4px !important;
-                                border-bottom: 1px solid #333 !important;
-                            }
+                            font-size: 20px !important;
+                            margin-bottom: 4px !important;
+                        }
                         .printable-document h3 {
                             font-size: 16px !important;
                             margin-bottom: 4px !important;
@@ -163,34 +161,19 @@ export default function QuoteDetail() {
                         .printable-document table {
                             font-size: 14px !important;
                             border-collapse: collapse !important;
-                            page-break-inside: auto !important;
-                            break-inside: auto !important;
                         }
-                        .printable-document thead { display: table-header-group !important; }
-                        .printable-document tfoot { display: table-footer-group !important; }
-                        .printable-document tr { page-break-inside: avoid !important; break-inside: avoid !important; }
-                        .printable-document th,
-                        .printable-document td { page-break-inside: avoid !important; break-inside: avoid !important; }
                         .printable-document table th,
                         .printable-document table td {
                             padding: 4px 6px !important;
                             line-height: 1.4 !important;
-                        }
-                        /* Row dividers only between body rows, not after the last */
-                        .printable-document table thead th {
                             border-bottom: 1.5px solid #333 !important;
                         }
-                        .printable-document table tbody tr:not(:last-child) td {
-                            border-bottom: 1.5px solid #333 !important;
-                        }
-                        .printable-document .border-b { border-bottom: 0 !important; }
                         .printable-document table thead tr {
                             background-color: #e5e7eb !important;
                         }
                         .printable-document table tbody tr:nth-child(even) {
                             background-color: #f9fafb !important;
                         }
-                        /* Row borders handled above via :not(:last-child); removed redundant overrides */
                         .printable-document .text-xl {
                             font-size: 18px !important;
                         }
@@ -199,11 +182,6 @@ export default function QuoteDetail() {
                         }
                         .printable-document img {
                             max-height: 50px !important;
-                        }
-                        .printable-document img.quote-qr {
-                            max-height: none !important;
-                            height: 1.75in !important;
-                            width: auto !important;
                         }
                         .printable-document .pb-6 {
                             padding-bottom: 4px !important;
@@ -228,10 +206,6 @@ export default function QuoteDetail() {
                         }
                         .printable-document .text-xs {
                             font-size: 12px !important;
-                        }
-                        .printable-document .avoid-break {
-                            break-inside: avoid !important;
-                            page-break-inside: avoid !important;
                         }
                         .no-print {
                             display: none !important;
@@ -279,33 +253,38 @@ export default function QuoteDetail() {
             <PrintableDocument title="Price Quote" logoUrl={quote?.image_url || undefined}>
                 <div className="space-y-6">
                     {/* Header Info */}
-                    <div className="grid md:grid-cols-2 gap-2 pb-2 border-b">
+                    <div className="grid md:grid-cols-2 gap-6 pb-6 border-b">
                         <div>
                             <div className="text-sm text-gray-500 mb-1">Quote Number</div>
                             <div className="font-bold text-lg">{quote.quote_number}</div>
                         </div>
                         <div>
-                            <div className="text-sm text-gray-500 mb-1 text-right">Date</div>
-                            <div className="font-semibold text-right">{new Date().toLocaleDateString()}</div>
+                            <div className="text-sm text-gray-500 mb-1">Date</div>
+                            <div className="font-semibold">{new Date().toLocaleDateString()}</div>
                         </div>
-
-                        {quote.patient_name &&
-            <div>
+                        <div>
+                            <div className="text-sm text-gray-500 mb-1">Status</div>
+                            <Badge className={getStatusColor(quote.status)}>
+                                {quote.status.charAt(0).toUpperCase() + quote.status.slice(1)}
+                            </Badge>
+                        </div>
+                        {quote.patient_name && (
+                            <div>
                                 <div className="text-sm text-gray-500 mb-1">Patient Name</div>
                                 <div className="font-semibold">{quote.patient_name}</div>
                             </div>
-            }
-                        {location &&
-            <div>
+                        )}
+                        {location && (
+                            <div>
                                 <div className="text-sm text-gray-500 mb-1">Clinic Location</div>
                                 <div className="font-semibold">{location.name}</div>
                             </div>
-            }
+                        )}
                     </div>
 
                     {/* Items Table */}
                     <div>
-                        <h3 className="mb-1 text-lg font-bold">Items</h3>
+                        <h3 className="font-bold text-lg mb-4">Items</h3>
                         <table className="w-full">
                             <thead className="bg-slate-100">
                                 <tr>
@@ -317,100 +296,92 @@ export default function QuoteDetail() {
                             </thead>
                             <tbody>
                                 {items.map((item, index) => {
-                  const itemSubtotal = item.price * item.quantity;
-                  const itemTax = item.taxable ? itemSubtotal * (location?.tax_rate || 0) / 100 : 0;
-                  return (
-                    <tr key={index} className="border-b">
+                                    const itemSubtotal = item.price * item.quantity;
+                                    const itemTax = item.taxable ? itemSubtotal * (location?.tax_rate || 0) / 100 : 0;
+                                    return (
+                                        <tr key={index} className="border-b">
                                             <td className="p-3">
                                                 <div className="font-medium">{item.name}</div>
-                                                {item.tier_name &&
-                        <div className="text-sm text-gray-600">
+                                                {item.tier_name && (
+                                                    <div className="text-sm text-gray-600">
                                                         {item.tier_name}
                                                         {item.sessions > 1 && ` (${item.sessions} ${item.unit_type || 'sessions'})`}
                                                     </div>
-                        }
-                                                {item.taxable &&
-                        <div className="text-xs text-gray-500">
+                                                )}
+                                                {item.taxable && (
+                                                    <div className="text-xs text-gray-500">
                                                         Taxable (Tax: ${itemTax.toFixed(2)})
                                                     </div>
-                        }
+                                                )}
                                             </td>
                                             <td className="text-center p-3">{item.quantity}</td>
                                             <td className="text-right p-3">${item.price.toFixed(2)}</td>
                                             <td className="text-right p-3 font-semibold">
                                                 ${itemSubtotal.toFixed(2)}
                                             </td>
-                                        </tr>);
-
-                })}
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>
 
                     {/* Totals */}
-                    <div className="flex justify-end avoid-break">
+                    <div className="flex justify-end">
                         <div className="w-64 space-y-2">
-                            {quote.show_totals !== false &&
-              <div className="flex justify-between pb-2">
+                            {quote.show_totals !== false && (
+                                <div className="flex justify-between pb-2">
                                     <span>Subtotal:</span>
                                     <span className="font-semibold">${quote.subtotal.toFixed(2)}</span>
                                 </div>
-              }
-                            {quote.discount_amount > 0 && appliedDiscount &&
-              <div className="flex justify-between pb-2 text-green-600">
+                            )}
+                            {quote.discount_amount > 0 && appliedDiscount && (
+                                <div className="flex justify-between pb-2 text-green-600">
                                     <span>Discount ({appliedDiscount.name}):</span>
                                     <span className="font-semibold">-${quote.discount_amount.toFixed(2)}</span>
                                 </div>
-              }
+                            )}
                             <div className="flex justify-between pb-2">
                                 <span>Tax ({location?.tax_rate}%):</span>
                                 <span className="font-semibold">${quote.tax_amount.toFixed(2)}</span>
                             </div>
-                            {quote.show_totals !== false &&
-              <div className="flex justify-between text-xl font-bold text-blue-900 pt-2 border-t-2">
+                            {quote.show_totals !== false && (
+                                <div className="flex justify-between text-xl font-bold text-blue-900 pt-2 border-t-2">
                                     <span>Total:</span>
                                     <span>${quote.total.toFixed(2)}</span>
                                 </div>
-              }
+                            )}
                         </div>
                     </div>
 
                     {/* Notes */}
-                    {quote.notes &&
-          <div className="bg-slate-50 p-4 rounded-lg border">
+                    {quote.notes && (
+                        <div className="bg-slate-50 p-4 rounded-lg border">
                             <div className="font-semibold mb-2">Notes:</div>
                             <div className="text-gray-700 whitespace-pre-wrap">{quote.notes}</div>
                         </div>
-          }
+                    )}
 
                     {/* Footer */}
-                    <div className="text-gray-500 mt-8 text-sm border-t">
+                    <div className="text-sm text-gray-500 border-t pt-4 mt-8">
                         <p>This quote is valid for 30 days from the date of issue.</p>
                         <p className="mt-2">Payment is due at the time of service unless other arrangements have been made.</p>
-                        <p className="mt-3 font-semibold text-gray-700">Cherry Financing and Care Credit Available</p>
-                        <div className="flex justify-center">
-                            <img
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/b101b52c2_CHCPaymentOptions.png"
-                alt="Scan for payment options"
-                className="quote-qr"
-                style={{ height: '1.75in' }} />
-
-                        </div>
-                        </div>
+                        <p className="mt-3 font-semibold text-gray-700">Cherry Financing and CareCredit Available</p>
+                    </div>
                 </div>
             </PrintableDocument>
 
             <EditQuoteDialog
-        open={showEditDialog}
-        onOpenChange={setShowEditDialog}
-        quote={quote}
-        onSuccess={() => {
-          queryClient.invalidateQueries(['quote', quoteId]);
-          queryClient.invalidateQueries(['quotes']);
-        }} />
+                open={showEditDialog}
+                onOpenChange={setShowEditDialog}
+                quote={quote}
+                onSuccess={() => {
+                    queryClient.invalidateQueries(['quote', quoteId]);
+                    queryClient.invalidateQueries(['quotes']);
+                }}
+            />
 
 
-
-        </div>);
-
+        </div>
+    );
 }

@@ -3,26 +3,25 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "./utils";
 import { base44 } from "@/api/base44Client";
 import { 
-                  BookOpen, 
-                  FileText, 
-                  Building2, 
-                  DollarSign, 
-                  Home,
-                  Menu,
-                  X,
-                  Stethoscope,
-                  Users,
-                  Package,
-                  Tag,
-                  MessageSquare,
-                  Layers,
-                  LogOut,
-                  ChevronDown,
-                  Sparkles,
-                  Bell,
-                  Calendar,
-                  Pill
-              } from "lucide-react";
+            BookOpen, 
+            FileText, 
+            Building2, 
+            DollarSign, 
+            Home,
+            Menu,
+            X,
+            Stethoscope,
+            Users,
+            Package,
+            Tag,
+            MessageSquare,
+            Layers,
+            LogOut,
+            ChevronDown,
+            Sparkles,
+            Bell,
+            Calendar
+        } from "lucide-react";
 
 export default function Layout({ children, currentPageName }) {
     // Check if this is a public page immediately - before any state or effects
@@ -97,7 +96,6 @@ export default function Layout({ children, currentPageName }) {
                 { name: "Lab Tests", path: "LabTestDirectory", icon: Stethoscope },
                 { name: "Referral Directory", path: "ReferralDirectory", icon: Users },
                 { name: "Education Library", path: "EducationLibrary", icon: BookOpen },
-                { name: "Medication Coupons", path: "MedicationCoupons", icon: Pill },
             ]
         },
         {
@@ -203,7 +201,7 @@ export default function Layout({ children, currentPageName }) {
                                     <div 
                                         onMouseEnter={() => openMenu(0)}
                                         onMouseLeave={() => closeMenuDelayed(300)}
-                                        className="absolute top-full right-0 mt-1 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 max-h-[70vh] overflow-y-auto"
+                                        className="absolute top-full right-0 mt-1 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
                                     >
                                         {menuGroups.map((group, idx) => {
                                             if (group.single) {

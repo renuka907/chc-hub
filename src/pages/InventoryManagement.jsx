@@ -156,7 +156,7 @@ export default function InventoryManagement() {
         }
     };
 
-    const canEdit = currentUser?.role === 'admin' || currentUser?.role === 'staff';
+    const canEdit = currentUser?.role === 'admin' || currentUser?.role === 'manager';
 
     return (
         <div className="space-y-6">
