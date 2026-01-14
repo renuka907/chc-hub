@@ -118,35 +118,97 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                     }
 
                     @media print {
-                        body * { visibility: hidden !important; }
+                        @page {
+                            margin: 0.3cm;
+                        }
+                        body * {
+                            visibility: hidden !important;
+                        }
                         .no-print { display: none !important; }
-                        .printable-document, .printable-document * { visibility: visible !important; }
+                        .printable-document,
+                        .printable-document * {
+                            visibility: visible !important;
+                            color: #000 !important;
+                        }
                         .printable-document {
-                            position: fixed;
-                            inset: 0;
+                            position: absolute !important;
+                            left: 0 !important;
+                            top: 0 !important;
                             width: 100%;
-                            background: white;
-                            padding: 0.5in;
-                            border: 2px solid black;
-                            max-width: 100%;
-                            z-index: 9999;
+                            padding: 5px !important;
+                            font-size: 15px !important;
+                            line-height: 1.5 !important;
+                            border: none !important;
+                        }
+                        .printable-document h1 {
+                            font-size: 20px !important;
+                            margin-bottom: 4px !important;
+                        }
+                        .printable-document h3 {
+                            font-size: 16px !important;
+                            margin-bottom: 4px !important;
+                        }
+                        .printable-document .space-y-6 > * + * {
+                            margin-top: 6px !important;
+                        }
+                        .printable-document table {
+                            font-size: 14px !important;
+                            border-collapse: collapse !important;
+                        }
+                        .printable-document table th,
+                        .printable-document table td {
+                            padding: 4px 6px !important;
+                            line-height: 1.4 !important;
+                            border-bottom: 1.5px solid #333 !important;
+                        }
+                        .printable-document table thead tr {
+                            background-color: #e5e7eb !important;
+                        }
+                        .printable-document table tbody tr:nth-child(even) {
+                            background-color: #f9fafb !important;
+                        }
+                        .printable-document .text-xl {
+                            font-size: 18px !important;
+                        }
+                        .printable-document .grid {
+                            gap: 4px !important;
+                        }
+                        .printable-document img {
+                            max-height: 50px !important;
+                        }
+                        .printable-document .pb-6 {
+                            padding-bottom: 4px !important;
+                        }
+                        .printable-document .mb-4 {
+                            margin-bottom: 4px !important;
+                        }
+                        .printable-document .p-3 {
+                            padding: 2px 4px !important;
+                        }
+                        .printable-document .p-4 {
+                            padding: 4px !important;
+                        }
+                        .printable-document .pt-4 {
+                            padding-top: 4px !important;
+                        }
+                        .printable-document .mt-8 {
+                            margin-top: 6px !important;
+                        }
+                        .printable-document .text-sm {
+                            font-size: 13px !important;
+                        }
+                        .printable-document .text-xs {
+                            font-size: 12px !important;
                         }
                         .print-page-break { page-break-before: always; }
                         .printable-document.one-page {
-                            max-height: 100vh;
-                            overflow: hidden;
-                            padding: 0.35in;
-                            font-size: 12px;
-                            line-height: 1.35;
+                            padding: 5px !important;
                         }
-                        .printable-document.one-page h1 { font-size: 16px; margin-bottom: 6px; }
-                        .printable-document.one-page h2 { font-size: 14px; margin-bottom: 4px; }
-                        .printable-document.one-page h3 { font-size: 13px; margin-bottom: 3px; }
-                        .printable-document.one-page table { font-size: 12px; }
-                        .printable-document.one-page table th,
-                        .printable-document.one-page table td { padding: 3px 4px; }
-                        .printable-document.one-page img { max-height: 40px; }
-                        .printable-document.one-page, .printable-document.one-page * {
+                        .printable-document.one-page img {
+                            max-height: 40px !important;
+                        }
+                        .printable-document.one-page,
+                        .printable-document.one-page * {
                             page-break-inside: avoid !important;
                             break-inside: avoid !important;
                         }
