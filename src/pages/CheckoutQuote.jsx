@@ -292,7 +292,8 @@ export default function CheckoutQuote() {
                             max-height: 50px !important;
                         }
                         .printable-quote img.qr-code {
-                            max-height: 120px !important;
+                            max-height: none !important;
+                            max-width: 120px !important;
                             width: 120px !important;
                             height: auto !important;
                         }
