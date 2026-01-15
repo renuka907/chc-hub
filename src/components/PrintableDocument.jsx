@@ -131,7 +131,6 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                             width: 100%;
                             background: white;
                             padding: 0.5in;
-                            border: 2px solid black;
                             max-width: 100%;
                         }
                         .no-print {
