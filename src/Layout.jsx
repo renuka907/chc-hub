@@ -180,7 +180,7 @@ export default function Layout({ children, currentPageName }) {
                                     onMouseLeave={() => {
                                         closeTimerRef.current = setTimeout(() => {
                                             setOpenDropdown(null);
-                                        }, 30000);
+                                        }, 5000);
                                     }}
                                     className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
                                 >
