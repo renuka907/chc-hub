@@ -291,6 +291,11 @@ export default function CheckoutQuote() {
                         .printable-quote img {
                             max-height: 50px !important;
                         }
+                        .printable-quote img.qr-code {
+                            max-height: 120px !important;
+                            width: 120px !important;
+                            height: auto !important;
+                        }
                         .printable-quote .pb-6 {
                             padding-bottom: 4px !important;
                         }
@@ -440,7 +445,7 @@ export default function CheckoutQuote() {
                                     <img 
                                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/93c585704_CHCPaymentOptions.jpg"
                                         alt="Scan for Payment Options"
-                                        className="mx-auto"
+                                        className="mx-auto qr-code"
                                         style={{width: '120px', height: 'auto'}}
                                     />
                                 </div>
