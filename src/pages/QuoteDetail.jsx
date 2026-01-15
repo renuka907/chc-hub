@@ -184,8 +184,8 @@ export default function QuoteDetail() {
                             max-height: 50px !important;
                         }
                         .printable-document img[alt="Scan for Payment Options"] {
-                            width: 120px !important;
-                            height: 120px !important;
+                            width: 160px !important;
+                            height: 160px !important;
                             object-fit: contain !important;
                         }
                         .printable-document .pb-6 {
@@ -382,7 +382,7 @@ export default function QuoteDetail() {
                                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/93c585704_CHCPaymentOptions.jpg"
                                 alt="Scan for Payment Options"
                                 className="mx-auto"
-                                style={{width: '120px', height: 'auto'}}
+                                style={{width: '160px', height: 'auto'}}
                             />
                         </div>
                     </div>
