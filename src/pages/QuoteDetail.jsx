@@ -369,6 +369,16 @@ export default function QuoteDetail() {
                         <p>This quote is valid for 30 days from the date of issue.</p>
                         <p className="mt-2">Payment is due at the time of service unless other arrangements have been made.</p>
                         <p className="mt-3 font-semibold text-gray-700">Cherry Financing and CareCredit Available</p>
+
+                        {/* QR Code for Payment Options */}
+                        <div className="mt-6 text-center">
+                            <img 
+                                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/93c585704_CHCPaymentOptions.jpg"
+                                alt="Scan for Payment Options"
+                                className="mx-auto"
+                                style={{width: '200px', height: 'auto'}}
+                            />
+                        </div>
                     </div>
                 </div>
             </PrintableDocument>
