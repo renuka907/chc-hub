@@ -39,6 +39,7 @@ export default function Layout({ children, currentPageName }) {
     const [currentUser, setCurrentUser] = React.useState(null);
     const [isLoading, setIsLoading] = React.useState(true);
     const [openDropdown, setOpenDropdown] = React.useState(null);
+    const closeTimerRef = React.useRef(null);
 
     React.useEffect(() => {
         base44.auth.me()
@@ -169,19 +170,39 @@ export default function Layout({ children, currentPageName }) {
                             {/* Single Dropdown Menu */}
                             <div className="relative">
                                 <button
-                                    onMouseEnter={() => setOpenDropdown(0)}
-                                    onMouseLeave={() => setOpenDropdown(null)}
+                                    onMouseEnter={() => {
+                                        if (closeTimerRef.current) {
+                                            clearTimeout(closeTimerRef.current);
+                                            closeTimerRef.current = null;
+                                        }
+                                        setOpenDropdown(0);
+                                    }}
+                                    onMouseLeave={() => {
+                                        closeTimerRef.current = setTimeout(() => {
+                                            setOpenDropdown(null);
+                                        }, 30000);
+                                    }}
                                     className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
                                 >
                                     <Menu className="w-4 h-4" />
                                     <span>Menu</span>
                                     <ChevronDown className={`w-3 h-3 transition-transform ${openDropdown === 0 ? 'rotate-180' : ''}`} />
                                 </button>
-                                
+
                                 {openDropdown === 0 && (
                                     <div 
-                                        onMouseEnter={() => setOpenDropdown(0)}
-                                        onMouseLeave={() => setOpenDropdown(null)}
+                                        onMouseEnter={() => {
+                                            if (closeTimerRef.current) {
+                                                clearTimeout(closeTimerRef.current);
+                                                closeTimerRef.current = null;
+                                            }
+                                            setOpenDropdown(0);
+                                        }}
+                                        onMouseLeave={() => {
+                                            closeTimerRef.current = setTimeout(() => {
+                                                setOpenDropdown(null);
+                                            }, 30000);
+                                        }}
                                         className="absolute top-full right-0 mt-1 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
                                     >
                                         {menuGroups.map((group, idx) => {
