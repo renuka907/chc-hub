@@ -183,6 +183,11 @@ export default function QuoteDetail() {
                         .printable-document img {
                             max-height: 50px !important;
                         }
+                        .printable-document img[alt="Scan for Payment Options"] {
+                            max-height: 80px !important;
+                            width: 80px !important;
+                            height: auto !important;
+                        }
                         .printable-document .pb-6 {
                             padding-bottom: 2px !important;
                         }
