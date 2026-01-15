@@ -15,7 +15,7 @@ export default function FollowUpDates() {
     return () => clearTimeout(timer);
   }, [today]);
 
-  const items = [
+  const weekItems = [
     { label: "2 weeks", date: addWeeks(today, 2) },
     { label: "4 weeks", date: addWeeks(today, 4) },
     { label: "6 weeks", date: addWeeks(today, 6) },
@@ -24,13 +24,15 @@ export default function FollowUpDates() {
     { label: "12 weeks", date: addWeeks(today, 12) },
     { label: "14 weeks", date: addWeeks(today, 14) },
     { label: "16 weeks", date: addWeeks(today, 16) },
-    // Half-months approximated as +15 days after whole months
+    { label: "22 weeks", date: addWeeks(today, 22) },
+  ];
+
+  const monthItems = [
     { label: "2 1/2 months", date: addDays(addMonths(today, 2), 15) },
     { label: "3 months", date: addMonths(today, 3) },
     { label: "3 1/2 months", date: addDays(addMonths(today, 3), 15) },
     { label: "5 months", date: addMonths(today, 5) },
     { label: "5 1/2 months", date: addDays(addMonths(today, 5), 15) },
-    { label: "22 weeks", date: addWeeks(today, 22) },
     { label: "6 months", date: addMonths(today, 6) },
   ];
 
@@ -42,15 +44,36 @@ export default function FollowUpDates() {
         <p className="text-xs text-gray-500 mt-1">Auto‑updates every day at midnight (local time)</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {items.map((item) => (
-          <div key={item.label} className="rounded-lg border bg-white p-4 shadow-sm">
-            <div className="text-sm text-gray-500">{item.label}</div>
-            <div className="text-lg font-semibold text-gray-900 mt-1">
-              {format(item.date, "EEE, MMM d, yyyy")}
-            </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Weeks Column */}
+        <div>
+          <h2 className="text-xl font-bold text-gray-900 mb-4">Weeks</h2>
+          <div className="space-y-3">
+            {weekItems.map((item) => (
+              <div key={item.label} className="rounded-lg border bg-white p-4 shadow-sm">
+                <div className="text-sm text-gray-500">{item.label}</div>
+                <div className="text-lg font-semibold text-gray-900 mt-1">
+                  {format(item.date, "EEE, MMM d, yyyy")}
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
+
+        {/* Months Column */}
+        <div>
+          <h2 className="text-xl font-bold text-gray-900 mb-4">Months</h2>
+          <div className="space-y-3">
+            {monthItems.map((item) => (
+              <div key={item.label} className="rounded-lg border bg-white p-4 shadow-sm">
+                <div className="text-sm text-gray-500">{item.label}</div>
+                <div className="text-lg font-semibold text-gray-900 mt-1">
+                  {format(item.date, "EEE, MMM d, yyyy")}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
