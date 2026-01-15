@@ -184,9 +184,9 @@ export default function QuoteDetail() {
                             max-height: 50px !important;
                         }
                         .printable-document img[alt="Scan for Payment Options"] {
-                            max-height: 80px !important;
                             width: 80px !important;
-                            height: auto !important;
+                            height: 80px !important;
+                            object-fit: contain !important;
                         }
                         .printable-document .pb-6 {
                             padding-bottom: 2px !important;
