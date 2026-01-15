@@ -213,6 +213,7 @@ export default function Layout({ children, currentPageName }) {
                                                     <Link
                                                         key={group.path}
                                                         to={createPageUrl(group.path)}
+                                                        onClick={() => setOpenDropdown(null)}
                                                         className={`flex items-center space-x-3 px-4 py-2 text-sm transition-colors ${
                                                             isActive
                                                                 ? "bg-purple-50 text-purple-900 font-medium"
@@ -237,6 +238,7 @@ export default function Layout({ children, currentPageName }) {
                                                             <Link
                                                                 key={item.path}
                                                                 to={createPageUrl(item.path)}
+                                                                onClick={() => setOpenDropdown(null)}
                                                                 className={`flex items-center space-x-3 px-6 py-2 text-sm transition-colors ${
                                                                     isActive
                                                                         ? "bg-purple-50 text-purple-900 font-medium"
