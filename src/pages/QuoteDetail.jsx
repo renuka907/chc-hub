@@ -376,7 +376,7 @@ export default function QuoteDetail() {
                                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/93c585704_CHCPaymentOptions.jpg"
                                 alt="Scan for Payment Options"
                                 className="mx-auto"
-                                style={{width: '200px', height: 'auto'}}
+                                style={{width: '120px', height: 'auto'}}
                             />
                         </div>
                     </div>
