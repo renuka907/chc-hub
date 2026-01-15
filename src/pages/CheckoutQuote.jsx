@@ -293,9 +293,10 @@ export default function CheckoutQuote() {
                         }
                         .printable-quote img.qr-code {
                             max-height: none !important;
-                            max-width: 80px !important;
-                            width: 80px !important;
-                            height: auto !important;
+                            max-width: 160px !important;
+                            width: 160px !important;
+                            height: 160px !important;
+                            object-fit: contain !important;
                         }
                         .printable-quote .pb-6 {
                             padding-bottom: 2px !important;
@@ -453,7 +454,7 @@ export default function CheckoutQuote() {
                                         src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/93c585704_CHCPaymentOptions.jpg"
                                         alt="Scan for Payment Options"
                                         className="mx-auto qr-code"
-                                        style={{width: '80px', height: 'auto'}}
+                                        style={{width: '160px', height: 'auto'}}
                                     />
                                 </div>
                             </div>
