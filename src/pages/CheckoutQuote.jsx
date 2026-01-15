@@ -264,17 +264,17 @@ export default function CheckoutQuote() {
                             margin-bottom: 4px !important;
                         }
                         .printable-quote .space-y-6 > * + * {
-                            margin-top: 6px !important;
+                            margin-top: 3px !important;
                         }
                         .printable-quote table {
-                            font-size: 14px !important;
+                            font-size: 13px !important;
                             border-collapse: collapse !important;
                         }
                         .printable-quote table th,
                         .printable-quote table td {
-                            padding: 4px 6px !important;
-                            line-height: 1.4 !important;
-                            border-bottom: 1.5px solid #333 !important;
+                            padding: 2px 4px !important;
+                            line-height: 1.3 !important;
+                            border-bottom: 1px solid #333 !important;
                         }
                         .printable-quote table thead tr {
                             background-color: #e5e7eb !important;
@@ -298,22 +298,28 @@ export default function CheckoutQuote() {
                             height: auto !important;
                         }
                         .printable-quote .pb-6 {
-                            padding-bottom: 4px !important;
+                            padding-bottom: 2px !important;
                         }
                         .printable-quote .mb-4 {
-                            margin-bottom: 4px !important;
+                            margin-bottom: 2px !important;
                         }
                         .printable-quote .p-3 {
-                            padding: 2px 4px !important;
+                            padding: 1px 3px !important;
                         }
                         .printable-quote .p-4 {
-                            padding: 4px !important;
+                            padding: 2px !important;
                         }
                         .printable-quote .pt-4 {
-                            padding-top: 4px !important;
+                            padding-top: 2px !important;
                         }
                         .printable-quote .mt-8 {
-                            margin-top: 6px !important;
+                            margin-top: 3px !important;
+                        }
+                        .printable-quote .mt-6 {
+                            margin-top: 3px !important;
+                        }
+                        .printable-quote .mb-6 {
+                            margin-bottom: 2px !important;
                         }
                         .printable-quote .text-sm {
                             font-size: 13px !important;
