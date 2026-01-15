@@ -51,7 +51,7 @@ export default function FollowUpDates() {
           <div className="space-y-3">
             {weekItems.map((item) => (
               <div key={item.label} className="rounded-lg border bg-white p-4 shadow-sm">
-                <div className="text-sm text-gray-500">{item.label}</div>
+                <div className="text-lg font-semibold text-purple-600">{item.label}</div>
                 <div className="text-lg font-semibold text-gray-900 mt-1">
                   {format(item.date, "EEE, MMM d, yyyy")}
                 </div>
@@ -66,7 +66,7 @@ export default function FollowUpDates() {
           <div className="space-y-3">
             {monthItems.map((item) => (
               <div key={item.label} className="rounded-lg border bg-white p-4 shadow-sm">
-                <div className="text-sm text-gray-500">{item.label}</div>
+                <div className="text-lg font-semibold text-purple-600">{item.label}</div>
                 <div className="text-lg font-semibold text-gray-900 mt-1">
                   {format(item.date, "EEE, MMM d, yyyy")}
                 </div>
