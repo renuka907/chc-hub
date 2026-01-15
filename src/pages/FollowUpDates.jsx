@@ -47,7 +47,7 @@ export default function FollowUpDates() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Weeks Column */}
         <div>
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Weeks</h2>
+          <h2 className="text-2xl font-bold text-purple-700 mb-4">Weeks</h2>
           <div className="space-y-3">
             {weekItems.map((item) => (
               <div key={item.label} className="rounded-lg border bg-white p-4 shadow-sm">
@@ -62,7 +62,7 @@ export default function FollowUpDates() {
 
         {/* Months Column */}
         <div>
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Months</h2>
+          <h2 className="text-2xl font-bold text-purple-700 mb-4">Months</h2>
           <div className="space-y-3">
             {monthItems.map((item) => (
               <div key={item.label} className="rounded-lg border bg-white p-4 shadow-sm">
