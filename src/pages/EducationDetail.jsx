@@ -91,21 +91,23 @@ export default function EducationDetail() {
                             line-height: 1.5 !important;
                             color: #000 !important;
                         }
+                        @page {
+                            @top-center {
+                                content: element(header);
+                            }
+                        }
                         .print-header {
-                            position: fixed !important;
-                            top: 0 !important;
-                            left: 0 !important;
-                            right: 0 !important;
-                            padding: 8pt 0.5in !important;
-                            border-bottom: 1px solid #ccc !important;
-                            background: white !important;
+                            position: running(header) !important;
+                            display: block !important;
                             text-align: center !important;
+                            padding: 8pt 0 !important;
+                            border-bottom: 1px solid #ccc !important;
                             font-size: 9pt !important;
-                            z-index: 9999 !important;
                         }
                         .print-header img {
                             height: 24pt !important;
                             margin: 0 auto 4pt !important;
+                            display: block !important;
                         }
                         .printable-document > div:first-child {
                             margin-top: 0 !important;
