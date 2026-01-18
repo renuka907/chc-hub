@@ -99,10 +99,7 @@ export default function AftercareDetail() {
                 {`
                     @media print {
                         @page {
-                            margin-top: 0.75in;
-                            margin-bottom: 0.5in;
-                            margin-left: 0.5in;
-                            margin-right: 0.5in;
+                            margin: 0.3in 0.5in 0.5in 0.5in;
                             size: letter;
                         }
                         body * {
@@ -114,9 +111,9 @@ export default function AftercareDetail() {
                             color: #000 !important;
                         }
                         .printable-document {
-                            position: static !important;
-                            left: auto !important;
-                            top: auto !important;
+                            position: absolute !important;
+                            left: 0 !important;
+                            top: 0 !important;
                             width: 100% !important;
                             max-width: 100% !important;
                             padding: 0 !important;
@@ -124,32 +121,22 @@ export default function AftercareDetail() {
                             font-size: 11pt !important;
                             line-height: 1.5 !important;
                         }
-                        @page {
-                            @top-center {
-                                content: element(header);
-                            }
-                        }
-                        .print-header {
-                            position: running(header) !important;
-                            display: block !important;
-                            text-align: center !important;
-                            padding: 8pt 0 !important;
-                            border-bottom: 1px solid #ccc !important;
-                            font-size: 9pt !important;
-                        }
-                        .print-header img {
-                            height: 24pt !important;
-                            margin: 0 auto 4pt !important;
-                            display: block !important;
-                        }
-                        .printable-document > div:first-child {
+                        .printable-document > div:first-child,
+                        .printable-document > * {
                             margin-top: 0 !important;
                             padding-top: 0 !important;
                         }
-                        .printable-document img:first-of-type {
-                            margin-top: 0 !important;
+                        .printable-document .mb-4 {
+                            margin-bottom: 0 !important;
                         }
-                        .printable-document h1:first-of-type {
+                        .printable-document img:first-of-type {
+                            display: none !important;
+                        }
+                        .printable-document .mb-6:first-child,
+                        .printable-document > div > div:first-child {
+                            display: none !important;
+                        }
+                        .printable-document h1 {
                             margin-top: 0 !important;
                             padding-top: 0 !important;
                         }
@@ -183,13 +170,33 @@ export default function AftercareDetail() {
                         .no-print {
                             display: none !important;
                         }
-                        .no-print-screen {
-                            display: none;
+                        
+                        /* Repeating header on each page - use thead/table approach */
+                        .print-header-table {
+                            display: table !important;
+                            width: 100% !important;
+                            position: static !important;
                         }
-                        @media print {
-                            .no-print-screen {
-                                display: block !important;
-                            }
+                        .print-header-table thead {
+                            display: table-header-group !important;
+                        }
+                        .print-header-table tbody {
+                            display: table-row-group !important;
+                        }
+                        .print-header-row {
+                            text-align: center !important;
+                            padding-bottom: 4pt !important;
+                            border-bottom: 1px solid #ccc !important;
+                        }
+                        .print-header-row img {
+                            height: 30pt !important;
+                            margin: 0 auto 2pt !important;
+                            display: block !important;
+                        }
+                        .print-header-row div {
+                            font-size: 8pt !important;
+                            color: #666 !important;
+                            margin-bottom: 4pt !important;
                         }
                     }
                 `}
@@ -235,15 +242,24 @@ export default function AftercareDetail() {
                 </div>
             </div>
 
-            {/* Printable Content */}
-            <div className="print-header no-print-screen">
-                <img 
-                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png"
-                    alt="Logo"
-                />
-                <div style={{fontSize: '8pt', color: '#666'}}>Contemporary Health Center | 239-561-9191</div>
-            </div>
-            <PrintableDocument title={`Aftercare Instructions: ${instruction.procedure_name}`}>
+            {/* Printable Content with repeating header */}
+            <table className="print-header-table">
+                <thead className="no-print">
+                    <tr>
+                        <th className="print-header-row">
+                            <img 
+                                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png"
+                                alt="Logo"
+                            />
+                            <div>6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
+                            <div>Phone: 239-561-9191 | contemporaryhealthcenter.com</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <PrintableDocument title={`Aftercare Instructions: ${instruction.procedure_name}`} showLogo={false}>
                 <div className="space-y-6">
                     {/* Metadata */}
                     {instruction.category && (
@@ -368,6 +384,10 @@ export default function AftercareDetail() {
                     </Card>
                 </div>
             </PrintableDocument>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
             {instruction && (
                 <AftercareForm
