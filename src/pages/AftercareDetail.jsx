@@ -121,6 +121,17 @@ export default function AftercareDetail() {
                             font-size: 11pt !important;
                             line-height: 1.5 !important;
                         }
+                        .printable-document > div:first-child {
+                            margin-top: 0 !important;
+                            padding-top: 0 !important;
+                        }
+                        .printable-document img:first-of-type {
+                            margin-top: 0 !important;
+                        }
+                        .printable-document h1:first-of-type {
+                            margin-top: 0 !important;
+                            padding-top: 0 !important;
+                        }
                         .printable-document h1,
                         .printable-document h2,
                         .printable-document h3 {

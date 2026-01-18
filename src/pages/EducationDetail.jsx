@@ -88,6 +88,17 @@ export default function EducationDetail() {
                             line-height: 1.5 !important;
                             color: #000 !important;
                         }
+                        .printable-document > div:first-child {
+                            margin-top: 0 !important;
+                            padding-top: 0 !important;
+                        }
+                        .printable-document img:first-of-type {
+                            margin-top: 0 !important;
+                        }
+                        .printable-document h1:first-of-type {
+                            margin-top: 0 !important;
+                            padding-top: 0 !important;
+                        }
                         .printable-document h1 {
                             font-size: 16pt !important;
                             margin-bottom: 12pt !important;
