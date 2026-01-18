@@ -8,6 +8,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import SearchBar from "../components/SearchBar";
 import AftercareForm from "../components/AftercareForm";
@@ -15,11 +18,17 @@ import ConsentFormForm from "../components/ConsentFormForm";
 import BulkActionsBar from "../components/BulkActionsBar";
 import TagManager from "../components/forms/TagManager";
 import { usePermissions } from "../components/permissions/usePermissions";
-import { FileText, Printer, Plus, Star } from "lucide-react";
+import { FileText, Printer, Plus, Star, Filter, X, CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
 
 export default function AftercareLibrary() {
     const [searchQuery, setSearchQuery] = useState("");
     const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+    const [categoryFilter, setCategoryFilter] = useState("all");
+    const [formTypeFilter, setFormTypeFilter] = useState("all");
+    const [dateFrom, setDateFrom] = useState(null);
+    const [dateTo, setDateTo] = useState(null);
+    const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
     const [showAftercareForm, setShowAftercareForm] = useState(false);
     const [showConsentForm, setShowConsentForm] = useState(false);
     const [activeTab, setActiveTab] = useState("aftercare");
@@ -92,25 +101,56 @@ export default function AftercareLibrary() {
 
     const filteredAftercare = aftercareInstructions.filter(item => {
         const matchesSearch = item.procedure_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.category?.toLowerCase().includes(searchQuery.toLowerCase());
+            item.category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.instructions?.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesFavorite = !showFavoritesOnly || item.is_favorite;
+        const matchesCategory = categoryFilter === "all" || item.category === categoryFilter;
         const isNotProviderForm = item.category !== "Provider Forms";
-        return matchesSearch && matchesFavorite && isNotProviderForm;
+        
+        const itemDate = new Date(item.updated_date || item.created_date);
+        const matchesDateFrom = !dateFrom || itemDate >= dateFrom;
+        const matchesDateTo = !dateTo || itemDate <= dateTo;
+        
+        return matchesSearch && matchesFavorite && matchesCategory && isNotProviderForm && matchesDateFrom && matchesDateTo;
     });
 
     const filteredClinicForms = aftercareInstructions.filter(item => {
-        const matchesSearch = item.procedure_name.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesSearch = item.procedure_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.instructions?.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesFavorite = !showFavoritesOnly || item.is_favorite;
         const isProviderForm = item.category === "Provider Forms";
-        return matchesSearch && matchesFavorite && isProviderForm;
+        
+        const itemDate = new Date(item.updated_date || item.created_date);
+        const matchesDateFrom = !dateFrom || itemDate >= dateFrom;
+        const matchesDateTo = !dateTo || itemDate <= dateTo;
+        
+        return matchesSearch && matchesFavorite && isProviderForm && matchesDateFrom && matchesDateTo;
     });
 
     const filteredForms = consentForms.filter(form => {
         const matchesSearch = form.form_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            form.form_type?.toLowerCase().includes(searchQuery.toLowerCase());
+            form.form_type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            form.content?.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesFavorite = !showFavoritesOnly || form.is_favorite;
-        return matchesSearch && matchesFavorite;
+        const matchesFormType = formTypeFilter === "all" || form.form_type === formTypeFilter;
+        
+        const formDate = new Date(form.updated_date || form.created_date);
+        const matchesDateFrom = !dateFrom || formDate >= dateFrom;
+        const matchesDateTo = !dateTo || formDate <= dateTo;
+        
+        return matchesSearch && matchesFavorite && matchesFormType && matchesDateFrom && matchesDateTo;
     });
+    
+    const clearAllFilters = () => {
+        setSearchQuery("");
+        setShowFavoritesOnly(false);
+        setCategoryFilter("all");
+        setFormTypeFilter("all");
+        setDateFrom(null);
+        setDateTo(null);
+    };
+    
+    const hasActiveFilters = searchQuery || showFavoritesOnly || categoryFilter !== "all" || formTypeFilter !== "all" || dateFrom || dateTo;
 
     const categoryColors = {
         "Gynecology": "bg-pink-100 text-pink-800",
@@ -151,22 +191,128 @@ export default function AftercareLibrary() {
                     )}
             </div>
 
-            {/* Search and Favorites */}
-            <div className="space-y-4">
-                <SearchBar
-                    value={searchQuery}
-                    onChange={setSearchQuery}
-                    placeholder="Search procedures or forms..."
-                />
-                <Button
-                    variant={showFavoritesOnly ? "default" : "outline"}
-                    onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-                    className={showFavoritesOnly ? "bg-yellow-500 hover:bg-yellow-600" : ""}
-                >
-                    <Star className={`w-4 h-4 mr-2 ${showFavoritesOnly ? 'fill-white' : ''}`} />
-                    {showFavoritesOnly ? 'Show All' : 'Show Favorites Only'}
-                </Button>
-            </div>
+            {/* Search and Filters */}
+            <Card className="bg-white">
+                <CardContent className="pt-6 space-y-4">
+                    <div className="flex gap-2">
+                        <div className="flex-1">
+                            <SearchBar
+                                value={searchQuery}
+                                onChange={setSearchQuery}
+                                placeholder="Search by name, category, or content..."
+                            />
+                        </div>
+                        <Button
+                            variant="outline"
+                            onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                            className={showAdvancedFilters ? "bg-blue-50 border-blue-300" : ""}
+                        >
+                            <Filter className="w-4 h-4 mr-2" />
+                            Filters
+                        </Button>
+                    </div>
+                    
+                    {showAdvancedFilters && (
+                        <div className="border-t pt-4 space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {/* Favorites Filter */}
+                                <Button
+                                    variant={showFavoritesOnly ? "default" : "outline"}
+                                    onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
+                                    className={`w-full ${showFavoritesOnly ? "bg-yellow-500 hover:bg-yellow-600" : ""}`}
+                                >
+                                    <Star className={`w-4 h-4 mr-2 ${showFavoritesOnly ? 'fill-white' : ''}`} />
+                                    {showFavoritesOnly ? 'Favorites Only' : 'All Items'}
+                                </Button>
+                                
+                                {/* Category Filter (for aftercare) */}
+                                {activeTab === "aftercare" && (
+                                    <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Filter by category" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="all">All Categories</SelectItem>
+                                            <SelectItem value="Gynecology">Gynecology</SelectItem>
+                                            <SelectItem value="Hormone Therapy">Hormone Therapy</SelectItem>
+                                            <SelectItem value="Mens Health">Mens Health</SelectItem>
+                                            <SelectItem value="General">General</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                                
+                                {/* Form Type Filter (for consent forms) */}
+                                {activeTab === "consent" && (
+                                    <Select value={formTypeFilter} onValueChange={setFormTypeFilter}>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Filter by type" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="all">All Types</SelectItem>
+                                            <SelectItem value="Procedure">Procedure</SelectItem>
+                                            <SelectItem value="Treatment">Treatment</SelectItem>
+                                            <SelectItem value="General">General</SelectItem>
+                                            <SelectItem value="HIPAA">HIPAA</SelectItem>
+                                            <SelectItem value="Financial">Financial</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                                
+                                {/* Date Range */}
+                                <div className="flex gap-2">
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button variant="outline" className="w-full justify-start text-left font-normal">
+                                                <CalendarIcon className="w-4 h-4 mr-2" />
+                                                {dateFrom ? format(dateFrom, "MMM d, yyyy") : "From date"}
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0">
+                                            <Calendar
+                                                mode="single"
+                                                selected={dateFrom}
+                                                onSelect={setDateFrom}
+                                                initialFocus
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                    
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button variant="outline" className="w-full justify-start text-left font-normal">
+                                                <CalendarIcon className="w-4 h-4 mr-2" />
+                                                {dateTo ? format(dateTo, "MMM d, yyyy") : "To date"}
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0">
+                                            <Calendar
+                                                mode="single"
+                                                selected={dateTo}
+                                                onSelect={setDateTo}
+                                                initialFocus
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                </div>
+                            </div>
+                            
+                            {hasActiveFilters && (
+                                <div className="flex items-center justify-between pt-2 border-t">
+                                    <span className="text-sm text-gray-600">
+                                        {activeTab === "aftercare" && `${filteredAftercare.length} results`}
+                                        {activeTab === "consent" && `${filteredForms.length} results`}
+                                        {activeTab === "clinic" && `${filteredClinicForms.length} results`}
+                                    </span>
+                                    <Button variant="ghost" size="sm" onClick={clearAllFilters}>
+                                        <X className="w-4 h-4 mr-2" />
+                                        Clear All Filters
+                                    </Button>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
 
             {/* Tabs */}
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">

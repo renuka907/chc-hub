@@ -5,14 +5,20 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import SearchBar from "../components/SearchBar";
 import EducationTopicForm from "../components/EducationTopicForm";
-import { BookOpen, Calendar, ExternalLink, Plus, Star } from "lucide-react";
+import { BookOpen, Calendar, ExternalLink, Plus, Star, Filter, X } from "lucide-react";
+import { format } from "date-fns";
 
 export default function EducationLibrary() {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+    const [dateFrom, setDateFrom] = useState(null);
+    const [dateTo, setDateTo] = useState(null);
+    const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const queryClient = useQueryClient();
 
@@ -34,11 +40,27 @@ export default function EducationLibrary() {
 
     const filteredTopics = topics.filter(topic => {
         const matchesSearch = topic.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            topic.summary?.toLowerCase().includes(searchQuery.toLowerCase());
+                            topic.summary?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            topic.content?.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesCategory = selectedCategory === "all" || topic.category === selectedCategory;
         const matchesFavorite = !showFavoritesOnly || topic.is_favorite;
-        return matchesSearch && matchesCategory && matchesFavorite;
+        
+        const topicDate = new Date(topic.updated_date || topic.created_date);
+        const matchesDateFrom = !dateFrom || topicDate >= dateFrom;
+        const matchesDateTo = !dateTo || topicDate <= dateTo;
+        
+        return matchesSearch && matchesCategory && matchesFavorite && matchesDateFrom && matchesDateTo;
     });
+    
+    const clearAllFilters = () => {
+        setSearchQuery("");
+        setSelectedCategory("all");
+        setShowFavoritesOnly(false);
+        setDateFrom(null);
+        setDateTo(null);
+    };
+    
+    const hasActiveFilters = searchQuery || selectedCategory !== "all" || showFavoritesOnly || dateFrom || dateTo;
 
     const categoryColors = {
         "Gynecology": "bg-pink-100 text-pink-800",
@@ -68,13 +90,75 @@ export default function EducationLibrary() {
                 </div>
             </div>
 
-            {/* Search and Filter */}
-            <div className="bg-white rounded-3xl p-6 shadow-md">
-                <SearchBar
-                    value={searchQuery}
-                    onChange={setSearchQuery}
-                    placeholder="Search education topics..."
-                />
+            {/* Search and Advanced Filters */}
+            <div className="bg-white rounded-3xl p-6 shadow-md space-y-4">
+                <div className="flex gap-2">
+                    <div className="flex-1">
+                        <SearchBar
+                            value={searchQuery}
+                            onChange={setSearchQuery}
+                            placeholder="Search topics by title, summary, or content..."
+                        />
+                    </div>
+                    <Button
+                        variant="outline"
+                        onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                        className={`rounded-2xl ${showAdvancedFilters ? "bg-purple-50 border-purple-300" : ""}`}
+                    >
+                        <Filter className="w-4 h-4 mr-2" />
+                        Advanced
+                    </Button>
+                </div>
+                
+                {showAdvancedFilters && (
+                    <div className="border-t pt-4 space-y-4">
+                        <div className="flex gap-2">
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button variant="outline" className="rounded-2xl">
+                                        <Calendar className="w-4 h-4 mr-2" />
+                                        {dateFrom ? format(dateFrom, "MMM d, yyyy") : "From date"}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0">
+                                    <CalendarComponent
+                                        mode="single"
+                                        selected={dateFrom}
+                                        onSelect={setDateFrom}
+                                        initialFocus
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                            
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button variant="outline" className="rounded-2xl">
+                                        <Calendar className="w-4 h-4 mr-2" />
+                                        {dateTo ? format(dateTo, "MMM d, yyyy") : "To date"}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0">
+                                    <CalendarComponent
+                                        mode="single"
+                                        selected={dateTo}
+                                        onSelect={setDateTo}
+                                        initialFocus
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+                        
+                        {hasActiveFilters && (
+                            <div className="flex items-center justify-between pt-2 border-t">
+                                <span className="text-sm text-gray-600">{filteredTopics.length} results found</span>
+                                <Button variant="ghost" size="sm" onClick={clearAllFilters} className="rounded-2xl">
+                                    <X className="w-4 h-4 mr-2" />
+                                    Clear All Filters
+                                </Button>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
             {/* Category Filters */}
