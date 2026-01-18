@@ -146,7 +146,8 @@ export default function ConsentFormDetail() {
                 {`
                     @media print {
                         @page {
-                            margin: 0.3cm;
+                            margin: 0.5in;
+                            size: letter;
                         }
                         body * {
                             visibility: hidden;
@@ -157,13 +158,34 @@ export default function ConsentFormDetail() {
                             color: #000 !important;
                         }
                         .printable-document {
-                            position: absolute !important;
-                            left: 0 !important;
-                            top: 0 !important;
-                            width: 100%;
-                            padding: 5px !important;
+                            position: static !important;
+                            left: auto !important;
+                            top: auto !important;
+                            width: 100% !important;
+                            max-width: 100% !important;
+                            padding: 0 !important;
+                            margin: 0 !important;
                             font-size: 11pt !important;
-                            line-height: 1.4 !important;
+                            line-height: 1.5 !important;
+                        }
+                        .printable-document h1,
+                        .printable-document h2,
+                        .printable-document h3 {
+                            page-break-after: avoid !important;
+                            break-after: avoid !important;
+                            orphans: 3 !important;
+                            widows: 3 !important;
+                        }
+                        .printable-document p,
+                        .printable-document li {
+                            orphans: 3 !important;
+                            widows: 3 !important;
+                        }
+                        .printable-document ul,
+                        .printable-document ol,
+                        .printable-document table {
+                            page-break-inside: auto !important;
+                            break-inside: auto !important;
                         }
                         .no-print {
                             display: none !important;

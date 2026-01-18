@@ -64,7 +64,7 @@ export default function EducationDetail() {
                 {`
                     @media print {
                         @page {
-                            size: 8.5in 11in;
+                            size: letter;
                             margin: 0.5in;
                         }
                         body {
@@ -84,25 +84,40 @@ export default function EducationDetail() {
                             max-width: 100% !important;
                             margin: 0 !important;
                             padding: 0 !important;
-                            font-size: 12pt !important;
-                            line-height: 1.4 !important;
+                            font-size: 11pt !important;
+                            line-height: 1.5 !important;
                             color: #000 !important;
                         }
                         .printable-document h1 {
-                            font-size: 18pt !important;
+                            font-size: 16pt !important;
                             margin-bottom: 12pt !important;
                             page-break-after: avoid !important;
+                            orphans: 3 !important;
+                            widows: 3 !important;
                         }
+                        .printable-document h2,
                         .printable-document h3 {
-                            font-size: 14pt !important;
+                            font-size: 13pt !important;
                             margin-bottom: 8pt !important;
                             margin-top: 12pt !important;
                             page-break-after: avoid !important;
+                            orphans: 3 !important;
+                            widows: 3 !important;
                         }
                         .printable-document p {
                             margin-bottom: 8pt !important;
                             orphans: 3 !important;
                             widows: 3 !important;
+                        }
+                        .printable-document li {
+                            orphans: 2 !important;
+                            widows: 2 !important;
+                        }
+                        .printable-document ul,
+                        .printable-document ol {
+                            margin-bottom: 8pt !important;
+                            padding-left: 20pt !important;
+                            page-break-inside: auto !important;
                         }
                         .printable-document img {
                             max-width: 100% !important;
@@ -111,32 +126,10 @@ export default function EducationDetail() {
                             display: block !important;
                             margin: 12pt auto !important;
                         }
-                        .printable-document .bg-blue-50 {
-                            background-color: #f0f4f8 !important;
-                            border: 1px solid #ccc !important;
-                            padding: 10pt !important;
-                            margin-bottom: 12pt !important;
-                            page-break-inside: avoid !important;
-                        }
+                        .printable-document .bg-blue-50,
                         .printable-document .bg-slate-50 {
-                            background-color: #f5f5f5 !important;
-                            border: 1px solid #ccc !important;
-                            padding: 10pt !important;
-                            margin-top: 12pt !important;
-                            page-break-inside: avoid !important;
-                        }
-                        .printable-document ul,
-                        .printable-document ol {
-                            margin-bottom: 8pt !important;
-                            padding-left: 20pt !important;
-                        }
-                        .printable-document li {
-                            margin-bottom: 4pt !important;
-                        }
-                        .printable-document .border-t {
-                            border-top: 1px solid #ddd !important;
-                            padding-top: 12pt !important;
-                            margin-top: 12pt !important;
+                            page-break-inside: auto !important;
+                            overflow: visible !important;
                         }
                         .no-print {
                             display: none !important;

@@ -99,7 +99,8 @@ export default function AftercareDetail() {
                 {`
                     @media print {
                         @page {
-                            margin: 0.3cm;
+                            margin: 0.5in;
+                            size: letter;
                         }
                         body * {
                             visibility: hidden;
@@ -110,52 +111,45 @@ export default function AftercareDetail() {
                             color: #000 !important;
                         }
                         .printable-document {
-                            position: absolute !important;
-                            left: 0 !important;
-                            top: 0 !important;
-                            width: 100%;
-                            padding: 5px !important;
+                            position: static !important;
+                            left: auto !important;
+                            top: auto !important;
+                            width: 100% !important;
+                            max-width: 100% !important;
+                            padding: 0 !important;
+                            margin: 0 !important;
                             font-size: 11pt !important;
-                            line-height: 1.4 !important;
+                            line-height: 1.5 !important;
                         }
-                        .no-print {
-                            display: none !important;
+                        .printable-document h1,
+                        .printable-document h2,
+                        .printable-document h3 {
+                            page-break-after: avoid !important;
+                            break-after: avoid !important;
+                            orphans: 3 !important;
+                            widows: 3 !important;
                         }
-                        .printable-document .card-compact {
-                            padding: 8px !important;
-                            margin: 6px 0 !important;
-                            page-break-inside: avoid !important;
-                            break-inside: avoid !important;
-                            display: block !important;
-                            overflow: visible !important;
+                        .printable-document p,
+                        .printable-document li {
+                            orphans: 3 !important;
+                            widows: 3 !important;
                         }
-                        .printable-document .card-compact-header {
-                            padding: 6px !important;
-                            margin-bottom: 4px !important;
+                        .printable-document ul,
+                        .printable-document ol {
+                            page-break-inside: auto !important;
+                            break-inside: auto !important;
                         }
-                        .printable-document .card-compact-content {
-                            padding: 8px !important;
-                        }
+                        .printable-document .card-compact,
                         .printable-document .bg-blue-50,
                         .printable-document .bg-amber-50,
                         .printable-document .bg-green-50,
                         .printable-document .bg-slate-100 {
-                            page-break-inside: avoid !important;
-                            break-inside: avoid !important;
-                            page-break-before: auto !important;
-                            page-break-after: auto !important;
-                            orphans: 4 !important;
-                            widows: 4 !important;
-                            display: block !important;
+                            page-break-inside: auto !important;
+                            break-inside: auto !important;
                             overflow: visible !important;
-                            position: relative !important;
                         }
-                        .printable-document .bg-amber-50 {
-                            min-height: 100px !important;
-                        }
-                        .printable-document > div > * {
-                            page-break-inside: avoid !important;
-                            break-inside: avoid !important;
+                        .no-print {
+                            display: none !important;
                         }
                     }
                 `}
