@@ -64,8 +64,11 @@ export default function EducationDetail() {
                 {`
                     @media print {
                         @page {
+                            margin-top: 0.75in;
+                            margin-bottom: 0.5in;
+                            margin-left: 0.5in;
+                            margin-right: 0.5in;
                             size: letter;
-                            margin: 0.5in;
                         }
                         body {
                             margin: 0;
@@ -87,6 +90,22 @@ export default function EducationDetail() {
                             font-size: 11pt !important;
                             line-height: 1.5 !important;
                             color: #000 !important;
+                        }
+                        .print-header {
+                            position: fixed !important;
+                            top: 0 !important;
+                            left: 0 !important;
+                            right: 0 !important;
+                            padding: 8pt 0.5in !important;
+                            border-bottom: 1px solid #ccc !important;
+                            background: white !important;
+                            text-align: center !important;
+                            font-size: 9pt !important;
+                            z-index: 9999 !important;
+                        }
+                        .print-header img {
+                            height: 24pt !important;
+                            margin: 0 auto 4pt !important;
                         }
                         .printable-document > div:first-child {
                             margin-top: 0 !important;
@@ -145,6 +164,14 @@ export default function EducationDetail() {
                         .no-print {
                             display: none !important;
                         }
+                        .no-print-screen {
+                            display: none;
+                        }
+                        @media print {
+                            .no-print-screen {
+                                display: block !important;
+                            }
+                        }
                     }
                 `}
             </style>
@@ -178,6 +205,13 @@ export default function EducationDetail() {
             </div>
 
             {/* Printable Content */}
+            <div className="print-header no-print-screen">
+                <img 
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png"
+                    alt="Logo"
+                />
+                <div style={{fontSize: '8pt', color: '#666'}}>Contemporary Health Center | 239-561-9191</div>
+            </div>
             <PrintableDocument title={topic.title}>
                 <div className="space-y-6">
                     {/* Metadata */}
