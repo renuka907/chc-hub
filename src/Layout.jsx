@@ -39,6 +39,7 @@ export default function Layout({ children, currentPageName }) {
     const [currentUser, setCurrentUser] = React.useState(null);
     const [isLoading, setIsLoading] = React.useState(true);
     const [openDropdown, setOpenDropdown] = React.useState(null);
+    const [reminderCount, setReminderCount] = React.useState(0);
     const closeTimerRef = React.useRef(null);
 
     React.useEffect(() => {
@@ -50,6 +51,21 @@ export default function Layout({ children, currentPageName }) {
             .catch(() => {
                 base44.auth.redirectToLogin();
             });
+    }, []);
+
+    React.useEffect(() => {
+        const fetchReminderCount = async () => {
+            try {
+                const reminders = await base44.entities.Reminder.filter({ completed: false });
+                setReminderCount(reminders.length);
+            } catch (e) {
+                // silently fail
+            }
+        };
+
+        fetchReminderCount();
+        const interval = setInterval(fetchReminderCount, 30000); // Update every 30 seconds
+        return () => clearInterval(interval);
     }, []);
 
     const menuGroups = [
@@ -160,10 +176,15 @@ export default function Layout({ children, currentPageName }) {
                             </Link>
                             <Link 
                                 to={createPageUrl("Reminders")} 
-                                className="flex items-center gap-2 bg-white border-2 border-purple-300 text-purple-700 px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
+                                className="flex items-center gap-2 bg-white border-2 border-purple-300 text-purple-700 px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium relative"
                             >
                                 <Bell className="w-4 h-4" />
                                 <span>Reminders</span>
+                                {reminderCount > 0 && (
+                                    <span className="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                        {reminderCount > 99 ? '99+' : reminderCount}
+                                    </span>
+                                )}
                             </Link>
                             
                             {/* Single Dropdown Menu */}
