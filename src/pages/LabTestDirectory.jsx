@@ -645,8 +645,10 @@ Only return found: false if you truly cannot identify what test they're asking a
                                             deleting={deleteTestMutation.isPending}
                                             panels={panels}
                                             onUpdatePanels={updateTestPanelsMutation.mutate}
-                                        />
-                                    ))}
+                                            onGenerateICD10={generateICD10Mutation.mutate}
+                                            generatingCodes={generateICD10Mutation.isPending}
+                                  />
+                                ))}
                                 </div>
                             </div>
                         )}
