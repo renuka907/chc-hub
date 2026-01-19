@@ -70,7 +70,7 @@ export default function Home() {
                 </div>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {quickLinks.map((link) => {
                     const Icon = link.icon;
                     const gradientMap = {
