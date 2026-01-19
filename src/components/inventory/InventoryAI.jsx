@@ -148,7 +148,23 @@ Be specific and actionable.`,
             </CardHeader>
             <CardContent className="flex-1 p-0 flex flex-col">
                 {/* Quick Actions */}
-                <div className="p-4 border-b bg-gray-50">
+                <div className="p-4 border-b bg-gray-50 space-y-3">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Location</label>
+                        <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                            <SelectTrigger className="w-full">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Locations</SelectItem>
+                                {locations.map(loc => (
+                                    <SelectItem key={loc.id} value={loc.id}>
+                                        {loc.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
                     <Button
                         onClick={generateSuggestions}
                         disabled={isLoading}
