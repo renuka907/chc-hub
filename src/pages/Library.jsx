@@ -614,46 +614,39 @@ export default function Library() {
                             </CardContent>
                         </Card>
                     ) : (
-                        <div className="grid md:grid-cols-2 gap-6">
-                            {filteredClinicForms.map(instruction => (
-                                <div key={instruction.id} className="relative">
-                                    <div className="absolute top-4 left-4 z-10">
+                        <div className="bg-white rounded-2xl p-6 shadow-md">
+                            <h3 className="text-xl font-bold mb-4 text-gray-900 flex items-center">
+                                <span className="px-3 py-1 rounded-lg text-sm mr-3 bg-orange-100 text-orange-800">
+                                    Clinic Forms
+                                </span>
+                                <span className="text-gray-400 text-sm font-normal">({filteredClinicForms.length})</span>
+                            </h3>
+                            <div className="space-y-2">
+                                {filteredClinicForms.map(instruction => (
+                                    <div key={instruction.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors group">
                                         <Checkbox
                                             checked={selectedItems.has(instruction.id)}
                                             onCheckedChange={() => toggleSelection(instruction.id)}
                                             onClick={(e) => e.stopPropagation()}
-                                            className="bg-white border-2 border-gray-400"
+                                            className="flex-shrink-0"
                                         />
-                                    </div>
-                                    <button
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            toggleAftercareFavorite(instruction.id, instruction.is_favorite);
-                                        }}
-                                        className="absolute top-4 right-4 z-10 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center hover:scale-110 transition-transform"
-                                    >
-                                        <Star className={`w-4 h-4 ${instruction.is_favorite ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`} />
-                                    </button>
-                                    <Link to={createPageUrl(`AftercareDetail?id=${instruction.id}`)}>
-                                        <Card className={`h-full hover:shadow-lg transition-all duration-300 border-2 ${selectedItems.has(instruction.id) ? 'border-blue-500 bg-blue-50' : 'hover:border-blue-200'} cursor-pointer group`}>
-                                            <CardHeader>
-                                                <div className="flex items-start justify-between mb-2">
-                                                    <div className="flex gap-2 flex-wrap">
-                                                        <Badge className="bg-orange-100 text-orange-800">
-                                                            Clinic Form
-                                                        </Badge>
-                                                        {instruction.version && (
-                                                            <Badge variant="outline">v{instruction.version}</Badge>
-                                                        )}
-                                                    </div>
-                                                    <Printer className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
-                                                </div>
-                                                <CardTitle className="group-hover:text-blue-600 transition-colors">
+                                        <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                toggleAftercareFavorite(instruction.id, instruction.is_favorite);
+                                            }}
+                                            className="flex-shrink-0 w-6 h-6 flex items-center justify-center hover:scale-110 transition-transform"
+                                        >
+                                            <Star className={`w-4 h-4 ${instruction.is_favorite ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`} />
+                                        </button>
+                                        <Link to={createPageUrl(`AftercareDetail?id=${instruction.id}`)} className="flex-1 flex items-center justify-between min-w-0">
+                                            <div className="flex-1 min-w-0 mr-4">
+                                                <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
                                                     {instruction.procedure_name}
-                                                </CardTitle>
+                                                </h4>
                                                 {instruction.tags && JSON.parse(instruction.tags).length > 0 && (
-                                                    <div className="flex gap-1 flex-wrap mt-2">
+                                                    <div className="flex gap-1 flex-wrap mt-1">
                                                         {JSON.parse(instruction.tags).slice(0, 3).map(tag => (
                                                             <Badge key={tag} variant="secondary" className="text-xs">
                                                                 {tag}
@@ -661,11 +654,15 @@ export default function Library() {
                                                         ))}
                                                     </div>
                                                 )}
-                                            </CardHeader>
-                                        </Card>
-                                    </Link>
-                                </div>
-                            ))}
+                                            </div>
+                                            {instruction.version && (
+                                                <Badge variant="outline" className="flex-shrink-0">v{instruction.version}</Badge>
+                                            )}
+                                        </Link>
+                                        <Printer className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors flex-shrink-0" />
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     )}
                 </TabsContent>
