@@ -84,7 +84,7 @@ export default function Home() {
                     
                     return (
                         <Link key={link.path} to={createPageUrl(link.path)}>
-                            <div className={`h-full bg-gradient-to-br ${bgGradient} rounded-3xl p-6 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer relative overflow-hidden`}>
+                            <div className={`h-full bg-gradient-to-br ${bgGradient} rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer relative overflow-hidden`}>
                                 <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <div className="w-8 h-8 bg-white/50 rounded-full flex items-center justify-center">
                                         <span className="text-lg">✓</span>
