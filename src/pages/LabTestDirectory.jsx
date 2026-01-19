@@ -605,7 +605,7 @@ Only return found: false if you truly cannot identify what test they're asking a
     );
 }
 
-function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, onDelete, deleting }) {
+function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, onDelete, deleting, panels, onAssignToPanel, onRemoveFromPanel }) {
     return (
         <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
