@@ -114,6 +114,7 @@ export default function Layout({ children, currentPageName }) {
                 { name: "Procedures", path: "ProceduresManagement", icon: Stethoscope },
                 { name: "Lab Tests", path: "LabTestDirectory", icon: Stethoscope },
                 { name: "Medication Calculator", path: "MedicationCalculator", icon: Stethoscope },
+                { name: "Provider Directory", path: "ProviderReferral", icon: Users },
             ]
         },
         {
