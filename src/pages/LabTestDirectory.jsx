@@ -307,9 +307,9 @@ Only return found: false if you truly cannot identify what test they're asking a
     };
 
     const filteredTests = savedTests.filter(test =>
-        test.test_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        test.test_code?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        test.category?.toLowerCase().includes(searchQuery.toLowerCase())
+        test.test_name?.toLowerCase().includes(testFilter.toLowerCase()) ||
+        test.test_code?.toLowerCase().includes(testFilter.toLowerCase()) ||
+        test.category?.toLowerCase().includes(testFilter.toLowerCase())
     );
 
     const favoriteTests = filteredTests.filter(t => t.is_favorite);
