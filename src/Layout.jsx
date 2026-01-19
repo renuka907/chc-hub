@@ -184,6 +184,11 @@ export default function Layout({ children, currentPageName }) {
 
                         {/* Quick Action Buttons and Menu */}
                         <div className="hidden md:flex items-center gap-2">
+                            {currentUser && (
+                                <div className="text-sm text-gray-600 mr-2 px-4">
+                                    <span className="font-medium">{currentUser.full_name || currentUser.email}</span>
+                                </div>
+                            )}
                             <Link 
                                 to={createPageUrl("Home")} 
                                 className="flex items-center gap-2 bg-white border-2 border-purple-300 text-purple-700 px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
