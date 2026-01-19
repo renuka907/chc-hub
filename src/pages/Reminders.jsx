@@ -500,14 +500,30 @@ export default function Reminders() {
                                         </div>
 
                                         <div className="flex gap-2">
-                                             <Button
-                                                  variant="ghost"
-                                                  size="sm"
-                                                  onClick={() => handleSnoozeReminder(reminder)}
-                                                  title="Hide for 24 hours"
-                                              >
-                                                  Snooze
-                                              </Button>
+                                             <DropdownMenu>
+                                                  <DropdownMenuTrigger asChild>
+                                                      <Button variant="ghost" size="sm">
+                                                          Snooze
+                                                      </Button>
+                                                  </DropdownMenuTrigger>
+                                                  <DropdownMenuContent align="end">
+                                                      <DropdownMenuItem onClick={() => handleSnoozeReminder(reminder, 1)}>
+                                                          1 hour
+                                                      </DropdownMenuItem>
+                                                      <DropdownMenuItem onClick={() => handleSnoozeReminder(reminder, 4)}>
+                                                          4 hours
+                                                      </DropdownMenuItem>
+                                                      <DropdownMenuItem onClick={() => handleSnoozeReminder(reminder, 8)}>
+                                                          8 hours
+                                                      </DropdownMenuItem>
+                                                      <DropdownMenuItem onClick={() => handleSnoozeReminder(reminder, 24)}>
+                                                          24 hours
+                                                      </DropdownMenuItem>
+                                                      <DropdownMenuItem onClick={() => handleSnoozeReminder(reminder, 48)}>
+                                                          2 days
+                                                      </DropdownMenuItem>
+                                                  </DropdownMenuContent>
+                                             </DropdownMenu>
                                               <Button
                                                   variant="ghost"
                                                   size="sm"
