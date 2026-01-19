@@ -443,11 +443,13 @@ export default function Reminders() {
                                             checked={selectedReminders.has(reminder.id)}
                                             onCheckedChange={() => toggleReminderSelection(reminder.id)}
                                             className="mt-1"
+                                            title="Select for bulk actions"
                                         />
                                         <Checkbox
                                             checked={reminder.completed}
                                             onCheckedChange={() => handleToggleComplete(reminder)}
                                             className="mt-1"
+                                            title="Mark as complete"
                                         />
 
                                         <div className="flex-1 min-w-0">
