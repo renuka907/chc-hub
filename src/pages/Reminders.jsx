@@ -264,6 +264,50 @@ export default function Reminders() {
                 </CardContent>
             </Card>
 
+            {/* Due Reminders Alert */}
+            {dueReminders.length > 0 && (
+                <Card className="border-red-300 bg-red-50">
+                    <CardContent className="p-4">
+                        <div className="flex items-start justify-between gap-4">
+                            <div className="flex items-start gap-3 flex-1">
+                                <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                                <div>
+                                    <h3 className="font-semibold text-red-900 mb-2">You have {dueReminders.length} due reminder{dueReminders.length !== 1 ? "s" : ""}</h3>
+                                    <div className="space-y-1">
+                                        {dueReminders.slice(0, 3).map(reminder => (
+                                            <div key={reminder.id} className="text-sm text-red-800">
+                                                • <strong>{reminder.title}</strong>
+                                                {reminder.due_date && (
+                                                    <span className="ml-2 text-red-700">
+                                                        {isOverdue(reminder.due_date) ? "Overdue" : "Due soon"}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        ))}
+                                        {dueReminders.length > 3 && (
+                                            <div className="text-sm text-red-800">
+                                                +{dueReminders.length - 3} more
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                    setFilterStatus("active");
+                                    setSearchQuery("");
+                                }}
+                                className="text-red-700 border-red-300 hover:bg-red-100"
+                            >
+                                View All
+                            </Button>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
+
             {/* Bulk Actions Bar */}
             {selectedReminders.size > 0 && (
                 <Card className="border-purple-300 bg-purple-50">
