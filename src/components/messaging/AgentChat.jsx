@@ -123,10 +123,14 @@ export default function AgentChat({ agentName }) {
         }, 25000);
 
         try {
+            const locationContext = selectedLocation === "all" 
+                ? "" 
+                : `\n\nClinic Location Filter: ${locations.find(l => l.id === selectedLocation)?.name || "Selected location"}\nPlease include this clinic name when mentioning items or recommendations.`;
+            
             const conv = await base44.agents.getConversation(conversationId);
             await base44.agents.addMessage(conv, {
                 role: "user",
-                content: userMessage
+                content: userMessage + locationContext
             });
         } catch (error) {
             console.error("Failed to send message:", error);
