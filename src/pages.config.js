@@ -21,6 +21,7 @@ import QuotesManagement from './pages/QuotesManagement';
 import UserManagement from './pages/UserManagement';
 import ViewSharedForm from './pages/ViewSharedForm';
 import EducationDetail from './pages/EducationDetail';
+import Library from './pages/Library';
 import __Layout from './Layout.jsx';
 
 
@@ -48,6 +49,7 @@ export const PAGES = {
     "UserManagement": UserManagement,
     "ViewSharedForm": ViewSharedForm,
     "EducationDetail": EducationDetail,
+    "Library": Library,
 }
 
 export const pagesConfig = {

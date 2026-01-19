@@ -77,14 +77,13 @@ export default function Layout({ children, currentPageName }) {
             items: [
                 { name: "Procedures", path: "ProceduresManagement", icon: Stethoscope },
                 { name: "Lab Tests", path: "LabTestDirectory", icon: Stethoscope },
-                { name: "Education Library", path: "EducationLibrary", icon: BookOpen },
             ]
         },
         {
             name: "Forms & Documents",
             icon: FileText,
             items: [
-                { name: "Aftercare & Consents", path: "AftercareLibrary", icon: FileText },
+                { name: "Resource Library", path: "Library", icon: BookOpen },
                 { name: "Form Templates", path: "FormTemplates", icon: Layers },
             ]
         },
