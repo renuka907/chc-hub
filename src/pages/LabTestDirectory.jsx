@@ -727,17 +727,29 @@ function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, o
                         <Badge variant="outline" className="text-xs">
                             {panels.find(p => p.id === test.panel_id)?.panel_name}
                         </Badge>
-                        {onRemoveFromPanel && (
-                            <button
-                                onClick={() => onRemoveFromPanel?.(test.id)}
-                                className="text-gray-400 hover:text-red-600"
-                                title="Remove from panel"
-                            >
-                                <Minus className="w-3 h-3" />
-                            </button>
+                        </div>
                         )}
-                    </div>
-                )}
+                        {panels.length > 0 && (
+                        <div>
+                            <p className="text-xs font-semibold text-gray-600 mb-2">Assign to Panel</p>
+                            <select
+                                value={test.panel_id || ""}
+                                onChange={(e) => {
+                                    if (e.target.value) {
+                                        onAssignToPanel?.({ testId: test.id, panelId: e.target.value });
+                                    } else if (test.panel_id) {
+                                        onRemoveFromPanel?.(test.id);
+                                    }
+                                }}
+                                className="w-full text-xs border border-gray-300 rounded px-2 py-1 bg-white"
+                            >
+                                <option value="">None</option>
+                                {panels.map(panel => (
+                                    <option key={panel.id} value={panel.id}>{panel.panel_name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        )}
                 {test.diagnosis_codes && (
                     <div>
                         <p className="text-xs font-semibold text-gray-600 mb-1">Diagnosis Codes</p>
