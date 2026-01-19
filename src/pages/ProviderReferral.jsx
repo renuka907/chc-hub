@@ -89,6 +89,13 @@ export default function ProviderReferral() {
                         <Filter className="w-4 h-4" />
                         Filters
                     </Button>
+                    <Button
+                        onClick={handlePrint}
+                        className="gap-2 bg-purple-600 hover:bg-purple-700 text-white"
+                    >
+                        <Printer className="w-4 h-4" />
+                        Print Directory
+                    </Button>
                 </div>
 
                 {showFilters && (
