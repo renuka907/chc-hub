@@ -700,16 +700,16 @@ Only return found: false if you truly cannot identify what test they're asking a
                         </CardContent>
                     </Card>
                 ) : (
-                    <div className="space-y-4">
+                    <div className="space-y-2">
                         {favoriteTests.length > 0 && (
                             <div>
-                                <h3 className="text-sm font-semibold text-gray-600 mb-2 flex items-center gap-2">
+                                <h3 className="text-sm font-semibold text-gray-600 mb-3 flex items-center gap-2">
                                     <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />
                                     Favorites
                                 </h3>
-                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div className="space-y-2 mb-6">
                                     {favoriteTests.map(test => (
-                                        <TestCard 
+                                        <TestListItem
                                             key={test.id} 
                                             test={test} 
                                             onToggleFavorite={toggleFavoriteMutation.mutate}
@@ -722,8 +722,8 @@ Only return found: false if you truly cannot identify what test they're asking a
                                             onUpdatePanels={updateTestPanelsMutation.mutate}
                                             onGenerateICD10={generateICD10Mutation.mutate}
                                             generatingCodes={generateICD10Mutation.isPending}
-                                  />
-                                ))}
+                                        />
+                                    ))}
                                 </div>
                             </div>
                         )}
@@ -731,11 +731,11 @@ Only return found: false if you truly cannot identify what test they're asking a
                         {otherTests.length > 0 && (
                             <div>
                                 {favoriteTests.length > 0 && (
-                                    <h3 className="text-sm font-semibold text-gray-600 mb-2">All Tests</h3>
+                                    <h3 className="text-sm font-semibold text-gray-600 mb-3">All Tests</h3>
                                 )}
-                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div className="space-y-2">
                                     {otherTests.map(test => (
-                                        <TestCard 
+                                        <TestListItem
                                             key={test.id} 
                                             test={test} 
                                             onToggleFavorite={toggleFavoriteMutation.mutate}
@@ -748,8 +748,8 @@ Only return found: false if you truly cannot identify what test they're asking a
                                             onUpdatePanels={updateTestPanelsMutation.mutate}
                                             onGenerateICD10={generateICD10Mutation.mutate}
                                             generatingCodes={generateICD10Mutation.isPending}
-                                  />
-                                ))}
+                                        />
+                                    ))}
                                 </div>
                             </div>
                         )}
