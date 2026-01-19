@@ -130,6 +130,7 @@ export default function Layout({ children, currentPageName }) {
                 { name: "Pricing", path: "PricingManagement", icon: DollarSign },
                 { name: "Quotes", path: "QuotesManagement", icon: FileText },
                 { name: "Inventory", path: "InventoryManagement", icon: Package },
+                { name: "Usage Tracking", path: "InventoryUsageTracking", icon: TrendingUp },
                 ...(currentUser?.role === 'admin' || currentUser?.role === 'manager' ? [{ name: "Inventory Reports", path: "InventoryReports", icon: Package }] : []),
                 ...(currentUser?.role === 'admin' || currentUser?.role === 'manager' ? [{ name: "Discounts", path: "DiscountManagement", icon: Tag }] : []),
             ]
