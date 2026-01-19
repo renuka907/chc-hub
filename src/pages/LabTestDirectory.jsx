@@ -278,6 +278,16 @@ Only return found: false if you truly cannot identify what test they're asking a
     const favoriteTests = filteredTests.filter(t => t.is_favorite);
     const otherTests = filteredTests.filter(t => !t.is_favorite);
 
+    const calculatePanelTubes = (panelId) => {
+        const panelTests = savedTests.filter(t => t.panel_id === panelId);
+        const tubeCount = {};
+        panelTests.forEach(test => {
+            const tube = test.tube_type || 'Unknown';
+            tubeCount[tube] = (tubeCount[tube] || 0) + 1;
+        });
+        return tubeCount;
+    };
+
     return (
         <div className="space-y-6">
             <div>
