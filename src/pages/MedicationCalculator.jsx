@@ -116,6 +116,24 @@ export default function MedicationCalculator() {
                             <p className="text-xs text-gray-500 mt-1">Enter the concentration (e.g., 200mg/ml)</p>
                         </div>
 
+                        {/* Units per ml (Optional) */}
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                Units per ml (Optional)
+                            </label>
+                            <Input
+                                type="number"
+                                placeholder="e.g., 100 for U-100 insulin"
+                                value={unitsPerMl}
+                                onChange={(e) => setUnitsPerMl(e.target.value)}
+                                onKeyPress={handleKeyPress}
+                                step="0.1"
+                                min="0"
+                                className="text-lg"
+                            />
+                            <p className="text-xs text-gray-500 mt-1">Leave blank to skip insulin units calculation. Common: U-100 (100 units/ml)</p>
+                        </div>
+
                         {/* Error Message */}
                         {error && (
                             <Alert className="border-red-200 bg-red-50">
