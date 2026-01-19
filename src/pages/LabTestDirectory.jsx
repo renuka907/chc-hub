@@ -651,8 +651,11 @@ Only return found: false if you truly cannot identify what test they're asking a
                                                 <p className="text-xs font-semibold text-gray-600 mb-2">Tube Breakdown:</p>
                                                 <div className="space-y-1">
                                                     {Object.entries(tubeCount).map(([tube, count]) => (
-                                                        <div key={tube} className="flex justify-between text-sm">
-                                                            <span className="text-gray-700">{tube}</span>
+                                                        <div key={tube} className="flex justify-between items-center text-sm">
+                                                            <div className="flex items-center gap-2">
+                                                                <TestTube className={`w-4 h-4 ${getTubeColor(tube)}`} />
+                                                                <span className="text-gray-700">{tube}</span>
+                                                            </div>
                                                             <Badge variant="outline">{count}</Badge>
                                                         </div>
                                                     ))}
