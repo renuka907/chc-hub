@@ -61,6 +61,32 @@ export default function ProviderReferral() {
         window.print();
     };
 
+    const handlePrintCard = (provider) => {
+        const printContent = `
+            <div style="font-family: Arial, sans-serif; padding: 40px; max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #6d28d9; margin-bottom: 20px;">${provider.full_name}</h2>
+                ${provider.credentials ? `<p style="color: #8b5cf6; font-weight: bold; margin-bottom: 10px;">${provider.credentials}</p>` : ''}
+                <p style="color: #666; font-size: 14px; margin-bottom: 20px;">${provider.specialty}</p>
+                
+                ${provider.bio ? `<p style="color: #333; margin-bottom: 20px;">${provider.bio}</p>` : ''}
+                
+                <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; margin-bottom: 20px;">
+                    ${provider.email ? `<p style="margin: 8px 0;"><strong>Email:</strong> ${provider.email}</p>` : ''}
+                    ${provider.phone ? `<p style="margin: 8px 0;"><strong>Phone:</strong> ${provider.phone}</p>` : ''}
+                    ${provider.address ? `<p style="margin: 8px 0;"><strong>Address:</strong> ${provider.address}</p>` : ''}
+                    <p style="margin: 8px 0;"><strong>Clinic:</strong> ${getClinicName(provider.clinic_location_id)}</p>
+                </div>
+                
+                ${provider.languages ? `<p style="font-size: 12px; color: #666;">Languages: ${JSON.parse(provider.languages || '[]').join(", ") || "English"}</p>` : ''}
+            </div>
+        `;
+        
+        const newWindow = window.open('', '', 'width=600,height=700');
+        newWindow.document.write(printContent);
+        newWindow.document.close();
+        setTimeout(() => newWindow.print(), 250);
+    };
+
     return (
         <div className="space-y-6">
             {/* Header */}
