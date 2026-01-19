@@ -208,10 +208,6 @@ export default function EducationDetail() {
 
             {/* Printable Content */}
             <div className="print-header no-print-screen">
-                <img 
-                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png"
-                    alt="Logo"
-                />
                 <div style={{fontSize: '8pt', color: '#666'}}>Contemporary Health Center | 239-561-9191</div>
             </div>
             <PrintableDocument title={topic.title}>
