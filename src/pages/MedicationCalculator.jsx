@@ -170,7 +170,7 @@ export default function MedicationCalculator() {
                                     </p>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className={`grid gap-4 ${result.units ? 'grid-cols-3' : 'grid-cols-2'}`}>
                                     <div className="bg-white rounded-lg p-4 border border-green-200">
                                         <p className="text-xs font-semibold text-gray-600 mb-2">Volume (ml)</p>
                                         <p className="text-3xl font-bold text-green-700">{result.ml}</p>
@@ -182,6 +182,14 @@ export default function MedicationCalculator() {
                                         <p className="text-3xl font-bold text-green-700">{result.cc}</p>
                                         <p className="text-xs text-gray-600 mt-1">cubic centimeters</p>
                                     </div>
+
+                                    {result.units && (
+                                        <div className="bg-white rounded-lg p-4 border border-green-200">
+                                            <p className="text-xs font-semibold text-gray-600 mb-2">Insulin Units</p>
+                                            <p className="text-3xl font-bold text-green-700">{result.units}</p>
+                                            <p className="text-xs text-gray-600 mt-1">on insulin syringe</p>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <Alert className="border-blue-200 bg-blue-50">
