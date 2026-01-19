@@ -25,8 +25,6 @@ export default function Reminders() {
     const [itemToDelete, setItemToDelete] = useState(null);
     const [dueReminders, setDueReminders] = useState([]);
     const [showNotificationPrefs, setShowNotificationPrefs] = useState(false);
-    const [viewMode, setViewMode] = useState("list"); // "list" or "calendar"
-    const [calendarViewMode, setCalendarViewMode] = useState("month"); // "month", "week", "day"
     const queryClient = useQueryClient();
 
     const { data: reminders = [], isLoading } = useQuery({
