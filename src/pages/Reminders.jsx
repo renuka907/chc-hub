@@ -10,7 +10,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import ReminderEditDialog from "../components/reminders/ReminderEditDialog";
 import NotificationPreferencesDialog from "../components/reminders/NotificationPreferencesDialog";
-import CalendarView from "../components/reminders/CalendarView";
 import { Bell, Plus, Clock, CheckCircle2, AlertCircle, Calendar, Trash2, Search, X, Settings } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
