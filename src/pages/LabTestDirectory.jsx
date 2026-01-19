@@ -934,7 +934,8 @@ function TestListItem({ test, onToggleFavorite, getTubeColor, onSyncTube, syncin
                         <p className="text-xs text-gray-500">Click Generate to create codes</p>
                     )}
                 </div>
-            </CardContent>
-        </Card>
-    );
-}
+                </CardContent>
+                )}
+                </Card>
+                );
+                }
