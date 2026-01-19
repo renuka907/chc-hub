@@ -16,6 +16,7 @@ import InventoryReports from './pages/InventoryReports';
 import InventoryUsageTracking from './pages/InventoryUsageTracking';
 import LabTestDirectory from './pages/LabTestDirectory';
 import Library from './pages/Library';
+import MedicationCalculator from './pages/MedicationCalculator';
 import Messaging from './pages/Messaging';
 import PricingManagement from './pages/PricingManagement';
 import ProcedureDetail from './pages/ProcedureDetail';
@@ -25,7 +26,6 @@ import QuotesManagement from './pages/QuotesManagement';
 import Reminders from './pages/Reminders';
 import UserManagement from './pages/UserManagement';
 import ViewSharedForm from './pages/ViewSharedForm';
-import MedicationCalculator from './pages/MedicationCalculator';
 import __Layout from './Layout.jsx';
 
 
@@ -48,6 +48,7 @@ export const PAGES = {
     "InventoryUsageTracking": InventoryUsageTracking,
     "LabTestDirectory": LabTestDirectory,
     "Library": Library,
+    "MedicationCalculator": MedicationCalculator,
     "Messaging": Messaging,
     "PricingManagement": PricingManagement,
     "ProcedureDetail": ProcedureDetail,
@@ -57,7 +58,6 @@ export const PAGES = {
     "Reminders": Reminders,
     "UserManagement": UserManagement,
     "ViewSharedForm": ViewSharedForm,
-    "MedicationCalculator": MedicationCalculator,
 }
 
 export const pagesConfig = {

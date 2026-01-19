@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, RotateCcw } from "lucide-react";
+import SyringeVisualization from "../components/calculator/SyringeVisualization";
 
 export default function MedicationCalculator() {
     const [amountNeeded, setAmountNeeded] = useState("");
