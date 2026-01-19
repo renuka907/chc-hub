@@ -685,7 +685,7 @@ Only return found: false if you truly cannot identify what test they're asking a
     );
 }
 
-function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, onDelete, deleting, panels, onUpdatePanels }) {
+function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, onDelete, deleting, panels, onUpdatePanels, onGenerateICD10, generatingCodes }) {
     const testPanelIds = (() => {
         try {
             const ids = typeof test.panel_ids === 'string' ? JSON.parse(test.panel_ids) : test.panel_ids;
