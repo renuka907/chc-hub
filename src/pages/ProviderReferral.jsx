@@ -265,8 +265,14 @@ export default function ProviderReferral() {
                                                         </a>
                                                     </div>
                                                 )}
-                                                <div className="flex items-center gap-2 text-gray-700">
-                                                    <MapPin className="w-4 h-4 text-purple-500" />
+                                                {provider.address && (
+                                                    <div className="flex items-start gap-2 text-gray-700 text-sm">
+                                                        <MapPin className="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0" />
+                                                        <span>{provider.address}</span>
+                                                    </div>
+                                                )}
+                                                <div className="flex items-center gap-2 text-gray-700 text-xs text-gray-500">
+                                                    <MapPin className="w-4 h-4 text-gray-400" />
                                                     {getClinicName(provider.clinic_location_id)}
                                                 </div>
                                             </div>
