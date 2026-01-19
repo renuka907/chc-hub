@@ -412,165 +412,146 @@ export default function InventoryManagement() {
                                     </div>
                                 </div>
 
-                                {/* Items Grid */}
-                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {/* Items List */}
+                                <div className="space-y-2">
                                     {items.map(item => {
-                                        const isLowStock = item.quantity <= item.low_stock_threshold;
-                                        const itemExpiringSoon = isExpiringSoon(item.expiry_date);
-                                        const daysUntilExpiry = item.expiry_date ? Math.ceil((new Date(item.expiry_date) - new Date()) / (1000 * 60 * 60 * 24)) : null;
-                                        const associatedServices = getPricingItemNames(item.associated_pricing_item_ids);
-                                        
-                                        return (
-                                            <Card key={item.id} className={`hover:shadow-lg transition-all duration-300 border-2 ${
-                                                isLowStock && itemExpiringSoon ? 'border-red-500 bg-red-50' : 
-                                                isLowStock ? 'border-red-300 bg-red-50' : 
-                                                itemExpiringSoon ? 'border-amber-300 bg-amber-50' : ''
-                                            }`}>
-                                                <CardHeader className="pb-3">
-                                                    <div className="flex items-start justify-between mb-3">
-                                                        <div className="flex flex-wrap gap-2">
-                                                            <Badge className={typeColors[item.item_type]}>
-                                                                {item.item_type}
-                                                            </Badge>
-                                                            {item.item_condition && (
-                                                                <Badge variant="outline" className={
-                                                                    item.item_condition === 'unopened' ? 'border-green-300 text-green-700 bg-green-50' :
-                                                                    item.item_condition === 'opened' ? 'border-blue-300 text-blue-700 bg-blue-50' :
-                                                                    'border-amber-300 text-amber-700 bg-amber-50'
-                                                                }>
-                                                                    {item.item_condition === 'unopened' ? '🔒 Unopened' :
-                                                                     item.item_condition === 'opened' ? '📦 Opened' : '⚠️ Partial'}
-                                                                </Badge>
-                                                            )}
-                                                            {isLowStock && (
-                                                                <Badge className="bg-red-500 text-white">
-                                                                    <AlertTriangle className="w-3 h-3 mr-1" />
-                                                                    Low Stock
-                                                                </Badge>
-                                                            )}
-                                                            {itemExpiringSoon && daysUntilExpiry !== null && (
-                                                                <Badge className="bg-amber-500 text-white">
-                                                                    <Calendar className="w-3 h-3 mr-1" />
-                                                                    {daysUntilExpiry === 0 ? 'Expires Today' : `${daysUntilExpiry}d`}
-                                                                </Badge>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                    <CardTitle className="text-lg mb-1">{item.item_name}</CardTitle>
-                                                    {item.sku && (
-                                                        <div className="text-xs text-gray-500">SKU: {item.sku}</div>
-                                                    )}
-                                                </CardHeader>
-                                                <CardContent>
-                                                    <div className="space-y-2">
-                                                        <div className="bg-gray-50 rounded-lg p-3">
-                                                            <div className="flex justify-between items-center mb-1">
-                                                                <span className="text-xs text-gray-600">Stock:</span>
-                                                                <span className={`text-xl font-bold ${isLowStock ? 'text-red-600' : 'text-green-600'}`}>
-                                                                    {item.quantity} {item.unit}
-                                                                </span>
-                                                            </div>
-                                                            <div className="flex justify-between text-xs">
-                                                                <span className="text-gray-600">Alert at:</span>
-                                                                <span className="font-medium">{item.low_stock_threshold} {item.unit}</span>
-                                                            </div>
-                                                            {item.storage_location && (
-                                                                <div className="flex justify-between text-sm mt-1 pt-1 border-t border-gray-200">
-                                                                    <span className="text-gray-600">Location:</span>
-                                                                    <span className="font-bold text-orange-600">{item.storage_location}</span>
-                                                                </div>
-                                                            )}
-                                                        </div>
+                                         const isLowStock = item.quantity <= item.low_stock_threshold;
+                                         const itemExpiringSoon = isExpiringSoon(item.expiry_date);
+                                         const daysUntilExpiry = item.expiry_date ? Math.ceil((new Date(item.expiry_date) - new Date()) / (1000 * 60 * 60 * 24)) : null;
+                                         const associatedServices = getPricingItemNames(item.associated_pricing_item_ids);
 
-                                                        <div className="text-xs space-y-1">
-                                                            {item.cost_per_unit && (
-                                                                <div className="flex justify-between">
-                                                                    <span className="text-gray-600">Cost:</span>
-                                                                    <span className="font-medium">${item.cost_per_unit}/{item.unit}</span>
-                                                                </div>
-                                                            )}
-                                                            {item.supplier && (
-                                                                <div className="flex justify-between">
-                                                                    <span className="text-gray-600">Supplier:</span>
-                                                                    <span className="font-medium text-right ml-2">{item.supplier}</span>
-                                                                </div>
-                                                            )}
-                                                            {item.expiry_date && (
-                                                                <div className="flex justify-between">
-                                                                    <span className="text-gray-600">Expires:</span>
-                                                                    <span className={`font-medium ${itemExpiringSoon ? 'text-amber-600' : ''}`}>
-                                                                        {new Date(item.expiry_date).toLocaleDateString()}
-                                                                    </span>
-                                                                </div>
-                                                            )}
-                                                        </div>
+                                         return (
+                                             <Card key={item.id} className={`hover:shadow-md transition-all duration-300 border-l-4 ${
+                                                 isLowStock && itemExpiringSoon ? 'border-l-red-500 bg-red-50' : 
+                                                 isLowStock ? 'border-l-red-300 bg-red-50' : 
+                                                 itemExpiringSoon ? 'border-l-amber-300 bg-amber-50' : 'border-l-gray-300'
+                                             }`}>
+                                                 <CardContent className="p-4">
+                                                     <div className="flex items-center justify-between gap-4">
+                                                         {/* Left: Item info */}
+                                                         <div className="flex-1 min-w-0">
+                                                             <div className="flex items-center gap-3 mb-2">
+                                                                 <div>
+                                                                     <div className="font-semibold text-gray-900">{item.item_name}</div>
+                                                                     {item.sku && (
+                                                                         <div className="text-xs text-gray-500">SKU: {item.sku}</div>
+                                                                     )}
+                                                                 </div>
+                                                             </div>
+                                                             <div className="flex flex-wrap gap-2 mb-2">
+                                                                 <Badge className={typeColors[item.item_type]} className="text-xs">
+                                                                     {item.item_type}
+                                                                 </Badge>
+                                                                 {item.item_condition && (
+                                                                     <Badge variant="outline" className={`text-xs ${
+                                                                         item.item_condition === 'unopened' ? 'border-green-300 text-green-700 bg-green-50' :
+                                                                         item.item_condition === 'opened' ? 'border-blue-300 text-blue-700 bg-blue-50' :
+                                                                         'border-amber-300 text-amber-700 bg-amber-50'
+                                                                     }`}>
+                                                                         {item.item_condition === 'unopened' ? '🔒 Unopened' :
+                                                                          item.item_condition === 'opened' ? '📦 Opened' : '⚠️ Partial'}
+                                                                     </Badge>
+                                                                 )}
+                                                                 {isLowStock && (
+                                                                     <Badge className="bg-red-500 text-white text-xs">
+                                                                         <AlertTriangle className="w-3 h-3 mr-1" />
+                                                                         Low Stock
+                                                                     </Badge>
+                                                                 )}
+                                                                 {itemExpiringSoon && daysUntilExpiry !== null && (
+                                                                     <Badge className="bg-amber-500 text-white text-xs">
+                                                                         <Calendar className="w-3 h-3 mr-1" />
+                                                                         {daysUntilExpiry === 0 ? 'Expires Today' : `${daysUntilExpiry}d`}
+                                                                     </Badge>
+                                                                 )}
+                                                             </div>
+                                                         </div>
 
-                                                        {associatedServices.length > 0 && (
-                                                            <div>
-                                                                <div className="text-xs text-gray-600 mb-1">Used in:</div>
-                                                                <div className="flex flex-wrap gap-1">
-                                                                    {associatedServices.slice(0, 2).map((service, idx) => (
-                                                                        <Badge key={idx} variant="outline" className="text-xs">
-                                                                            {service}
-                                                                        </Badge>
-                                                                    ))}
-                                                                    {associatedServices.length > 2 && (
-                                                                        <Badge variant="outline" className="text-xs">
-                                                                            +{associatedServices.length - 2}
-                                                                        </Badge>
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                        )}
+                                                         {/* Middle: Stock info */}
+                                                         <div className="text-center">
+                                                             <div className={`text-2xl font-bold ${isLowStock ? 'text-red-600' : 'text-green-600'}`}>
+                                                                 {item.quantity}
+                                                             </div>
+                                                             <div className="text-xs text-gray-600">{item.unit}</div>
+                                                             <div className="text-xs text-gray-500 mt-1">Alert: {item.low_stock_threshold}</div>
+                                                         </div>
 
-                                                        {canEdit && (
-                                                            <div className="flex gap-2 pt-2 border-t">
-                                                                {item.status === 'archived' ? (
-                                                                    <Button 
-                                                                        variant="outline" 
-                                                                        size="sm"
-                                                                        className="flex-1 text-green-600 hover:text-green-700 hover:bg-green-50"
-                                                                        onClick={() => unarchiveMutation.mutate(item.id)}
-                                                                    >
-                                                                        <Package className="w-3 h-3 mr-1" />
-                                                                        Restore
-                                                                    </Button>
-                                                                ) : (
-                                                                    <>
-                                                                        <Button 
-                                                                            variant="outline" 
-                                                                            size="sm"
-                                                                            className="flex-1"
-                                                                            onClick={() => handleEdit(item)}
-                                                                        >
-                                                                            <Pencil className="w-3 h-3 mr-1" />
-                                                                            Edit
-                                                                        </Button>
-                                                                        <Button 
-                                                                            variant="outline"
-                                                                            size="sm"
-                                                                            className="text-gray-600 hover:text-gray-700 hover:bg-gray-50"
-                                                                            onClick={() => archiveMutation.mutate(item.id)}
-                                                                        >
-                                                                            <Package className="w-3 h-3" />
-                                                                        </Button>
-                                                                    </>
-                                                                )}
-                                                                <Button 
-                                                                    variant="outline"
-                                                                    size="sm"
-                                                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                                                                    onClick={() => setDeleteConfirm(item)}
-                                                                >
-                                                                    <Trash2 className="w-3 h-3" />
-                                                                </Button>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </CardContent>
-                                            </Card>
-                                        );
-                                    })}
+                                                         {/* Info grid */}
+                                                         <div className="grid grid-cols-3 gap-4 text-sm">
+                                                             {item.storage_location && (
+                                                                 <div>
+                                                                     <div className="text-xs text-gray-600">Location</div>
+                                                                     <div className="font-medium text-orange-600">{item.storage_location}</div>
+                                                                 </div>
+                                                             )}
+                                                             {item.cost_per_unit && (
+                                                                 <div>
+                                                                     <div className="text-xs text-gray-600">Cost</div>
+                                                                     <div className="font-medium">${item.cost_per_unit}</div>
+                                                                 </div>
+                                                             )}
+                                                             {item.expiry_date && (
+                                                                 <div>
+                                                                     <div className="text-xs text-gray-600">Expires</div>
+                                                                     <div className={`font-medium ${itemExpiringSoon ? 'text-amber-600' : ''}`}>
+                                                                         {new Date(item.expiry_date).toLocaleDateString()}
+                                                                     </div>
+                                                                 </div>
+                                                             )}
+                                                             {item.supplier && (
+                                                                 <div>
+                                                                     <div className="text-xs text-gray-600">Supplier</div>
+                                                                     <div className="font-medium truncate">{item.supplier}</div>
+                                                                 </div>
+                                                             )}
+                                                         </div>
+
+                                                         {/* Actions */}
+                                                         {canEdit && (
+                                                             <div className="flex gap-1">
+                                                                 {item.status === 'archived' ? (
+                                                                     <Button 
+                                                                         variant="outline" 
+                                                                         size="sm"
+                                                                         className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                                                                         onClick={() => unarchiveMutation.mutate(item.id)}
+                                                                     >
+                                                                         <Package className="w-4 h-4" />
+                                                                     </Button>
+                                                                 ) : (
+                                                                     <>
+                                                                         <Button 
+                                                                             variant="outline" 
+                                                                             size="sm"
+                                                                             onClick={() => handleEdit(item)}
+                                                                         >
+                                                                             <Pencil className="w-4 h-4" />
+                                                                         </Button>
+                                                                         <Button 
+                                                                             variant="outline"
+                                                                             size="sm"
+                                                                             className="text-gray-600 hover:text-gray-700 hover:bg-gray-50"
+                                                                             onClick={() => archiveMutation.mutate(item.id)}
+                                                                         >
+                                                                             <Package className="w-4 h-4" />
+                                                                         </Button>
+                                                                     </>
+                                                                 )}
+                                                                 <Button 
+                                                                     variant="outline"
+                                                                     size="sm"
+                                                                     className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                                     onClick={() => setDeleteConfirm(item)}
+                                                                 >
+                                                                     <Trash2 className="w-4 h-4" />
+                                                                 </Button>
+                                                             </div>
+                                                         )}
+                                                     </div>
+                                                 </CardContent>
+                                             </Card>
+                                         );
+                                     })}
                                 </div>
                             </div>
                         ));
