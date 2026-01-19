@@ -24,6 +24,11 @@ export default function LabTestDirectory() {
         queryFn: () => base44.entities.LabTestInfo.list('-updated_date'),
     });
 
+    const { data: panels = [] } = useQuery({
+        queryKey: ['panels'],
+        queryFn: () => base44.entities.Panel.list('-updated_date'),
+    });
+
     const toggleFavoriteMutation = useMutation({
         mutationFn: ({ id, isFavorite }) => 
             base44.entities.LabTestInfo.update(id, { is_favorite: !isFavorite }),
