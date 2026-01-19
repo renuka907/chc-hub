@@ -494,7 +494,6 @@ export default function Reminders() {
                     ))
                 )}
             </div>
-            )}
 
             <ReminderEditDialog
                 open={showCreateDialog}
