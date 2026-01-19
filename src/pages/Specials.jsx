@@ -16,6 +16,7 @@ export default function SpecialsPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [previewOpen, setPreviewOpen] = useState(false);
     const [selectedPreview, setSelectedPreview] = useState(null);
+    const [currentUser, setCurrentUser] = useState(null);
     const [formData, setFormData] = useState({
         title: "",
         date_from: "",
@@ -24,10 +25,16 @@ export default function SpecialsPage() {
     const [file, setFile] = useState(null);
     const queryClient = useQueryClient();
 
+    useEffect(() => {
+        base44.auth.me().then(setCurrentUser);
+    }, []);
+
     const { data: specials = [], isLoading } = useQuery({
         queryKey: ["specials"],
         queryFn: () => base44.entities.Special.list("-updated_date"),
     });
+
+    const isAdmin = currentUser?.role === "admin";
 
     const archiveMutation = useMutation({
         mutationFn: (special) => base44.entities.Special.update(special.id, { is_archived: !special.is_archived }),
