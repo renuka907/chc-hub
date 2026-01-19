@@ -128,7 +128,7 @@ export default function PermissionsDialog({ open, onOpenChange, user, onSave, is
                                         )}
                                     </CardTitle>
                                 </CardHeader>
-                                {hasAnyAction(page.id) && (
+                                {isEnabled && (
                                     <CardContent className="pt-0">
                                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 ml-6">
                                             {page.actions.map(action => (
@@ -143,6 +143,8 @@ export default function PermissionsDialog({ open, onOpenChange, user, onSave, is
                                         </div>
                                     </CardContent>
                                 )}
+                            );
+                        })}
                             </Card>
                         ))}
                     </div>
