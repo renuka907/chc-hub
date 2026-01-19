@@ -196,6 +196,7 @@ export default function MedicationCalculator() {
                                     <AlertCircle className="h-4 w-4 text-blue-600" />
                                     <AlertDescription className="text-blue-700 text-sm">
                                         Draw up <span className="font-bold">{result.ml} ml ({result.cc} cc)</span> from the vial
+                                        {result.units && <span> • <span className="font-bold">{result.units} units</span> on insulin syringe</span>}
                                     </AlertDescription>
                                 </Alert>
                             </CardContent>
