@@ -76,9 +76,40 @@ export default function EducationDetail() {
                         body * {
                             visibility: hidden;
                         }
+                        .print-header-table,
+                        .print-header-table * {
+                            visibility: visible;
+                        }
                         .printable-document,
                         .printable-document * {
                             visibility: visible;
+                        }
+                        .print-header-table {
+                            display: table !important;
+                            width: 100% !important;
+                            position: static !important;
+                        }
+                        .print-header-table thead {
+                            display: table-header-group !important;
+                        }
+                        .print-header-table tbody {
+                            display: table-row-group !important;
+                        }
+                        .print-header-row {
+                            text-align: center !important;
+                            padding-bottom: 10pt !important;
+                            padding-top: 8pt !important;
+                            border-bottom: 1px solid #ccc !important;
+                        }
+                        .print-header-row img {
+                            height: 40pt !important;
+                            margin: 0 auto 6pt !important;
+                            display: block !important;
+                        }
+                        .print-header-row .header-info {
+                            font-size: 8pt !important;
+                            color: #666 !important;
+                            line-height: 1.3 !important;
                         }
                         .printable-document {
                             position: static !important;
@@ -94,6 +125,15 @@ export default function EducationDetail() {
                         .printable-document > div:first-child {
                             margin-top: 0 !important;
                             padding-top: 0 !important;
+                        }
+                        .printable-document > div > .mb-4:first-child {
+                            display: none !important;
+                        }
+                        .printable-document img:first-of-type {
+                            display: none !important;
+                        }
+                        .printable-document > div > .mb-6:first-child {
+                            display: none !important;
                         }
                         .printable-document h1 {
                             font-size: 18pt !important;
@@ -210,10 +250,27 @@ export default function EducationDetail() {
                 </div>
             </div>
 
-            {/* Printable Content */}
-            <div className="print-header no-print-screen">
-            </div>
-            <PrintableDocument title={topic.title}>
+            {/* Printable Content with repeating header */}
+            <table className="print-header-table">
+                <thead className="no-print">
+                    <tr>
+                        <th className="print-header-row">
+                            <img 
+                                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png"
+                                alt="Contemporary Health Center Logo"
+                            />
+                            <div className="header-info">
+                                <div style={{fontWeight: 600}}>6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
+                                <div style={{marginTop: '2pt'}}>Phone: 239-561-9191 | Fax: 239-561-9188</div>
+                                <div style={{marginTop: '2pt'}}>contemporaryhealthcenter.com</div>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+            <PrintableDocument title={topic.title} showLogo={false}>
                 <div className="space-y-6">
                     {/* Metadata */}
                     <div className="flex flex-wrap gap-3 items-center">
@@ -285,6 +342,10 @@ export default function EducationDetail() {
                     </div>
                 </div>
             </PrintableDocument>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
             {topic && (
                 <EducationTopicForm
