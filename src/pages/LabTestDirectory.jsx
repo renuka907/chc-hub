@@ -624,7 +624,14 @@ Only return found: false if you truly cannot identify what test they're asking a
                 ) : (
                     <div className="grid md:grid-cols-2 gap-4">
                         {panels.map(panel => {
-                             const panelTests = savedTests.filter(t => t.panel_id === panel.id);
+                             const panelTests = savedTests.filter(t => {
+                                 try {
+                                     const panelIds = typeof t.panel_ids === 'string' ? JSON.parse(t.panel_ids) : t.panel_ids || [];
+                                     return Array.isArray(panelIds) ? panelIds.includes(panel.id) : false;
+                                 } catch {
+                                     return false;
+                                 }
+                             });
                              const tubeCount = calculatePanelTubes(panel.id, panel.panel_name);
                              const totalTubes = Object.values(tubeCount).reduce((a, b) => a + b, 0);
                             return (
