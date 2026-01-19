@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Upload, X, Loader2, FileUp, Archive, Search, Eye, Edit } from "lucide-react";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import PreviewModal from "@/components/specials/PreviewModal";
 import EditSpecialDialog from "@/components/specials/EditSpecialDialog";
 
@@ -38,6 +38,10 @@ export default function SpecialsPage() {
     });
 
     const isAdmin = currentUser?.role === "admin";
+
+    const parseLocalDate = (dateString) => {
+        return parse(dateString, 'yyyy-MM-dd', new Date());
+    };
 
     const archiveMutation = useMutation({
         mutationFn: (special) => base44.entities.Special.update(special.id, { is_archived: !special.is_archived }),
@@ -253,7 +257,7 @@ export default function SpecialsPage() {
                                                         {special.title}
                                                     </p>
                                                     <p className="text-sm text-gray-600 mt-1">
-                                                        {format(new Date(special.date_from), "MMM d, yyyy")} - {format(new Date(special.date_to), "MMM d, yyyy")}
+                                                        {format(parseLocalDate(special.date_from), "MMM d, yyyy")} - {format(parseLocalDate(special.date_to), "MMM d, yyyy")}
                                                     </p>
                                                 </div>
                                                 <div className="flex gap-2">
@@ -320,7 +324,7 @@ export default function SpecialsPage() {
                                                             {special.title}
                                                         </p>
                                                         <p className="text-sm text-gray-600 mt-1">
-                                                            {format(new Date(special.date_from), "MMM d, yyyy")} - {format(new Date(special.date_to), "MMM d, yyyy")}
+                                                            {format(parseLocalDate(special.date_from), "MMM d, yyyy")} - {format(parseLocalDate(special.date_to), "MMM d, yyyy")}
                                                         </p>
                                                     </div>
                                                     {isAdmin && (
