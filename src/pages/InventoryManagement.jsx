@@ -81,6 +81,42 @@ export default function InventoryManagement() {
         },
     });
 
+    const bulkArchiveMutation = useMutation({
+        mutationFn: async () => {
+            for (const id of selectedItems) {
+                await base44.entities.InventoryItem.update(id, { status: 'archived' });
+            }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['inventoryItems'] });
+            setSelectedItems(new Set());
+        },
+    });
+
+    const bulkDeleteMutation = useMutation({
+        mutationFn: async () => {
+            for (const id of selectedItems) {
+                await base44.entities.InventoryItem.delete(id);
+            }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['inventoryItems'] });
+            setSelectedItems(new Set());
+        },
+    });
+
+    const bulkStatusMutation = useMutation({
+        mutationFn: async (newStatus) => {
+            for (const id of selectedItems) {
+                await base44.entities.InventoryItem.update(id, { status: newStatus });
+            }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['inventoryItems'] });
+            setSelectedItems(new Set());
+        },
+    });
+
     const handleSuccess = () => {
         queryClient.invalidateQueries({ queryKey: ['inventoryItems'] });
         setEditingItem(null);
