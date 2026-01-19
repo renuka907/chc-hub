@@ -14,18 +14,11 @@ import {
 export default function Home() {
     const quickLinks = [
         {
-            title: "Education Library",
-            description: "Access patient education materials organized by specialty",
+            title: "Resource Library",
+            description: "Access education materials, aftercare instructions, and consent forms",
             icon: BookOpen,
-            path: "EducationLibrary",
+            path: "Library",
             color: "from-purple-500 to-violet-600"
-        },
-        {
-            title: "Aftercare & Forms",
-            description: "View procedure aftercare instructions and consent forms",
-            icon: FileText,
-            path: "AftercareLibrary",
-            color: "from-cyan-500 to-blue-600"
         },
         {
             title: "Pricing",
