@@ -434,113 +434,111 @@ Only return found: false if you truly cannot identify what test they're asking a
                     ) : null}
 
                     {/* Quest Diagnostics Search Results */}
-                    {searchResults && searchResults.found && (
-                                <Card className="border-blue-200 bg-blue-50">
-                                    <CardContent className="pt-6 space-y-4">
-                                        <div className="flex items-start justify-between">
-                                            <div className="flex-1">
-                                                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                                                    {searchResults.test_name}
-                                                </h3>
-                                                {searchResults.test_code && (
-                                                    <Badge variant="outline" className="mb-2">
-                                                        Code: {searchResults.test_code}
-                                                    </Badge>
-                                                )}
-                                            </div>
-                                            <Button
-                                                size="sm"
-                                                onClick={() => handleSaveTest(searchResults)}
-                                                disabled={saveTestMutation.isPending}
-                                                className="text-black"
-                                            >
-                                                <Plus className="w-4 h-4 mr-2" />
-                                                Save to Directory
-                                            </Button>
+                    {searchResults && searchResults.found ? (
+                        <Card className="border-blue-200 bg-blue-50">
+                            <CardContent className="pt-6 space-y-4">
+                                <div className="flex items-start justify-between">
+                                    <div className="flex-1">
+                                        <h3 className="text-xl font-bold text-gray-900 mb-2">
+                                            {searchResults.test_name}
+                                        </h3>
+                                        {searchResults.test_code && (
+                                            <Badge variant="outline" className="mb-2">
+                                                Code: {searchResults.test_code}
+                                            </Badge>
+                                        )}
+                                    </div>
+                                    <Button
+                                        size="sm"
+                                        onClick={() => handleSaveTest(searchResults)}
+                                        disabled={saveTestMutation.isPending}
+                                        className="text-black"
+                                    >
+                                        <Plus className="w-4 h-4 mr-2" />
+                                        Save to Directory
+                                    </Button>
+                                </div>
+
+                                <div className="grid md:grid-cols-2 gap-4">
+                                    <div>
+                                        <p className="text-sm font-semibold text-gray-700 mb-1">Tube Type</p>
+                                        <Badge className={getTubeColor(searchResults.tube_type)}>
+                                            <TestTube className="w-3 h-3 mr-1" />
+                                            {searchResults.tube_type}
+                                        </Badge>
+                                    </div>
+                                    {searchResults.specimen_type && (
+                                        <div>
+                                            <p className="text-sm font-semibold text-gray-700 mb-1">Specimen Type</p>
+                                            <p className="text-sm text-gray-800">{searchResults.specimen_type}</p>
                                         </div>
-
-                                        <div className="grid md:grid-cols-2 gap-4">
-                                            <div>
-                                                <p className="text-sm font-semibold text-gray-700 mb-1">Tube Type</p>
-                                                <Badge className={getTubeColor(searchResults.tube_type)}>
-                                                    <TestTube className="w-3 h-3 mr-1" />
-                                                    {searchResults.tube_type}
-                                                </Badge>
-                                            </div>
-                                            {searchResults.specimen_type && (
-                                                <div>
-                                                    <p className="text-sm font-semibold text-gray-700 mb-1">Specimen Type</p>
-                                                    <p className="text-sm text-gray-800">{searchResults.specimen_type}</p>
-                                                </div>
-                                            )}
-                                            {searchResults.volume_required && (
-                                                <div>
-                                                    <p className="text-sm font-semibold text-gray-700 mb-1">Volume Required</p>
-                                                    <p className="text-sm text-gray-800">{searchResults.volume_required}</p>
-                                                </div>
-                                            )}
-                                            {searchResults.category && (
-                                                <div>
-                                                    <p className="text-sm font-semibold text-gray-700 mb-1">Category</p>
-                                                    <Badge variant="outline">{searchResults.category}</Badge>
-                                                </div>
-                                            )}
+                                    )}
+                                    {searchResults.volume_required && (
+                                        <div>
+                                            <p className="text-sm font-semibold text-gray-700 mb-1">Volume Required</p>
+                                            <p className="text-sm text-gray-800">{searchResults.volume_required}</p>
                                         </div>
+                                    )}
+                                    {searchResults.category && (
+                                        <div>
+                                            <p className="text-sm font-semibold text-gray-700 mb-1">Category</p>
+                                            <Badge variant="outline">{searchResults.category}</Badge>
+                                        </div>
+                                    )}
+                                </div>
 
-                                        {searchResults.collection_instructions && (
-                                            <div>
-                                                <p className="text-sm font-semibold text-gray-700 mb-1">Collection Instructions</p>
-                                                <p className="text-sm text-gray-800">{searchResults.collection_instructions}</p>
-                                            </div>
-                                        )}
+                                {searchResults.collection_instructions && (
+                                    <div>
+                                        <p className="text-sm font-semibold text-gray-700 mb-1">Collection Instructions</p>
+                                        <p className="text-sm text-gray-800">{searchResults.collection_instructions}</p>
+                                    </div>
+                                )}
 
-                                        {searchResults.storage_requirements && (
-                                            <div>
-                                                <p className="text-sm font-semibold text-gray-700 mb-1">Storage Requirements</p>
-                                                <p className="text-sm text-gray-800">{searchResults.storage_requirements}</p>
-                                            </div>
-                                        )}
+                                {searchResults.storage_requirements && (
+                                    <div>
+                                        <p className="text-sm font-semibold text-gray-700 mb-1">Storage Requirements</p>
+                                        <p className="text-sm text-gray-800">{searchResults.storage_requirements}</p>
+                                    </div>
+                                )}
 
-                                        {searchResults.notes && (
-                                            <Alert>
-                                                <AlertCircle className="h-4 w-4" />
-                                                <AlertDescription>{searchResults.notes}</AlertDescription>
-                                            </Alert>
-                                        )}
+                                {searchResults.notes && (
+                                    <Alert>
+                                        <AlertCircle className="h-4 w-4" />
+                                        <AlertDescription>{searchResults.notes}</AlertDescription>
+                                    </Alert>
+                                )}
 
-                                        {searchResults.quest_url && (
-                                            <a 
-                                                href={searchResults.quest_url} 
-                                                target="_blank" 
-                                                rel="noopener noreferrer"
-                                                className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700"
-                                            >
-                                                View on Quest Diagnostics
-                                                <ExternalLink className="w-3 h-3 ml-1" />
-                                            </a>
-                                        )}
-                                    </CardContent>
-                                </Card>
-                            ) : (
-                                <Alert>
-                                    <AlertCircle className="h-4 w-4" />
-                                    <AlertDescription>
-                                        <p className="font-semibold mb-2">Test not found</p>
-                                        {searchResults.suggestions?.length > 0 && (
-                                            <div>
-                                                <p className="text-sm mb-1">Similar tests:</p>
-                                                <ul className="text-sm list-disc list-inside">
-                                                    {searchResults.suggestions.map((suggestion, i) => (
-                                                        <li key={i}>{suggestion}</li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        )}
-                                    </AlertDescription>
-                                </Alert>
-                            )}
-                        </div>
-                    )}
+                                {searchResults.quest_url && (
+                                    <a 
+                                        href={searchResults.quest_url} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700"
+                                    >
+                                        View on Quest Diagnostics
+                                        <ExternalLink className="w-3 h-3 ml-1" />
+                                    </a>
+                                )}
+                            </CardContent>
+                        </Card>
+                    ) : searchResults && !searchResults.found ? (
+                        <Alert>
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertDescription>
+                                <p className="font-semibold mb-2">Test not found</p>
+                                {searchResults.suggestions?.length > 0 && (
+                                    <div>
+                                        <p className="text-sm mb-1">Similar tests:</p>
+                                        <ul className="text-sm list-disc list-inside">
+                                            {searchResults.suggestions.map((suggestion, i) => (
+                                                <li key={i}>{suggestion}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+                            </AlertDescription>
+                        </Alert>
+                    ) : null}
                 </CardContent>
             </Card>
 
