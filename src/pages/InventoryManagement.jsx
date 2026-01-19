@@ -31,6 +31,7 @@ export default function InventoryManagement() {
     const [expiryThresholdDays, setExpiryThresholdDays] = useState(30);
     const [showForm, setShowForm] = useState(false);
     const [showAuditForm, setShowAuditForm] = useState(false);
+    const [showBarcodeScanner, setShowBarcodeScanner] = useState(false);
     const [editingItem, setEditingItem] = useState(null);
     const [deleteConfirm, setDeleteConfirm] = useState(null);
     const [showAI, setShowAI] = useState(false);
