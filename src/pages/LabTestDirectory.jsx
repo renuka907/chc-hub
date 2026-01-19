@@ -83,6 +83,27 @@ export default function LabTestDirectory() {
         }
     });
 
+    const generateICD10Mutation = useMutation({
+        mutationFn: async ({ testId, testName, testCode, category }) => {
+            const { data } = await base44.functions.invoke('generateICD10Codes', { 
+                testName,
+                testCode,
+                category
+            });
+            if (data?.codes && Array.isArray(data.codes)) {
+                await base44.entities.LabTestInfo.update(testId, { diagnosis_codes: JSON.stringify(data.codes) });
+            }
+            return data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['labTests'] });
+            toast.success("ICD-10 codes generated");
+        },
+        onError: () => {
+            toast.error('Failed to generate codes');
+        }
+    });
+
     const createPanelMutation = useMutation({
         mutationFn: (panelData) => base44.entities.Panel.create(panelData),
         onSuccess: () => {
