@@ -14,6 +14,8 @@ export default function SpecialsPage() {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
+    const [previewOpen, setPreviewOpen] = useState(false);
+    const [selectedPreview, setSelectedPreview] = useState(null);
     const [formData, setFormData] = useState({
         title: "",
         date_from: "",
