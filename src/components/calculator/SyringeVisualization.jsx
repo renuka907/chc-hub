@@ -119,7 +119,7 @@ export default function SyringeVisualization({ result }) {
                     {minorMarks.map((mark) => {
                         const markPercentage = (mark / 1) * 100;
                         return (
-                            <div key={`minor-${mark.toFixed(2)}`} className="absolute top-0 flex flex-col items-center" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
+                            <div key={`minor-${mark.toFixed(2)}`} className="absolute top-0 flex flex-col items-center z-10" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
                                 <div className="w-0.5 bg-gray-400" style={{ height: "6px" }} />
                             </div>
                         );
@@ -127,7 +127,7 @@ export default function SyringeVisualization({ result }) {
                     {majorMarks.map((mark) => {
                         const markPercentage = (mark / 1) * 100;
                         return (
-                            <div key={mark.toFixed(1)} className="absolute top-0 flex flex-col items-center" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
+                            <div key={mark.toFixed(1)} className="absolute top-0 flex flex-col items-center z-10" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
                                 <div className="w-1 bg-gray-800" style={{ height: "16px" }} />
                                 <span className="text-xs font-semibold text-gray-700 mt-1">{mark.toFixed(1)}</span>
                             </div>
