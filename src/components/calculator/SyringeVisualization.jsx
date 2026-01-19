@@ -34,7 +34,7 @@ export default function SyringeVisualization({ result }) {
                     {minorMarks.map((mark) => {
                         const markPercentage = (mark / 30) * 100;
                         return (
-                            <div key={`minor-${mark}`} className="absolute top-0 flex flex-col items-center" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
+                            <div key={`minor-${mark}`} className="absolute top-0 flex flex-col items-center z-10" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
                                 <div className="w-0.5 bg-gray-400" style={{ height: "6px" }} />
                             </div>
                         );
@@ -42,7 +42,7 @@ export default function SyringeVisualization({ result }) {
                     {majorMarks.map((mark) => {
                         const markPercentage = (mark / 30) * 100;
                         return (
-                            <div key={mark} className="absolute top-0 flex flex-col items-center" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
+                            <div key={mark} className="absolute top-0 flex flex-col items-center z-10" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
                                 <div className="w-1 bg-gray-800" style={{ height: "16px" }} />
                                 <span className="text-xs font-semibold text-gray-700 mt-1">{mark}</span>
                             </div>
@@ -149,29 +149,16 @@ export default function SyringeVisualization({ result }) {
 
     const renderSyringe3ml = () => {
         const percentage = (volumeMl / 3) * 100;
-        const majorMarks = [0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0];
-        const minorMarks = [];
-        for (let i = 0; i <= 30; i += 5) {
-            const mark = i / 10;
-            if (!majorMarks.includes(mark)) minorMarks.push(mark);
-        }
+        const marks = [0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0];
         return (
             <div className="space-y-2">
                 <p className="text-sm font-semibold text-gray-700">3 ml Syringe</p>
                 <div className="relative h-24 bg-gradient-to-r from-green-50 to-green-100 rounded-full border-2 border-green-400">
-                    {minorMarks.map((mark) => {
+                    {marks.map((mark) => {
                         const markPercentage = (mark / 3) * 100;
                         return (
-                            <div key={`minor-${mark.toFixed(1)}`} className="absolute top-0 flex flex-col items-center" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
-                                <div className="w-0.5 bg-gray-400" style={{ height: "6px" }} />
-                            </div>
-                        );
-                    })}
-                    {majorMarks.map((mark) => {
-                        const markPercentage = (mark / 3) * 100;
-                        return (
-                            <div key={mark.toFixed(1)} className="absolute top-0 flex flex-col items-center" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
-                                <div className="w-1 bg-gray-800" style={{ height: "16px" }} />
+                            <div key={mark} className="absolute top-0 flex flex-col items-center" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
+                                <div className="w-1 bg-gray-800" style={{ height: mark % 1 === 0 ? "16px" : "10px" }} />
                                 <span className="text-xs font-semibold text-gray-700 mt-1">{mark.toFixed(1)}</span>
                             </div>
                         );
