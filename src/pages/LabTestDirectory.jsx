@@ -74,6 +74,43 @@ export default function LabTestDirectory() {
         }
     });
 
+    const createPanelMutation = useMutation({
+        mutationFn: (panelData) => base44.entities.Panel.create(panelData),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['panels'] });
+            setNewPanelName("");
+            setShowPanelForm(false);
+            toast.success("Panel created");
+        },
+        onError: () => {
+            toast.error('Failed to create panel');
+        }
+    });
+
+    const assignTestToPanelMutation = useMutation({
+        mutationFn: ({ testId, panelId }) => 
+            base44.entities.LabTestInfo.update(testId, { panel_id: panelId }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['labTests'] });
+            toast.success("Test assigned to panel");
+        },
+        onError: () => {
+            toast.error('Failed to assign test');
+        }
+    });
+
+    const removeTestFromPanelMutation = useMutation({
+        mutationFn: (testId) => 
+            base44.entities.LabTestInfo.update(testId, { panel_id: null }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['labTests'] });
+            toast.success("Test removed from panel");
+        },
+        onError: () => {
+            toast.error('Failed to remove test');
+        }
+    });
+
     const handleSyncTube = (id) => syncTubeMutation.mutate({ id });
 
     // Auto-sync tube types from Quest for saved tests (runs once per test id)
