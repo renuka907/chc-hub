@@ -146,13 +146,14 @@ export default function Reminders() {
         return new Date(dueDate) < new Date();
     };
 
-    const handleSnoozeReminder = async (reminder) => {
+    const handleSnoozeReminder = async (reminder, hours) => {
         try {
             const now = new Date();
-            const showAfter = new Date(now.getTime() + 24 * 60 * 60 * 1000); // Hide for 24 hours
+            const showAfter = new Date(now.getTime() + hours * 60 * 60 * 1000);
             await base44.entities.Reminder.update(reminder.id, { show_after: showAfter.toISOString() });
             queryClient.invalidateQueries({ queryKey: ['reminders'] });
-            toast.info(`Reminder hidden until ${showAfter.toLocaleDateString()}`);
+            const timeLabel = hours < 24 ? `${hours} hour${hours > 1 ? 's' : ''}` : `${hours / 24} day${hours / 24 > 1 ? 's' : ''}`;
+            toast.info(`Reminder hidden for ${timeLabel}`);
         } catch (error) {
             toast.error('Failed to snooze reminder');
         }
