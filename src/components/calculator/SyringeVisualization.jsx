@@ -192,15 +192,28 @@ export default function SyringeVisualization({ result }) {
 
     const renderSyringe5ml = () => {
         const percentage = (volumeMl / 5) * 100;
-        const marks = [0, 1, 2, 3, 4, 5];
+        const majorMarks = [0, 1, 2, 3, 4, 5];
+        const minorMarks = [];
+        for (let i = 0; i <= 50; i += 5) {
+            const mark = i / 10;
+            if (!majorMarks.includes(mark)) minorMarks.push(mark);
+        }
         return (
             <div className="space-y-2">
                 <p className="text-sm font-semibold text-gray-700">5 ml Syringe</p>
                 <div className="relative h-24 bg-gradient-to-r from-purple-50 to-purple-100 rounded-full border-2 border-purple-400">
-                    {marks.map((mark) => {
+                    {minorMarks.map((mark) => {
                         const markPercentage = (mark / 5) * 100;
                         return (
-                            <div key={mark} className="absolute top-0 flex flex-col items-center" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
+                            <div key={`minor-${mark.toFixed(1)}`} className="absolute top-0 flex flex-col items-center z-10" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
+                                <div className="w-0.5 bg-gray-400" style={{ height: "8px" }} />
+                            </div>
+                        );
+                    })}
+                    {majorMarks.map((mark) => {
+                        const markPercentage = (mark / 5) * 100;
+                        return (
+                            <div key={mark} className="absolute top-0 flex flex-col items-center z-10" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
                                 <div className="w-1 bg-gray-800" style={{ height: "16px" }} />
                                 <span className="text-xs font-semibold text-gray-700 mt-1">{mark}</span>
                             </div>
