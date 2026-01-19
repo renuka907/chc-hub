@@ -107,8 +107,8 @@ export default function CalendarView({ reminders, viewMode = "month", onViewChan
                         <div key={idx} className="grid grid-cols-7 gap-1">
                             {week.map(day => (
                                 <Droppable
-                                    key={format(day, "yyyy-MM-dd")}
                                     droppableId={day.toISOString()}
+                                    key={day.toISOString()}
                                 >
                                     {(provided, snapshot) => (
                                         <div
@@ -152,8 +152,8 @@ export default function CalendarView({ reminders, viewMode = "month", onViewChan
                 <div className="grid grid-cols-7 gap-2">
                     {days.map(day => (
                         <Droppable
-                            key={format(day, "yyyy-MM-dd")}
                             droppableId={day.toISOString()}
+                            key={day.toISOString()}
                         >
                             {(provided, snapshot) => (
                                 <div
