@@ -377,35 +377,7 @@ export default function Reminders() {
                 </Card>
             )}
 
-            {/* View Mode Toggle */}
-            <div className="flex gap-2 justify-end mb-4">
-                <Button
-                    variant={viewMode === "list" ? "default" : "outline"}
-                    onClick={() => setViewMode("list")}
-                    className={viewMode === "list" ? "bg-purple-600" : ""}
-                >
-                    List View
-                </Button>
-                <Button
-                    variant={viewMode === "calendar" ? "default" : "outline"}
-                    onClick={() => setViewMode("calendar")}
-                    className={viewMode === "calendar" ? "bg-purple-600" : ""}
-                >
-                    Calendar View
-                </Button>
-            </div>
-
-            {/* Calendar View */}
-            {viewMode === "calendar" && (
-                <CalendarView 
-                    reminders={reminders} 
-                    viewMode={calendarViewMode}
-                    onViewChange={setCalendarViewMode}
-                />
-            )}
-
             {/* Reminders List */}
-            {viewMode === "list" && (
             <div className="space-y-3">
                 {filteredReminders.length === 0 ? (
                     <Card className="text-center py-12">
