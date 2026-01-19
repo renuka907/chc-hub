@@ -122,7 +122,7 @@ export default function SpecialsPage() {
             )}
 
             {isAdmin && (
-            <Card className="border-2 border-dashed border-purple-300">
+                <Card className="border-2 border-dashed border-purple-300">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <FileUp className="w-5 h-5 text-purple-600" />
