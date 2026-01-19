@@ -34,6 +34,7 @@ export default function InventoryManagement() {
     const [showAI, setShowAI] = useState(false);
     const [showArchived, setShowArchived] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
+    const [selectedItems, setSelectedItems] = useState(new Set());
     const queryClient = useQueryClient();
 
     React.useEffect(() => {
