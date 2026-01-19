@@ -62,10 +62,11 @@ export default function ReminderEditDialog({ open, onOpenChange, reminder, users
   const toISO = (local) => (local ? new Date(local).toISOString() : undefined);
 
   const handleSave = async () => {
-    if (!reminder) return;
     setSaving(true);
     try {
       const payload = {
+        title: form.title,
+        description: form.description,
         assigned_to: form.assigned_to || undefined,
         due_date: form.due_date_local ? toISO(form.due_date_local) : undefined,
         recurrence_type: form.recurrence_type,
@@ -75,7 +76,12 @@ export default function ReminderEditDialog({ open, onOpenChange, reminder, users
       if (payload.due_date) {
         payload.next_trigger_at = payload.due_date;
       }
-      await base44.entities.Reminder.update(reminder.id, payload);
+      if (reminder) {
+        await base44.entities.Reminder.update(reminder.id, payload);
+      } else {
+        await base44.entities.Reminder.create(payload);
+      }
+      onOpenChange(false);
       onSaved?.();
     } finally {
       setSaving(false);
