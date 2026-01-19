@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import ReminderEditDialog from "../components/reminders/ReminderEditDialog";
 import NotificationPreferencesDialog from "../components/reminders/NotificationPreferencesDialog";
 import { Bell, Plus, Clock, CheckCircle2, AlertCircle, Calendar, Trash2, Search, X, Settings } from "lucide-react";
