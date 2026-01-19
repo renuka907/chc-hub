@@ -204,13 +204,19 @@ export default function Layout({ children, currentPageName }) {
                                 <Bell className="w-4 h-4" />
                                 <span>Reminders</span>
                                 {reminderCount > 0 && (
-                                    <span className="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                                        {reminderCount > 99 ? '99+' : reminderCount}
-                                    </span>
-                                )}
-                            </Link>
-                            
-                            {/* Single Dropdown Menu */}
+                                        <span className="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                            {reminderCount > 99 ? '99+' : reminderCount}
+                                        </span>
+                                    )}
+                                </Link>
+                                <Link 
+                                    to={createPageUrl("AdminProfile")} 
+                                    className="flex items-center gap-2 bg-white border-2 border-purple-300 text-purple-700 px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
+                                >
+                                    <span>Profile</span>
+                                </Link>
+
+                                {/* Single Dropdown Menu */}
                             <div className="relative">
                                 <button
                                     onMouseEnter={() => {
