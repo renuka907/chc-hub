@@ -113,6 +113,15 @@ export default function SpecialsPage() {
             </div>
 
             {/* Add New Special */}
+            {!isAdmin && (
+                <Card className="border-2 border-yellow-300 bg-yellow-50">
+                    <CardContent className="p-6">
+                        <p className="text-yellow-800">Only admins can add or remove specials.</p>
+                    </CardContent>
+                </Card>
+            )}
+
+            {isAdmin && (
             <Card className="border-2 border-dashed border-purple-300">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
