@@ -29,8 +29,13 @@ export default function InventoryAI({ inventoryItems, locations }) {
         setIsLoading(true);
 
         try {
+            // Filter items by selected location
+            const filteredItems = selectedLocation === "all" 
+                ? inventoryItems 
+                : inventoryItems.filter(item => item.location_id === selectedLocation);
+
             // Prepare inventory context
-            const inventoryContext = inventoryItems.map(item => ({
+            const inventoryContext = filteredItems.map(item => ({
                 name: item.item_name,
                 type: item.item_type,
                 quantity: item.quantity,
@@ -44,6 +49,8 @@ export default function InventoryAI({ inventoryItems, locations }) {
                 expiry_date: item.expiry_date,
                 is_low_stock: item.quantity <= item.low_stock_threshold
             }));
+
+            const locationName = selectedLocation === "all" ? "all locations" : (locations.find(l => l.id === selectedLocation)?.name || "selected location");
 
             const response = await base44.integrations.Core.InvokeLLM({
                 prompt: `You are an inventory management AI assistant. Answer questions about inventory levels, locations, reorder needs, and provide recommendations.
