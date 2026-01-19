@@ -106,16 +106,29 @@ export default function SyringeVisualization({ result }) {
 
     const renderTB1Syringe = () => {
         const percentage = (volumeMl / 1) * 100;
-        const marks = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
+        const majorMarks = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
+        const minorMarks = [];
+        for (let i = 0; i <= 100; i += 2) {
+            const mark = i / 100;
+            if (!majorMarks.find(m => Math.abs(m - mark) < 0.01)) minorMarks.push(mark);
+        }
         return (
             <div className="space-y-2">
                 <p className="text-sm font-semibold text-gray-700">1 ml TB Syringe</p>
                 <div className="relative h-24 bg-gradient-to-r from-amber-50 to-amber-100 rounded-full border-2 border-amber-400">
-                    {marks.map((mark) => {
+                    {minorMarks.map((mark) => {
                         const markPercentage = (mark / 1) * 100;
                         return (
-                            <div key={mark} className="absolute top-0 flex flex-col items-center" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
-                                <div className="w-1 bg-gray-800" style={{ height: mark % 0.5 === 0 ? "16px" : "10px" }} />
+                            <div key={`minor-${mark.toFixed(2)}`} className="absolute top-0 flex flex-col items-center" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
+                                <div className="w-0.5 bg-gray-400" style={{ height: "6px" }} />
+                            </div>
+                        );
+                    })}
+                    {majorMarks.map((mark) => {
+                        const markPercentage = (mark / 1) * 100;
+                        return (
+                            <div key={mark.toFixed(1)} className="absolute top-0 flex flex-col items-center" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
+                                <div className="w-1 bg-gray-800" style={{ height: "16px" }} />
                                 <span className="text-xs font-semibold text-gray-700 mt-1">{mark.toFixed(1)}</span>
                             </div>
                         );
