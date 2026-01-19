@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { usePermissions } from "../components/permissions/usePermissions";
-import { Search, Loader2, TestTube, Star, ExternalLink, Plus, AlertCircle, RefreshCw, Trash2, Folder, Minus } from "lucide-react";
-import { toast } from "sonner";
+      import { base44 } from "@/api/base44Client";
+      import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+      import { Button } from "@/components/ui/button";
+      import { Input } from "@/components/ui/input";
+      import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+      import { Badge } from "@/components/ui/badge";
+      import { Alert, AlertDescription } from "@/components/ui/alert";
+      import { usePermissions } from "../components/permissions/usePermissions";
+      import PanelManager from "../components/panels/PanelManager";
+      import { Search, Loader2, TestTube, Star, ExternalLink, Plus, AlertCircle, RefreshCw, Trash2, Folder, Minus, Settings } from "lucide-react";
+      import { toast } from "sonner";
 
 export default function LabTestDirectory() {
           const [searchQuery, setSearchQuery] = useState("");
