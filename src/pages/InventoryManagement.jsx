@@ -9,7 +9,8 @@ import SearchBar from "../components/SearchBar";
 import InventoryForm from "../components/inventory/InventoryForm";
 import InventoryAuditForm from "../components/inventory/InventoryAuditForm";
 import InventoryAI from "../components/inventory/InventoryAI";
-import { Package, Plus, Pencil, Trash2, AlertTriangle, TrendingDown, Calendar, Settings, ClipboardCheck, Sparkles, Check } from "lucide-react";
+import BarcodeScanner from "../components/inventory/BarcodeScanner";
+import { Package, Plus, Pencil, Trash2, AlertTriangle, TrendingDown, Calendar, Settings, ClipboardCheck, Sparkles, Check, Barcode } from "lucide-react";
 import {
     AlertDialog,
     AlertDialogAction,
