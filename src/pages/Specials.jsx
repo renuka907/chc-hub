@@ -306,6 +306,8 @@ export default function SpecialsPage() {
                     </>
                 )}
             </div>
+
+            <PreviewModal file={selectedPreview} open={previewOpen} onOpenChange={setPreviewOpen} />
         </div>
     );
 }
