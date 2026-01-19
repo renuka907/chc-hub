@@ -309,6 +309,13 @@ export default function ProviderReferral() {
                                                     </p>
                                                 </div>
                                             )}
+
+                                            {provider.notes && (
+                                                <div className="mt-3 pt-3 border-t bg-blue-50 p-3 rounded">
+                                                    <p className="text-xs font-semibold text-blue-900 mb-1">Notes</p>
+                                                    <p className="text-xs text-blue-800">{provider.notes}</p>
+                                                </div>
+                                            )}
                                         </CardContent>
                                     </Card>
                                 ))}
