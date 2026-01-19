@@ -300,10 +300,24 @@ Only return found: false if you truly cannot identify what test they're asking a
 
     return (
         <div className="space-y-6">
-            <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">Lab Test Directory</h1>
-                <p className="text-gray-600">Search Quest Diagnostics for tube types and specimen requirements</p>
+            <div className="flex items-start justify-between">
+                <div>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Lab Test Directory</h1>
+                    <p className="text-gray-600">Search Quest Diagnostics for tube types and specimen requirements</p>
+                </div>
+                {isAdmin && (
+                    <Button
+                        onClick={() => setShowPanelManager(true)}
+                        variant="outline"
+                        className="gap-2"
+                    >
+                        <Settings className="w-4 h-4" />
+                        Manage Panels
+                    </Button>
+                )}
             </div>
+
+            <PanelManager isOpen={showPanelManager} onClose={() => setShowPanelManager(false)} />
 
             {/* Search Section */}
             <Card>
