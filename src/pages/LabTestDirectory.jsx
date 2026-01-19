@@ -8,7 +8,7 @@ import React, { useState, useEffect, useRef } from "react";
       import { Alert, AlertDescription } from "@/components/ui/alert";
       import { usePermissions } from "../components/permissions/usePermissions";
       import PanelManager from "../components/panels/PanelManager";
-      import { Search, Loader2, TestTube, Star, ExternalLink, Plus, AlertCircle, RefreshCw, Trash2, Folder, Minus, Settings } from "lucide-react";
+      import { Search, Loader2, TestTube, Star, ExternalLink, Plus, AlertCircle, RefreshCw, Trash2, Folder, Minus, Settings, Sparkles } from "lucide-react";
       import { toast } from "sonner";
 
 export default function LabTestDirectory() {
