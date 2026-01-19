@@ -108,7 +108,10 @@ export default function Reminders() {
                 (filterStatus === "completed" ? reminder.completed : !reminder.completed);
             const matchesSearch = reminder.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 reminder.description?.toLowerCase().includes(searchQuery.toLowerCase());
-            return matchesStatus && matchesSearch;
+            // Filter by show_after time - only show if show_after is in the past or not set
+            const now = new Date();
+            const isVisible = !reminder.show_after || new Date(reminder.show_after) <= now;
+            return matchesStatus && matchesSearch && isVisible;
         })
         .sort((a, b) => {
             if (sortBy === "due_date") {
@@ -140,6 +143,18 @@ export default function Reminders() {
     const isOverdue = (dueDate) => {
         if (!dueDate) return false;
         return new Date(dueDate) < new Date();
+    };
+
+    const handleSnoozeReminder = async (reminder) => {
+        try {
+            const now = new Date();
+            const showAfter = new Date(now.getTime() + 24 * 60 * 60 * 1000); // Hide for 24 hours
+            await base44.entities.Reminder.update(reminder.id, { show_after: showAfter.toISOString() });
+            queryClient.invalidateQueries({ queryKey: ['reminders'] });
+            toast.info(`Reminder hidden until ${showAfter.toLocaleDateString()}`);
+        } catch (error) {
+            toast.error('Failed to snooze reminder');
+        }
     };
 
     // Check for due reminders and show notifications
@@ -443,28 +458,36 @@ export default function Reminders() {
                                     </div>
                                     
                                     <div className="flex gap-2">
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() => {
-                                                setEditingReminder(reminder);
-                                                setShowCreateDialog(true);
-                                            }}
-                                        >
-                                            Edit
-                                        </Button>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                                            onClick={() => {
-                                                setItemToDelete(reminder.id);
-                                                setShowDeleteDialog(true);
-                                            }}
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </Button>
-                                    </div>
+                                         <Button
+                                             variant="ghost"
+                                             size="sm"
+                                             onClick={() => handleSnoozeReminder(reminder)}
+                                             title="Hide for 24 hours"
+                                         >
+                                             Snooze
+                                         </Button>
+                                         <Button
+                                             variant="ghost"
+                                             size="sm"
+                                             onClick={() => {
+                                                 setEditingReminder(reminder);
+                                                 setShowCreateDialog(true);
+                                             }}
+                                         >
+                                             Edit
+                                         </Button>
+                                         <Button
+                                             variant="ghost"
+                                             size="icon"
+                                             className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                                             onClick={() => {
+                                                 setItemToDelete(reminder.id);
+                                                 setShowDeleteDialog(true);
+                                             }}
+                                         >
+                                             <Trash2 className="w-4 h-4" />
+                                         </Button>
+                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
