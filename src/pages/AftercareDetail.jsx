@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 
 export default function AftercareDetail() {
+    // Enhanced print styling
     const urlParams = new URLSearchParams(window.location.search);
     const instructionId = urlParams.get('id');
     const [showEditForm, setShowEditForm] = useState(false);
