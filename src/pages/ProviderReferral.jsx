@@ -11,6 +11,7 @@ export default function ProviderReferral() {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedSpecialty, setSelectedSpecialty] = useState("");
     const [showFilters, setShowFilters] = useState(false);
+    const [showPrintPreview, setShowPrintPreview] = useState(false);
 
     const { data: providers, isLoading } = useQuery({
         queryKey: ['providers'],
