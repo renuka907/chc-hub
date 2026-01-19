@@ -5,10 +5,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { Sparkles, Send, Loader2, Package, AlertTriangle, TrendingUp } from "lucide-react";
 
 export default function InventoryAI({ inventoryItems, locations }) {
     const [question, setQuestion] = useState("");
+    const [selectedLocation, setSelectedLocation] = useState("all");
     const [messages, setMessages] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
