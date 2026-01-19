@@ -464,7 +464,8 @@ export default function Reminders() {
                 open={showCreateDialog}
                 onOpenChange={setShowCreateDialog}
                 reminder={editingReminder}
-                onSuccess={() => {
+                users={teamMembers}
+                onSaved={() => {
                     queryClient.invalidateQueries({ queryKey: ['reminders'] });
                     setShowCreateDialog(false);
                     setEditingReminder(null);
