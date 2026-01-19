@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import ReminderEditDialog from "../components/reminders/ReminderEditDialog";
-import { Bell, Plus, Clock, CheckCircle2, AlertCircle, Calendar, Trash2, Search, X } from "lucide-react";
+import NotificationPreferencesDialog from "../components/reminders/NotificationPreferencesDialog";
+import { Bell, Plus, Clock, CheckCircle2, AlertCircle, Calendar, Trash2, Search, X, Settings } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
@@ -23,6 +24,7 @@ export default function Reminders() {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
     const [dueReminders, setDueReminders] = useState([]);
+    const [showNotificationPrefs, setShowNotificationPrefs] = useState(false);
     const queryClient = useQueryClient();
 
     const { data: reminders = [], isLoading } = useQuery({
@@ -201,16 +203,26 @@ export default function Reminders() {
                             <p className="text-gray-600">Track tasks and upcoming deadlines</p>
                         </div>
                     </div>
-                    <Button 
-                        onClick={() => {
-                            setEditingReminder(null);
-                            setShowCreateDialog(true);
-                        }}
-                        className="bg-purple-600 hover:bg-purple-700"
-                    >
-                        <Plus className="w-4 h-4 mr-2" />
-                        New Reminder
-                    </Button>
+                    <div className="flex gap-2">
+                        <Button 
+                            variant="outline"
+                            onClick={() => setShowNotificationPrefs(true)}
+                            className="border-purple-300"
+                        >
+                            <Settings className="w-4 h-4 mr-2" />
+                            Notification Settings
+                        </Button>
+                        <Button 
+                            onClick={() => {
+                                setEditingReminder(null);
+                                setShowCreateDialog(true);
+                            }}
+                            className="bg-purple-600 hover:bg-purple-700"
+                        >
+                            <Plus className="w-4 h-4 mr-2" />
+                            New Reminder
+                        </Button>
+                    </div>
                 </div>
             </div>
 
@@ -470,6 +482,11 @@ export default function Reminders() {
                     setShowCreateDialog(false);
                     setEditingReminder(null);
                 }}
+            />
+
+            <NotificationPreferencesDialog
+                open={showNotificationPrefs}
+                onOpenChange={setShowNotificationPrefs}
             />
 
             {/* Delete Dialog */}
