@@ -285,17 +285,6 @@ export default function EducationDetail() {
                         )}
                     </div>
 
-                    {/* Image */}
-                    {topic.image_url && (
-                        <div className="my-6">
-                            <img 
-                                src={topic.image_url} 
-                                alt={topic.title}
-                                className="w-full max-w-2xl mx-auto rounded-lg"
-                            />
-                        </div>
-                    )}
-
                     {/* Summary */}
                     {topic.summary && (
                         <Card className="bg-blue-50 border-blue-200">
