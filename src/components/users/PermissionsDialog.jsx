@@ -143,10 +143,9 @@ export default function PermissionsDialog({ open, onOpenChange, user, onSave, is
                                         </div>
                                     </CardContent>
                                 )}
-                            );
-                        })}
-                            </Card>
-                        ))}
+                                </Card>
+                                );
+                                })}
                     </div>
                 </div>
 
