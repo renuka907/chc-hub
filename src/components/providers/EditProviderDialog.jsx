@@ -9,25 +9,42 @@ import { Loader2 } from "lucide-react";
 export default function EditProviderDialog({ provider, open, onOpenChange, onSave }) {
     const [formData, setFormData] = useState(null);
     const [saving, setSaving] = useState(false);
+    const isNew = !provider;
 
     useEffect(() => {
-        if (provider) {
-            setFormData({
-                full_name: provider.full_name || "",
-                specialty: provider.specialty || "",
-                email: provider.email || "",
-                phone: provider.phone || "",
-                address: provider.address || "",
-                credentials: provider.credentials || "",
-                bio: provider.bio || "",
-            });
+        if (open) {
+            if (provider) {
+                setFormData({
+                    full_name: provider.full_name || "",
+                    specialty: provider.specialty || "",
+                    email: provider.email || "",
+                    phone: provider.phone || "",
+                    address: provider.address || "",
+                    credentials: provider.credentials || "",
+                    bio: provider.bio || "",
+                });
+            } else {
+                setFormData({
+                    full_name: "",
+                    specialty: "",
+                    email: "",
+                    phone: "",
+                    address: "",
+                    credentials: "",
+                    bio: "",
+                });
+            }
         }
     }, [provider, open]);
 
     const handleSave = async () => {
         setSaving(true);
         try {
-            await base44.entities.Provider.update(provider.id, formData);
+            if (isNew) {
+                await base44.entities.Provider.create(formData);
+            } else {
+                await base44.entities.Provider.update(provider.id, formData);
+            }
             onSave();
             onOpenChange(false);
         } catch (error) {
@@ -43,7 +60,7 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-md">
                 <DialogHeader>
-                    <DialogTitle>Edit Provider</DialogTitle>
+                    <DialogTitle>{isNew ? "Add Provider" : "Edit Provider"}</DialogTitle>
                 </DialogHeader>
 
                 <div className="space-y-4">
