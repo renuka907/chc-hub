@@ -542,58 +542,64 @@ export default function Library() {
                             </CardContent>
                         </Card>
                     ) : (
-                        <div className="grid md:grid-cols-2 gap-6">
-                            {filteredForms.map(form => (
-                                <div key={form.id} className="relative">
-                                    <div className="absolute top-4 left-4 z-10">
-                                        <Checkbox
-                                            checked={selectedItems.has(form.id)}
-                                            onCheckedChange={() => toggleSelection(form.id)}
-                                            onClick={(e) => e.stopPropagation()}
-                                            className="bg-white border-2 border-gray-400"
-                                        />
-                                    </div>
-                                    <button
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            toggleFormFavorite(form.id, form.is_favorite);
-                                        }}
-                                        className="absolute top-4 right-4 z-10 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center hover:scale-110 transition-transform"
-                                    >
-                                        <Star className={`w-4 h-4 ${form.is_favorite ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`} />
-                                    </button>
-                                    <Link to={createPageUrl(`ConsentFormDetail?id=${form.id}`)}>
-                                        <Card className={`h-full hover:shadow-lg transition-all duration-300 border-2 ${selectedItems.has(form.id) ? 'border-blue-500 bg-blue-50' : 'hover:border-blue-200'} cursor-pointer group`}>
-                                            <CardHeader>
-                                                <div className="flex items-start justify-between mb-2">
-                                                    <div className="flex gap-2 flex-wrap">
-                                                        <Badge className={formTypeColors[form.form_type] || "bg-gray-100 text-gray-800"}>
-                                                            {form.form_type}
-                                                        </Badge>
+                        <div className="space-y-6">
+                            {["Procedure", "Treatment", "General", "HIPAA", "Financial"].map(formType => {
+                                const typeForms = filteredForms.filter(f => f.form_type === formType);
+                                if (typeForms.length === 0) return null;
+                                
+                                return (
+                                    <div key={formType} className="bg-white rounded-2xl p-6 shadow-md">
+                                        <h3 className="text-xl font-bold mb-4 text-gray-900 flex items-center">
+                                            <span className={`px-3 py-1 rounded-lg text-sm mr-3 ${formTypeColors[formType]}`}>
+                                                {formType}
+                                            </span>
+                                            <span className="text-gray-400 text-sm font-normal">({typeForms.length})</span>
+                                        </h3>
+                                        <div className="space-y-2">
+                                            {typeForms.map(form => (
+                                                <div key={form.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors group">
+                                                    <Checkbox
+                                                        checked={selectedItems.has(form.id)}
+                                                        onCheckedChange={() => toggleSelection(form.id)}
+                                                        onClick={(e) => e.stopPropagation()}
+                                                        className="flex-shrink-0"
+                                                    />
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            toggleFormFavorite(form.id, form.is_favorite);
+                                                        }}
+                                                        className="flex-shrink-0 w-6 h-6 flex items-center justify-center hover:scale-110 transition-transform"
+                                                    >
+                                                        <Star className={`w-4 h-4 ${form.is_favorite ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`} />
+                                                    </button>
+                                                    <Link to={createPageUrl(`ConsentFormDetail?id=${form.id}`)} className="flex-1 flex items-center justify-between min-w-0">
+                                                        <div className="flex-1 min-w-0 mr-4">
+                                                            <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
+                                                                {form.form_name}
+                                                            </h4>
+                                                            {form.tags && JSON.parse(form.tags).length > 0 && (
+                                                                <div className="flex gap-1 flex-wrap mt-1">
+                                                                    {JSON.parse(form.tags).slice(0, 3).map(tag => (
+                                                                        <Badge key={tag} variant="secondary" className="text-xs">
+                                                                            {tag}
+                                                                        </Badge>
+                                                                    ))}
+                                                                </div>
+                                                            )}
+                                                        </div>
                                                         {form.version && (
-                                                            <Badge variant="outline">v{form.version}</Badge>
+                                                            <Badge variant="outline" className="flex-shrink-0">v{form.version}</Badge>
                                                         )}
-                                                    </div>
-                                                    <Printer className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                                                    </Link>
+                                                    <Printer className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors flex-shrink-0" />
                                                 </div>
-                                                <CardTitle className="group-hover:text-blue-600 transition-colors">
-                                                    {form.form_name}
-                                                </CardTitle>
-                                                {form.tags && JSON.parse(form.tags).length > 0 && (
-                                                    <div className="flex gap-1 flex-wrap mt-2">
-                                                        {JSON.parse(form.tags).slice(0, 3).map(tag => (
-                                                            <Badge key={tag} variant="secondary" className="text-xs">
-                                                                {tag}
-                                                            </Badge>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </CardHeader>
-                                        </Card>
-                                    </Link>
-                                </div>
-                            ))}
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     )}
                 </TabsContent>
