@@ -277,7 +277,14 @@ Only return found: false if you truly cannot identify what test they're asking a
     const otherTests = filteredTests.filter(t => !t.is_favorite);
 
     const calculatePanelTubes = (panelId) => {
-        const panelTests = savedTests.filter(t => t.panel_id === panelId);
+        const panelTests = savedTests.filter(t => {
+            try {
+                const panelIds = typeof t.panel_ids === 'string' ? JSON.parse(t.panel_ids) : t.panel_ids || [];
+                return Array.isArray(panelIds) ? panelIds.includes(panelId) : false;
+            } catch {
+                return false;
+            }
+        });
         const tubeCount = {};
         panelTests.forEach(test => {
             const tube = test.tube_type || 'Unknown';
