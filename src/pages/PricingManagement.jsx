@@ -317,97 +317,103 @@ export default function PricingManagement() {
                     </CardContent>
                 </Card>
             ) : (
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-3">
                     {filteredItems.map(item => {
                         const tiers = item.pricing_tiers ? JSON.parse(item.pricing_tiers) : [];
                         return (
-                            <Card key={item.id} className="hover:shadow-lg transition-all duration-300 border-2 relative">
-                                <button
-                                    onClick={() => toggleFavoriteMutation.mutate({ id: item.id, currentValue: item.is_favorite })}
-                                    className="absolute top-4 right-4 z-10 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center hover:scale-110 transition-transform"
-                                >
-                                    <Star className={`w-4 h-4 ${item.is_favorite ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`} />
-                                </button>
-                                <CardHeader className="pb-3">
-                                    <div className="flex items-start justify-between mb-3">
-                                        <div className="flex flex-wrap gap-2">
-                                            {(() => {
-                                                // Handle both old and new category formats
-                                                let cats = [];
-                                                if (item.categories) {
-                                                    try {
-                                                        cats = JSON.parse(item.categories);
-                                                    } catch (e) {}
-                                                } else if (item.category) {
-                                                    cats = [item.category];
-                                                }
-                                                return cats.map(cat => (
-                                                    <Badge key={cat} className={categoryColors[cat] || "bg-gray-100 text-gray-800"}>
-                                                        {cat}
-                                                    </Badge>
-                                                ));
-                                            })()}
-                                            <Badge className={typeColors[item.item_type]}>
-                                                {item.item_type}
-                                            </Badge>
-                                            {item.area_based && (
-                                                <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
-                                                    <Tag className="w-3 h-3 mr-1" />
-                                                    Area-based
+                            <Card key={item.id} className="hover:shadow-md transition-all duration-300 border relative">
+                                <div className="p-4">
+                                    <div className="flex items-start justify-between gap-4">
+                                        {/* Left side: Info */}
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex flex-wrap gap-2 mb-2">
+                                                {(() => {
+                                                    let cats = [];
+                                                    if (item.categories) {
+                                                        try {
+                                                            cats = JSON.parse(item.categories);
+                                                        } catch (e) {}
+                                                    } else if (item.category) {
+                                                        cats = [item.category];
+                                                    }
+                                                    return cats.map(cat => (
+                                                        <Badge key={cat} className={categoryColors[cat] || "bg-gray-100 text-gray-800"}>
+                                                            {cat}
+                                                        </Badge>
+                                                    ));
+                                                })()}
+                                                <Badge className={typeColors[item.item_type]}>
+                                                    {item.item_type}
                                                 </Badge>
+                                                {item.area_based && (
+                                                    <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                                                        <Tag className="w-3 h-3 mr-1" />
+                                                        Area-based
+                                                    </Badge>
+                                                )}
+                                            </div>
+                                            <h3 className="font-semibold text-gray-900 mb-1">{item.name}</h3>
+                                            {item.description && (
+                                                <p className="text-sm text-gray-600 mb-2">{item.description}</p>
+                                            )}
+                                            <div className="text-xs text-gray-500">
+                                                📍 {(() => {
+                                                    const locationIds = item.clinic_location_ids ? JSON.parse(item.clinic_location_ids) : [];
+                                                    const locationNames = locationIds
+                                                        .map(id => locations.find(l => l.id === id)?.name)
+                                                        .filter(Boolean);
+                                                    return locationNames.length > 0 ? locationNames.join(', ') : 'No locations';
+                                                })()}
+                                            </div>
+                                        </div>
+
+                                        {/* Pricing */}
+                                        <div className="flex-shrink-0 text-right min-w-fit">
+                                            <div className="space-y-1">
+                                                {tiers.map((tier, idx) => (
+                                                    <div key={idx} className="flex flex-col items-end">
+                                                        <span className="text-xs text-gray-600">
+                                                            {tier.tier_name}
+                                                            {tier.sessions > 1 && ` (${tier.sessions})`}
+                                                        </span>
+                                                        <span className="font-bold text-green-600">
+                                                            ${tier.price.toLocaleString()}
+                                                        </span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Actions */}
+                                        <div className="flex-shrink-0 flex items-center gap-2">
+                                            <button
+                                                onClick={() => toggleFavoriteMutation.mutate({ id: item.id, currentValue: item.is_favorite })}
+                                                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                            >
+                                                <Star className={`w-4 h-4 ${item.is_favorite ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`} />
+                                            </button>
+                                            {canEdit && (
+                                                <>
+                                                    <Button 
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        onClick={() => handleEdit(item)}
+                                                    >
+                                                        <Pencil className="w-4 h-4" />
+                                                    </Button>
+                                                    <Button 
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                        onClick={() => setDeleteConfirm(item)}
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </Button>
+                                                </>
                                             )}
                                         </div>
                                     </div>
-                                    <CardTitle className="text-xl mb-2">{item.name}</CardTitle>
-                                    <div className="text-sm text-gray-600">
-                                        📍 {(() => {
-                                            const locationIds = item.clinic_location_ids ? JSON.parse(item.clinic_location_ids) : [];
-                                            const locationNames = locationIds
-                                                .map(id => locations.find(l => l.id === id)?.name)
-                                                .filter(Boolean);
-                                            return locationNames.length > 0 ? locationNames.join(', ') : 'No locations';
-                                        })()}
-                                    </div>
-                                    {item.description && (
-                                        <p className="text-sm text-gray-600 mt-2">{item.description}</p>
-                                    )}
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-                                        {tiers.map((tier, idx) => (
-                                            <div key={idx} className="flex justify-between items-center text-sm">
-                                                <span className="font-medium text-gray-700">
-                                                    {tier.tier_name}
-                                                    {tier.sessions > 1 && (
-                                                        <span className="text-gray-500 ml-2">({tier.sessions} {tier.unit_type || 'sessions'})</span>
-                                                    )}
-                                                </span>
-                                                <span className="font-bold text-green-600 text-base">
-                                                    ${tier.price.toLocaleString()}
-                                                </span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    {canEdit && (
-                                        <div className="flex gap-2 mt-4">
-                                            <Button 
-                                                variant="outline" 
-                                                className="flex-1"
-                                                onClick={() => handleEdit(item)}
-                                            >
-                                                <Pencil className="w-4 h-4 mr-2" />
-                                                Edit
-                                            </Button>
-                                            <Button 
-                                                variant="outline" 
-                                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                                                onClick={() => setDeleteConfirm(item)}
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </Button>
-                                        </div>
-                                    )}
-                                </CardContent>
+                                </div>
                             </Card>
                         );
                     })}
