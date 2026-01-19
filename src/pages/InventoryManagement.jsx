@@ -439,7 +439,7 @@ export default function InventoryManagement() {
                                                                  </div>
                                                              </div>
                                                              <div className="flex flex-wrap gap-2 mb-2">
-                                                                 <Badge className={typeColors[item.item_type]} className="text-xs">
+                                                                 <Badge className={`${typeColors[item.item_type]} text-xs`}>
                                                                      {item.item_type}
                                                                  </Badge>
                                                                  {item.item_condition && (
