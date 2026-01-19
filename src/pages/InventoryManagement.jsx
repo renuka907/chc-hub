@@ -518,12 +518,21 @@ export default function InventoryManagement() {
 
                                          return (
                                              <Card key={item.id} className={`hover:shadow-md transition-all duration-300 border-l-4 ${
+                                                 selectedItems.has(item.id) ? 'border-blue-500 bg-blue-50' :
                                                  isLowStock && itemExpiringSoon ? 'border-l-red-500 bg-red-50' : 
                                                  isLowStock ? 'border-l-red-300 bg-red-50' : 
                                                  itemExpiringSoon ? 'border-l-amber-300 bg-amber-50' : 'border-l-gray-300'
                                              }`}>
                                                  <CardContent className="p-4">
                                                      <div className="flex items-start justify-between gap-6">
+                                                         {/* Checkbox */}
+                                                         {canEdit && (
+                                                             <Checkbox
+                                                                 checked={selectedItems.has(item.id)}
+                                                                 onCheckedChange={() => toggleItemSelection(item.id)}
+                                                                 className="mt-1 flex-shrink-0"
+                                                             />
+                                                         )}
                                                          {/* Item name & badges - 30% */}
                                                          <div className="flex-1 min-w-0">
                                                              <div className="font-semibold text-gray-900">{item.item_name}</div>
