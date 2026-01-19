@@ -364,7 +364,7 @@ Only return found: false if you truly cannot identify what test they're asking a
         });
         const tubeVolumes = {};
         panelTests.forEach(test => {
-            const tube = test.tube_type || 'Unknown';
+            const tube = normalizeTubeType(test.tube_type);
             const volumeStr = test.volume_required || '0';
             const volumeNeeded = parseFloat(volumeStr) || 0;
             tubeVolumes[tube] = (tubeVolumes[tube] || 0) + volumeNeeded;
