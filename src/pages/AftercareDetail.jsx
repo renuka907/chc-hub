@@ -196,7 +196,7 @@ export default function AftercareDetail() {
 
             {/* Action Bar */}
             <div className="flex items-center justify-between no-print">
-                <Link to={createPageUrl("AftercareLibrary")}>
+                <Link to={createPageUrl("Library")}>
                     <Button variant="outline" size="sm">
                         <ArrowLeft className="w-4 h-4 mr-2" />
                         Back to Library
