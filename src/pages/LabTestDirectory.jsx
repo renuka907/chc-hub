@@ -354,7 +354,8 @@ Only return found: false if you truly cannot identify what test they're asking a
                                                         Code: {searchResults.test_code}
                                                     </Badge>
                                                 )}
-                                            </div>
+                                                </div>
+                                                )}
                                             <Button
                                                 size="sm"
                                                 onClick={() => handleSaveTest(searchResults)}
