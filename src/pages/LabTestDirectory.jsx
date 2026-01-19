@@ -56,6 +56,17 @@ export default function LabTestDirectory() {
         }
     });
 
+    const deleteTestMutation = useMutation({
+        mutationFn: (id) => base44.entities.LabTestInfo.delete(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['labTests'] });
+            toast.success("Test deleted");
+        },
+        onError: () => {
+            toast.error('Failed to delete test');
+        }
+    });
+
     const handleSyncTube = (id) => syncTubeMutation.mutate({ id });
 
     // Auto-sync tube types from Quest for saved tests (runs once per test id)
