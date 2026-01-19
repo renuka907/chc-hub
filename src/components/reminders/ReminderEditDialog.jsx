@@ -8,6 +8,8 @@ import { base44 } from "@/api/base44Client";
 
 export default function ReminderEditDialog({ open, onOpenChange, reminder, users = [], onSaved }) {
   const [form, setForm] = React.useState({
+    title: "",
+    description: "",
     assigned_to: "",
     due_date_local: "",
     recurrence_type: "none",
@@ -17,16 +19,30 @@ export default function ReminderEditDialog({ open, onOpenChange, reminder, users
   const [saving, setSaving] = React.useState(false);
 
   React.useEffect(() => {
-    if (!reminder) return;
-    const dueLocal = reminder.due_date ? toLocalInput(reminder.due_date) : "";
-    setForm({
-      assigned_to: reminder.assigned_to || "",
-      due_date_local: dueLocal,
-      recurrence_type: reminder.recurrence_type || "none",
-      recurrence_interval: reminder.recurrence_interval || 1,
-      priority: reminder.priority || "medium"
-    });
-  }, [reminder?.id]);
+    if (reminder) {
+      const dueLocal = reminder.due_date ? toLocalInput(reminder.due_date) : "";
+      setForm({
+        title: reminder.title || "",
+        description: reminder.description || "",
+        assigned_to: reminder.assigned_to || "",
+        due_date_local: dueLocal,
+        recurrence_type: reminder.recurrence_type || "none",
+        recurrence_interval: reminder.recurrence_interval || 1,
+        priority: reminder.priority || "medium"
+      });
+    } else {
+      // Reset form for new reminder
+      setForm({
+        title: "",
+        description: "",
+        assigned_to: "",
+        due_date_local: "",
+        recurrence_type: "none",
+        recurrence_interval: 1,
+        priority: "medium"
+      });
+    }
+  }, [reminder?.id, open]);
 
   const toLocalInput = (iso) => {
     try {
