@@ -149,16 +149,29 @@ export default function SyringeVisualization({ result }) {
 
     const renderSyringe3ml = () => {
         const percentage = (volumeMl / 3) * 100;
-        const marks = [0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0];
+        const majorMarks = [0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0];
+        const minorMarks = [];
+        for (let i = 0; i <= 30; i += 1) {
+            const mark = i / 10;
+            if (!majorMarks.find(m => Math.abs(m - mark) < 0.01)) minorMarks.push(mark);
+        }
         return (
             <div className="space-y-2">
                 <p className="text-sm font-semibold text-gray-700">3 ml Syringe</p>
                 <div className="relative h-24 bg-gradient-to-r from-green-50 to-green-100 rounded-full border-2 border-green-400">
-                    {marks.map((mark) => {
+                    {minorMarks.map((mark) => {
                         const markPercentage = (mark / 3) * 100;
                         return (
-                            <div key={mark} className="absolute top-0 flex flex-col items-center" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
-                                <div className="w-1 bg-gray-800" style={{ height: mark % 1 === 0 ? "16px" : "10px" }} />
+                            <div key={`minor-${mark.toFixed(2)}`} className="absolute top-0 flex flex-col items-center z-10" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
+                                <div className="w-0.5 bg-gray-400" style={{ height: "6px" }} />
+                            </div>
+                        );
+                    })}
+                    {majorMarks.map((mark) => {
+                        const markPercentage = (mark / 3) * 100;
+                        return (
+                            <div key={mark} className="absolute top-0 flex flex-col items-center z-10" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
+                                <div className="w-1 bg-gray-800" style={{ height: "16px" }} />
                                 <span className="text-xs font-semibold text-gray-700 mt-1">{mark.toFixed(1)}</span>
                             </div>
                         );
