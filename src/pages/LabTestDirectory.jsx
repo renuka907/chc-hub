@@ -420,6 +420,8 @@ Only return found: false if you truly cannot identify what test they're asking a
                                             getTubeColor={getTubeColor}
                                             onSyncTube={handleSyncTube}
                                             syncing={syncTubeMutation.isPending}
+                                            onDelete={deleteTestMutation.mutate}
+                                            deleting={deleteTestMutation.isPending}
                                         />
                                     ))}
                                 </div>
