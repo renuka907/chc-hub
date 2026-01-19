@@ -119,7 +119,7 @@ export default function MedicationCalculator() {
                         {/* Units per ml (Optional) */}
                         <div>
                             <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                Units per ml (Optional)
+                                Units per ml
                             </label>
                             <Input
                                 type="number"
@@ -131,7 +131,7 @@ export default function MedicationCalculator() {
                                 min="0"
                                 className="text-lg"
                             />
-                            <p className="text-xs text-gray-500 mt-1">Leave blank to skip insulin units calculation. Common: U-100 (100 units/ml)</p>
+                            <p className="text-xs text-gray-500 mt-1">Default: U-100 (100 units/ml)</p>
                         </div>
 
                         {/* Error Message */}
