@@ -159,7 +159,7 @@ export default function Layout({ children, currentPageName }) {
                                 <span>Chat with Peach</span>
                             </Link>
                             <Link 
-                                to={createPageUrl("Messaging")} 
+                                to={createPageUrl("Reminders")} 
                                 className="flex items-center gap-2 bg-white border-2 border-purple-300 text-purple-700 px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
                             >
                                 <Bell className="w-4 h-4" />
