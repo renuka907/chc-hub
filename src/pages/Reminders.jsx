@@ -392,6 +392,7 @@ export default function Reminders() {
                     </Card>
                 ) : (
                     (() => {
+                        const now = new Date();
                         const today = new Date();
                         today.setHours(0, 0, 0, 0);
                         const tomorrow = new Date(today);
@@ -400,6 +401,7 @@ export default function Reminders() {
                         weekEnd.setDate(weekEnd.getDate() + 7);
 
                         const groups = {
+                            snoozed: [],
                             overdue: [],
                             today: [],
                             tomorrow: [],
@@ -409,6 +411,12 @@ export default function Reminders() {
                         };
 
                         filteredReminders.forEach(reminder => {
+                            // Check if reminder is snoozed
+                            if (reminder.show_after && new Date(reminder.show_after) > now) {
+                                groups.snoozed.push(reminder);
+                                return;
+                            }
+
                             if (!reminder.due_date) {
                                 groups.noDueDate.push(reminder);
                             } else {
