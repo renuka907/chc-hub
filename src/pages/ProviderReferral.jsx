@@ -139,6 +139,13 @@ export default function ProviderReferral() {
                 )}
             </div>
 
+            {/* Print Preview Component */}
+            <PrintableProviderCard 
+                providers={filteredProviders} 
+                locations={locations}
+                clinicName="CHC Hub - Provider Directory"
+            />
+
             {/* Results */}
             {isLoading ? (
                 <div className="flex items-center justify-center py-12">
