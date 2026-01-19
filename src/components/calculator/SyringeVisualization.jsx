@@ -22,18 +22,26 @@ export default function SyringeVisualization({ result }) {
 
     const renderInsulin30Syringe = () => {
         const percentage = (units / 30) * 100;
+        const marks = [0, 5, 10, 15, 20, 25, 30];
         return (
             <div className="space-y-2">
                 <p className="text-sm font-semibold text-gray-700">30 Unit Insulin Syringe</p>
-                <div className="relative h-16 bg-gradient-to-r from-blue-50 to-blue-100 rounded-full border-2 border-blue-400 flex items-center px-4">
-                    <div className="absolute left-4 text-xs font-semibold text-gray-600">0</div>
-                    <div className="absolute right-4 text-xs font-semibold text-gray-600">30</div>
+                <div className="relative h-24 bg-gradient-to-r from-blue-50 to-blue-100 rounded-full border-2 border-blue-400">
+                    {marks.map((mark) => {
+                        const markPercentage = (mark / 30) * 100;
+                        return (
+                            <div key={mark} className="absolute top-0 flex flex-col items-center" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
+                                <div className="w-1 bg-gray-800" style={{ height: mark % 10 === 0 ? "16px" : "10px" }} />
+                                <span className="text-xs font-semibold text-gray-700 mt-1">{mark}</span>
+                            </div>
+                        );
+                    })}
                     <div
-                        className="absolute h-12 bg-red-500 rounded transition-all"
+                        className="absolute top-1/2 h-10 bg-red-500 rounded transition-all"
                         style={{
-                            left: `${Math.max(20, Math.min(percentage + 10, 85))}%`,
-                            transform: "translateX(-50%)",
-                            width: "3px"
+                            left: `${percentage}%`,
+                            transform: "translateX(-50%) translateY(-50%)",
+                            width: "4px"
                         }}
                     />
                 </div>
