@@ -245,7 +245,7 @@ export default function Layout({ children, currentPageName }) {
                                                 setOpenDropdown(null);
                                             }, 1000);
                                         }}
-                                        className="absolute top-full right-0 mt-1 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
+                                        className="absolute top-full right-0 mt-1 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 max-h-96 overflow-y-auto"
                                     >
                                         {menuGroups.map((group, idx) => {
                                             if (group.single) {
