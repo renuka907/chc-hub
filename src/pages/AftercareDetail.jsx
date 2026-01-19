@@ -247,10 +247,6 @@ export default function AftercareDetail() {
                 <thead className="no-print">
                     <tr>
                         <th className="print-header-row">
-                            <img 
-                                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png"
-                                alt="Logo"
-                            />
                             <div>6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
                             <div>Phone: 239-561-9191 | contemporaryhealthcenter.com</div>
                         </th>
