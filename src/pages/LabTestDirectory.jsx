@@ -347,31 +347,32 @@ Only return found: false if you truly cannot identify what test they're asking a
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <Search className="w-5 h-5" />
-                        Search Quest Diagnostics
+                        Smart Lab Test Search
                     </CardTitle>
+                    <p className="text-sm text-gray-600 mt-2">Search by test name, code, symptoms, or conditions</p>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="flex gap-2">
                         <Input
-                            placeholder="Search by test name, code, or abbreviation (e.g., CBC, 7336, TSH)"
+                            placeholder="e.g., CBC, check liver health, feeling tired, diabetes screening..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                            onKeyPress={(e) => e.key === 'Enter' && handleAISearch()}
                         />
                         <Button 
-                            onClick={handleSearch} 
+                            onClick={handleAISearch} 
                             disabled={isSearching}
-                            className="bg-blue-600 hover:bg-blue-700"
+                            className="bg-purple-600 hover:bg-purple-700"
                         >
                             {isSearching ? (
                                 <>
                                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                    Searching...
+                                    AI Search...
                                 </>
                             ) : (
                                 <>
                                     <Search className="w-4 h-4 mr-2" />
-                                    Search
+                                    AI Search
                                 </>
                             )}
                         </Button>
