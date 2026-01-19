@@ -696,6 +696,12 @@ export default function InventoryManagement() {
                 onSuccess={handleSuccess}
             />
 
+            <BarcodeScanner
+                open={showBarcodeScanner}
+                onOpenChange={setShowBarcodeScanner}
+                onBarcodeScanned={handleBarcodeScanned}
+            />
+
             <AlertDialog open={!!deleteConfirm} onOpenChange={(open) => !open && setDeleteConfirm(null)}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
