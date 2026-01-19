@@ -456,7 +456,7 @@ Only return found: false if you truly cannot identify what test they're asking a
     );
 }
 
-function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing }) {
+function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, onDelete, deleting }) {
     return (
         <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
@@ -479,6 +479,18 @@ function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing })
                             title={test.is_favorite ? 'Unfavorite' : 'Favorite'}
                         >
                             <Star className={`w-4 h-4 ${test.is_favorite ? 'fill-yellow-500 text-yellow-500' : ''}`} />
+                        </button>
+                        <button
+                            onClick={() => {
+                                if (confirm(`Delete "${test.test_name}"?`)) {
+                                    onDelete?.(test.id);
+                                }
+                            }}
+                            disabled={deleting}
+                            className="text-gray-400 hover:text-red-600"
+                            title="Delete test"
+                        >
+                            <Trash2 className={`w-4 h-4 ${deleting ? 'opacity-50' : ''}`} />
                         </button>
                     </div>
                 </div>
