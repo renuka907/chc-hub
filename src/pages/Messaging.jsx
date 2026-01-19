@@ -8,15 +8,13 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Send, Users, Bot, CheckCircle2, Circle, Trash2, Mic, MicOff, Edit } from "lucide-react";
+import { Send, Users, Bot, Mic, MicOff } from "lucide-react";
 import { format } from "date-fns";
 import AgentChat from "../components/messaging/AgentChat";
-import ReminderEditDialog from "../components/reminders/ReminderEditDialog";
 
 export default function Messaging() {
     const [message, setMessage] = useState("");
     const [isRecording, setIsRecording] = useState(false);
-    const [editingReminder, setEditingReminder] = useState(null);
     const messagesEndRef = useRef(null);
     const recognitionRef = useRef(null);
     const queryClient = useQueryClient();
@@ -35,30 +33,6 @@ export default function Messaging() {
     const { data: allUsers = [] } = useQuery({
         queryKey: ['allUsers'],
         queryFn: () => base44.entities.User.list(),
-    });
-
-    const { data: reminders = [] } = useQuery({
-        queryKey: ['reminders'],
-        queryFn: () => base44.entities.Reminder.list('-created_date', 50),
-        refetchInterval: 5000,
-    });
-
-    const toggleReminderMutation = useMutation({
-        mutationFn: async ({ id, completed }) => {
-            await base44.entities.Reminder.update(id, { completed });
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['reminders'] });
-        },
-    });
-
-    const deleteReminderMutation = useMutation({
-        mutationFn: async (id) => {
-            await base44.entities.Reminder.delete(id);
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['reminders'] });
-        },
     });
 
     const sendMessageMutation = useMutation({
@@ -127,9 +101,6 @@ export default function Messaging() {
 
     const onlineUsers = allUsers.length;
 
-    const activeReminders = reminders.filter(r => !r.completed);
-    const completedReminders = reminders.filter(r => r.completed);
-
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -146,98 +117,7 @@ export default function Messaging() {
                 </div>
             </div>
 
-            {/* Reminders Box */}
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <CheckCircle2 className="w-5 h-5 text-purple-600" />
-                        Reminders
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    {activeReminders.length === 0 && completedReminders.length === 0 ? (
-                        <p className="text-gray-500 text-sm">No reminders yet. Ask Peach to create one!</p>
-                    ) : (
-                        <div className="space-y-4">
-                            {activeReminders.map((reminder) => (
-                                <div key={reminder.id} className="flex items-start gap-3 p-3 bg-white rounded-lg border hover:bg-gray-50">
-                                    <Checkbox
-                                        checked={false}
-                                        onCheckedChange={() => toggleReminderMutation.mutate({ id: reminder.id, completed: true })}
-                                        className="mt-1"
-                                    />
-                                    <div className="flex-1">
-                                        <div className="font-medium text-gray-900">{reminder.title}</div>
-                                        {reminder.description && (
-                                            <div className="text-sm text-gray-600 mt-1">{reminder.description}</div>
-                                        )}
-                                        <div className="flex gap-2 mt-2 flex-wrap">
-                                            {reminder.due_date && (
-                                                <Badge variant="outline" className="text-xs">
-                                                    {format(new Date(reminder.due_date), 'MMM d, h:mm a')}
-                                                </Badge>
-                                            )}
-                                            {reminder.assigned_to && (
-                                                <Badge variant="outline" className="text-xs">
-                                                    Assigned: {reminder.assigned_to}
-                                                </Badge>
-                                            )}
-                                            {reminder.recurrence_type && reminder.recurrence_type !== 'none' && (
-                                                <Badge className="bg-purple-100 text-purple-700 text-xs">
-                                                    {`${reminder.recurrence_type}${reminder.recurrence_interval && reminder.recurrence_interval > 1 ? ` x${reminder.recurrence_interval}` : ''}`}
-                                                </Badge>
-                                            )}
-                                            {reminder.priority && reminder.priority !== 'medium' && (
-                                                <Badge className={reminder.priority === 'high' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}>
-                                                    {reminder.priority}
-                                                </Badge>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => setEditingReminder(reminder)}
-                                    >
-                                        <Edit className="w-4 h-4 text-gray-400" />
-                                    </Button>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => deleteReminderMutation.mutate(reminder.id)}
-                                    >
-                                        <Trash2 className="w-4 h-4 text-gray-400" />
-                                    </Button>
-                                </div>
-                            ))}
-                            {completedReminders.length > 0 && (
-                                <div className="border-t pt-4">
-                                    <p className="text-sm text-gray-500 mb-3">Completed</p>
-                                    {completedReminders.map((reminder) => (
-                                        <div key={reminder.id} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg opacity-60">
-                                            <Checkbox
-                                                checked={true}
-                                                onCheckedChange={() => toggleReminderMutation.mutate({ id: reminder.id, completed: false })}
-                                                className="mt-1"
-                                            />
-                                            <div className="flex-1">
-                                                <div className="font-medium text-gray-600 line-through">{reminder.title}</div>
-                                            </div>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={() => deleteReminderMutation.mutate(reminder.id)}
-                                            >
-                                                <Trash2 className="w-4 h-4 text-gray-400" />
-                                            </Button>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </CardContent>
-            </Card>
+
 
             {/* Chat Container with Tabs */}
             <Tabs defaultValue="assistant" className="space-y-4">
@@ -337,19 +217,6 @@ export default function Messaging() {
                     </Card>
                 </TabsContent>
                 </Tabs>
-
-                <ReminderEditDialog
-                open={!!editingReminder}
-                onOpenChange={(open) => {
-                if (!open) setEditingReminder(null);
-                }}
-                reminder={editingReminder}
-                users={allUsers}
-                onSaved={() => {
-                setEditingReminder(null);
-                queryClient.invalidateQueries({ queryKey: ['reminders'] });
-                }}
-                />
                 </div>
                 );
-}
+                }
