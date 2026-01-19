@@ -264,20 +264,24 @@ export default function SpecialsPage() {
                                                     >
                                                         <Eye className="w-4 h-4" />
                                                     </button>
-                                                    <button
-                                                        onClick={() => archiveMutation.mutate(special)}
-                                                        className="text-sm text-gray-600 hover:text-gray-900"
-                                                        title="Archive"
-                                                    >
-                                                        <Archive className="w-4 h-4" />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => deleteMutation.mutate(special.id)}
-                                                        className="text-sm text-red-600 hover:text-red-900"
-                                                        title="Delete"
-                                                    >
-                                                        <X className="w-4 h-4" />
-                                                    </button>
+                                                    {isAdmin && (
+                                                        <>
+                                                            <button
+                                                                onClick={() => archiveMutation.mutate(special)}
+                                                                className="text-sm text-gray-600 hover:text-gray-900"
+                                                                title="Archive"
+                                                            >
+                                                                <Archive className="w-4 h-4" />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => deleteMutation.mutate(special.id)}
+                                                                className="text-sm text-red-600 hover:text-red-900"
+                                                                title="Delete"
+                                                            >
+                                                                <X className="w-4 h-4" />
+                                                            </button>
+                                                        </>
+                                                    )}
                                                 </div>
                                             </div>
                                         </CardContent>
