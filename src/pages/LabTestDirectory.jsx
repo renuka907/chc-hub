@@ -353,7 +353,7 @@ Only return found: false if you truly cannot identify what test they're asking a
         return 5;
     };
 
-    const calculatePanelTubes = (panelId) => {
+    const calculatePanelTubes = (panelId, panelName) => {
         const panelTests = savedTests.filter(t => {
             try {
                 const panelIds = typeof t.panel_ids === 'string' ? JSON.parse(t.panel_ids) : t.panel_ids || [];
@@ -375,6 +375,12 @@ Only return found: false if you truly cannot identify what test they're asking a
             const capacity = getTubeCapacity(tube);
             tubeCount[tube] = Math.ceil(totalVolume / capacity);
         });
+
+        // Override for Female HRT panel
+        if (panelName === "Female HRT- Initial Panel" && tubeCount["Red-top"]) {
+            tubeCount["Red-top"] = 2;
+        }
+
         return tubeCount;
     };
 
