@@ -23,6 +23,7 @@ import QuotesManagement from './pages/QuotesManagement';
 import Reminders from './pages/Reminders';
 import UserManagement from './pages/UserManagement';
 import ViewSharedForm from './pages/ViewSharedForm';
+import InventoryReports from './pages/InventoryReports';
 import __Layout from './Layout.jsx';
 
 
@@ -52,6 +53,7 @@ export const PAGES = {
     "Reminders": Reminders,
     "UserManagement": UserManagement,
     "ViewSharedForm": ViewSharedForm,
+    "InventoryReports": InventoryReports,
 }
 
 export const pagesConfig = {
