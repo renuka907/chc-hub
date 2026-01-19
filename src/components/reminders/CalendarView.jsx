@@ -1,8 +1,9 @@
 import React from "react";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, startOfWeek, endOfWeek, isSameDay, isSameMonth, addDays, startOfDay, endOfDay } from "date-fns";
-import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
@@ -10,6 +11,8 @@ import { toast } from "sonner";
 
 export default function CalendarView({ reminders, viewMode = "month", onViewChange }) {
     const [currentDate, setCurrentDate] = React.useState(new Date());
+    const [selectedDate, setSelectedDate] = React.useState(null);
+    const [editingReminder, setEditingReminder] = React.useState(null);
     const queryClient = useQueryClient();
 
     const handleDragEnd = async (result) => {
@@ -223,8 +226,59 @@ export default function CalendarView({ reminders, viewMode = "month", onViewChan
         );
     };
 
+    const DateRemindersModal = () => {
+        const dateReminders = selectedDate ? getRemindersForDate(selectedDate) : [];
+
+        return (
+            <Dialog open={!!selectedDate} onOpenChange={(open) => !open && setSelectedDate(null)}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>
+                            Reminders for {selectedDate && format(selectedDate, "MMMM d, yyyy")}
+                        </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-2 max-h-96 overflow-y-auto">
+                        {dateReminders.length === 0 ? (
+                            <p className="text-gray-500">No reminders for this date</p>
+                        ) : (
+                            dateReminders.map(reminder => (
+                                <div
+                                    key={reminder.id}
+                                    className="p-3 border rounded-lg hover:bg-gray-50 cursor-pointer transition-all"
+                                    onClick={() => setEditingReminder(reminder)}
+                                >
+                                    <div className="flex justify-between items-start gap-2">
+                                        <div className="flex-1">
+                                            <p className="font-medium text-sm">{reminder.title}</p>
+                                            {reminder.description && (
+                                                <p className="text-xs text-gray-600 mt-1">{reminder.description}</p>
+                                            )}
+                                            <div className="flex gap-2 mt-2">
+                                                <Badge className={{
+                                                    low: "bg-blue-100 text-blue-800",
+                                                    medium: "bg-yellow-100 text-yellow-800",
+                                                    high: "bg-red-100 text-red-800"
+                                                }[reminder.priority] || "bg-gray-100 text-gray-800"}>
+                                                    {reminder.priority}
+                                                </Badge>
+                                                {new Date(reminder.due_date) < new Date() && !reminder.completed && (
+                                                    <Badge className="bg-red-100 text-red-800">Overdue</Badge>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </DialogContent>
+            </Dialog>
+        );
+    };
+
     return (
         <DragDropContext onDragEnd={handleDragEnd}>
+            <DateRemindersModal />
             <div className="bg-white rounded-lg border p-6">
                 {/* Header Controls */}
                 <div className="flex items-center justify-between mb-6">
