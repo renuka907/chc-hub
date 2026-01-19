@@ -129,6 +129,16 @@ export default function ProviderReferral() {
                         Filters
                     </Button>
                     <Button
+                        onClick={() => {
+                            setEditingProvider(null);
+                            setShowEditDialog(true);
+                        }}
+                        className="gap-2 bg-green-600 hover:bg-green-700 text-white"
+                    >
+                        <Plus className="w-4 h-4" />
+                        Add Provider
+                    </Button>
+                    <Button
                         onClick={handlePrint}
                         className="gap-2 bg-purple-600 hover:bg-purple-700 text-white"
                     >
