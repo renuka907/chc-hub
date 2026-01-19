@@ -220,13 +220,6 @@ export default function EducationLibrary() {
                                 <Star className={`w-4 h-4 ${topic.is_favorite ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`} />
                             </button>
                             <Link to={createPageUrl(`EducationDetail?id=${topic.id}`)}>
-                                {topic.image_url && (
-                                    <img 
-                                        src={topic.image_url} 
-                                        alt={topic.title}
-                                        className="w-full h-40 object-cover"
-                                    />
-                                )}
                                 <div className="p-6">
                                     <div className="flex items-start justify-between mb-3">
                                         <span className={`px-3 py-1 rounded-xl text-xs font-medium ${categoryColors[topic.category]}`}>
