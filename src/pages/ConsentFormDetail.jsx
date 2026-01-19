@@ -49,7 +49,7 @@ export default function ConsentFormDetail() {
         mutationFn: (id) => base44.entities.ConsentForm.delete(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['consentForms'] });
-            navigate(createPageUrl("AftercareLibrary"));
+            navigate(createPageUrl("Library"));
         }
     });
 
