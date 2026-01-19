@@ -55,12 +55,14 @@ export default function InventoryAI({ inventoryItems, locations }) {
             const response = await base44.integrations.Core.InvokeLLM({
                 prompt: `You are an inventory management AI assistant. Answer questions about inventory levels, locations, reorder needs, and provide recommendations.
 
+Current Location Filter: ${locationName}
+
 Current Inventory Data:
 ${JSON.stringify(inventoryContext, null, 2)}
 
 User Question: ${question}
 
-Provide a helpful, concise answer. If suggesting reorders, be specific about quantities and items. Format your response clearly with bullet points or numbers when appropriate.`,
+Provide a helpful, concise answer. When referencing items, always mention which clinic location they're in. If suggesting reorders, be specific about quantities and items. Format your response clearly with bullet points or numbers when appropriate.`,
                 add_context_from_internet: false
             });
 
