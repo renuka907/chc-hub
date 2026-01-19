@@ -92,11 +92,30 @@ export default function ReminderEditDialog({ open, onOpenChange, reminder, users
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Reminder</DialogTitle>
+          <DialogTitle>{reminder ? "Edit Reminder" : "Create Reminder"}</DialogTitle>
         </DialogHeader>
 
-        {reminder && (
-          <div className="space-y-4">
+        <div className="space-y-4">
+            <div>
+              <Label>Title</Label>
+              <Input
+                placeholder="Reminder title"
+                className="mt-1"
+                value={form.title}
+                onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+              />
+            </div>
+
+            <div>
+              <Label>Description</Label>
+              <Input
+                placeholder="Reminder details"
+                className="mt-1"
+                value={form.description}
+                onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+              />
+            </div>
+
             <div>
               <Label>Assign to</Label>
               <Select
