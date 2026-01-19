@@ -3,26 +3,27 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "./utils";
 import { base44 } from "@/api/base44Client";
 import { 
-                  BookOpen, 
-                  FileText, 
-                  Building2, 
-                  DollarSign, 
-                  Home,
-                  Menu,
-                  X,
-                  Stethoscope,
-                  Users,
-                  Package,
-                  Tag,
-                  MessageSquare,
-                  Layers,
-                  LogOut,
-                  ChevronDown,
-                  Sparkles,
-                  Bell,
-                  Calendar,
-                  TrendingUp
-              } from "lucide-react";
+                        BookOpen, 
+                        FileText, 
+                        Building2, 
+                        DollarSign, 
+                        Home,
+                        Menu,
+                        X,
+                        Stethoscope,
+                        Users,
+                        Package,
+                        Tag,
+                        MessageSquare,
+                        Layers,
+                        LogOut,
+                        ChevronDown,
+                        Sparkles,
+                        Bell,
+                        Calendar,
+                        TrendingUp,
+                        Upload
+                    } from "lucide-react";
 
 export default function Layout({ children, currentPageName }) {
     // Check if this is a public page immediately - before any state or effects
