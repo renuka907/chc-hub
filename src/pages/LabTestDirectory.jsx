@@ -373,7 +373,8 @@ Only return found: false if you truly cannot identify what test they're asking a
         const tubeCount = {};
         Object.entries(tubeVolumes).forEach(([tube, totalVolume]) => {
             const capacity = getTubeCapacity(tube);
-            tubeCount[tube] = Math.ceil(totalVolume / capacity);
+            const count = totalVolume > 0 ? Math.ceil(totalVolume / capacity) : (panelTests.length > 0 ? 1 : 0);
+            tubeCount[tube] = count;
         });
 
         // Override for Female HRT-Initial Panel - force red-top to 2
