@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,8 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import ReminderEditDialog from "../components/reminders/ReminderEditDialog";
-import { Bell, Plus, Clock, CheckCircle2, AlertCircle, Calendar, Trash2, Search } from "lucide-react";
+import { Bell, Plus, Clock, CheckCircle2, AlertCircle, Calendar, Trash2, Search, X } from "lucide-react";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 export default function Reminders() {
     const [showCreateDialog, setShowCreateDialog] = useState(false);
@@ -21,6 +22,7 @@ export default function Reminders() {
     const [selectedReminders, setSelectedReminders] = useState(new Set());
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
+    const [dueReminders, setDueReminders] = useState([]);
     const queryClient = useQueryClient();
 
     const { data: reminders = [], isLoading } = useQuery({
@@ -132,6 +134,45 @@ export default function Reminders() {
         if (!dueDate) return false;
         return new Date(dueDate) < new Date();
     };
+
+    // Check for due reminders and show notifications
+    useEffect(() => {
+        if (reminders.length === 0) return;
+
+        const now = new Date();
+        const soon = new Date(now.getTime() + 15 * 60000); // 15 minutes from now
+
+        const upcoming = reminders.filter(reminder => {
+            if (reminder.completed) return false;
+            if (!reminder.due_date) return false;
+            const dueTime = new Date(reminder.due_date);
+            return dueTime <= soon && dueTime > now;
+        });
+
+        const overdue = reminders.filter(reminder => {
+            if (reminder.completed) return false;
+            return isOverdue(reminder.due_date);
+        });
+
+        setDueReminders([...overdue, ...upcoming]);
+
+        // Show toast notifications for newly due reminders
+        overdue.forEach(reminder => {
+            const key = `overdue-${reminder.id}`;
+            if (!sessionStorage.getItem(key)) {
+                toast.error(`⏰ Overdue: ${reminder.title}`, { duration: 5000 });
+                sessionStorage.setItem(key, 'shown');
+            }
+        });
+
+        upcoming.forEach(reminder => {
+            const key = `upcoming-${reminder.id}`;
+            if (!sessionStorage.getItem(key)) {
+                toast.info(`📢 Coming up soon: ${reminder.title}`, { duration: 4000 });
+                sessionStorage.setItem(key, 'shown');
+            }
+        });
+    }, [reminders]);
 
     if (isLoading) {
         return (
