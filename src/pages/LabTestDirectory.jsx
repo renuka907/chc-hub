@@ -760,20 +760,26 @@ Only return found: false if you truly cannot identify what test they're asking a
     );
 }
 
-function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, onDelete, deleting, panels, onUpdatePanels, onGenerateICD10, generatingCodes }) {
-    const testPanelIds = (() => {
-        try {
-            const ids = typeof test.panel_ids === 'string' ? JSON.parse(test.panel_ids) : test.panel_ids;
-            return Array.isArray(ids) ? ids : [];
-        } catch {
-            return [];
-        }
-    })();
-    return (
-        <Card className="hover:shadow-md transition-shadow">
-            <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                    <CardTitle className="text-base">{test.test_name}</CardTitle>
+function TestListItem({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, onDelete, deleting, panels, onUpdatePanels, onGenerateICD10, generatingCodes }) {
+     const testPanelIds = (() => {
+         try {
+             const ids = typeof test.panel_ids === 'string' ? JSON.parse(test.panel_ids) : test.panel_ids;
+             return Array.isArray(ids) ? ids : [];
+         } catch {
+             return [];
+         }
+     })();
+     const [expanded, setExpanded] = useState(false);
+
+     return (
+         <Card className="hover:shadow-sm transition-shadow">
+             <CardHeader className="pb-2">
+                 <button 
+                     onClick={() => setExpanded(!expanded)}
+                     className="flex items-start justify-between w-full text-left"
+                 >
+                     <div className="flex-1 min-w-0">
+                         <CardTitle className="text-base">{test.test_name}</CardTitle>
                     <div className="flex items-center gap-2">
                         {test.quest_url && (
                             <button
