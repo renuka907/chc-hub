@@ -774,65 +774,65 @@ function TestListItem({ test, onToggleFavorite, getTubeColor, onSyncTube, syncin
      return (
          <Card className="hover:shadow-sm transition-shadow">
              <CardHeader className="pb-2">
-                 <button 
-                     onClick={() => setExpanded(!expanded)}
-                     className="flex items-start justify-between w-full text-left"
-                 >
-                     <div className="flex-1 min-w-0">
-                         <CardTitle className="text-base">{test.test_name}</CardTitle>
-                         {test.test_code && (
-                             <Badge variant="outline" className="text-xs mt-1">{test.test_code}</Badge>
-                         )}
-                         <div className="flex items-center gap-2 mt-1">
-                             <Badge className={getTubeColor(test.tube_type)}>
-                                 <TestTube className="w-3 h-3 mr-1" />
-                                 {test.tube_type}
-                             </Badge>
-                             {test.category && (
-                                 <Badge variant="outline" className="text-xs">{test.category}</Badge>
-                             )}
-                         </div>
-                     </div>
-                     <div className="flex items-center gap-1 flex-shrink-0">
-                         {test.quest_url && (
-                             <button
-                                 onClick={(e) => {
-                                     e.preventDefault();
-                                     onSyncTube?.(test.id);
-                                 }}
-                                 disabled={syncing}
-                                 className="text-gray-400 hover:text-blue-600 p-1"
-                                 title="Sync tube from Quest"
-                             >
-                                 <RefreshCw className={`w-4 h-4 ${syncing ? 'animate-spin' : ''}`} />
-                             </button>
-                         )}
-                         <button
-                             onClick={(e) => {
-                                 e.preventDefault();
-                                 onToggleFavorite({ id: test.id, isFavorite: test.is_favorite });
-                             }}
-                             className="text-gray-400 hover:text-yellow-500 p-1"
-                             title={test.is_favorite ? 'Unfavorite' : 'Favorite'}
+                         <button 
+                             onClick={() => setExpanded(!expanded)}
+                             className="flex items-start justify-between w-full text-left"
                          >
-                             <Star className={`w-4 h-4 ${test.is_favorite ? 'fill-yellow-500 text-yellow-500' : ''}`} />
+                             <div className="flex-1 min-w-0">
+                                 <CardTitle className="text-base">{test.test_name}</CardTitle>
+                                 {test.test_code && (
+                                     <Badge variant="outline" className="text-xs mt-1">{test.test_code}</Badge>
+                                 )}
+                                 <div className="flex items-center gap-2 mt-1">
+                                     <Badge className={getTubeColor(test.tube_type)}>
+                                         <TestTube className="w-3 h-3 mr-1" />
+                                         {test.tube_type}
+                                     </Badge>
+                                     {test.category && (
+                                         <Badge variant="outline" className="text-xs">{test.category}</Badge>
+                                     )}
+                                 </div>
+                             </div>
+                             <div className="flex items-center gap-1 flex-shrink-0">
+                                 {test.quest_url && (
+                                     <button
+                                         onClick={(e) => {
+                                             e.preventDefault();
+                                             onSyncTube?.(test.id);
+                                         }}
+                                         disabled={syncing}
+                                         className="text-gray-400 hover:text-blue-600 p-1"
+                                         title="Sync tube from Quest"
+                                     >
+                                         <RefreshCw className={`w-4 h-4 ${syncing ? 'animate-spin' : ''}`} />
+                                     </button>
+                                 )}
+                                 <button
+                                     onClick={(e) => {
+                                         e.preventDefault();
+                                         onToggleFavorite({ id: test.id, isFavorite: test.is_favorite });
+                                     }}
+                                     className="text-gray-400 hover:text-yellow-500 p-1"
+                                     title={test.is_favorite ? 'Unfavorite' : 'Favorite'}
+                                 >
+                                     <Star className={`w-4 h-4 ${test.is_favorite ? 'fill-yellow-500 text-yellow-500' : ''}`} />
+                                 </button>
+                                 <button
+                                     onClick={(e) => {
+                                         e.preventDefault();
+                                         if (confirm(`Delete "${test.test_name}"?`)) {
+                                             onDelete?.(test.id);
+                                         }
+                                     }}
+                                     disabled={deleting}
+                                     className="text-gray-400 hover:text-red-600 p-1"
+                                     title="Delete test"
+                                 >
+                                     <Trash2 className={`w-4 h-4 ${deleting ? 'opacity-50' : ''}`} />
+                                 </button>
+                             </div>
                          </button>
-                         <button
-                             onClick={(e) => {
-                                 e.preventDefault();
-                                 if (confirm(`Delete "${test.test_name}"?`)) {
-                                     onDelete?.(test.id);
-                                 }
-                             }}
-                             disabled={deleting}
-                             className="text-gray-400 hover:text-red-600 p-1"
-                             title="Delete test"
-                         >
-                             <Trash2 className={`w-4 h-4 ${deleting ? 'opacity-50' : ''}`} />
-                         </button>
-                     </div>
-                     </button>
-                </CardHeader>
+                    </CardHeader>
                 {expanded && (
                 <CardContent className="space-y-3 pt-0">
                 {test.specimen_type && (
