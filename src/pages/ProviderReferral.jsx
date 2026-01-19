@@ -185,6 +185,14 @@ export default function ProviderReferral() {
                 clinicName="CHC Hub - Provider Directory"
             />
 
+            {/* Edit Provider Dialog */}
+            <EditProviderDialog 
+                provider={editingProvider}
+                open={showEditDialog}
+                onOpenChange={setShowEditDialog}
+                onSave={handleSaveProvider}
+            />
+
             {/* Results */}
             {isLoading ? (
                 <div className="flex items-center justify-center py-12">
