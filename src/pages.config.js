@@ -23,13 +23,13 @@ import Messaging from './pages/Messaging';
 import PricingManagement from './pages/PricingManagement';
 import ProcedureDetail from './pages/ProcedureDetail';
 import ProceduresManagement from './pages/ProceduresManagement';
+import ProviderReferral from './pages/ProviderReferral';
 import QuoteDetail from './pages/QuoteDetail';
 import QuotesManagement from './pages/QuotesManagement';
 import Reminders from './pages/Reminders';
 import UserManagement from './pages/UserManagement';
 import UserProfile from './pages/UserProfile';
 import ViewSharedForm from './pages/ViewSharedForm';
-import ProviderReferral from './pages/ProviderReferral';
 import __Layout from './Layout.jsx';
 
 
@@ -59,13 +59,13 @@ export const PAGES = {
     "PricingManagement": PricingManagement,
     "ProcedureDetail": ProcedureDetail,
     "ProceduresManagement": ProceduresManagement,
+    "ProviderReferral": ProviderReferral,
     "QuoteDetail": QuoteDetail,
     "QuotesManagement": QuotesManagement,
     "Reminders": Reminders,
     "UserManagement": UserManagement,
     "UserProfile": UserProfile,
     "ViewSharedForm": ViewSharedForm,
-    "ProviderReferral": ProviderReferral,
 }
 
 export const pagesConfig = {
