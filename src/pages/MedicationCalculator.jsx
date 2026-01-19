@@ -8,6 +8,7 @@ import { AlertCircle, RotateCcw } from "lucide-react";
 export default function MedicationCalculator() {
     const [amountNeeded, setAmountNeeded] = useState("");
     const [vialStrength, setVialStrength] = useState("");
+    const [unitsPerMl, setUnitsPerMl] = useState("");
     const [result, setResult] = useState(null);
     const [error, setError] = useState("");
 
