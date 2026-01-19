@@ -131,15 +131,13 @@ export default function CalendarView({ reminders, viewMode = "month", onViewChan
                                                         : "bg-white border-gray-200 hover:border-gray-300"
                                                 }`}
                                             >
-                                                <div className="relative mb-1">
-                                                    <div className="flex justify-between items-start">
-                                                        <div className="text-xs font-semibold text-gray-600">
-                                                            {format(day, "d")}
-                                                        </div>
-                                                        {hasReminders && (
-                                                            <div className="absolute top-0 right-0 w-2.5 h-2.5 bg-blue-600 rounded-full shadow-md border border-blue-700"></div>
-                                                        )}
+                                                <div className="flex justify-between items-start mb-1 relative">
+                                                    <div className="text-xs font-semibold text-gray-600">
+                                                        {format(day, "d")}
                                                     </div>
+                                                    {hasReminders && (
+                                                        <div className="w-3 h-3 bg-blue-600 rounded-full shadow-md border border-blue-700 flex-shrink-0"></div>
+                                                    )}
                                                 </div>
                                                 <div className="space-y-1">
                                                     {dayReminders.slice(0, 2).map((reminder, i) => (
