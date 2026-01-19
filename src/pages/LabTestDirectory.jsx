@@ -676,7 +676,17 @@ Only return found: false if you truly cannot identify what test they're asking a
 
             {/* Saved Tests */}
             <div>
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Saved Tests ({savedTests.length})</h2>
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl font-bold text-gray-900">Saved Tests ({filteredTests.length})</h2>
+                </div>
+                <div className="mb-4">
+                    <Input
+                        placeholder="Filter tests by name, code, or category..."
+                        value={testFilter}
+                        onChange={(e) => setTestFilter(e.target.value)}
+                        className="max-w-md"
+                    />
+                </div>
                 
                 {isLoading ? (
                     <div className="text-center py-12">
