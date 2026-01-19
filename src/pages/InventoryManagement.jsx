@@ -210,6 +210,23 @@ export default function InventoryManagement() {
         setSelectedItems(newSelection);
     };
 
+    const handleBarcodeScanned = (barcode) => {
+        // Search for item by barcode or SKU
+        const foundItem = inventoryItems.find(
+            item => item.sku === barcode || (item.sku && item.sku.includes(barcode))
+        );
+
+        if (foundItem) {
+            // Edit existing item
+            setEditingItem(foundItem);
+            setShowForm(true);
+        } else {
+            // Create new item with barcode as SKU
+            setEditingItem(null);
+            setShowForm(true);
+        }
+    };
+
     return (
         <div className="space-y-6">
             {/* Header */}
