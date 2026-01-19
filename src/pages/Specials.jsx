@@ -1,14 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Upload, X, Loader2, FileUp } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Upload, X, Loader2, FileUp, Archive, Search } from "lucide-react";
+import { format } from "date-fns";
 
 export default function SpecialsPage() {
     const [uploading, setUploading] = useState(false);
-    const [uploadedFile, setUploadedFile] = useState(null);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
+    const [formData, setFormData] = useState({
+        title: "",
+        date_from: "",
+        date_to: "",
+    });
+    const [file, setFile] = useState(null);
+    const queryClient = useQueryClient();
+
+    const { data: specials = [], isLoading } = useQuery({
+        queryKey: ["specials"],
+        queryFn: () => base44.entities.Special.list("-updated_date"),
+    });
+
+    const archiveMutation = useMutation({
+        mutationFn: (special) => base44.entities.Special.update(special.id, { is_archived: !special.is_archived }),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["specials"] }),
+    });
+
+    const deleteMutation = useMutation({
+        mutationFn: (id) => base44.entities.Special.delete(id),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["specials"] }),
+    });
 
     const handleFileUpload = async (e) => {
         const file = e.target.files?.[0];
