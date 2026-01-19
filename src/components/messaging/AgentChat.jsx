@@ -324,6 +324,21 @@ export default function AgentChat({ agentName }) {
                             </p>
                         </div>
                     </div>
+                    <div className="flex items-center gap-2 mr-2">
+                        <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                            <SelectTrigger className="w-40 h-8">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Locations</SelectItem>
+                                {locations.map(loc => (
+                                    <SelectItem key={loc.id} value={loc.id}>
+                                        {loc.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
                     <div className="flex items-center gap-2">
                         <Button
                             variant="outline"
