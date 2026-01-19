@@ -255,11 +255,6 @@ export default function EducationDetail() {
                 <thead className="no-print">
                     <tr>
                         <th className="print-header-row">
-                            <div className="header-info">
-                                <div style={{fontWeight: 600}}>6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
-                                <div style={{marginTop: '2pt'}}>Phone: 239-561-9191 | Fax: 239-561-9188</div>
-                                <div style={{marginTop: '2pt'}}>contemporaryhealthcenter.com</div>
-                            </div>
                         </th>
                     </tr>
                 </thead>
