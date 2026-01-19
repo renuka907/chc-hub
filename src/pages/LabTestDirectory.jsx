@@ -569,21 +569,22 @@ Only return found: false if you truly cannot identify what test they're asking a
             </Card>
 
             {/* Panels Section */}
-            {isAdmin && (
-            <div>
+             <div>
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-bold text-gray-900">Test Panels</h2>
-                    <Button 
-                        onClick={() => setShowPanelForm(!showPanelForm)}
-                        className="bg-purple-600 hover:bg-purple-700"
-                        size="sm"
-                    >
-                        <Plus className="w-4 h-4 mr-2" />
-                        New Panel
-                    </Button>
+                    {isAdmin && (
+                        <Button 
+                            onClick={() => setShowPanelForm(!showPanelForm)}
+                            className="bg-purple-600 hover:bg-purple-700"
+                            size="sm"
+                        >
+                            <Plus className="w-4 h-4 mr-2" />
+                            New Panel
+                        </Button>
+                    )}
                 </div>
 
-                {showPanelForm && (
+                {isAdmin && showPanelForm && (
                     <Card className="mb-4">
                         <CardContent className="pt-6 space-y-3">
                             <Input
@@ -672,7 +673,6 @@ Only return found: false if you truly cannot identify what test they're asking a
                     </div>
                 )}
             </div>
-            )}
 
             {/* Saved Tests */}
             <div>
