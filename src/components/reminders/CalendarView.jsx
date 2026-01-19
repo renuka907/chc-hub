@@ -108,36 +108,53 @@ export default function CalendarView({ reminders, viewMode = "month", onViewChan
                 <div className="space-y-1">
                     {weeks.map((week, idx) => (
                         <div key={idx} className="grid grid-cols-7 gap-1">
-                            {week.map(day => (
-                                <Droppable
-                                    droppableId={day.toISOString()}
-                                    key={day.toISOString()}
-                                >
-                                    {(provided, snapshot) => (
-                                        <div
-                                            ref={provided.innerRef}
-                                            {...provided.droppableProps}
-                                            className={`min-h-24 p-2 rounded border-2 transition-all ${
-                                                !isSameMonth(day, currentDate)
-                                                    ? "bg-gray-50 border-gray-200"
-                                                    : snapshot.isDraggingOver
-                                                    ? "bg-blue-50 border-blue-300"
-                                                    : "bg-white border-gray-200"
-                                            }`}
-                                        >
-                                            <div className="text-xs font-semibold text-gray-600 mb-1">
-                                                {format(day, "d")}
+                            {week.map(day => {
+                                const dayReminders = getRemindersForDate(day);
+                                const hasReminders = dayReminders.length > 0;
+                                return (
+                                    <Droppable
+                                        droppableId={day.toISOString()}
+                                        key={day.toISOString()}
+                                    >
+                                        {(provided, snapshot) => (
+                                            <div
+                                                ref={provided.innerRef}
+                                                {...provided.droppableProps}
+                                                onClick={() => hasReminders && setSelectedDate(day)}
+                                                className={`min-h-24 p-2 rounded border-2 transition-all cursor-pointer ${
+                                                    !isSameMonth(day, currentDate)
+                                                        ? "bg-gray-50 border-gray-200"
+                                                        : snapshot.isDraggingOver
+                                                        ? "bg-blue-50 border-blue-300"
+                                                        : hasReminders
+                                                        ? "bg-blue-50 border-blue-200 hover:border-blue-300"
+                                                        : "bg-white border-gray-200 hover:border-gray-300"
+                                                }`}
+                                            >
+                                                <div className="flex justify-between items-start mb-1">
+                                                    <div className="text-xs font-semibold text-gray-600">
+                                                        {format(day, "d")}
+                                                    </div>
+                                                    {hasReminders && (
+                                                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
+                                                    )}
+                                                </div>
+                                                <div className="space-y-1">
+                                                    {dayReminders.slice(0, 2).map((reminder, i) => (
+                                                        <ReminderCell key={reminder.id} reminder={reminder} index={i} />
+                                                    ))}
+                                                </div>
+                                                {dayReminders.length > 2 && (
+                                                    <div className="text-xs text-blue-600 font-medium mt-1">
+                                                        +{dayReminders.length - 2} more
+                                                    </div>
+                                                )}
+                                                {provided.placeholder}
                                             </div>
-                                            <div className="space-y-1">
-                                                {getRemindersForDate(day).map((reminder, i) => (
-                                                    <ReminderCell key={reminder.id} reminder={reminder} index={i} />
-                                                ))}
-                                            </div>
-                                            {provided.placeholder}
-                                        </div>
-                                    )}
-                                </Droppable>
-                            ))}
+                                        )}
+                                    </Droppable>
+                                );
+                            })}
                         </div>
                     ))}
                 </div>
