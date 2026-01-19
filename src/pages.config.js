@@ -30,6 +30,7 @@ import Reminders from './pages/Reminders';
 import UserManagement from './pages/UserManagement';
 import UserProfile from './pages/UserProfile';
 import ViewSharedForm from './pages/ViewSharedForm';
+import Specials from './pages/Specials';
 import __Layout from './Layout.jsx';
 
 
@@ -66,6 +67,7 @@ export const PAGES = {
     "UserManagement": UserManagement,
     "UserProfile": UserProfile,
     "ViewSharedForm": ViewSharedForm,
+    "Specials": Specials,
 }
 
 export const pagesConfig = {
