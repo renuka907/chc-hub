@@ -57,6 +57,10 @@ export default function ProviderReferral() {
         return clinic?.name || "Not assigned";
     };
 
+    const handlePrint = () => {
+        window.print();
+    };
+
     return (
         <div className="space-y-6">
             {/* Header */}
