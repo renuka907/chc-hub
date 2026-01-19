@@ -231,7 +231,7 @@ export default function InventoryManagement() {
         <div className="space-y-6">
             {/* Header */}
             <div className="bg-white rounded-3xl p-6 shadow-md">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="flex items-center space-x-3">
                         <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
                             <Package className="w-6 h-6 text-orange-600" />
@@ -241,36 +241,40 @@ export default function InventoryManagement() {
                             <p className="text-gray-600">Track stock levels and manage supplies</p>
                         </div>
                     </div>
-                    <div className="flex gap-3">
+                    <div className="flex flex-wrap gap-2 sm:gap-3">
                         <Button 
                             onClick={() => setShowAI(!showAI)} 
                             variant="outline"
+                            size="sm"
                             className={`border-purple-600 text-purple-600 hover:bg-purple-50 ${showAI ? 'bg-purple-50' : ''}`}
                         >
-                            <Sparkles className="w-4 h-4 mr-2" />
-                            AI Assistant
+                            <Sparkles className="w-4 h-4 mr-1" />
+                            <span className="hidden sm:inline">AI Assistant</span>
+                            <span className="sm:hidden">AI</span>
                         </Button>
                         {canEdit && (
                             <>
                                 <Button 
                                     onClick={() => setShowBarcodeScanner(true)} 
                                     variant="outline"
+                                    size="sm"
                                     className="border-blue-600 text-blue-600 hover:bg-blue-50"
                                 >
-                                    <Barcode className="w-4 h-4 mr-2" />
-                                    Scan Barcode
+                                    <Barcode className="w-4 h-4 mr-1" />
+                                    <span className="hidden sm:inline">Scan</span>
                                 </Button>
                                 <Button 
                                     onClick={() => setShowAuditForm(true)} 
                                     variant="outline"
+                                    size="sm"
                                     className="border-orange-600 text-orange-600 hover:bg-orange-50"
                                 >
-                                    <ClipboardCheck className="w-4 h-4 mr-2" />
-                                    Daily Audit
+                                    <ClipboardCheck className="w-4 h-4 mr-1" />
+                                    <span className="hidden sm:inline">Audit</span>
                                 </Button>
-                                <Button onClick={() => { setEditingItem(null); setShowForm(true); }} className="bg-orange-600 hover:bg-orange-700">
-                                    <Plus className="w-4 h-4 mr-2" />
-                                    Add Item
+                                <Button onClick={() => { setEditingItem(null); setShowForm(true); }} className="bg-orange-600 hover:bg-orange-700" size="sm">
+                                    <Plus className="w-4 h-4 mr-1" />
+                                    Add
                                 </Button>
                             </>
                         )}
