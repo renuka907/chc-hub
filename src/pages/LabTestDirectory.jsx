@@ -190,19 +190,19 @@ Only return found: false if you truly cannot identify what test they're asking a
     };
 
     const tubeColors = {
-        "lavender": "bg-purple-200 text-purple-900",
-        "purple": "bg-purple-200 text-purple-900",
-        "red": "bg-red-200 text-red-900",
-        "gold": "bg-amber-300 text-amber-900",
-        "yellow": "bg-amber-300 text-amber-900",
-        "green": "bg-emerald-200 text-emerald-900",
-        "blue": "bg-blue-200 text-blue-900",
-        "gray": "bg-slate-300 text-slate-900",
-        "pink": "bg-pink-200 text-pink-900",
-        "black": "bg-slate-700 text-white",
-        "sodium citrate": "bg-blue-200 text-blue-900",
-        "edta": "bg-purple-200 text-purple-900",
-        "sst": "bg-amber-300 text-amber-900"
+        "lavender": "bg-purple-300 text-purple-950",
+        "purple": "bg-purple-300 text-purple-950",
+        "red": "bg-red-400 text-white",
+        "gold": "bg-yellow-400 text-yellow-950",
+        "yellow": "bg-yellow-400 text-yellow-950",
+        "green": "bg-green-400 text-green-950",
+        "blue": "bg-cyan-300 text-cyan-950",
+        "gray": "bg-gray-400 text-gray-950",
+        "pink": "bg-pink-300 text-pink-950",
+        "black": "bg-black text-white",
+        "sodium citrate": "bg-cyan-300 text-cyan-950",
+        "edta": "bg-purple-300 text-purple-950",
+        "sst": "bg-yellow-400 text-yellow-950"
     };
 
     const getTubeColor = (tubeType) => {
