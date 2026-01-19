@@ -22,18 +22,20 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                     address: provider.address || "",
                     credentials: provider.credentials || "",
                     bio: provider.bio || "",
+                    notes: provider.notes || "",
                 });
-            } else {
-                setFormData({
-                    full_name: "",
-                    specialty: "",
-                    email: "",
-                    phone: "",
-                    address: "",
-                    credentials: "",
-                    bio: "",
-                });
-            }
+                } else {
+                    setFormData({
+                        full_name: "",
+                        specialty: "",
+                        email: "",
+                        phone: "",
+                        address: "",
+                        credentials: "",
+                        bio: "",
+                        notes: "",
+                    });
+                }
         }
     }, [provider, open]);
 
