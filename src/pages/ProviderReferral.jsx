@@ -13,6 +13,9 @@ export default function ProviderReferral() {
     const [selectedSpecialty, setSelectedSpecialty] = useState("");
     const [showFilters, setShowFilters] = useState(false);
     const [showPrintPreview, setShowPrintPreview] = useState(false);
+    const [editingProvider, setEditingProvider] = useState(null);
+    const [showEditDialog, setShowEditDialog] = useState(false);
+    const queryClient = useQueryClient();
 
     const { data: providers, isLoading } = useQuery({
         queryKey: ['providers'],
