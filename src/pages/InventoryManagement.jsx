@@ -543,6 +543,13 @@ export default function InventoryManagement() {
                                                                  <Badge className={`${typeColors[item.item_type]} text-xs`}>
                                                                      {item.item_type}
                                                                  </Badge>
+                                                                 <Badge className={`text-xs ${
+                                                                     item.item_condition === 'unopened' ? 'bg-green-100 text-green-800' :
+                                                                     item.item_condition === 'opened' ? 'bg-blue-100 text-blue-800' :
+                                                                     'bg-gray-100 text-gray-800'
+                                                                 }`}>
+                                                                     {item.item_condition}
+                                                                 </Badge>
                                                                  {isLowStock && (
                                                                      <Badge className="bg-red-500 text-white text-xs">
                                                                          Low Stock
