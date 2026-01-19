@@ -136,7 +136,7 @@ export default function CalendarView({ reminders, viewMode = "month", onViewChan
                                                         {format(day, "d")}
                                                     </div>
                                                     {hasReminders && (
-                                                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
+                                                        <div className="w-2 h-2 bg-blue-600 rounded-full shadow-sm"></div>
                                                     )}
                                                 </div>
                                                 <div className="space-y-1">
