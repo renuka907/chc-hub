@@ -208,7 +208,6 @@ export default function EducationDetail() {
 
             {/* Printable Content */}
             <div className="print-header no-print-screen">
-                <div style={{fontSize: '8pt', color: '#666'}}>Contemporary Health Center | 239-561-9191</div>
             </div>
             <PrintableDocument title={topic.title}>
                 <div className="space-y-6">
