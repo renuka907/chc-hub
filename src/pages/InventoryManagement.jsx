@@ -543,66 +543,66 @@ export default function InventoryManagement() {
 
                                                      {/* Badges row */}
                                                      <div className="flex flex-wrap gap-1">
-                                                                 <Badge className={`${typeColors[item.item_type]} text-xs`}>
-                                                                     {item.item_type}
-                                                                 </Badge>
-                                                                 <Badge className={`text-xs ${
-                                                                     item.item_condition === 'unopened' ? 'bg-green-100 text-green-800' :
-                                                                     item.item_condition === 'opened' ? 'bg-blue-100 text-blue-800' :
-                                                                     'bg-gray-100 text-gray-800'
-                                                                 }`}>
-                                                                     {item.item_condition}
-                                                                 </Badge>
-                                                                 {isLowStock && (
-                                                                     <Badge className="bg-red-500 text-white text-xs">
-                                                                         Low Stock
-                                                                     </Badge>
-                                                                 )}
-                                                                 {itemExpiringSoon && daysUntilExpiry !== null && (
-                                                                     <Badge className="bg-amber-500 text-white text-xs">
-                                                                         {daysUntilExpiry === 0 ? 'Expires Today' : `${daysUntilExpiry}d`}
-                                                                     </Badge>
-                                                                 )}
+                                                         <Badge className={`${typeColors[item.item_type]} text-xs`}>
+                                                             {item.item_type}
+                                                         </Badge>
+                                                         <Badge className={`text-xs ${
+                                                             item.item_condition === 'unopened' ? 'bg-green-100 text-green-800' :
+                                                             item.item_condition === 'opened' ? 'bg-blue-100 text-blue-800' :
+                                                             'bg-gray-100 text-gray-800'
+                                                         }`}>
+                                                             {item.item_condition}
+                                                         </Badge>
+                                                         {isLowStock && (
+                                                             <Badge className="bg-red-500 text-white text-xs">
+                                                                 Low Stock
+                                                             </Badge>
+                                                         )}
+                                                         {itemExpiringSoon && daysUntilExpiry !== null && (
+                                                             <Badge className="bg-amber-500 text-white text-xs">
+                                                                 {daysUntilExpiry === 0 ? 'Expires Today' : `${daysUntilExpiry}d`}
+                                                             </Badge>
+                                                         )}
+                                                     </div>
+
+                                                     {/* Details row */}
+                                                     <div className="flex items-center justify-between gap-4">
+                                                         {/* Stock */}
+                                                         <div className="flex-1 text-center">
+                                                             <div className="text-xs text-gray-600">Stock</div>
+                                                             <div className={`text-lg font-bold ${isLowStock ? 'text-red-600' : 'text-green-600'}`}>
+                                                                 {item.quantity}
                                                              </div>
+                                                             <div className="text-xs text-gray-600">{item.unit}</div>
+                                                         </div>
 
-                                                             {/* Details row */}
-                                                             <div className="flex items-center justify-between gap-4">
-                                                                 {/* Stock - 15% */}
-                                                                 <div className="flex-1 text-center">
-                                                                     <div className="text-xs text-gray-600">Stock</div>
-                                                                     <div className={`text-lg font-bold ${isLowStock ? 'text-red-600' : 'text-green-600'}`}>
-                                                                         {item.quantity}
-                                                                     </div>
-                                                                     <div className="text-xs text-gray-600">{item.unit}</div>
-                                                                 </div>
+                                                         {/* Location */}
+                                                         <div className="flex-1 text-center">
+                                                             <div className="text-xs text-gray-600">Location</div>
+                                                             <div className="font-medium text-sm text-orange-600 truncate">
+                                                                 {item.storage_location || '—'}
+                                                             </div>
+                                                         </div>
 
-                                                                 {/* Location - 15% */}
-                                                                 <div className="flex-1 text-center">
-                                                                     <div className="text-xs text-gray-600">Location</div>
-                                                                     <div className="font-medium text-sm text-orange-600 truncate">
-                                                                         {item.storage_location || '—'}
-                                                                     </div>
-                                                                 </div>
+                                                         {/* Expires */}
+                                                         <div className="flex-1 text-center">
+                                                             <div className="text-xs text-gray-600">Expires</div>
+                                                             <div className={`font-medium text-sm ${itemExpiringSoon ? 'text-amber-600' : ''}`}>
+                                                                 {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString() : '—'}
+                                                             </div>
+                                                         </div>
 
-                                                                 {/* Expires - 15% */}
-                                                                 <div className="flex-1 text-center">
-                                                                     <div className="text-xs text-gray-600">Expires</div>
-                                                                     <div className={`font-medium text-sm ${itemExpiringSoon ? 'text-amber-600' : ''}`}>
-                                                                         {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString() : '—'}
-                                                                     </div>
-                                                                 </div>
+                                                         {/* Supplier */}
+                                                         <div className="flex-1 text-center">
+                                                             <div className="text-xs text-gray-600">Supplier</div>
+                                                             <div className="font-medium text-sm truncate">
+                                                                 {item.supplier || '—'}
+                                                             </div>
+                                                         </div>
 
-                                                                 {/* Supplier - 15% */}
-                                                                 <div className="flex-1 text-center">
-                                                                     <div className="text-xs text-gray-600">Supplier</div>
-                                                                     <div className="font-medium text-sm truncate">
-                                                                         {item.supplier || '—'}
-                                                                     </div>
-                                                                 </div>
-
-                                                                 {/* Actions - auto */}
-                                                                 {canEdit && (
-                                                                     <div className="flex gap-1 flex-shrink-0">
+                                                         {/* Actions */}
+                                                         {canEdit && (
+                                                             <div className="flex gap-1 flex-shrink-0">
                                                                  {item.status === 'archived' ? (
                                                                      <Button 
                                                                          variant="outline" 
@@ -640,8 +640,8 @@ export default function InventoryManagement() {
                                                                      <Trash2 className="w-4 h-4" />
                                                                  </Button>
                                                              </div>
-                                                             )}
-                                                             </div>
+                                                         )}
+                                                     </div>
                                                              </CardContent>
                                              </Card>
                                          );
