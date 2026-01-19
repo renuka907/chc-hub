@@ -11,13 +11,20 @@ import { Search, Loader2, TestTube, Star, ExternalLink, Plus, AlertCircle, Refre
 import { toast } from "sonner";
 
 export default function LabTestDirectory() {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [isSearching, setIsSearching] = useState(false);
-    const [searchResults, setSearchResults] = useState(null);
-    const [showPanelForm, setShowPanelForm] = useState(false);
-    const [newPanelName, setNewPanelName] = useState("");
-    const queryClient = useQueryClient();
-    const { can } = usePermissions();
+          const [searchQuery, setSearchQuery] = useState("");
+          const [isSearching, setIsSearching] = useState(false);
+          const [searchResults, setSearchResults] = useState(null);
+          const [showPanelForm, setShowPanelForm] = useState(false);
+          const [newPanelName, setNewPanelName] = useState("");
+          const queryClient = useQueryClient();
+          const { can } = usePermissions();
+          const [currentUser, setCurrentUser] = useState(null);
+
+          React.useEffect(() => {
+              base44.auth.me().then(setCurrentUser).catch(() => {});
+          }, []);
+
+          const isAdmin = currentUser?.role === 'admin';
 
     const { data: savedTests = [], isLoading } = useQuery({
         queryKey: ['labTests'],
