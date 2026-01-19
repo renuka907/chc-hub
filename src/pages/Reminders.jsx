@@ -109,10 +109,7 @@ export default function Reminders() {
                 (filterStatus === "completed" ? reminder.completed : !reminder.completed);
             const matchesSearch = reminder.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 reminder.description?.toLowerCase().includes(searchQuery.toLowerCase());
-            // Filter by show_after time - only show if show_after is in the past or not set
-            const now = new Date();
-            const isVisible = !reminder.show_after || new Date(reminder.show_after) <= now;
-            return matchesStatus && matchesSearch && isVisible;
+            return matchesStatus && matchesSearch;
         })
         .sort((a, b) => {
             if (sortBy === "due_date") {
