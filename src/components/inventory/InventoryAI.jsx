@@ -62,7 +62,7 @@ ${JSON.stringify(inventoryContext, null, 2)}
 
 User Question: ${question}
 
-Provide a helpful, concise answer. When referencing items, always mention which clinic location they're in. If suggesting reorders, be specific about quantities and items. Format your response clearly with bullet points or numbers when appropriate.`,
+IMPORTANT: For EVERY item you mention in your response, ALWAYS include the clinic location in parentheses. For example: "Item Name (Clinic Location Name)". This applies to all items, whether discussing stock levels, reorders, expiring items, or recommendations. Format your response clearly with bullet points or numbers when appropriate.`,
                 add_context_from_internet: false
             });
 
