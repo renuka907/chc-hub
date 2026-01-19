@@ -80,11 +80,15 @@ IMPORTANT: For EVERY item you mention in your response, ALWAYS include the clini
     const generateSuggestions = async () => {
         setIsLoading(true);
         try {
-            const lowStock = inventoryItems.filter(item => 
+            const filteredItems = selectedLocation === "all" 
+                ? inventoryItems 
+                : inventoryItems.filter(item => item.location_id === selectedLocation);
+
+            const lowStock = filteredItems.filter(item => 
                 item.quantity <= item.low_stock_threshold && item.status === 'active'
             );
 
-            const expiringSoon = inventoryItems.filter(item => {
+            const expiringSoon = filteredItems.filter(item => {
                 if (!item.expiry_date) return false;
                 const days = Math.ceil((new Date(item.expiry_date) - new Date()) / (1000 * 60 * 60 * 24));
                 return days >= 0 && days <= 30;
@@ -96,6 +100,7 @@ IMPORTANT: For EVERY item you mention in your response, ALWAYS include the clini
 Low Stock Items (${lowStock.length}):
 ${JSON.stringify(lowStock.map(item => ({
     name: item.item_name,
+    clinic: locations.find(l => l.id === item.location_id)?.name || "Unknown",
     current: item.quantity,
     threshold: item.low_stock_threshold,
     reorder_qty: item.reorder_quantity,
@@ -105,17 +110,18 @@ ${JSON.stringify(lowStock.map(item => ({
 Expiring Soon (${expiringSoon.length}):
 ${JSON.stringify(expiringSoon.map(item => ({
     name: item.item_name,
+    clinic: locations.find(l => l.id === item.location_id)?.name || "Unknown",
     expiry: item.expiry_date,
     quantity: item.quantity
 })), null, 2)}
 
 Provide:
-1. **Priority Reorder List**: Items that need immediate attention with suggested quantities
-2. **Expiry Alerts**: Actions to take for items expiring soon
+1. **Priority Reorder List**: Items that need immediate attention with suggested quantities. For EVERY item, include the clinic name in parentheses.
+2. **Expiry Alerts**: Actions to take for items expiring soon. For EVERY item, include the clinic name in parentheses.
 3. **Cost Optimization**: Any opportunities to reduce costs or improve ordering
 4. **General Recommendations**: Overall inventory health insights
 
-Be specific and actionable.`,
+Be specific and actionable. ALWAYS include clinic location for each item mentioned.`,
                 add_context_from_internet: false
             });
 
