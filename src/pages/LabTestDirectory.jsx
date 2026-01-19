@@ -643,7 +643,15 @@ Only return found: false if you truly cannot identify what test they're asking a
     );
 }
 
-function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, onDelete, deleting, panels, onAssignToPanel, onRemoveFromPanel }) {
+function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, onDelete, deleting, panels, onUpdatePanels }) {
+    const testPanelIds = (() => {
+        try {
+            const ids = typeof test.panel_ids === 'string' ? JSON.parse(test.panel_ids) : test.panel_ids;
+            return Array.isArray(ids) ? ids : [];
+        } catch {
+            return [];
+        }
+    })();
     return (
         <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
