@@ -241,6 +241,13 @@ export default function ProviderReferral() {
                                                     >
                                                         <Printer className="w-4 h-4 text-gray-600 hover:text-purple-600" />
                                                     </button>
+                                                    <button
+                                                        onClick={() => handleEditProvider(provider)}
+                                                        className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                                                        title="Edit provider"
+                                                    >
+                                                        <Edit className="w-4 h-4 text-gray-600 hover:text-purple-600" />
+                                                    </button>
                                                 </div>
                                             </div>
 
