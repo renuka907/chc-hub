@@ -636,6 +636,7 @@ Only return found: false if you truly cannot identify what test they're asking a
                                             onDelete={deleteTestMutation.mutate}
                                             deleting={deleteTestMutation.isPending}
                                             panels={panels}
+                                            onAssignToPanel={assignTestToPanelMutation.mutate}
                                             onRemoveFromPanel={removeTestFromPanelMutation.mutate}
                                         />
                                     ))}
