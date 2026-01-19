@@ -237,14 +237,16 @@ export default function SpecialsPage() {
                                                     </p>
                                                 </div>
                                                 <div className="flex gap-2">
-                                                    <a
-                                                        href={special.file_url}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="text-sm text-purple-600 hover:underline"
+                                                    <button
+                                                        onClick={() => {
+                                                            setSelectedPreview(special);
+                                                            setPreviewOpen(true);
+                                                        }}
+                                                        className="text-sm text-purple-600 hover:text-purple-900"
+                                                        title="Preview"
                                                     >
-                                                        View
-                                                    </a>
+                                                        <Eye className="w-4 h-4" />
+                                                    </button>
                                                     <button
                                                         onClick={() => archiveMutation.mutate(special)}
                                                         className="text-sm text-gray-600 hover:text-gray-900"
