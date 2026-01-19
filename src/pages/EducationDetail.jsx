@@ -64,159 +64,102 @@ export default function EducationDetail() {
                 {`
                     @media print {
                         @page {
-                            margin: 0in 0.5in 0.5in 0.5in;
+                            margin: 0.5in 0.5in 0.75in 0.5in;
                             size: letter;
                         }
+                        
                         body {
-                            margin: 0;
-                            padding: 0;
                             -webkit-print-color-adjust: exact;
                             print-color-adjust: exact;
                         }
+                        
                         body * {
                             visibility: hidden;
                         }
-                        .print-header-table,
-                        .print-header-table * {
+                        
+                        .print-container,
+                        .print-container * {
                             visibility: visible;
                         }
-                        .printable-document,
-                        .printable-document * {
-                            visibility: visible;
+                        
+                        .print-container {
+                            position: absolute;
+                            left: 0;
+                            top: 0;
+                            width: 100%;
+                            font-family: 'Times New Roman', serif;
+                            font-size: 11pt;
+                            line-height: 1.6;
+                            color: #000;
                         }
-                        .print-header-table {
-                            display: table !important;
-                            width: 100% !important;
-                            position: static !important;
+                        
+                        .print-logo {
+                            text-align: center;
+                            margin-bottom: 8pt;
                         }
-                        .print-header-table thead {
-                            display: table-header-group !important;
+                        
+                        .print-logo img {
+                            height: 50px;
+                            width: auto;
                         }
-                        .print-header-table tbody {
-                            display: table-row-group !important;
+                        
+                        .print-contact {
+                            text-align: center;
+                            font-size: 9pt;
+                            margin-bottom: 12pt;
+                            padding-bottom: 8pt;
+                            border-bottom: 1px solid #ccc;
                         }
-                        .print-header-row {
-                            text-align: center !important;
-                            padding-bottom: 10pt !important;
-                            padding-top: 8pt !important;
-                            border-bottom: 1px solid #ccc !important;
+                        
+                        .print-title {
+                            font-size: 18pt;
+                            font-weight: bold;
+                            text-align: center;
+                            margin: 12pt 0;
+                            padding-bottom: 8pt;
+                            border-bottom: 2px solid #000;
+                            text-transform: uppercase;
                         }
-                        .print-header-row img {
-                            height: 40pt !important;
-                            margin: 0 auto 6pt !important;
-                            display: block !important;
+                        
+                        .print-container h2 {
+                            font-size: 14pt;
+                            font-weight: bold;
+                            margin-top: 14pt;
+                            margin-bottom: 8pt;
                         }
-                        .print-header-row .header-info {
-                            font-size: 8pt !important;
-                            color: #666 !important;
-                            line-height: 1.3 !important;
+                        
+                        .print-container h3 {
+                            font-size: 12pt;
+                            font-weight: bold;
+                            margin-top: 12pt;
+                            margin-bottom: 8pt;
                         }
-                        .printable-document {
-                            position: static !important;
-                            width: 100% !important;
-                            max-width: 100% !important;
-                            margin: 0 !important;
-                            padding: 0 !important;
-                            font-family: 'Times New Roman', serif !important;
-                            font-size: 11pt !important;
-                            line-height: 1.6 !important;
-                            color: #000 !important;
+                        
+                        .print-container p {
+                            margin-bottom: 8pt;
+                            text-align: justify;
                         }
-                        .printable-document > div:first-child {
-                            margin-top: 0 !important;
-                            padding-top: 0 !important;
+                        
+                        .print-container ul,
+                        .print-container ol {
+                            margin-bottom: 8pt;
+                            padding-left: 24pt;
                         }
-                        .printable-document > div > .mb-4:first-child {
-                            display: none !important;
+                        
+                        .print-container li {
+                            margin-bottom: 4pt;
                         }
-                        .printable-document img:first-of-type {
-                            display: none !important;
+                        
+                        .print-section {
+                            background: #f8f9fa;
+                            border: 1px solid #ddd;
+                            padding: 10pt;
+                            margin: 10pt 0;
+                            page-break-inside: avoid;
                         }
-                        .printable-document > div > .mb-6:first-child {
-                            display: none !important;
-                        }
-                        .printable-document h1 {
-                            font-size: 18pt !important;
-                            font-weight: bold !important;
-                            margin-top: 0 !important;
-                            margin-bottom: 14pt !important;
-                            page-break-after: avoid !important;
-                            orphans: 3 !important;
-                            widows: 3 !important;
-                            text-align: center !important;
-                            border-bottom: 2px solid #000 !important;
-                            padding-bottom: 8pt !important;
-                        }
-                        .printable-document h2 {
-                            font-size: 14pt !important;
-                            font-weight: bold !important;
-                            margin-top: 16pt !important;
-                            margin-bottom: 10pt !important;
-                            page-break-after: avoid !important;
-                            orphans: 3 !important;
-                            widows: 3 !important;
-                        }
-                        .printable-document h3 {
-                            font-size: 12pt !important;
-                            font-weight: bold !important;
-                            margin-top: 12pt !important;
-                            margin-bottom: 8pt !important;
-                            page-break-after: avoid !important;
-                            orphans: 3 !important;
-                            widows: 3 !important;
-                        }
-                        .printable-document p {
-                            margin-bottom: 10pt !important;
-                            orphans: 3 !important;
-                            widows: 3 !important;
-                            text-align: justify !important;
-                        }
-                        .printable-document li {
-                            margin-bottom: 6pt !important;
-                            orphans: 2 !important;
-                            widows: 2 !important;
-                        }
-                        .printable-document ul,
-                        .printable-document ol {
-                            margin-bottom: 10pt !important;
-                            padding-left: 24pt !important;
-                            page-break-inside: avoid !important;
-                        }
-                        .printable-document img {
-                            max-width: 100% !important;
-                            max-height: 3.5in !important;
-                            page-break-inside: avoid !important;
-                            page-break-before: auto !important;
-                            page-break-after: auto !important;
-                            display: block !important;
-                            margin: 14pt auto !important;
-                        }
-                        .printable-document .bg-blue-50,
-                        .printable-document .bg-slate-50 {
-                            background: #f8f9fa !important;
-                            border: 1px solid #ddd !important;
-                            padding: 12pt !important;
-                            margin: 10pt 0 !important;
-                            page-break-inside: avoid !important;
-                        }
-                        .printable-document .card,
-                        .printable-document [class*="Card"] {
-                            border: 1px solid #ddd !important;
-                            padding: 12pt !important;
-                            margin: 10pt 0 !important;
-                            page-break-inside: avoid !important;
-                        }
-                        .printable-document .badge,
-                        .printable-document [class*="Badge"] {
-                            border: 1px solid #000 !important;
-                            padding: 2pt 6pt !important;
-                            font-size: 9pt !important;
-                        }
+                        
                         .no-print {
                             display: none !important;
-                        }
-                        .no-print-screen {
-                            display: none;
                         }
                     }
                 `}
