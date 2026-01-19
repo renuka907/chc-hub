@@ -82,18 +82,26 @@ export default function SyringeVisualization({ result }) {
 
     const renderTB1Syringe = () => {
         const percentage = (volumeMl / 1) * 100;
+        const marks = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
         return (
             <div className="space-y-2">
                 <p className="text-sm font-semibold text-gray-700">1 ml TB Syringe</p>
-                <div className="relative h-16 bg-gradient-to-r from-amber-50 to-amber-100 rounded-full border-2 border-amber-400 flex items-center px-4">
-                    <div className="absolute left-4 text-xs font-semibold text-gray-600">0</div>
-                    <div className="absolute right-4 text-xs font-semibold text-gray-600">1ml</div>
+                <div className="relative h-24 bg-gradient-to-r from-amber-50 to-amber-100 rounded-full border-2 border-amber-400">
+                    {marks.map((mark) => {
+                        const markPercentage = (mark / 1) * 100;
+                        return (
+                            <div key={mark} className="absolute top-0 flex flex-col items-center" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
+                                <div className="w-1 bg-gray-800" style={{ height: mark % 0.5 === 0 ? "16px" : "10px" }} />
+                                <span className="text-xs font-semibold text-gray-700 mt-1">{mark.toFixed(1)}</span>
+                            </div>
+                        );
+                    })}
                     <div
-                        className="absolute h-12 bg-red-500 rounded transition-all"
+                        className="absolute top-1/2 h-10 bg-red-500 rounded transition-all"
                         style={{
-                            left: `${Math.max(15, Math.min(percentage + 10, 85))}%`,
-                            transform: "translateX(-50%)",
-                            width: "3px"
+                            left: `${percentage}%`,
+                            transform: "translateX(-50%) translateY(-50%)",
+                            width: "4px"
                         }}
                     />
                 </div>
