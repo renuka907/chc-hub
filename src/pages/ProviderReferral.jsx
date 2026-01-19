@@ -214,14 +214,21 @@ export default function ProviderReferral() {
                                                         )}
                                                     </div>
                                                 </div>
-                                                {provider.accepting_referrals && (
-                                                    <div className="flex items-start">
-                                                        <span className="inline-flex items-center gap-1 bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
-                                                            <Star className="w-3 h-3" />
-                                                            Open
-                                                        </span>
-                                                    </div>
-                                                )}
+                                                <div className="flex items-start gap-2">
+                                                    {provider.accepting_referrals && (
+                                                         <span className="inline-flex items-center gap-1 bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
+                                                             <Star className="w-3 h-3" />
+                                                             Open
+                                                         </span>
+                                                     )}
+                                                    <button
+                                                        onClick={() => handlePrintCard(provider)}
+                                                        className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                                                        title="Print provider card"
+                                                    >
+                                                        <Printer className="w-4 h-4 text-gray-600 hover:text-purple-600" />
+                                                    </button>
+                                                </div>
                                             </div>
 
                                             {provider.bio && (
