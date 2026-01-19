@@ -223,23 +223,31 @@ export default function Layout({ children, currentPageName }) {
                                     <span>Profile</span>
                                 </Link>
 
-                                {/* Single Dropdown Menu */}
-                            <div className="relative">
-                                <button
-                                    onMouseEnter={() => {
-                                        if (closeTimerRef.current) {
-                                            clearTimeout(closeTimerRef.current);
-                                            closeTimerRef.current = null;
-                                        }
-                                        setOpenDropdown(0);
-                                    }}
-                                    onMouseLeave={() => {
-                                        closeTimerRef.current = setTimeout(() => {
-                                            setOpenDropdown(null);
-                                        }, 1000);
-                                    }}
-                                    className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
-                                >
+                                <Link 
+                                                        to={createPageUrl("Specials")} 
+                                                        className="flex items-center gap-2 bg-white border-2 border-purple-300 text-purple-700 px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
+                                                    >
+                                                        <Upload className="w-4 h-4" />
+                                                        <span>Specials</span>
+                                                    </Link>
+
+                                                {/* Single Dropdown Menu */}
+                                                    <div className="relative">
+                                                        <button
+                                                            onMouseEnter={() => {
+                                                                if (closeTimerRef.current) {
+                                                                    clearTimeout(closeTimerRef.current);
+                                                                    closeTimerRef.current = null;
+                                                                }
+                                                                setOpenDropdown(0);
+                                                            }}
+                                                            onMouseLeave={() => {
+                                                                closeTimerRef.current = setTimeout(() => {
+                                                                    setOpenDropdown(null);
+                                                                }, 1000);
+                                                            }}
+                                                            className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
+                                                        >
                                     <Menu className="w-4 h-4" />
                                     <span>Menu</span>
                                     <ChevronDown className={`w-3 h-3 transition-transform ${openDropdown === 0 ? 'rotate-180' : ''}`} />
