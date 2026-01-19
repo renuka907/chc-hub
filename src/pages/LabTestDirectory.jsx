@@ -297,6 +297,7 @@ Only return found: false if you truly cannot identify what test they're asking a
                                                 size="sm"
                                                 onClick={() => handleSaveTest(searchResults)}
                                                 disabled={saveTestMutation.isPending}
+                                                className="text-black"
                                             >
                                                 <Plus className="w-4 h-4 mr-2" />
                                                 Save to Directory
