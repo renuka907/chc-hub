@@ -443,6 +443,100 @@ Only return found: false if you truly cannot identify what test they're asking a
                 </CardContent>
             </Card>
 
+            {/* Panels Section */}
+            <div>
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl font-bold text-gray-900">Test Panels</h2>
+                    <Button 
+                        onClick={() => setShowPanelForm(!showPanelForm)}
+                        className="bg-purple-600 hover:bg-purple-700"
+                        size="sm"
+                    >
+                        <Plus className="w-4 h-4 mr-2" />
+                        New Panel
+                    </Button>
+                </div>
+
+                {showPanelForm && (
+                    <Card className="mb-4">
+                        <CardContent className="pt-6 space-y-3">
+                            <Input
+                                placeholder="Panel name (e.g., Annual Physical, Hormone Panel)"
+                                value={newPanelName}
+                                onChange={(e) => setNewPanelName(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && newPanelName.trim() && createPanelMutation.mutate({ panel_name: newPanelName })}
+                            />
+                            <div className="flex gap-2">
+                                <Button 
+                                    onClick={() => newPanelName.trim() && createPanelMutation.mutate({ panel_name: newPanelName })}
+                                    disabled={!newPanelName.trim() || createPanelMutation.isPending}
+                                    className="bg-green-600 hover:bg-green-700"
+                                    size="sm"
+                                >
+                                    Create Panel
+                                </Button>
+                                <Button 
+                                    onClick={() => {
+                                        setShowPanelForm(false);
+                                        setNewPanelName("");
+                                    }}
+                                    variant="outline"
+                                    size="sm"
+                                >
+                                    Cancel
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
+
+                {panels.length === 0 ? (
+                    <Card>
+                        <CardContent className="py-8 text-center text-gray-500">
+                            <Folder className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                            <p>No panels created yet. Create one to organize tests.</p>
+                        </CardContent>
+                    </Card>
+                ) : (
+                    <div className="grid md:grid-cols-2 gap-4">
+                        {panels.map(panel => {
+                            const panelTests = savedTests.filter(t => t.panel_id === panel.id);
+                            const tubeCount = calculatePanelTubes(panel.id);
+                            const totalTubes = Object.values(tubeCount).reduce((a, b) => a + b, 0);
+                            return (
+                                <Card key={panel.id} className="hover:shadow-md transition-shadow">
+                                    <CardHeader>
+                                        <div className="flex items-start justify-between">
+                                            <div>
+                                                <CardTitle className="text-lg">{panel.panel_name}</CardTitle>
+                                                <p className="text-sm text-gray-600 mt-1">{panelTests.length} tests • {totalTubes} total tubes</p>
+                                            </div>
+                                        </div>
+                                    </CardHeader>
+                                    <CardContent className="space-y-3">
+                                        {Object.entries(tubeCount).length > 0 ? (
+                                            <div>
+                                                <p className="text-xs font-semibold text-gray-600 mb-2">Tube Breakdown:</p>
+                                                <div className="space-y-1">
+                                                    {Object.entries(tubeCount).map(([tube, count]) => (
+                                                        <div key={tube} className="flex justify-between text-sm">
+                                                            <span className="text-gray-700">{tube}</span>
+                                                            <Badge variant="outline">{count}</Badge>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <p className="text-sm text-gray-500">No tests in this panel yet</p>
+                                        )}
+                                    </CardContent>
+                                </Card>
+                            );
+                        })}
+                    </div>
+                )}
+            </div>
+
             {/* Saved Tests */}
             <div>
                 <h2 className="text-xl font-bold text-gray-900 mb-4">Saved Tests ({savedTests.length})</h2>
