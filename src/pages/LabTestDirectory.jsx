@@ -208,13 +208,30 @@ Only return found: false if you truly cannot identify what test they're asking a
                     console.log('Verification via Quest failed', e);
                 }
             }
-        } catch (error) {
+
+            // Auto-generate ICD-10 codes
+            try {
+                const { data: icdData } = await base44.functions.invoke('generateICD10Codes', { 
+                    testName: response.test_name,
+                    testCode: response.test_code,
+                    category: response.category
+                });
+                if (icdData?.codes && Array.isArray(icdData.codes)) {
+                    setSearchResults(prev => ({
+                        ...prev,
+                        diagnosis_codes: icdData.codes
+                    }));
+                }
+            } catch (e) {
+                console.log('ICD-10 generation skipped', e);
+            }
+            } catch (error) {
             toast.error("Failed to search Quest Diagnostics");
             console.error(error);
-        } finally {
+            } finally {
             setIsSearching(false);
-        }
-    };
+            }
+            };
 
     const handleSaveTest = (testData) => {
         const payload = {
