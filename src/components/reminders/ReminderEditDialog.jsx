@@ -14,13 +14,21 @@ export default function ReminderEditDialog({ open, onOpenChange, reminder, users
     due_date_local: "",
     recurrence_type: "none",
     recurrence_interval: 1,
-    priority: "medium"
+    priority: "medium",
+    hide_until_hours: 0
   });
   const [saving, setSaving] = React.useState(false);
 
   React.useEffect(() => {
     if (reminder) {
       const dueLocal = reminder.due_date ? toLocalInput(reminder.due_date) : "";
+      const showAfterLocal = reminder.show_after ? toLocalInput(reminder.show_after) : "";
+      const dueDate = reminder.due_date ? new Date(reminder.due_date) : null;
+      const showAfterDate = reminder.show_after ? new Date(reminder.show_after) : null;
+      let hideUntilHours = 0;
+      if (dueDate && showAfterDate) {
+        hideUntilHours = Math.round((dueDate - showAfterDate) / (1000 * 60 * 60));
+      }
       setForm({
         title: reminder.title || "",
         description: reminder.description || "",
@@ -28,7 +36,8 @@ export default function ReminderEditDialog({ open, onOpenChange, reminder, users
         due_date_local: dueLocal,
         recurrence_type: reminder.recurrence_type || "none",
         recurrence_interval: reminder.recurrence_interval || 1,
-        priority: reminder.priority || "medium"
+        priority: reminder.priority || "medium",
+        hide_until_hours: hideUntilHours
       });
     } else {
       // Reset form for new reminder
@@ -39,7 +48,8 @@ export default function ReminderEditDialog({ open, onOpenChange, reminder, users
         due_date_local: "",
         recurrence_type: "none",
         recurrence_interval: 1,
-        priority: "medium"
+        priority: "medium",
+        hide_until_hours: 0
       });
     }
   }, [reminder?.id, open]);
@@ -75,6 +85,13 @@ export default function ReminderEditDialog({ open, onOpenChange, reminder, users
       };
       if (payload.due_date) {
         payload.next_trigger_at = payload.due_date;
+        if (form.hide_until_hours > 0) {
+          const dueDate = new Date(payload.due_date);
+          const showAfterDate = new Date(dueDate.getTime() - form.hide_until_hours * 60 * 60 * 1000);
+          payload.show_after = showAfterDate.toISOString();
+        } else {
+          payload.show_after = undefined;
+        }
       }
       if (reminder) {
         await base44.entities.Reminder.update(reminder.id, payload);
@@ -191,6 +208,19 @@ export default function ReminderEditDialog({ open, onOpenChange, reminder, users
                   <SelectItem value="high">High</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            <div>
+              <Label>Hide until (hours before due date)</Label>
+              <Input
+                type="number"
+                min={0}
+                max={168}
+                value={form.hide_until_hours}
+                onChange={(e) => setForm((f) => ({ ...f, hide_until_hours: Math.max(0, parseInt(e.target.value || 0)) }))}
+                className="mt-1"
+              />
+              <p className="text-xs text-gray-500 mt-1">Reminder will only show this many hours before due date. Set to 0 to always show.</p>
             </div>
         </div>
 
