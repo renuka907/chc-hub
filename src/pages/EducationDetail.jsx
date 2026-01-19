@@ -64,159 +64,134 @@ export default function EducationDetail() {
                 {`
                     @media print {
                         @page {
-                            margin: 0.15in 0.5in 0.5in 0.5in;
+                            margin: 0.5in 0.5in 0.5in 0.5in;
                             size: letter;
                         }
+
                         body {
                             margin: 0;
                             padding: 0;
                             -webkit-print-color-adjust: exact;
                             print-color-adjust: exact;
                         }
+
                         body * {
                             visibility: hidden;
                         }
-                        .print-header-table,
-                        .print-header-table * {
+
+                        .print-header,
+                        .print-header * {
                             visibility: visible;
                         }
-                        .printable-document,
-                        .printable-document * {
+
+                        .print-content,
+                        .print-content * {
                             visibility: visible;
                         }
-                        .print-header-table {
-                            display: table !important;
-                            width: 100% !important;
-                            position: static !important;
+
+                        .print-header {
+                            position: fixed;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            text-align: center;
+                            padding: 12pt 0.5in;
+                            background: white;
+                            z-index: 9999;
                         }
-                        .print-header-table thead {
-                            display: table-header-group !important;
+
+                        .print-header img {
+                            height: 36pt;
+                            margin: 0 auto 4pt;
+                            display: block;
                         }
-                        .print-header-table tbody {
-                            display: table-row-group !important;
+
+                        .print-header .header-info {
+                            font-size: 8pt;
+                            color: #666;
+                            line-height: 1.3;
+                            font-family: 'Times New Roman', serif;
                         }
-                        .print-header-row {
-                            text-align: center !important;
-                            padding-bottom: 10pt !important;
-                            padding-top: 8pt !important;
-                            border-bottom: 1px solid #ccc !important;
+
+                        .print-content {
+                            position: relative;
+                            margin-top: 85pt;
+                            font-family: 'Times New Roman', serif;
+                            font-size: 11pt;
+                            line-height: 1.6;
+                            color: #000;
                         }
-                        .print-header-row img {
-                            height: 40pt !important;
-                            margin: 0 auto 6pt !important;
-                            display: block !important;
+
+                        .print-content h1 {
+                            font-size: 18pt;
+                            font-weight: bold;
+                            margin: 0 0 14pt 0;
+                            text-align: center;
+                            border-bottom: 2px solid #000;
+                            padding-bottom: 8pt;
+                            page-break-after: avoid;
                         }
-                        .print-header-row .header-info {
-                            font-size: 8pt !important;
-                            color: #666 !important;
-                            line-height: 1.3 !important;
+
+                        .print-content h2 {
+                            font-size: 14pt;
+                            font-weight: bold;
+                            margin: 16pt 0 10pt 0;
+                            page-break-after: avoid;
                         }
-                        .printable-document {
-                            position: static !important;
-                            width: 100% !important;
-                            max-width: 100% !important;
-                            margin: 0 !important;
-                            padding: 0 !important;
-                            font-family: 'Times New Roman', serif !important;
-                            font-size: 11pt !important;
-                            line-height: 1.6 !important;
-                            color: #000 !important;
+
+                        .print-content h3 {
+                            font-size: 12pt;
+                            font-weight: bold;
+                            margin: 12pt 0 8pt 0;
+                            page-break-after: avoid;
                         }
-                        .printable-document > div:first-child {
-                            margin-top: 0 !important;
-                            padding-top: 0 !important;
+
+                        .print-content p {
+                            margin-bottom: 10pt;
+                            text-align: justify;
                         }
-                        .printable-document > div > .mb-4:first-child {
-                            display: none !important;
+
+                        .print-content ul,
+                        .print-content ol {
+                            margin-bottom: 10pt;
+                            padding-left: 24pt;
                         }
-                        .printable-document img:first-of-type {
-                            display: none !important;
+
+                        .print-content li {
+                            margin-bottom: 6pt;
                         }
-                        .printable-document > div > .mb-6:first-child {
-                            display: none !important;
+
+                        .print-content .metadata {
+                            font-size: 10pt;
+                            margin-bottom: 12pt;
                         }
-                        .printable-document h1 {
-                            font-size: 18pt !important;
-                            font-weight: bold !important;
-                            margin-top: 0 !important;
-                            margin-bottom: 14pt !important;
-                            page-break-after: avoid !important;
-                            orphans: 3 !important;
-                            widows: 3 !important;
-                            text-align: center !important;
-                            border-bottom: 2px solid #000 !important;
-                            padding-bottom: 8pt !important;
-                        }
-                        .printable-document h2 {
-                            font-size: 14pt !important;
-                            font-weight: bold !important;
-                            margin-top: 16pt !important;
-                            margin-bottom: 10pt !important;
-                            page-break-after: avoid !important;
-                            orphans: 3 !important;
-                            widows: 3 !important;
-                        }
-                        .printable-document h3 {
-                            font-size: 12pt !important;
-                            font-weight: bold !important;
-                            margin-top: 12pt !important;
-                            margin-bottom: 8pt !important;
-                            page-break-after: avoid !important;
-                            orphans: 3 !important;
-                            widows: 3 !important;
-                        }
-                        .printable-document p {
-                            margin-bottom: 10pt !important;
-                            orphans: 3 !important;
-                            widows: 3 !important;
-                            text-align: justify !important;
-                        }
-                        .printable-document li {
-                            margin-bottom: 6pt !important;
-                            orphans: 2 !important;
-                            widows: 2 !important;
-                        }
-                        .printable-document ul,
-                        .printable-document ol {
-                            margin-bottom: 10pt !important;
-                            padding-left: 24pt !important;
-                            page-break-inside: avoid !important;
-                        }
-                        .printable-document img {
-                            max-width: 100% !important;
-                            max-height: 3.5in !important;
-                            page-break-inside: avoid !important;
-                            page-break-before: auto !important;
-                            page-break-after: auto !important;
-                            display: block !important;
-                            margin: 14pt auto !important;
-                        }
-                        .printable-document .bg-blue-50,
-                        .printable-document .bg-slate-50 {
+
+                        .print-content .summary-box {
                             background: #f8f9fa !important;
                             border: 1px solid #ddd !important;
-                            padding: 12pt !important;
-                            margin: 10pt 0 !important;
-                            page-break-inside: avoid !important;
+                            padding: 12pt;
+                            margin: 12pt 0;
+                            page-break-inside: avoid;
                         }
-                        .printable-document .card,
-                        .printable-document [class*="Card"] {
+
+                        .print-content .references-box {
+                            background: #f8f9fa !important;
                             border: 1px solid #ddd !important;
-                            padding: 12pt !important;
-                            margin: 10pt 0 !important;
-                            page-break-inside: avoid !important;
+                            padding: 12pt;
+                            margin: 12pt 0;
+                            page-break-inside: avoid;
                         }
-                        .printable-document .badge,
-                        .printable-document [class*="Badge"] {
-                            border: 1px solid #000 !important;
-                            padding: 2pt 6pt !important;
-                            font-size: 9pt !important;
+
+                        .print-content .disclaimer {
+                            font-size: 9pt;
+                            color: #666;
+                            border-top: 1px solid #ccc;
+                            padding-top: 10pt;
+                            margin-top: 20pt;
                         }
+
                         .no-print {
                             display: none !important;
-                        }
-                        .no-print-screen {
-                            display: none;
                         }
                     }
                 `}
@@ -250,86 +225,72 @@ export default function EducationDetail() {
                 </div>
             </div>
 
-            {/* Printable Content with repeating header */}
-            <table className="print-header-table">
-                <thead className="no-print">
-                    <tr>
-                        <th className="print-header-row">
-                            <img 
-                                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png"
-                                alt="Contemporary Health Center Logo"
-                            />
-                            <div className="header-info">
-                                <div style={{fontWeight: 600}}>6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
-                                <div style={{marginTop: '2pt'}}>Phone: 239-561-9191 | Fax: 239-561-9188</div>
-                                <div style={{marginTop: '2pt'}}>contemporaryhealthcenter.com</div>
-                            </div>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-            <PrintableDocument title={topic.title} showLogo={false}>
-                <div className="space-y-6">
-                    {/* Metadata */}
-                    {topic.last_reviewed && (
-                        <div className="flex items-center text-sm text-gray-600 mb-4">
-                            <Calendar className="w-4 h-4 mr-1" />
-                            Last Reviewed: {new Date(topic.last_reviewed).toLocaleDateString()}
+            {/* Print Header (fixed position on print) */}
+            <div className="print-header no-print-screen">
+                <img 
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png"
+                    alt="Contemporary Health Center Logo"
+                />
+                <div className="header-info">
+                    <div style={{fontWeight: 600}}>6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
+                    <div style={{marginTop: '2pt'}}>Phone: 239-561-9191 | Fax: 239-561-9188</div>
+                    <div style={{marginTop: '2pt'}}>contemporaryhealthcenter.com</div>
+                </div>
+            </div>
+
+            {/* Print Content */}
+            <div className="print-content">
+                <h1>{topic.title}</h1>
+
+                {/* Metadata */}
+                {topic.last_reviewed && (
+                    <div className="metadata flex items-center text-sm text-gray-600">
+                        <Calendar className="w-4 h-4 mr-1 no-print" />
+                        Last Reviewed: {new Date(topic.last_reviewed).toLocaleDateString()}
+                    </div>
+                )}
+
+                {/* Summary */}
+                {topic.summary && (
+                    <div className="summary-box">
+                        <p className="text-gray-800 font-medium">{topic.summary}</p>
+                    </div>
+                )}
+
+                {/* Main Content */}
+                <div className="prose max-w-none">
+                    {topic.content?.includes('<') ? (
+                        <div 
+                            className="text-gray-800 leading-relaxed"
+                            dangerouslySetInnerHTML={{ __html: topic.content }}
+                        />
+                    ) : (
+                        <div className="whitespace-pre-wrap text-gray-800 leading-relaxed">
+                            {topic.content}
                         </div>
                     )}
-
-                    {/* Summary */}
-                    {topic.summary && (
-                        <Card className="bg-blue-50 border-blue-200">
-                            <CardContent className="pt-6">
-                                <p className="text-gray-800 font-medium">{topic.summary}</p>
-                            </CardContent>
-                        </Card>
-                    )}
-
-                    {/* Main Content */}
-                    <div className="prose max-w-none">
-                        {topic.content?.includes('<') ? (
-                            <div 
-                                className="text-gray-800 leading-relaxed"
-                                dangerouslySetInnerHTML={{ __html: topic.content }}
-                            />
-                        ) : (
-                            <div className="whitespace-pre-wrap text-gray-800 leading-relaxed">
-                                {topic.content}
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Medical References */}
-                    {topic.medical_references && (
-                        <Card className="bg-slate-50 border-slate-200">
-                            <CardContent className="pt-6">
-                                <div className="flex items-start space-x-2">
-                                    <ExternalLink className="w-5 h-5 text-slate-600 mt-1 flex-shrink-0" />
-                                    <div>
-                                        <h3 className="font-semibold text-slate-900 mb-2">Medical References</h3>
-                                        <p className="text-sm text-slate-700 whitespace-pre-wrap">
-                                            {topic.medical_references}
-                                        </p>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    )}
-
-                    {/* Disclaimer */}
-                    <div className="text-xs text-gray-500 italic border-t pt-4 mt-8">
-                        <p>This information is for educational purposes only and should not replace professional medical advice. Please consult with a healthcare provider for personalized medical guidance.</p>
-                    </div>
                 </div>
-            </PrintableDocument>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+
+                {/* Medical References */}
+                {topic.medical_references && (
+                    <div className="references-box">
+                        <div className="flex items-start space-x-2">
+                            <ExternalLink className="w-5 h-5 text-slate-600 mt-1 flex-shrink-0 no-print" />
+                            <div>
+                                <h3 className="font-semibold text-slate-900 mb-2">Medical References</h3>
+                                <p className="text-sm text-slate-700 whitespace-pre-wrap">
+                                    {topic.medical_references}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Disclaimer */}
+                <div className="disclaimer">
+                    <p>This information is for educational purposes only and should not replace professional medical advice. Please consult with a healthcare provider for personalized medical guidance.</p>
+                </div>
+            </div>
 
             {topic && (
                 <EducationTopicForm
