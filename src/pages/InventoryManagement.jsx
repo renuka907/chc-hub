@@ -467,14 +467,6 @@ export default function InventoryManagement() {
                                                              </div>
                                                          </div>
 
-                                                         {/* Cost - 12% */}
-                                                         <div className="flex-1 text-center">
-                                                             <div className="text-xs text-gray-600">Cost</div>
-                                                             <div className="font-medium text-sm">
-                                                                 {item.cost_per_unit ? `$${item.cost_per_unit}` : '—'}
-                                                             </div>
-                                                         </div>
-
                                                          {/* Expires - 15% */}
                                                          <div className="flex-1 text-center">
                                                              <div className="text-xs text-gray-600">Expires</div>
