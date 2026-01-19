@@ -336,6 +336,52 @@ export default function InventoryManagement() {
                 </div>
             </div>
 
+            {/* Bulk Actions Bar */}
+            {selectedItems.size > 0 && canEdit && (
+                <Card className="border-2 border-blue-300 bg-blue-50">
+                    <CardContent className="p-4 flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-700">
+                            {selectedItems.size} item{selectedItems.size !== 1 ? 's' : ''} selected
+                        </span>
+                        <div className="flex gap-2">
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => bulkStatusMutation.mutate('active')}
+                                disabled={bulkStatusMutation.isPending}
+                                className="text-green-600 hover:text-green-700 hover:bg-green-50 border-green-300"
+                            >
+                                Mark Active
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => bulkArchiveMutation.mutate()}
+                                disabled={bulkArchiveMutation.isPending}
+                                className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 border-orange-300"
+                            >
+                                Archive
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={() => bulkDeleteMutation.mutate()}
+                                disabled={bulkDeleteMutation.isPending}
+                            >
+                                Delete
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => setSelectedItems(new Set())}
+                            >
+                                Clear
+                            </Button>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
+
             {/* Filters */}
             <div className="bg-white rounded-3xl p-6 shadow-md">
                 <div className="flex flex-wrap gap-3 items-center">
