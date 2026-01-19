@@ -4,6 +4,7 @@ import CheckoutQuote from './pages/CheckoutQuote';
 import ClinicDirectory from './pages/ClinicDirectory';
 import ConsentFormDetail from './pages/ConsentFormDetail';
 import DiscountManagement from './pages/DiscountManagement';
+import EducationDetail from './pages/EducationDetail';
 import EducationLibrary from './pages/EducationLibrary';
 import EmployeeQuestions from './pages/EmployeeQuestions';
 import FAQ from './pages/FAQ';
@@ -12,6 +13,7 @@ import FormTemplates from './pages/FormTemplates';
 import Home from './pages/Home';
 import InventoryManagement from './pages/InventoryManagement';
 import LabTestDirectory from './pages/LabTestDirectory';
+import Library from './pages/Library';
 import Messaging from './pages/Messaging';
 import PricingManagement from './pages/PricingManagement';
 import ProcedureDetail from './pages/ProcedureDetail';
@@ -20,8 +22,6 @@ import QuoteDetail from './pages/QuoteDetail';
 import QuotesManagement from './pages/QuotesManagement';
 import UserManagement from './pages/UserManagement';
 import ViewSharedForm from './pages/ViewSharedForm';
-import EducationDetail from './pages/EducationDetail';
-import Library from './pages/Library';
 import __Layout from './Layout.jsx';
 
 
@@ -32,6 +32,7 @@ export const PAGES = {
     "ClinicDirectory": ClinicDirectory,
     "ConsentFormDetail": ConsentFormDetail,
     "DiscountManagement": DiscountManagement,
+    "EducationDetail": EducationDetail,
     "EducationLibrary": EducationLibrary,
     "EmployeeQuestions": EmployeeQuestions,
     "FAQ": FAQ,
@@ -40,6 +41,7 @@ export const PAGES = {
     "Home": Home,
     "InventoryManagement": InventoryManagement,
     "LabTestDirectory": LabTestDirectory,
+    "Library": Library,
     "Messaging": Messaging,
     "PricingManagement": PricingManagement,
     "ProcedureDetail": ProcedureDetail,
@@ -48,8 +50,6 @@ export const PAGES = {
     "QuotesManagement": QuotesManagement,
     "UserManagement": UserManagement,
     "ViewSharedForm": ViewSharedForm,
-    "EducationDetail": EducationDetail,
-    "Library": Library,
 }
 
 export const pagesConfig = {
