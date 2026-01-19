@@ -154,36 +154,7 @@ export default function Home() {
                 </Link>
             </div>
 
-            {/* Removed duplicate cards - now all in one grid */}
-            <div className="hidden">
-                <Link to={createPageUrl("InventoryManagement")}>
-                    <div className="bg-gradient-to-br from-orange-100 to-amber-100 rounded-3xl p-8 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group">
-                        <div className="flex items-start space-x-4">
-                            <div className="w-12 h-12 bg-white/60 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                                <Package className="w-6 h-6 text-orange-700" />
-                            </div>
-                            <div>
-                                <h3 className="text-xl font-bold text-gray-900 mb-2">Inventory Management</h3>
-                                <p className="text-gray-700">Track supplies, medications, and equipment across all clinic locations. Monitor stock levels and expiration dates.</p>
-                            </div>
-                        </div>
-                    </div>
-                </Link>
 
-                <Link to={createPageUrl("FAQ")}>
-                    <div className="bg-gradient-to-br from-blue-100 to-cyan-100 rounded-3xl p-8 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer group">
-                        <div className="flex items-start space-x-4">
-                            <div className="w-12 h-12 bg-white/60 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                                <MessageSquare className="w-6 h-6 text-blue-700" />
-                            </div>
-                            <div>
-                                <h3 className="text-xl font-bold text-gray-900 mb-2">FAQs & Questions</h3>
-                                <p className="text-gray-700">Browse frequently asked questions or submit your own question to management.</p>
-                            </div>
-                        </div>
-                    </div>
-                </Link>
-            </div>
         </div>
     );
 }
