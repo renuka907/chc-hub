@@ -253,6 +253,14 @@ export default function InventoryManagement() {
                         {canEdit && (
                             <>
                                 <Button 
+                                    onClick={() => setShowBarcodeScanner(true)} 
+                                    variant="outline"
+                                    className="border-blue-600 text-blue-600 hover:bg-blue-50"
+                                >
+                                    <Barcode className="w-4 h-4 mr-2" />
+                                    Scan Barcode
+                                </Button>
+                                <Button 
                                     onClick={() => setShowAuditForm(true)} 
                                     variant="outline"
                                     className="border-orange-600 text-orange-600 hover:bg-orange-50"
