@@ -377,7 +377,7 @@ Only return found: false if you truly cannot identify what test they're asking a
         });
 
         // Override for Female HRT- Initial Panel - force red-top to 2
-        if (panelName === "Female HRT- Initial Panel") {
+        if (panelName?.trim() === "Female HRT- Initial Panel") {
             tubeCount["Red-top"] = 2;
         }
 
