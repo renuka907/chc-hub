@@ -35,6 +35,11 @@ export default function Reminders() {
         queryFn: () => base44.auth.me(),
     });
 
+    const { data: teamMembers = [] } = useQuery({
+        queryKey: ['teamMembers'],
+        queryFn: () => base44.entities.User.list(),
+    });
+
     const toggleCompleteMutation = useMutation({
         mutationFn: ({ id, completed }) => 
             base44.entities.Reminder.update(id, { completed }),
