@@ -131,94 +131,94 @@ export default function SpecialsPage() {
                         </CardHeader>
                         <CardContent>
                             <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
-                            <Label htmlFor="title">Title (Optional)</Label>
-                            <Input
-                                id="title"
-                                value={formData.title}
-                                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                placeholder="e.g., Summer Sale 2026"
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <Label htmlFor="date_from">Start Date</Label>
+                                <Label htmlFor="title">Title (Optional)</Label>
                                 <Input
-                                    id="date_from"
-                                    type="date"
-                                    value={formData.date_from}
-                                    onChange={(e) => setFormData({ ...formData, date_from: e.target.value })}
-                                    required
+                                    id="title"
+                                    value={formData.title}
+                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                    placeholder="e.g., Summer Sale 2026"
                                 />
                             </div>
-                            <div>
-                                <Label htmlFor="date_to">End Date</Label>
-                                <Input
-                                    id="date_to"
-                                    type="date"
-                                    value={formData.date_to}
-                                    onChange={(e) => setFormData({ ...formData, date_to: e.target.value })}
-                                    required
-                                />
-                            </div>
-                        </div>
 
-                        <div>
-                            <Label htmlFor="file">File (PDF or JPG)</Label>
-                            <div className="flex flex-col items-center justify-center p-8 bg-purple-50 rounded-lg border-2 border-dashed border-purple-200">
-                                <label className="cursor-pointer w-full">
-                                    <div className="flex flex-col items-center gap-3">
-                                        <Upload className="w-8 h-8 text-purple-600" />
-                                        <div className="text-center">
-                                            <p className="font-semibold text-gray-900">
-                                                {file ? file.name : "Click to upload"}
-                                            </p>
-                                            {!file && (
-                                                <p className="text-sm text-gray-600">or drag and drop</p>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <input
-                                        id="file"
-                                        type="file"
-                                        accept=".pdf,.jpg,.jpeg"
-                                        onChange={handleFileSelect}
-                                        className="hidden"
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <Label htmlFor="date_from">Start Date</Label>
+                                    <Input
+                                        id="date_from"
+                                        type="date"
+                                        value={formData.date_from}
+                                        onChange={(e) => setFormData({ ...formData, date_from: e.target.value })}
+                                        required
                                     />
-                                </label>
+                                </div>
+                                <div>
+                                    <Label htmlFor="date_to">End Date</Label>
+                                    <Input
+                                        id="date_to"
+                                        type="date"
+                                        value={formData.date_to}
+                                        onChange={(e) => setFormData({ ...formData, date_to: e.target.value })}
+                                        required
+                                    />
+                                </div>
                             </div>
-                        </div>
 
-                        {error && (
-                            <div className="p-4 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
-                                {error}
+                            <div>
+                                <Label htmlFor="file">File (PDF or JPG)</Label>
+                                <div className="flex flex-col items-center justify-center p-8 bg-purple-50 rounded-lg border-2 border-dashed border-purple-200">
+                                    <label className="cursor-pointer w-full">
+                                        <div className="flex flex-col items-center gap-3">
+                                            <Upload className="w-8 h-8 text-purple-600" />
+                                            <div className="text-center">
+                                                <p className="font-semibold text-gray-900">
+                                                    {file ? file.name : "Click to upload"}
+                                                </p>
+                                                {!file && (
+                                                    <p className="text-sm text-gray-600">or drag and drop</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <input
+                                            id="file"
+                                            type="file"
+                                            accept=".pdf,.jpg,.jpeg"
+                                            onChange={handleFileSelect}
+                                            className="hidden"
+                                        />
+                                    </label>
+                                </div>
                             </div>
-                        )}
 
-                        {success && (
-                            <div className="p-4 bg-green-50 border border-green-200 rounded text-green-700 text-sm">
-                                {success}
-                            </div>
-                        )}
-
-                        <Button
-                            type="submit"
-                            disabled={uploading || !file}
-                            className="w-full bg-purple-600 hover:bg-purple-700"
-                        >
-                            {uploading ? (
-                                <>
-                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                    Adding...
-                                </>
-                            ) : (
-                                "Add Special"
+                            {error && (
+                                <div className="p-4 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+                                    {error}
+                                </div>
                             )}
-                        </Button>
-                    </form>
-                </CardContent>
-            </Card>
+
+                            {success && (
+                                <div className="p-4 bg-green-50 border border-green-200 rounded text-green-700 text-sm">
+                                    {success}
+                                </div>
+                            )}
+
+                            <Button
+                                type="submit"
+                                disabled={uploading || !file}
+                                className="w-full bg-purple-600 hover:bg-purple-700"
+                            >
+                                {uploading ? (
+                                    <>
+                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                        Adding...
+                                    </>
+                                ) : (
+                                    "Add Special"
+                                )}
+                            </Button>
+                        </form>
+                    </CardContent>
+                </Card>
             )}
 
             {/* Search and Specials List */}
