@@ -344,6 +344,12 @@ export default function SpecialsPage() {
             </div>
 
             <PreviewModal file={selectedPreview} open={previewOpen} onOpenChange={setPreviewOpen} />
+            <EditSpecialDialog 
+                special={selectedEdit} 
+                open={editOpen} 
+                onOpenChange={setEditOpen}
+                onSave={() => queryClient.invalidateQueries({ queryKey: ["specials"] })}
+            />
         </div>
     );
 }
