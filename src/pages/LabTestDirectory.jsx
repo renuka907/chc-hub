@@ -314,6 +314,30 @@ Only return found: false if you truly cannot identify what test they're asking a
     const favoriteTests = filteredTests.filter(t => t.is_favorite);
     const otherTests = filteredTests.filter(t => !t.is_favorite);
 
+    const getTubeCapacity = (tubeType) => {
+        if (!tubeType) return 5;
+        const lowerTube = tubeType.toLowerCase();
+        const capacities = {
+            "lavender": 3,
+            "purple": 3,
+            "edta": 3,
+            "red": 7,
+            "gold": 8,
+            "yellow": 5,
+            "green": 6,
+            "blue": 2.7,
+            "sodium citrate": 2.7,
+            "gray": 4,
+            "pink": 5,
+            "black": 2.7,
+            "sst": 8
+        };
+        for (const [color, capacity] of Object.entries(capacities)) {
+            if (lowerTube.includes(color)) return capacity;
+        }
+        return 5;
+    };
+
     const calculatePanelTubes = (panelId) => {
         const panelTests = savedTests.filter(t => {
             try {
@@ -323,10 +347,18 @@ Only return found: false if you truly cannot identify what test they're asking a
                 return false;
             }
         });
-        const tubeCount = {};
+        const tubeVolumes = {};
         panelTests.forEach(test => {
             const tube = test.tube_type || 'Unknown';
-            tubeCount[tube] = (tubeCount[tube] || 0) + 1;
+            const volumeStr = test.volume_required || '0';
+            const volumeNeeded = parseFloat(volumeStr) || 0;
+            tubeVolumes[tube] = (tubeVolumes[tube] || 0) + volumeNeeded;
+        });
+
+        const tubeCount = {};
+        Object.entries(tubeVolumes).forEach(([tube, totalVolume]) => {
+            const capacity = getTubeCapacity(tube);
+            tubeCount[tube] = Math.ceil(totalVolume / capacity);
         });
         return tubeCount;
     };
