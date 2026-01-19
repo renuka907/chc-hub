@@ -5,14 +5,22 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import ReminderEditDialog from "../components/reminders/ReminderEditDialog";
-import { Bell, Plus, Clock, CheckCircle2, AlertCircle, Calendar } from "lucide-react";
+import { Bell, Plus, Clock, CheckCircle2, AlertCircle, Calendar, Trash2, Search } from "lucide-react";
 import { format } from "date-fns";
 
 export default function Reminders() {
     const [showCreateDialog, setShowCreateDialog] = useState(false);
     const [editingReminder, setEditingReminder] = useState(null);
     const [filterStatus, setFilterStatus] = useState("all");
+    const [searchQuery, setSearchQuery] = useState("");
+    const [sortBy, setSortBy] = useState("due_date");
+    const [selectedReminders, setSelectedReminders] = useState(new Set());
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState(null);
     const queryClient = useQueryClient();
 
     const { data: reminders = [], isLoading } = useQuery({
@@ -33,6 +41,41 @@ export default function Reminders() {
         }
     });
 
+    const deleteReminderMutation = useMutation({
+        mutationFn: (id) => base44.entities.Reminder.delete(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['reminders'] });
+            setItemToDelete(null);
+            setShowDeleteDialog(false);
+        }
+    });
+
+    const bulkDeleteMutation = useMutation({
+        mutationFn: async () => {
+            for (const id of selectedReminders) {
+                await base44.entities.Reminder.delete(id);
+            }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['reminders'] });
+            setSelectedReminders(new Set());
+            setShowDeleteDialog(false);
+        }
+    });
+
+    const bulkCompleteMutation = useMutation({
+        mutationFn: async () => {
+            for (const id of selectedReminders) {
+                const reminder = reminders.find(r => r.id === id);
+                await base44.entities.Reminder.update(id, { completed: !reminder?.completed });
+            }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['reminders'] });
+            setSelectedReminders(new Set());
+        }
+    });
+
     const handleToggleComplete = (reminder) => {
         toggleCompleteMutation.mutate({
             id: reminder.id,
@@ -40,11 +83,39 @@ export default function Reminders() {
         });
     };
 
-    const filteredReminders = reminders.filter(reminder => {
-        if (filterStatus === "completed") return reminder.completed;
-        if (filterStatus === "active") return !reminder.completed;
-        return true;
-    });
+    const toggleReminderSelection = (id) => {
+        const newSelection = new Set(selectedReminders);
+        if (newSelection.has(id)) {
+            newSelection.delete(id);
+        } else {
+            newSelection.add(id);
+        }
+        setSelectedReminders(newSelection);
+    };
+
+    const filteredReminders = reminders
+        .filter(reminder => {
+            const matchesStatus = filterStatus === "all" || 
+                (filterStatus === "completed" ? reminder.completed : !reminder.completed);
+            const matchesSearch = reminder.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                reminder.description?.toLowerCase().includes(searchQuery.toLowerCase());
+            return matchesStatus && matchesSearch;
+        })
+        .sort((a, b) => {
+            if (sortBy === "due_date") {
+                if (!a.due_date) return 1;
+                if (!b.due_date) return -1;
+                return new Date(a.due_date) - new Date(b.due_date);
+            }
+            if (sortBy === "priority") {
+                const priorityOrder = { high: 0, medium: 1, low: 2 };
+                return (priorityOrder[a.priority] || 1) - (priorityOrder[b.priority] || 1);
+            }
+            if (sortBy === "created") {
+                return new Date(b.created_date) - new Date(a.created_date);
+            }
+            return 0;
+        });
 
     const priorityColors = {
         low: "bg-blue-100 text-blue-800",
@@ -97,30 +168,97 @@ export default function Reminders() {
                 </div>
             </div>
 
-            {/* Filter Tabs */}
-            <div className="flex gap-2">
-                <Button
-                    variant={filterStatus === "all" ? "default" : "outline"}
-                    onClick={() => setFilterStatus("all")}
-                    className={filterStatus === "all" ? "bg-purple-600" : ""}
-                >
-                    All ({reminders.length})
-                </Button>
-                <Button
-                    variant={filterStatus === "active" ? "default" : "outline"}
-                    onClick={() => setFilterStatus("active")}
-                    className={filterStatus === "active" ? "bg-purple-600" : ""}
-                >
-                    Active ({reminders.filter(r => !r.completed).length})
-                </Button>
-                <Button
-                    variant={filterStatus === "completed" ? "default" : "outline"}
-                    onClick={() => setFilterStatus("completed")}
-                    className={filterStatus === "completed" ? "bg-purple-600" : ""}
-                >
-                    Completed ({reminders.filter(r => r.completed).length})
-                </Button>
-            </div>
+            {/* Search and Filters */}
+            <Card className="bg-white">
+                <CardContent className="pt-6 space-y-4">
+                    <div className="flex gap-2 flex-col md:flex-row">
+                        <div className="flex-1 relative">
+                            <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                            <Input
+                                placeholder="Search reminders..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="pl-10"
+                            />
+                        </div>
+                        <Select value={sortBy} onValueChange={setSortBy}>
+                            <SelectTrigger className="w-full md:w-48">
+                                <SelectValue placeholder="Sort by" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="due_date">Due Date</SelectItem>
+                                <SelectItem value="priority">Priority</SelectItem>
+                                <SelectItem value="created">Recently Added</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    {/* Status Tabs */}
+                    <div className="flex gap-2 flex-wrap">
+                        <Button
+                            variant={filterStatus === "all" ? "default" : "outline"}
+                            onClick={() => setFilterStatus("all")}
+                            className={filterStatus === "all" ? "bg-purple-600" : ""}
+                            size="sm"
+                        >
+                            All ({reminders.length})
+                        </Button>
+                        <Button
+                            variant={filterStatus === "active" ? "default" : "outline"}
+                            onClick={() => setFilterStatus("active")}
+                            className={filterStatus === "active" ? "bg-purple-600" : ""}
+                            size="sm"
+                        >
+                            Active ({reminders.filter(r => !r.completed).length})
+                        </Button>
+                        <Button
+                            variant={filterStatus === "completed" ? "default" : "outline"}
+                            onClick={() => setFilterStatus("completed")}
+                            className={filterStatus === "completed" ? "bg-purple-600" : ""}
+                            size="sm"
+                        >
+                            Completed ({reminders.filter(r => r.completed).length})
+                        </Button>
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Bulk Actions Bar */}
+            {selectedReminders.size > 0 && (
+                <Card className="border-purple-300 bg-purple-50">
+                    <CardContent className="p-4 flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-700">
+                            {selectedReminders.size} selected
+                        </span>
+                        <div className="flex gap-2">
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => bulkCompleteMutation.mutate()}
+                            >
+                                Mark as Complete
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={() => {
+                                    setShowDeleteDialog(true);
+                                    setItemToDelete("bulk");
+                                }}
+                            >
+                                Delete Selected
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => setSelectedReminders(new Set())}
+                            >
+                                Clear
+                            </Button>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
 
             {/* Reminders List */}
             <div className="space-y-3">
@@ -197,16 +335,29 @@ export default function Reminders() {
                                         </div>
                                     </div>
                                     
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => {
-                                            setEditingReminder(reminder);
-                                            setShowCreateDialog(true);
-                                        }}
-                                    >
-                                        Edit
-                                    </Button>
+                                    <div className="flex gap-2">
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => {
+                                                setEditingReminder(reminder);
+                                                setShowCreateDialog(true);
+                                            }}
+                                        >
+                                            Edit
+                                        </Button>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                                            onClick={() => {
+                                                setItemToDelete(reminder.id);
+                                                setShowDeleteDialog(true);
+                                            }}
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </Button>
+                                    </div>
                                 </div>
                             </CardContent>
                         </Card>
@@ -224,6 +375,35 @@ export default function Reminders() {
                     setEditingReminder(null);
                 }}
             />
+
+            {/* Delete Dialog */}
+            <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Reminder{itemToDelete === "bulk" ? "s" : ""}?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            {itemToDelete === "bulk"
+                                ? `Are you sure you want to delete ${selectedReminders.size} reminder${selectedReminders.size !== 1 ? "s" : ""}? This action cannot be undone.`
+                                : "Are you sure you want to delete this reminder? This action cannot be undone."}
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                            className="bg-red-600 hover:bg-red-700"
+                            onClick={() => {
+                                if (itemToDelete === "bulk") {
+                                    bulkDeleteMutation.mutate();
+                                } else {
+                                    deleteReminderMutation.mutate(itemToDelete);
+                                }
+                            }}
+                        >
+                            Delete
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }
