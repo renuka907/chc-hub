@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Users, Mail, Shield, UserPlus, Calendar, Trash2, Edit, UserX, UserCheck, FileDown, CheckCircle2 } from "lucide-react";
 import EditUserDialog from "../components/users/EditUserDialog";
 import RoleManagementDialog from "../components/users/RoleManagementDialog";
+import PermissionsDialog from "../components/users/PermissionsDialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ROLE_LABELS } from "../components/permissions/usePermissions";
 import {
@@ -41,6 +42,8 @@ export default function UserManagement() {
     const [inviteSuccessEmail, setInviteSuccessEmail] = useState(null);
     const [inviteError, setInviteError] = useState(null);
     const [resendingId, setResendingId] = useState(null);
+    const [showPermissionsDialog, setShowPermissionsDialog] = useState(false);
+    const [permissionsUser, setPermissionsUser] = useState(null);
     const queryClient = useQueryClient();
 
     const { data: users = [], isLoading } = useQuery({
@@ -80,6 +83,14 @@ export default function UserManagement() {
         mutationFn: ({ id, data }) => base44.entities.User.update(id, data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['users'] });
+        },
+    });
+
+    const updatePermissionsMutation = useMutation({
+        mutationFn: ({ id, permissions }) => base44.entities.User.update(id, { page_permissions: JSON.stringify(permissions) }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['users'] });
+            setShowPermissionsDialog(false);
         },
     });
 
@@ -317,6 +328,17 @@ export default function UserManagement() {
                                                     variant="outline"
                                                     size="sm"
                                                     onClick={() => {
+                                                        setPermissionsUser(user);
+                                                        setShowPermissionsDialog(true);
+                                                    }}
+                                                >
+                                                    <Shield className="w-3 h-3 mr-1" />
+                                                    Permissions
+                                                </Button>
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => {
                                                         setEditUser(user);
                                                         setShowEditDialog(true);
                                                     }}
@@ -464,6 +486,18 @@ export default function UserManagement() {
                 open={showEditDialog}
                 onOpenChange={setShowEditDialog}
                 user={editUser}
+            />
+
+            <PermissionsDialog
+                open={showPermissionsDialog}
+                onOpenChange={setShowPermissionsDialog}
+                user={permissionsUser}
+                onSave={(permissions) => {
+                    if (permissionsUser?.id) {
+                        updatePermissionsMutation.mutate({ id: permissionsUser.id, permissions });
+                    }
+                }}
+                isSaving={updatePermissionsMutation.isPending}
             />
         </div>
     );
