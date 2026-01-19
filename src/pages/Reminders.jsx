@@ -378,7 +378,7 @@ export default function Reminders() {
             )}
 
             {/* Reminders List */}
-            <div className="space-y-3">
+            <div className="space-y-6">
                 {filteredReminders.length === 0 ? (
                     <Card className="text-center py-12">
                         <CardContent>
@@ -392,106 +392,198 @@ export default function Reminders() {
                         </CardContent>
                     </Card>
                 ) : (
-                    filteredReminders.map(reminder => (
-                        <Card 
-                            key={reminder.id}
-                            className={`transition-all hover:shadow-lg ${
-                                reminder.completed ? 'bg-gray-50 opacity-75' : 'bg-white'
-                            } ${isOverdue(reminder.due_date) && !reminder.completed ? 'border-red-300 border-2' : ''}`}
-                        >
-                            <CardContent className="p-4">
-                                <div className="flex items-start gap-4">
-                                    <Checkbox
-                                        checked={selectedReminders.has(reminder.id)}
-                                        onCheckedChange={() => toggleReminderSelection(reminder.id)}
-                                        className="mt-1"
-                                    />
-                                    <Checkbox
-                                        checked={reminder.completed}
-                                        onCheckedChange={() => handleToggleComplete(reminder)}
-                                        className="mt-1"
-                                    />
-                                    
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <h3 className={`font-semibold text-gray-900 ${
-                                                reminder.completed ? 'line-through text-gray-500' : ''
-                                            }`}>
-                                                {reminder.title}
-                                            </h3>
-                                            <Badge className={priorityColors[reminder.priority]}>
-                                                {getPriorityIcon(reminder.priority)}
-                                                <span className="ml-1">{reminder.priority}</span>
-                                            </Badge>
-                                            {isOverdue(reminder.due_date) && !reminder.completed && (
-                                                <Badge variant="destructive">Overdue</Badge>
-                                            )}
-                                        </div>
-                                        
-                                        {reminder.description && (
-                                            <p className={`text-sm mb-2 ${
-                                                reminder.completed ? 'text-gray-400' : 'text-gray-600'
-                                            }`}>
-                                                {reminder.description}
-                                            </p>
-                                        )}
-                                        
-                                        <div className="flex items-center gap-4 text-sm text-gray-500">
-                                            {reminder.due_date && (
-                                                <div className="flex items-center gap-1">
-                                                    <Calendar className="w-4 h-4" />
-                                                    {format(new Date(reminder.due_date), "MMM d, yyyy h:mm a")}
-                                                </div>
-                                            )}
-                                            {reminder.assigned_to && (
-                                                <div className="flex items-center gap-1">
-                                                    <span className="text-xs">Assigned to:</span>
-                                                    <span className="font-medium">{reminder.assigned_to}</span>
-                                                </div>
-                                            )}
-                                            {reminder.recurrence_type && reminder.recurrence_type !== "none" && (
-                                                <Badge variant="outline" className="text-xs">
-                                                    Recurring: {reminder.recurrence_type}
+                    (() => {
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        const tomorrow = new Date(today);
+                        tomorrow.setDate(tomorrow.getDate() + 1);
+                        const weekEnd = new Date(today);
+                        weekEnd.setDate(weekEnd.getDate() + 7);
+
+                        const groups = {
+                            overdue: [],
+                            today: [],
+                            tomorrow: [],
+                            week: [],
+                            later: [],
+                            noDueDate: []
+                        };
+
+                        filteredReminders.forEach(reminder => {
+                            if (!reminder.due_date) {
+                                groups.noDueDate.push(reminder);
+                            } else {
+                                const dueDate = new Date(reminder.due_date);
+                                dueDate.setHours(0, 0, 0, 0);
+
+                                if (dueDate < today) {
+                                    groups.overdue.push(reminder);
+                                } else if (dueDate.getTime() === today.getTime()) {
+                                    groups.today.push(reminder);
+                                } else if (dueDate.getTime() === tomorrow.getTime()) {
+                                    groups.tomorrow.push(reminder);
+                                } else if (dueDate < weekEnd) {
+                                    groups.week.push(reminder);
+                                } else {
+                                    groups.later.push(reminder);
+                                }
+                            }
+                        });
+
+                        const ReminderCard = ({ reminder }) => (
+                            <Card 
+                                key={reminder.id}
+                                className={`transition-all hover:shadow-lg ${
+                                    reminder.completed ? 'bg-gray-50 opacity-75' : 'bg-white'
+                                } ${isOverdue(reminder.due_date) && !reminder.completed ? 'border-red-300 border-2' : ''}`}
+                            >
+                                <CardContent className="p-4">
+                                    <div className="flex items-start gap-4">
+                                        <Checkbox
+                                            checked={selectedReminders.has(reminder.id)}
+                                            onCheckedChange={() => toggleReminderSelection(reminder.id)}
+                                            className="mt-1"
+                                        />
+                                        <Checkbox
+                                            checked={reminder.completed}
+                                            onCheckedChange={() => handleToggleComplete(reminder)}
+                                            className="mt-1"
+                                        />
+
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <h3 className={`font-semibold text-gray-900 ${
+                                                    reminder.completed ? 'line-through text-gray-500' : ''
+                                                }`}>
+                                                    {reminder.title}
+                                                </h3>
+                                                <Badge className={priorityColors[reminder.priority]}>
+                                                    {getPriorityIcon(reminder.priority)}
+                                                    <span className="ml-1">{reminder.priority}</span>
                                                 </Badge>
+                                                {isOverdue(reminder.due_date) && !reminder.completed && (
+                                                    <Badge variant="destructive">Overdue</Badge>
+                                                )}
+                                            </div>
+
+                                            {reminder.description && (
+                                                <p className={`text-sm mb-2 ${
+                                                    reminder.completed ? 'text-gray-400' : 'text-gray-600'
+                                                }`}>
+                                                    {reminder.description}
+                                                </p>
                                             )}
+
+                                            <div className="flex items-center gap-4 text-sm text-gray-500">
+                                                {reminder.due_date && (
+                                                    <div className="flex items-center gap-1">
+                                                        <Calendar className="w-4 h-4" />
+                                                        {format(new Date(reminder.due_date), "MMM d, yyyy h:mm a")}
+                                                    </div>
+                                                )}
+                                                {reminder.assigned_to && (
+                                                    <div className="flex items-center gap-1">
+                                                        <span className="text-xs">Assigned to:</span>
+                                                        <span className="font-medium">{reminder.assigned_to}</span>
+                                                    </div>
+                                                )}
+                                                {reminder.recurrence_type && reminder.recurrence_type !== "none" && (
+                                                    <Badge variant="outline" className="text-xs">
+                                                        Recurring: {reminder.recurrence_type}
+                                                    </Badge>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="flex gap-2">
+                                             <Button
+                                                  variant="ghost"
+                                                  size="sm"
+                                                  onClick={() => handleSnoozeReminder(reminder)}
+                                                  title="Hide for 24 hours"
+                                              >
+                                                  Snooze
+                                              </Button>
+                                              <Button
+                                                  variant="ghost"
+                                                  size="sm"
+                                                  onClick={() => {
+                                                      setEditingReminder(reminder);
+                                                      setShowCreateDialog(true);
+                                                  }}
+                                              >
+                                                  Edit
+                                              </Button>
+                                              <Button
+                                                  variant="ghost"
+                                                  size="icon"
+                                                  className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                                                  onClick={() => {
+                                                      setItemToDelete(reminder.id);
+                                                      setShowDeleteDialog(true);
+                                                  }}
+                                              >
+                                                  <Trash2 className="w-4 h-4" />
+                                              </Button>
+                                          </div>
+                                     </div>
+                                </CardContent>
+                            </Card>
+                        );
+
+                        return (
+                            <>
+                                {groups.overdue.length > 0 && (
+                                    <div>
+                                        <h2 className="text-lg font-semibold text-red-600 mb-3">Overdue</h2>
+                                        <div className="space-y-3">
+                                            {groups.overdue.map(reminder => <ReminderCard key={reminder.id} reminder={reminder} />)}
                                         </div>
                                     </div>
-                                    
-                                    <div className="flex gap-2">
-                                         <Button
-                                             variant="ghost"
-                                             size="sm"
-                                             onClick={() => handleSnoozeReminder(reminder)}
-                                             title="Hide for 24 hours"
-                                         >
-                                             Snooze
-                                         </Button>
-                                         <Button
-                                             variant="ghost"
-                                             size="sm"
-                                             onClick={() => {
-                                                 setEditingReminder(reminder);
-                                                 setShowCreateDialog(true);
-                                             }}
-                                         >
-                                             Edit
-                                         </Button>
-                                         <Button
-                                             variant="ghost"
-                                             size="icon"
-                                             className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                                             onClick={() => {
-                                                 setItemToDelete(reminder.id);
-                                                 setShowDeleteDialog(true);
-                                             }}
-                                         >
-                                             <Trash2 className="w-4 h-4" />
-                                         </Button>
-                                     </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))
+                                )}
+                                {groups.today.length > 0 && (
+                                    <div>
+                                        <h2 className="text-lg font-semibold text-blue-600 mb-3">Today</h2>
+                                        <div className="space-y-3">
+                                            {groups.today.map(reminder => <ReminderCard key={reminder.id} reminder={reminder} />)}
+                                        </div>
+                                    </div>
+                                )}
+                                {groups.tomorrow.length > 0 && (
+                                    <div>
+                                        <h2 className="text-lg font-semibold text-purple-600 mb-3">Tomorrow</h2>
+                                        <div className="space-y-3">
+                                            {groups.tomorrow.map(reminder => <ReminderCard key={reminder.id} reminder={reminder} />)}
+                                        </div>
+                                    </div>
+                                )}
+                                {groups.week.length > 0 && (
+                                    <div>
+                                        <h2 className="text-lg font-semibold text-green-600 mb-3">This Week</h2>
+                                        <div className="space-y-3">
+                                            {groups.week.map(reminder => <ReminderCard key={reminder.id} reminder={reminder} />)}
+                                        </div>
+                                    </div>
+                                )}
+                                {groups.later.length > 0 && (
+                                    <div>
+                                        <h2 className="text-lg font-semibold text-gray-600 mb-3">Later</h2>
+                                        <div className="space-y-3">
+                                            {groups.later.map(reminder => <ReminderCard key={reminder.id} reminder={reminder} />)}
+                                        </div>
+                                    </div>
+                                )}
+                                {groups.noDueDate.length > 0 && (
+                                    <div>
+                                        <h2 className="text-lg font-semibold text-gray-500 mb-3">No Due Date</h2>
+                                        <div className="space-y-3">
+                                            {groups.noDueDate.map(reminder => <ReminderCard key={reminder.id} reminder={reminder} />)}
+                                        </div>
+                                    </div>
+                                )}
+                            </>
+                        );
+                    })()
                 )}
             </div>
 
