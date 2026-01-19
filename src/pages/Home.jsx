@@ -90,15 +90,15 @@ export default function Home() {
                                         <span className="text-lg">✓</span>
                                     </div>
                                 </div>
-                                <div className="flex flex-col items-center text-center space-y-4">
-                                    <div className="w-16 h-16 bg-white/60 rounded-2xl flex items-center justify-center shadow-sm">
-                                        <Icon className="w-8 h-8 text-gray-700" />
+                                <div className="flex flex-col items-center text-center space-y-2">
+                                    <div className="w-12 h-12 bg-white/60 rounded-xl flex items-center justify-center shadow-sm">
+                                        <Icon className="w-6 h-6 text-gray-700" />
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-bold text-gray-900 mb-2">
+                                        <h3 className="text-base font-bold text-gray-900 mb-1">
                                             {link.title}
                                         </h3>
-                                        <p className="text-sm text-gray-700">
+                                        <p className="text-xs text-gray-700">
                                             {link.description}
                                         </p>
                                     </div>
