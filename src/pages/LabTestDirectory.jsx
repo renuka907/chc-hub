@@ -376,8 +376,8 @@ Only return found: false if you truly cannot identify what test they're asking a
             tubeCount[tube] = Math.ceil(totalVolume / capacity);
         });
 
-        // Override for Female HRT- Initial Panel - force red-top to 2
-        if (panelName?.trim() === "Female HRT- Initial Panel") {
+        // Override for Female HRT-Initial Panel - force red-top to 2
+        if (panelName?.trim() === "Female HRT-Initial") {
             tubeCount["Red-top"] = 2;
         }
 
