@@ -523,23 +523,26 @@ export default function InventoryManagement() {
                                                  isLowStock ? 'border-l-red-300 bg-red-50' : 
                                                  itemExpiringSoon ? 'border-l-amber-300 bg-amber-50' : 'border-l-gray-300'
                                              }`}>
-                                                 <CardContent className="p-4">
-                                                     <div className="flex items-start justify-between gap-6">
-                                                         {/* Checkbox */}
+                                                 <CardContent className="p-4 space-y-3">
+                                                     {/* Header row with item name and checkbox */}
+                                                     <div className="flex items-center justify-between gap-3">
+                                                         <div className="flex-1 min-w-0">
+                                                             <div className="font-semibold text-lg text-gray-900">{item.item_name}</div>
+                                                             {item.sku && (
+                                                                 <div className="text-xs text-gray-500">SKU: {item.sku}</div>
+                                                             )}
+                                                         </div>
                                                          {canEdit && (
                                                              <Checkbox
                                                                  checked={selectedItems.has(item.id)}
                                                                  onCheckedChange={() => toggleItemSelection(item.id)}
-                                                                 className="mt-1 flex-shrink-0"
+                                                                 className="flex-shrink-0"
                                                              />
                                                          )}
-                                                         {/* Item name & badges - 30% */}
-                                                         <div className="flex-1 min-w-0">
-                                                             <div className="font-semibold text-gray-900">{item.item_name}</div>
-                                                             {item.sku && (
-                                                                 <div className="text-xs text-gray-500">SKU: {item.sku}</div>
-                                                             )}
-                                                             <div className="flex flex-wrap gap-1 mt-1">
+                                                     </div>
+
+                                                     {/* Badges row */}
+                                                     <div className="flex flex-wrap gap-1">
                                                                  <Badge className={`${typeColors[item.item_type]} text-xs`}>
                                                                      {item.item_type}
                                                                  </Badge>
