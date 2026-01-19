@@ -25,6 +25,7 @@ import QuotesManagement from './pages/QuotesManagement';
 import Reminders from './pages/Reminders';
 import UserManagement from './pages/UserManagement';
 import ViewSharedForm from './pages/ViewSharedForm';
+import MedicationCalculator from './pages/MedicationCalculator';
 import __Layout from './Layout.jsx';
 
 
@@ -56,6 +57,7 @@ export const PAGES = {
     "Reminders": Reminders,
     "UserManagement": UserManagement,
     "ViewSharedForm": ViewSharedForm,
+    "MedicationCalculator": MedicationCalculator,
 }
 
 export const pagesConfig = {
