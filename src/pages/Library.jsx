@@ -400,45 +400,57 @@ export default function Library() {
                             </CardContent>
                         </Card>
                     ) : (
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {filteredEducation.map(topic => (
-                                <div key={topic.id} className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group h-full relative">
-                                    <button
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            toggleEducationFavorite(topic.id, topic.is_favorite);
-                                        }}
-                                        className="absolute top-4 right-4 z-10 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center hover:scale-110 transition-transform"
-                                    >
-                                        <Star className={`w-4 h-4 ${topic.is_favorite ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`} />
-                                    </button>
-                                    <Link to={createPageUrl(`EducationDetail?id=${topic.id}`)}>
-                                        <div className="p-6">
-                                            <div className="flex items-start justify-between mb-3">
-                                                <span className={`px-3 py-1 rounded-xl text-xs font-medium ${categoryColors[topic.category]}`}>
-                                                    {topic.category}
-                                                </span>
-                                                <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-purple-600 transition-colors" />
-                                            </div>
-                                            <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors">
-                                                {topic.title}
-                                            </h3>
-                                            {topic.summary && (
-                                                <p className="text-sm text-gray-600 line-clamp-3 mb-3">
-                                                    {topic.summary}
-                                                </p>
-                                            )}
-                                            {topic.last_reviewed && (
-                                                <div className="flex items-center text-xs text-gray-500 pt-3 border-t">
-                                                    <CalendarIcon className="w-3 h-3 mr-1" />
-                                                    Reviewed: {new Date(topic.last_reviewed).toLocaleDateString()}
+                        <div className="space-y-6">
+                            {["Gynecology", "Hormone Replacement Therapy", "Mens Health", "Medication Education"].map(category => {
+                                const categoryTopics = filteredEducation.filter(t => t.category === category);
+                                if (categoryTopics.length === 0) return null;
+                                
+                                return (
+                                    <div key={category} className="bg-white rounded-2xl p-6 shadow-md">
+                                        <h3 className="text-xl font-bold mb-4 text-gray-900 flex items-center">
+                                            <span className={`px-3 py-1 rounded-lg text-sm mr-3 ${categoryColors[category]}`}>
+                                                {category}
+                                            </span>
+                                            <span className="text-gray-400 text-sm font-normal">({categoryTopics.length})</span>
+                                        </h3>
+                                        <div className="space-y-2">
+                                            {categoryTopics.map(topic => (
+                                                <div key={topic.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-purple-50 transition-colors group">
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            toggleEducationFavorite(topic.id, topic.is_favorite);
+                                                        }}
+                                                        className="flex-shrink-0 w-6 h-6 flex items-center justify-center hover:scale-110 transition-transform"
+                                                    >
+                                                        <Star className={`w-4 h-4 ${topic.is_favorite ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`} />
+                                                    </button>
+                                                    <Link to={createPageUrl(`EducationDetail?id=${topic.id}`)} className="flex-1 flex items-center justify-between min-w-0">
+                                                        <div className="flex-1 min-w-0 mr-4">
+                                                            <h4 className="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors truncate">
+                                                                {topic.title}
+                                                            </h4>
+                                                            {topic.summary && (
+                                                                <p className="text-sm text-gray-600 line-clamp-1">
+                                                                    {topic.summary}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                        {topic.last_reviewed && (
+                                                            <div className="flex items-center text-xs text-gray-500 flex-shrink-0">
+                                                                <CalendarIcon className="w-3 h-3 mr-1" />
+                                                                {new Date(topic.last_reviewed).toLocaleDateString()}
+                                                            </div>
+                                                        )}
+                                                    </Link>
+                                                    <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-purple-600 transition-colors flex-shrink-0" />
                                                 </div>
-                                            )}
+                                            ))}
                                         </div>
-                                    </Link>
-                                </div>
-                            ))}
+                                    </div>
+                                );
+                            })}
                         </div>
                     )}
                 </TabsContent>
