@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import ReminderEditDialog from "../components/reminders/ReminderEditDialog";
 import NotificationPreferencesDialog from "../components/reminders/NotificationPreferencesDialog";
+import CalendarView from "../components/reminders/CalendarView";
 import { Bell, Plus, Clock, CheckCircle2, AlertCircle, Calendar, Trash2, Search, X, Settings } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -25,6 +26,8 @@ export default function Reminders() {
     const [itemToDelete, setItemToDelete] = useState(null);
     const [dueReminders, setDueReminders] = useState([]);
     const [showNotificationPrefs, setShowNotificationPrefs] = useState(false);
+    const [viewMode, setViewMode] = useState("list"); // "list" or "calendar"
+    const [calendarViewMode, setCalendarViewMode] = useState("month"); // "month", "week", "day"
     const queryClient = useQueryClient();
 
     const { data: reminders = [], isLoading } = useQuery({
@@ -377,7 +380,35 @@ export default function Reminders() {
                 </Card>
             )}
 
+            {/* View Mode Toggle */}
+            <div className="flex gap-2 justify-end mb-4">
+                <Button
+                    variant={viewMode === "list" ? "default" : "outline"}
+                    onClick={() => setViewMode("list")}
+                    className={viewMode === "list" ? "bg-purple-600" : ""}
+                >
+                    List View
+                </Button>
+                <Button
+                    variant={viewMode === "calendar" ? "default" : "outline"}
+                    onClick={() => setViewMode("calendar")}
+                    className={viewMode === "calendar" ? "bg-purple-600" : ""}
+                >
+                    Calendar View
+                </Button>
+            </div>
+
+            {/* Calendar View */}
+            {viewMode === "calendar" && (
+                <CalendarView 
+                    reminders={reminders} 
+                    viewMode={calendarViewMode}
+                    onViewChange={setCalendarViewMode}
+                />
+            )}
+
             {/* Reminders List */}
+            {viewMode === "list" && (
             <div className="space-y-3">
                 {filteredReminders.length === 0 ? (
                     <Card className="text-center py-12">
@@ -494,6 +525,7 @@ export default function Reminders() {
                     ))
                 )}
             </div>
+            )}
 
             <ReminderEditDialog
                 open={showCreateDialog}
