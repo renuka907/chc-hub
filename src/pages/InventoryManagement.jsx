@@ -4,6 +4,7 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import SearchBar from "../components/SearchBar";
 import InventoryForm from "../components/inventory/InventoryForm";
 import InventoryAuditForm from "../components/inventory/InventoryAuditForm";
