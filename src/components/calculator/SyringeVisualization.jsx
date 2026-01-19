@@ -64,16 +64,28 @@ export default function SyringeVisualization({ result }) {
 
     const renderInsulin100Syringe = () => {
         const percentage = (units / 100) * 100;
-        const marks = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+        const majorMarks = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+        const minorMarks = [];
+        for (let i = 0; i <= 100; i += 5) {
+            if (!majorMarks.includes(i)) minorMarks.push(i);
+        }
         return (
             <div className="space-y-2">
                 <p className="text-sm font-semibold text-gray-700">100 Unit Insulin Syringe</p>
                 <div className="relative h-24 bg-gradient-to-r from-blue-50 to-blue-100 rounded-full border-2 border-blue-400">
-                    {marks.map((mark) => {
+                    {minorMarks.map((mark) => {
+                        const markPercentage = (mark / 100) * 100;
+                        return (
+                            <div key={`minor-${mark}`} className="absolute top-0 flex flex-col items-center" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
+                                <div className="w-0.5 bg-gray-400" style={{ height: "8px" }} />
+                            </div>
+                        );
+                    })}
+                    {majorMarks.map((mark) => {
                         const markPercentage = (mark / 100) * 100;
                         return (
                             <div key={mark} className="absolute top-0 flex flex-col items-center" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
-                                <div className="w-1 bg-gray-800" style={{ height: mark % 20 === 0 ? "16px" : "10px" }} />
+                                <div className="w-1 bg-gray-800" style={{ height: "16px" }} />
                                 <span className="text-xs font-semibold text-gray-700 mt-1">{mark}</span>
                             </div>
                         );
