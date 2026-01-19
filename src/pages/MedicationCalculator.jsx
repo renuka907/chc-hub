@@ -18,9 +18,10 @@ export default function MedicationCalculator() {
 
         const amount = parseFloat(amountNeeded);
         const strength = parseFloat(vialStrength);
+        const units = unitsPerMl ? parseFloat(unitsPerMl) : null;
 
         if (!amountNeeded || !vialStrength) {
-            setError("Please fill in both fields");
+            setError("Please fill in amount needed and vial strength");
             return;
         }
 
@@ -34,12 +35,19 @@ export default function MedicationCalculator() {
             return;
         }
 
+        if (units !== null && (isNaN(units) || units <= 0)) {
+            setError("Units per ml must be a valid number greater than 0");
+            return;
+        }
+
         const volumeToDrawMl = amount / strength;
         const volumeToDrawCc = volumeToDrawMl;
+        const insulinUnits = units ? Math.round(volumeToDrawMl * units) : null;
 
         setResult({
             ml: volumeToDrawMl.toFixed(3),
             cc: volumeToDrawCc.toFixed(3),
+            units: insulinUnits,
             amountNeeded: amount,
             vialStrength: strength
         });
