@@ -100,6 +100,47 @@ CRITICAL INSTRUCTION - YOU MUST FOLLOW THIS:
                 return days >= 0 && days <= 30;
             });
 
+            // Fetch usage data for insights
+            let usageInsights = "";
+            try {
+                const usageLogs = await base44.entities.UsageLog.list('-usage_date', 100);
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                
+                const recentUsage = usageLogs.filter(log => new Date(log.usage_date) >= thirtyDaysAgo);
+                
+                const itemPopularity = {};
+                recentUsage.forEach(log => {
+                    if (!itemPopularity[log.item_name]) {
+                        itemPopularity[log.item_name] = { times_used: 0, total_qty: 0 };
+                    }
+                    itemPopularity[log.item_name].times_used += 1;
+                    itemPopularity[log.item_name].total_qty += log.quantity_used;
+                });
+
+                const wasteRecords = recentUsage.filter(l => l.usage_reason === 'waste' || l.usage_reason === 'expired');
+                
+                usageInsights = `
+
+USAGE DATA FROM LAST 30 DAYS:
+Most Used Items:
+${JSON.stringify(
+    Object.entries(itemPopularity)
+        .sort((a, b) => b[1].total_qty - a[1].total_qty)
+        .slice(0, 5)
+        .map(([name, data]) => ({
+            item: name,
+            usage_count: data.times_used,
+            total_consumed: data.total_qty
+        })), null, 2
+)}
+
+Waste/Expired Records: ${wasteRecords.length}
+${wasteRecords.length > 0 ? `Top Waste Items: ${wasteRecords.map(r => r.item_name).slice(0, 3).join(', ')}` : ''}`;
+            } catch (e) {
+                usageInsights = "\n(Usage data unavailable)";
+            }
+
             const response = await base44.integrations.Core.InvokeLLM({
                 prompt: `You are an inventory management expert. Analyze this inventory data and provide actionable recommendations:
 
@@ -120,6 +161,7 @@ ${JSON.stringify(expiringSoon.map(item => ({
     expiry: item.expiry_date,
     quantity: item.quantity
 })), null, 2)}
+${usageInsights}
 
 CRITICAL INSTRUCTION - YOU MUST FOLLOW THIS FOR ALL ITEMS:
 - EVERY item you mention MUST include its clinic/building location in parentheses immediately after the name
@@ -129,10 +171,11 @@ CRITICAL INSTRUCTION - YOU MUST FOLLOW THIS FOR ALL ITEMS:
 - NEVER mention an item without its clinic location
 
 Provide:
-1. **Priority Reorder List**: Items that need immediate attention with suggested quantities
+1. **Priority Reorder List**: Items that need immediate attention with suggested quantities based on usage patterns
 2. **Expiry Alerts**: Actions to take for items expiring soon
-3. **Cost Optimization**: Any opportunities to reduce costs or improve ordering
-4. **General Recommendations**: Overall inventory health insights
+3. **Usage Insights**: Observations about popular items and waste trends
+4. **Cost Optimization**: Any opportunities to reduce costs or improve ordering based on usage data
+5. **General Recommendations**: Overall inventory health insights
 
 Be specific and actionable.`,
                 add_context_from_internet: false
