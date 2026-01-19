@@ -91,6 +91,15 @@ export default function ProviderReferral() {
         setTimeout(() => newWindow.print(), 250);
     };
 
+    const handleEditProvider = (provider) => {
+        setEditingProvider(provider);
+        setShowEditDialog(true);
+    };
+
+    const handleSaveProvider = () => {
+        queryClient.invalidateQueries({ queryKey: ['providers'] });
+    };
+
     return (
         <div className="space-y-6">
             {/* Header */}
