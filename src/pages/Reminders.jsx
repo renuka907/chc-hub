@@ -285,6 +285,11 @@ export default function Reminders() {
                             <CardContent className="p-4">
                                 <div className="flex items-start gap-4">
                                     <Checkbox
+                                        checked={selectedReminders.has(reminder.id)}
+                                        onCheckedChange={() => toggleReminderSelection(reminder.id)}
+                                        className="mt-1"
+                                    />
+                                    <Checkbox
                                         checked={reminder.completed}
                                         onCheckedChange={() => handleToggleComplete(reminder)}
                                         className="mt-1"
