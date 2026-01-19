@@ -6,6 +6,13 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Send, Bot, Loader2, Mic, MicOff, Printer, Download, RefreshCw } from "lucide-react";
 import { format } from "date-fns";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 export default function AgentChat({ agentName }) {
     const [message, setMessage] = useState("");
@@ -13,6 +20,7 @@ export default function AgentChat({ agentName }) {
     const [messages, setMessages] = useState([]);
     const [isProcessing, setIsProcessing] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
+    const [selectedLocation, setSelectedLocation] = useState("all");
     const messagesEndRef = useRef(null);
     const recognitionRef = useRef(null);
     const timeoutRef = useRef(null);
@@ -22,6 +30,11 @@ export default function AgentChat({ agentName }) {
     const { data: user } = useQuery({
         queryKey: ['currentUser'],
         queryFn: () => base44.auth.me(),
+    });
+
+    const { data: locations = [] } = useQuery({
+        queryKey: ['clinicLocations'],
+        queryFn: () => base44.entities.ClinicLocation.list(),
     });
 
     // Load or create conversation on mount
