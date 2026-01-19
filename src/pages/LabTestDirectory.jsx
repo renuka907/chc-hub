@@ -14,6 +14,8 @@ export default function LabTestDirectory() {
     const [searchQuery, setSearchQuery] = useState("");
     const [isSearching, setIsSearching] = useState(false);
     const [searchResults, setSearchResults] = useState(null);
+    const [showPanelForm, setShowPanelForm] = useState(false);
+    const [newPanelName, setNewPanelName] = useState("");
     const queryClient = useQueryClient();
     const { can } = usePermissions();
 
