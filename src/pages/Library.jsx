@@ -444,7 +444,16 @@ export default function Library() {
                                                             </div>
                                                         )}
                                                     </Link>
-                                                    <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-purple-600 transition-colors flex-shrink-0" />
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            window.open(createPageUrl(`EducationDetail?id=${topic.id}&autoprint=true`), '_blank');
+                                                        }}
+                                                        className="flex-shrink-0 w-6 h-6 flex items-center justify-center hover:scale-110 transition-transform"
+                                                    >
+                                                        <Printer className="w-4 h-4 text-gray-400 group-hover:text-purple-600 transition-colors" />
+                                                    </button>
                                                 </div>
                                             ))}
                                         </div>
@@ -521,7 +530,17 @@ export default function Library() {
                                                             <Badge variant="outline" className="flex-shrink-0">v{instruction.version}</Badge>
                                                         )}
                                                     </Link>
-                                                    <Printer className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors flex-shrink-0" />
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            window.open(createPageUrl(`AftercareDetail?id=${instruction.id}`), '_blank');
+                                                            setTimeout(() => window.print(), 500);
+                                                        }}
+                                                        className="flex-shrink-0 w-6 h-6 flex items-center justify-center hover:scale-110 transition-transform"
+                                                    >
+                                                        <Printer className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                                                    </button>
                                                 </div>
                                             ))}
                                         </div>
