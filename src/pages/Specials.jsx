@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Upload, X, Loader2, FileUp, Archive, Search, Eye } from "lucide-react";
+import { Upload, X, Loader2, FileUp, Archive, Search, Eye, Edit } from "lucide-react";
 import { format } from "date-fns";
 import PreviewModal from "@/components/specials/PreviewModal";
+import EditSpecialDialog from "@/components/specials/EditSpecialDialog";
 
 export default function SpecialsPage() {
     const [uploading, setUploading] = useState(false);

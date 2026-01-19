@@ -27,10 +27,10 @@ import ProviderReferral from './pages/ProviderReferral';
 import QuoteDetail from './pages/QuoteDetail';
 import QuotesManagement from './pages/QuotesManagement';
 import Reminders from './pages/Reminders';
+import Specials from './pages/Specials';
 import UserManagement from './pages/UserManagement';
 import UserProfile from './pages/UserProfile';
 import ViewSharedForm from './pages/ViewSharedForm';
-import Specials from './pages/Specials';
 import __Layout from './Layout.jsx';
 
 
@@ -64,10 +64,10 @@ export const PAGES = {
     "QuoteDetail": QuoteDetail,
     "QuotesManagement": QuotesManagement,
     "Reminders": Reminders,
+    "Specials": Specials,
     "UserManagement": UserManagement,
     "UserProfile": UserProfile,
     "ViewSharedForm": ViewSharedForm,
-    "Specials": Specials,
 }
 
 export const pagesConfig = {
