@@ -132,61 +132,14 @@ export default function LabTestDirectory() {
         });
     }, [savedTests]);
 
-    const handleAISearch = async () => {
+    const handleSearch = async () => {
         if (!searchQuery.trim()) {
-            toast.error("Please enter a test name, symptom, or condition");
+            toast.error("Please enter a test name");
             return;
         }
 
         setIsSearching(true);
         setSearchResults(null);
-
-        try {
-            const response = await base44.integrations.Core.InvokeLLM({
-                prompt: `Analyze this medical query: "${searchQuery}"
-
-    Determine if this is:
-    1. A direct lab test search (e.g., "CBC", "TSH")
-    2. A symptom/condition-based query (e.g., "check my liver function", "test for diabetes")
-    3. A panel query (e.g., "annual physical tests", "hormone panel")
-
-    For symptom/condition queries, recommend relevant lab tests.
-    For panel queries, identify which common medical panels apply.
-
-    If it's a direct test, provide that test info.
-    If it's symptoms/conditions, provide 2-3 most relevant tests to screen for those issues.
-
-    Return the relevant test name(s) and any matching panel names from: Annual Physical, Hormone Panel, Metabolic Panel, Thyroid Panel, Lipid Panel, Diabetes Screening, Liver Function, Kidney Function, Anemia Panel, Vitamin Panel`,
-                add_context_from_internet: false,
-                response_json_schema: {
-                    type: "object",
-                    properties: {
-                        query_type: { type: "string", enum: ["direct_test", "symptoms", "panel"] },
-                        primary_test: { type: "string" },
-                        related_tests: { type: "array", items: { type: "string" } },
-                        suggested_panels: { type: "array", items: { type: "string" } },
-                        interpretation: { type: "string" }
-                    }
-                }
-            });
-
-            setSearchResults(response);
-        } catch (error) {
-            toast.error("Failed to process query");
-            console.error(error);
-        } finally {
-            setIsSearching(false);
-        }
-    };
-
-    const handleSearch = async () => {
-            if (!searchQuery.trim()) {
-                toast.error("Please enter a test name");
-                return;
-            }
-
-            setIsSearching(true);
-            setSearchResults(null);
 
         try {
             const response = await base44.integrations.Core.InvokeLLM({
@@ -347,198 +300,146 @@ Only return found: false if you truly cannot identify what test they're asking a
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <Search className="w-5 h-5" />
-                        Smart Lab Test Search
+                        Search Quest Diagnostics
                     </CardTitle>
-                    <p className="text-sm text-gray-600 mt-2">Search by test name, code, symptoms, or conditions</p>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="flex gap-2">
                         <Input
-                            placeholder="e.g., CBC, check liver health, feeling tired, diabetes screening..."
+                            placeholder="Search by test name, code, or abbreviation (e.g., CBC, 7336, TSH)"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            onKeyPress={(e) => e.key === 'Enter' && handleAISearch()}
+                            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                         />
                         <Button 
-                            onClick={handleAISearch} 
+                            onClick={handleSearch} 
                             disabled={isSearching}
-                            className="bg-purple-600 hover:bg-purple-700"
+                            className="bg-blue-600 hover:bg-blue-700"
                         >
                             {isSearching ? (
                                 <>
                                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                    AI Search...
+                                    Searching...
                                 </>
                             ) : (
                                 <>
                                     <Search className="w-4 h-4 mr-2" />
-                                    AI Search
+                                    Search
                                 </>
                             )}
                         </Button>
                     </div>
 
-                    {/* AI Search Results */}
-                    {searchResults && searchResults.query_type ? (
+                    {/* Search Results */}
+                    {searchResults && (
                         <div className="space-y-4 mt-4">
-                            <Card className="border-purple-200 bg-purple-50">
-                                <CardContent className="pt-6 space-y-4">
-                                    <div>
-                                        <p className="text-sm font-semibold text-gray-700 mb-2">AI Interpretation</p>
-                                        <p className="text-sm text-gray-800">{searchResults.interpretation}</p>
-                                    </div>
-
-                                    {searchResults.suggested_panels?.length > 0 && (
-                                        <div>
-                                            <p className="text-sm font-semibold text-gray-700 mb-2">Matching Panels</p>
-                                            <div className="flex flex-wrap gap-2">
-                                                {searchResults.suggested_panels.map((panelName, idx) => {
-                                                    const matchedPanel = panels.find(p => 
-                                                        p.panel_name.toLowerCase().includes(panelName.toLowerCase()) ||
-                                                        panelName.toLowerCase().includes(p.panel_name.toLowerCase())
-                                                    );
-                                                    return (
-                                                        <Badge 
-                                                            key={idx} 
-                                                            className={matchedPanel ? "bg-green-200 text-green-900 cursor-pointer" : "bg-gray-200 text-gray-900"}
-                                                            title={matchedPanel ? "Already in directory" : "Not yet created"}
-                                                        >
-                                                            {panelName}
-                                                        </Badge>
-                                                    );
-                                                })}
+                            {searchResults.found ? (
+                                <Card className="border-blue-200 bg-blue-50">
+                                    <CardContent className="pt-6 space-y-4">
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex-1">
+                                                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                                                    {searchResults.test_name}
+                                                </h3>
+                                                {searchResults.test_code && (
+                                                    <Badge variant="outline" className="mb-2">
+                                                        Code: {searchResults.test_code}
+                                                    </Badge>
+                                                )}
                                             </div>
+                                            <Button
+                                                size="sm"
+                                                onClick={() => handleSaveTest(searchResults)}
+                                                disabled={saveTestMutation.isPending}
+                                                className="text-black"
+                                            >
+                                                <Plus className="w-4 h-4 mr-2" />
+                                                Save to Directory
+                                            </Button>
                                         </div>
-                                    )}
 
-                                    {searchResults.primary_test && (
-                                        <div>
-                                            <p className="text-sm font-semibold text-gray-700 mb-2">Primary Test</p>
-                                            <p className="text-sm text-gray-800">{searchResults.primary_test}</p>
+                                        <div className="grid md:grid-cols-2 gap-4">
+                                            <div>
+                                                <p className="text-sm font-semibold text-gray-700 mb-1">Tube Type</p>
+                                                <Badge className={getTubeColor(searchResults.tube_type)}>
+                                                    <TestTube className="w-3 h-3 mr-1" />
+                                                    {searchResults.tube_type}
+                                                </Badge>
+                                            </div>
+                                            {searchResults.specimen_type && (
+                                                <div>
+                                                    <p className="text-sm font-semibold text-gray-700 mb-1">Specimen Type</p>
+                                                    <p className="text-sm text-gray-800">{searchResults.specimen_type}</p>
+                                                </div>
+                                            )}
+                                            {searchResults.volume_required && (
+                                                <div>
+                                                    <p className="text-sm font-semibold text-gray-700 mb-1">Volume Required</p>
+                                                    <p className="text-sm text-gray-800">{searchResults.volume_required}</p>
+                                                </div>
+                                            )}
+                                            {searchResults.category && (
+                                                <div>
+                                                    <p className="text-sm font-semibold text-gray-700 mb-1">Category</p>
+                                                    <Badge variant="outline">{searchResults.category}</Badge>
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
 
-                                    {searchResults.related_tests?.length > 0 && (
-                                        <div>
-                                            <p className="text-sm font-semibold text-gray-700 mb-2">Related Tests</p>
-                                            <ul className="text-sm space-y-1">
-                                                {searchResults.related_tests.map((test, idx) => (
-                                                    <li key={idx} className="text-gray-800">• {test}</li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-                                </CardContent>
-                            </Card>
-                        </div>
-                    ) : null}
-
-                    {/* Quest Diagnostics Search Results */}
-                    {searchResults && searchResults.found ? (
-                        <Card className="border-blue-200 bg-blue-50">
-                            <CardContent className="pt-6 space-y-4">
-                                <div className="flex items-start justify-between">
-                                    <div className="flex-1">
-                                        <h3 className="text-xl font-bold text-gray-900 mb-2">
-                                            {searchResults.test_name}
-                                        </h3>
-                                        {searchResults.test_code && (
-                                            <Badge variant="outline" className="mb-2">
-                                                Code: {searchResults.test_code}
-                                            </Badge>
+                                        {searchResults.collection_instructions && (
+                                            <div>
+                                                <p className="text-sm font-semibold text-gray-700 mb-1">Collection Instructions</p>
+                                                <p className="text-sm text-gray-800">{searchResults.collection_instructions}</p>
+                                            </div>
                                         )}
-                                    </div>
-                                    <Button
-                                        size="sm"
-                                        onClick={() => handleSaveTest(searchResults)}
-                                        disabled={saveTestMutation.isPending}
-                                        className="text-black"
-                                    >
-                                        <Plus className="w-4 h-4 mr-2" />
-                                        Save to Directory
-                                    </Button>
-                                </div>
 
-                                <div className="grid md:grid-cols-2 gap-4">
-                                    <div>
-                                        <p className="text-sm font-semibold text-gray-700 mb-1">Tube Type</p>
-                                        <Badge className={getTubeColor(searchResults.tube_type)}>
-                                            <TestTube className="w-3 h-3 mr-1" />
-                                            {searchResults.tube_type}
-                                        </Badge>
-                                    </div>
-                                    {searchResults.specimen_type && (
-                                        <div>
-                                            <p className="text-sm font-semibold text-gray-700 mb-1">Specimen Type</p>
-                                            <p className="text-sm text-gray-800">{searchResults.specimen_type}</p>
-                                        </div>
-                                    )}
-                                    {searchResults.volume_required && (
-                                        <div>
-                                            <p className="text-sm font-semibold text-gray-700 mb-1">Volume Required</p>
-                                            <p className="text-sm text-gray-800">{searchResults.volume_required}</p>
-                                        </div>
-                                    )}
-                                    {searchResults.category && (
-                                        <div>
-                                            <p className="text-sm font-semibold text-gray-700 mb-1">Category</p>
-                                            <Badge variant="outline">{searchResults.category}</Badge>
-                                        </div>
-                                    )}
-                                </div>
+                                        {searchResults.storage_requirements && (
+                                            <div>
+                                                <p className="text-sm font-semibold text-gray-700 mb-1">Storage Requirements</p>
+                                                <p className="text-sm text-gray-800">{searchResults.storage_requirements}</p>
+                                            </div>
+                                        )}
 
-                                {searchResults.collection_instructions && (
-                                    <div>
-                                        <p className="text-sm font-semibold text-gray-700 mb-1">Collection Instructions</p>
-                                        <p className="text-sm text-gray-800">{searchResults.collection_instructions}</p>
-                                    </div>
-                                )}
+                                        {searchResults.notes && (
+                                            <Alert>
+                                                <AlertCircle className="h-4 w-4" />
+                                                <AlertDescription>{searchResults.notes}</AlertDescription>
+                                            </Alert>
+                                        )}
 
-                                {searchResults.storage_requirements && (
-                                    <div>
-                                        <p className="text-sm font-semibold text-gray-700 mb-1">Storage Requirements</p>
-                                        <p className="text-sm text-gray-800">{searchResults.storage_requirements}</p>
-                                    </div>
-                                )}
-
-                                {searchResults.notes && (
-                                    <Alert>
-                                        <AlertCircle className="h-4 w-4" />
-                                        <AlertDescription>{searchResults.notes}</AlertDescription>
-                                    </Alert>
-                                )}
-
-                                {searchResults.quest_url && (
-                                    <a 
-                                        href={searchResults.quest_url} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700"
-                                    >
-                                        View on Quest Diagnostics
-                                        <ExternalLink className="w-3 h-3 ml-1" />
-                                    </a>
-                                )}
-                            </CardContent>
-                        </Card>
-                    ) : searchResults && !searchResults.found ? (
-                        <Alert>
-                            <AlertCircle className="h-4 w-4" />
-                            <AlertDescription>
-                                <p className="font-semibold mb-2">Test not found</p>
-                                {searchResults.suggestions?.length > 0 && (
-                                    <div>
-                                        <p className="text-sm mb-1">Similar tests:</p>
-                                        <ul className="text-sm list-disc list-inside">
-                                            {searchResults.suggestions.map((suggestion, i) => (
-                                                <li key={i}>{suggestion}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                )}
-                            </AlertDescription>
-                        </Alert>
-                    ) : null}
+                                        {searchResults.quest_url && (
+                                            <a 
+                                                href={searchResults.quest_url} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700"
+                                            >
+                                                View on Quest Diagnostics
+                                                <ExternalLink className="w-3 h-3 ml-1" />
+                                            </a>
+                                        )}
+                                    </CardContent>
+                                </Card>
+                            ) : (
+                                <Alert>
+                                    <AlertCircle className="h-4 w-4" />
+                                    <AlertDescription>
+                                        <p className="font-semibold mb-2">Test not found</p>
+                                        {searchResults.suggestions?.length > 0 && (
+                                            <div>
+                                                <p className="text-sm mb-1">Similar tests:</p>
+                                                <ul className="text-sm list-disc list-inside">
+                                                    {searchResults.suggestions.map((suggestion, i) => (
+                                                        <li key={i}>{suggestion}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </AlertDescription>
+                                </Alert>
+                            )}
+                        </div>
+                    )}
                 </CardContent>
             </Card>
 
