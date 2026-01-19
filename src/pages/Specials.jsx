@@ -310,13 +310,15 @@ export default function SpecialsPage() {
                                                             {format(new Date(special.date_from), "MMM d, yyyy")} - {format(new Date(special.date_to), "MMM d, yyyy")}
                                                         </p>
                                                     </div>
-                                                    <button
-                                                        onClick={() => archiveMutation.mutate(special)}
-                                                        className="text-sm text-gray-600 hover:text-gray-900"
-                                                        title="Restore"
-                                                    >
-                                                        <Archive className="w-4 h-4" />
-                                                    </button>
+                                                    {isAdmin && (
+                                                        <button
+                                                            onClick={() => archiveMutation.mutate(special)}
+                                                            className="text-sm text-gray-600 hover:text-gray-900"
+                                                            title="Restore"
+                                                        >
+                                                            <Archive className="w-4 h-4" />
+                                                        </button>
+                                                    )}
                                                 </div>
                                             </CardContent>
                                         </Card>
