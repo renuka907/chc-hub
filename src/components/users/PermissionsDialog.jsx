@@ -91,28 +91,41 @@ export default function PermissionsDialog({ open, onOpenChange, user, onSave, is
                     </p>
 
                     <div className="grid gap-4">
-                        {AVAILABLE_PAGES.map(page => (
-                            <Card key={page.id} className={hasAnyAction(page.id) ? 'border-purple-300 bg-purple-50' : ''}>
+                        {AVAILABLE_PAGES.map(page => {
+                            const isEnabled = hasAnyAction(page.id);
+                            const enabledCount = permissions[page.id]?.actions?.length || 0;
+                            return (
+                            <Card key={page.id} className={isEnabled ? 'border-2 border-purple-400 bg-purple-50' : 'border border-gray-200 bg-gray-50 opacity-60'}>
                                 <CardHeader className="pb-3">
-                                    <CardTitle className="text-base flex items-center gap-2">
-                                        <Checkbox
-                                            checked={hasAnyAction(page.id)}
-                                            onCheckedChange={(checked) => {
-                                                if (checked) {
-                                                    setPermissions(prev => ({
-                                                        ...prev,
-                                                        [page.id]: { actions: page.actions }
-                                                    }));
-                                                } else {
-                                                    setPermissions(prev => {
-                                                        const newPerms = { ...prev };
-                                                        delete newPerms[page.id];
-                                                        return newPerms;
-                                                    });
-                                                }
-                                            }}
-                                        />
-                                        {page.name}
+                                    <CardTitle className="text-base flex items-center justify-between gap-2">
+                                        <div className="flex items-center gap-2">
+                                            <Checkbox
+                                                checked={isEnabled}
+                                                onCheckedChange={(checked) => {
+                                                    if (checked) {
+                                                        setPermissions(prev => ({
+                                                            ...prev,
+                                                            [page.id]: { actions: page.actions }
+                                                        }));
+                                                    } else {
+                                                        setPermissions(prev => {
+                                                            const newPerms = { ...prev };
+                                                            delete newPerms[page.id];
+                                                            return newPerms;
+                                                        });
+                                                    }
+                                                }}
+                                            />
+                                            <span className={isEnabled ? 'text-gray-900' : 'text-gray-500'}>{page.name}</span>
+                                        </div>
+                                        {isEnabled && (
+                                            <div className="text-xs font-semibold bg-purple-600 text-white px-2 py-1 rounded-full">
+                                                {enabledCount}/{page.actions.length}
+                                            </div>
+                                        )}
+                                        {!isEnabled && (
+                                            <div className="text-xs text-gray-400 font-medium">OFF</div>
+                                        )}
                                     </CardTitle>
                                 </CardHeader>
                                 {hasAnyAction(page.id) && (
