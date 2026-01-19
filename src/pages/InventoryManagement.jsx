@@ -428,9 +428,9 @@ export default function InventoryManagement() {
                                              }`}>
                                                  <CardContent className="p-4">
                                                      <div className="flex items-start justify-between gap-6">
-                                                         {/* Item name & badges - 25% */}
+                                                         {/* Item name & badges - 30% */}
                                                          <div className="flex-1 min-w-0">
-                                                             <div className="font-semibold text-gray-900 truncate">{item.item_name}</div>
+                                                             <div className="font-semibold text-gray-900">{item.item_name}</div>
                                                              {item.sku && (
                                                                  <div className="text-xs text-gray-500">SKU: {item.sku}</div>
                                                              )}
