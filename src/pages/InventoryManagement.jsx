@@ -101,23 +101,25 @@ export default function InventoryManagement() {
         return daysUntilExpiry >= 0 && daysUntilExpiry <= expiryThresholdDays;
     };
 
-    const filteredItems = inventoryItems.filter(item => {
-        const normalizedQuery = normalizeText(searchQuery);
-        const matchesSearch = !normalizedQuery || 
-            normalizeText(item.item_name).includes(normalizedQuery) ||
-            normalizeText(item.sku || '').includes(normalizedQuery) ||
-            normalizeText(item.notes || '').includes(normalizedQuery) ||
-            normalizeText(item.supplier || '').includes(normalizedQuery) ||
-            normalizeText(item.storage_location || '').includes(normalizedQuery);
-        
-        const matchesType = selectedType === "all" || item.item_type === selectedType;
-        const matchesLocation = selectedLocation === "all" || item.location_id === selectedLocation;
-        const matchesLowStock = !showLowStockOnly || (item.quantity <= item.low_stock_threshold);
-        const matchesExpiring = !showExpiringOnly || isExpiringSoon(item.expiry_date);
-        const matchesStatus = showArchived ? item.status === 'archived' : item.status === 'active';
+    const filteredItems = inventoryItems
+        .filter(item => {
+            const normalizedQuery = normalizeText(searchQuery);
+            const matchesSearch = !normalizedQuery || 
+                normalizeText(item.item_name).includes(normalizedQuery) ||
+                normalizeText(item.sku || '').includes(normalizedQuery) ||
+                normalizeText(item.notes || '').includes(normalizedQuery) ||
+                normalizeText(item.supplier || '').includes(normalizedQuery) ||
+                normalizeText(item.storage_location || '').includes(normalizedQuery);
+            
+            const matchesType = selectedType === "all" || item.item_type === selectedType;
+            const matchesLocation = selectedLocation === "all" || item.location_id === selectedLocation;
+            const matchesLowStock = !showLowStockOnly || (item.quantity <= item.low_stock_threshold);
+            const matchesExpiring = !showExpiringOnly || isExpiringSoon(item.expiry_date);
+            const matchesStatus = showArchived ? item.status === 'archived' : item.status === 'active';
 
-        return matchesSearch && matchesType && matchesLocation && matchesLowStock && matchesExpiring && matchesStatus;
-    });
+            return matchesSearch && matchesType && matchesLocation && matchesLowStock && matchesExpiring && matchesStatus;
+        })
+        .sort((a, b) => a.item_name.localeCompare(b.item_name));
 
     const lowStockCount = inventoryItems.filter(item => 
         item.quantity <= item.low_stock_threshold && item.status === 'active'
