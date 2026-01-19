@@ -571,6 +571,8 @@ Only return found: false if you truly cannot identify what test they're asking a
                                             syncing={syncTubeMutation.isPending}
                                             onDelete={deleteTestMutation.mutate}
                                             deleting={deleteTestMutation.isPending}
+                                            panels={panels}
+                                            onRemoveFromPanel={removeTestFromPanelMutation.mutate}
                                         />
                                     ))}
                                 </div>
