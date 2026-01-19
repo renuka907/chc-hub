@@ -121,13 +121,20 @@ ${JSON.stringify(expiringSoon.map(item => ({
     quantity: item.quantity
 })), null, 2)}
 
+CRITICAL INSTRUCTION - YOU MUST FOLLOW THIS FOR ALL ITEMS:
+- EVERY item you mention MUST include its clinic/building location in parentheses immediately after the name
+- Format: "Item Name (Clinic/Building Name)"
+- Examples: "Antiseptic Wipes (Downtown Clinic)", "Surgical Masks (Westside Medical Center)"
+- This applies to ALL items in your response: low stock items, expiring items, reorder suggestions, recommendations, EVERYTHING
+- NEVER mention an item without its clinic location
+
 Provide:
-1. **Priority Reorder List**: Items that need immediate attention with suggested quantities. For EVERY item, include the clinic name in parentheses.
-2. **Expiry Alerts**: Actions to take for items expiring soon. For EVERY item, include the clinic name in parentheses.
+1. **Priority Reorder List**: Items that need immediate attention with suggested quantities
+2. **Expiry Alerts**: Actions to take for items expiring soon
 3. **Cost Optimization**: Any opportunities to reduce costs or improve ordering
 4. **General Recommendations**: Overall inventory health insights
 
-Be specific and actionable. ALWAYS include clinic location for each item mentioned.`,
+Be specific and actionable.`,
                 add_context_from_internet: false
             });
 
