@@ -419,6 +419,19 @@ Only return found: false if you truly cannot identify what test they're asking a
                                                 <ExternalLink className="w-3 h-3 ml-1" />
                                             </a>
                                         )}
+
+                                        <div>
+                                            <label className="text-sm font-semibold text-gray-700 mb-2 block">Diagnosis Codes (ICD-10)</label>
+                                            <Input
+                                                placeholder="e.g., Z12.89, R00.0, E04.9"
+                                                value={searchResults.diagnosis_codes?.join(", ") || ""}
+                                                onChange={(e) => setSearchResults({
+                                                    ...searchResults,
+                                                    diagnosis_codes: e.target.value.split(",").map(c => c.trim()).filter(Boolean)
+                                                })}
+                                            />
+                                            <p className="text-xs text-gray-500 mt-1">Comma-separated ICD-10 codes that cover this test</p>
+                                        </div>
                                     </CardContent>
                                 </Card>
                             ) : (
