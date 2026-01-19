@@ -378,10 +378,63 @@ Only return found: false if you truly cannot identify what test they're asking a
                         </Button>
                     </div>
 
-                    {/* Search Results */}
-                    {searchResults && (
+                    {/* AI Search Results */}
+                    {searchResults && searchResults.query_type ? (
                         <div className="space-y-4 mt-4">
-                            {searchResults.found ? (
+                            <Card className="border-purple-200 bg-purple-50">
+                                <CardContent className="pt-6 space-y-4">
+                                    <div>
+                                        <p className="text-sm font-semibold text-gray-700 mb-2">AI Interpretation</p>
+                                        <p className="text-sm text-gray-800">{searchResults.interpretation}</p>
+                                    </div>
+
+                                    {searchResults.suggested_panels?.length > 0 && (
+                                        <div>
+                                            <p className="text-sm font-semibold text-gray-700 mb-2">Matching Panels</p>
+                                            <div className="flex flex-wrap gap-2">
+                                                {searchResults.suggested_panels.map((panelName, idx) => {
+                                                    const matchedPanel = panels.find(p => 
+                                                        p.panel_name.toLowerCase().includes(panelName.toLowerCase()) ||
+                                                        panelName.toLowerCase().includes(p.panel_name.toLowerCase())
+                                                    );
+                                                    return (
+                                                        <Badge 
+                                                            key={idx} 
+                                                            className={matchedPanel ? "bg-green-200 text-green-900 cursor-pointer" : "bg-gray-200 text-gray-900"}
+                                                            title={matchedPanel ? "Already in directory" : "Not yet created"}
+                                                        >
+                                                            {panelName}
+                                                        </Badge>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {searchResults.primary_test && (
+                                        <div>
+                                            <p className="text-sm font-semibold text-gray-700 mb-2">Primary Test</p>
+                                            <p className="text-sm text-gray-800">{searchResults.primary_test}</p>
+                                        </div>
+                                    )}
+
+                                    {searchResults.related_tests?.length > 0 && (
+                                        <div>
+                                            <p className="text-sm font-semibold text-gray-700 mb-2">Related Tests</p>
+                                            <ul className="text-sm space-y-1">
+                                                {searchResults.related_tests.map((test, idx) => (
+                                                    <li key={idx} className="text-gray-800">• {test}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        </div>
+                    ) : null}
+
+                    {/* Quest Diagnostics Search Results */}
+                    {searchResults && searchResults.found && (
                                 <Card className="border-blue-200 bg-blue-50">
                                     <CardContent className="pt-6 space-y-4">
                                         <div className="flex items-start justify-between">
