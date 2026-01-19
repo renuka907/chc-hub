@@ -1,3 +1,4 @@
+import ActivityDashboard from './pages/ActivityDashboard';
 import AdminProfile from './pages/AdminProfile';
 import AftercareDetail from './pages/AftercareDetail';
 import AftercareLibrary from './pages/AftercareLibrary';
@@ -26,13 +27,14 @@ import QuoteDetail from './pages/QuoteDetail';
 import QuotesManagement from './pages/QuotesManagement';
 import Reminders from './pages/Reminders';
 import UserManagement from './pages/UserManagement';
-import ViewSharedForm from './pages/ViewSharedForm';
-import ActivityDashboard from './pages/ActivityDashboard';
 import UserProfile from './pages/UserProfile';
+import ViewSharedForm from './pages/ViewSharedForm';
+import ProviderReferral from './pages/ProviderReferral';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "ActivityDashboard": ActivityDashboard,
     "AdminProfile": AdminProfile,
     "AftercareDetail": AftercareDetail,
     "AftercareLibrary": AftercareLibrary,
@@ -61,9 +63,9 @@ export const PAGES = {
     "QuotesManagement": QuotesManagement,
     "Reminders": Reminders,
     "UserManagement": UserManagement,
-    "ViewSharedForm": ViewSharedForm,
-    "ActivityDashboard": ActivityDashboard,
     "UserProfile": UserProfile,
+    "ViewSharedForm": ViewSharedForm,
+    "ProviderReferral": ProviderReferral,
 }
 
 export const pagesConfig = {
