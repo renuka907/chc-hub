@@ -197,6 +197,16 @@ export default function InventoryManagement() {
 
     const canEdit = currentUser?.role === 'admin' || currentUser?.role === 'manager';
 
+    const toggleItemSelection = (itemId) => {
+        const newSelection = new Set(selectedItems);
+        if (newSelection.has(itemId)) {
+            newSelection.delete(itemId);
+        } else {
+            newSelection.add(itemId);
+        }
+        setSelectedItems(newSelection);
+    };
+
     return (
         <div className="space-y-6">
             {/* Header */}
