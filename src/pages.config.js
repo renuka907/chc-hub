@@ -12,6 +12,8 @@ import FollowUpDates from './pages/FollowUpDates';
 import FormTemplates from './pages/FormTemplates';
 import Home from './pages/Home';
 import InventoryManagement from './pages/InventoryManagement';
+import InventoryReports from './pages/InventoryReports';
+import InventoryUsageTracking from './pages/InventoryUsageTracking';
 import LabTestDirectory from './pages/LabTestDirectory';
 import Library from './pages/Library';
 import Messaging from './pages/Messaging';
@@ -23,8 +25,6 @@ import QuotesManagement from './pages/QuotesManagement';
 import Reminders from './pages/Reminders';
 import UserManagement from './pages/UserManagement';
 import ViewSharedForm from './pages/ViewSharedForm';
-import InventoryReports from './pages/InventoryReports';
-import InventoryUsageTracking from './pages/InventoryUsageTracking';
 import __Layout from './Layout.jsx';
 
 
@@ -43,6 +43,8 @@ export const PAGES = {
     "FormTemplates": FormTemplates,
     "Home": Home,
     "InventoryManagement": InventoryManagement,
+    "InventoryReports": InventoryReports,
+    "InventoryUsageTracking": InventoryUsageTracking,
     "LabTestDirectory": LabTestDirectory,
     "Library": Library,
     "Messaging": Messaging,
@@ -54,8 +56,6 @@ export const PAGES = {
     "Reminders": Reminders,
     "UserManagement": UserManagement,
     "ViewSharedForm": ViewSharedForm,
-    "InventoryReports": InventoryReports,
-    "InventoryUsageTracking": InventoryUsageTracking,
 }
 
 export const pagesConfig = {

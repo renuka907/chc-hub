@@ -132,14 +132,61 @@ export default function LabTestDirectory() {
         });
     }, [savedTests]);
 
-    const handleSearch = async () => {
+    const handleAISearch = async () => {
         if (!searchQuery.trim()) {
-            toast.error("Please enter a test name");
+            toast.error("Please enter a test name, symptom, or condition");
             return;
         }
 
         setIsSearching(true);
         setSearchResults(null);
+
+        try {
+            const response = await base44.integrations.Core.InvokeLLM({
+                prompt: `Analyze this medical query: "${searchQuery}"
+
+    Determine if this is:
+    1. A direct lab test search (e.g., "CBC", "TSH")
+    2. A symptom/condition-based query (e.g., "check my liver function", "test for diabetes")
+    3. A panel query (e.g., "annual physical tests", "hormone panel")
+
+    For symptom/condition queries, recommend relevant lab tests.
+    For panel queries, identify which common medical panels apply.
+
+    If it's a direct test, provide that test info.
+    If it's symptoms/conditions, provide 2-3 most relevant tests to screen for those issues.
+
+    Return the relevant test name(s) and any matching panel names from: Annual Physical, Hormone Panel, Metabolic Panel, Thyroid Panel, Lipid Panel, Diabetes Screening, Liver Function, Kidney Function, Anemia Panel, Vitamin Panel`,
+                add_context_from_internet: false,
+                response_json_schema: {
+                    type: "object",
+                    properties: {
+                        query_type: { type: "string", enum: ["direct_test", "symptoms", "panel"] },
+                        primary_test: { type: "string" },
+                        related_tests: { type: "array", items: { type: "string" } },
+                        suggested_panels: { type: "array", items: { type: "string" } },
+                        interpretation: { type: "string" }
+                    }
+                }
+            });
+
+            setSearchResults(response);
+        } catch (error) {
+            toast.error("Failed to process query");
+            console.error(error);
+        } finally {
+            setIsSearching(false);
+        }
+    };
+
+    const handleSearch = async () => {
+            if (!searchQuery.trim()) {
+                toast.error("Please enter a test name");
+                return;
+            }
+
+            setIsSearching(true);
+            setSearchResults(null);
 
         try {
             const response = await base44.integrations.Core.InvokeLLM({
