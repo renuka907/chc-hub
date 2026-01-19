@@ -832,19 +832,9 @@ function TestListItem({ test, onToggleFavorite, getTubeColor, onSyncTube, syncin
                          </button>
                      </div>
                      </button>
-                {test.test_code && (
-                    <Badge variant="outline" className="w-fit text-xs">
-                        {test.test_code}
-                    </Badge>
-                )}
-            </CardHeader>
-            <CardContent className="space-y-3">
-                <div>
-                    <Badge className={getTubeColor(test.tube_type)}>
-                        <TestTube className="w-3 h-3 mr-1" />
-                        {test.tube_type}
-                    </Badge>
-                </div>
+                </CardHeader>
+                {expanded && (
+                <CardContent className="space-y-3 pt-0">
                 {test.specimen_type && (
                     <div>
                         <p className="text-xs font-semibold text-gray-600">Specimen</p>
