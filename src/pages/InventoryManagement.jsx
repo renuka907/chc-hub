@@ -640,9 +640,9 @@ export default function InventoryManagement() {
                                                                      <Trash2 className="w-4 h-4" />
                                                                  </Button>
                                                              </div>
-                                                         )}
-                                                     </div>
-                                                 </CardContent>
+                                                             )}
+                                                             </div>
+                                                             </CardContent>
                                              </Card>
                                          );
                                      })}
