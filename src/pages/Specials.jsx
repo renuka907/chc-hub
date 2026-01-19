@@ -219,6 +219,7 @@ export default function SpecialsPage() {
                     </form>
                 </CardContent>
             </Card>
+            )}
 
             {/* Search and Specials List */}
             <div>
