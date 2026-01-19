@@ -109,21 +109,21 @@ export default function Home() {
                 })}
 
                 <Link to={createPageUrl("InventoryManagement")}>
-                    <div className="h-full bg-gradient-to-br from-orange-200 to-amber-300 rounded-3xl p-6 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer relative overflow-hidden">
+                    <div className="h-full bg-gradient-to-br from-orange-200 to-amber-300 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer relative overflow-hidden">
                         <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
                             <div className="w-8 h-8 bg-white/50 rounded-full flex items-center justify-center">
                                 <span className="text-lg">✓</span>
                             </div>
                         </div>
-                        <div className="flex flex-col items-center text-center space-y-4">
-                            <div className="w-16 h-16 bg-white/60 rounded-2xl flex items-center justify-center shadow-sm">
-                                <Package className="w-8 h-8 text-gray-700" />
+                        <div className="flex flex-col items-center text-center space-y-2">
+                            <div className="w-12 h-12 bg-white/60 rounded-xl flex items-center justify-center shadow-sm">
+                                <Package className="w-6 h-6 text-gray-700" />
                             </div>
                             <div>
-                                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                                <h3 className="text-base font-bold text-gray-900 mb-1">
                                     Inventory
                                 </h3>
-                                <p className="text-sm text-gray-700">
+                                <p className="text-xs text-gray-700">
                                     Track supplies, medications, and equipment
                                 </p>
                             </div>
@@ -131,22 +131,45 @@ export default function Home() {
                     </div>
                 </Link>
 
-                <Link to={createPageUrl("FAQ")}>
-                    <div className="h-full bg-gradient-to-br from-blue-200 to-cyan-300 rounded-3xl p-6 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer relative overflow-hidden">
+                <Link to={createPageUrl("LabTestDirectory")}>
+                    <div className="h-full bg-gradient-to-br from-red-200 to-pink-300 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer relative overflow-hidden">
                         <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
                             <div className="w-8 h-8 bg-white/50 rounded-full flex items-center justify-center">
                                 <span className="text-lg">✓</span>
                             </div>
                         </div>
-                        <div className="flex flex-col items-center text-center space-y-4">
-                            <div className="w-16 h-16 bg-white/60 rounded-2xl flex items-center justify-center shadow-sm">
-                                <MessageSquare className="w-8 h-8 text-gray-700" />
+                        <div className="flex flex-col items-center text-center space-y-2">
+                            <div className="w-12 h-12 bg-white/60 rounded-xl flex items-center justify-center shadow-sm">
+                                <TestTube className="w-6 h-6 text-gray-700" />
                             </div>
                             <div>
-                                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                                <h3 className="text-base font-bold text-gray-900 mb-1">
+                                    Lab Tests
+                                </h3>
+                                <p className="text-xs text-gray-700">
+                                    Quest Diagnostics test directory
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </Link>
+
+                <Link to={createPageUrl("FAQ")}>
+                    <div className="h-full bg-gradient-to-br from-blue-200 to-cyan-300 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer relative overflow-hidden">
+                        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="w-8 h-8 bg-white/50 rounded-full flex items-center justify-center">
+                                <span className="text-lg">✓</span>
+                            </div>
+                        </div>
+                        <div className="flex flex-col items-center text-center space-y-2">
+                            <div className="w-12 h-12 bg-white/60 rounded-xl flex items-center justify-center shadow-sm">
+                                <MessageSquare className="w-6 h-6 text-gray-700" />
+                            </div>
+                            <div>
+                                <h3 className="text-base font-bold text-gray-900 mb-1">
                                     FAQs & Questions
                                 </h3>
-                                <p className="text-sm text-gray-700">
+                                <p className="text-xs text-gray-700">
                                     Browse FAQs or submit questions
                                 </p>
                             </div>
