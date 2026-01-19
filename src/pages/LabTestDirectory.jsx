@@ -802,9 +802,27 @@ function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, o
                         </div>
                     </div>
                 )}
-                {test.diagnosis_codes && (
-                    <div>
-                        <p className="text-xs font-semibold text-gray-600 mb-1">Diagnosis Codes</p>
+                <div>
+                    <div className="flex items-center justify-between mb-2">
+                        <p className="text-xs font-semibold text-gray-600">Diagnosis Codes</p>
+                        {!test.diagnosis_codes && (
+                            <button
+                                onClick={() => onGenerateICD10?.({ 
+                                    testId: test.id,
+                                    testName: test.test_name,
+                                    testCode: test.test_code,
+                                    category: test.category
+                                })}
+                                disabled={generatingCodes}
+                                className="text-xs text-blue-600 hover:text-blue-800 disabled:opacity-50 flex items-center gap-1"
+                                title="Generate top 5 ICD-10 codes"
+                            >
+                                <Sparkles className="w-3 h-3" />
+                                Generate
+                            </button>
+                        )}
+                    </div>
+                    {test.diagnosis_codes ? (
                         <div className="flex flex-wrap gap-1">
                             {(() => {
                                 try {
@@ -821,8 +839,10 @@ function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, o
                                 </Badge>
                             ))}
                         </div>
-                    </div>
-                )}
+                    ) : (
+                        <p className="text-xs text-gray-500">Click Generate to create codes</p>
+                    )}
+                </div>
             </CardContent>
         </Card>
     );
