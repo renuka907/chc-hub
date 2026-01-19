@@ -139,6 +139,18 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                             rows="3"
                         />
                     </div>
+
+                    <div>
+                        <Label htmlFor="notes">Internal Notes</Label>
+                        <textarea
+                            id="notes"
+                            value={formData.notes}
+                            onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                            placeholder="Staff notes (not printed)"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                            rows="2"
+                        />
+                    </div>
                 </div>
 
                 <DialogFooter>
