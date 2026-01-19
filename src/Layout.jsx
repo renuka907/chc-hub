@@ -142,6 +142,7 @@ export default function Layout({ children, currentPageName }) {
             icon: Users,
             items: [
                 { name: "User Management", path: "UserManagement", icon: Users },
+                { name: "Activity Dashboard", path: "ActivityDashboard", icon: TrendingUp },
             ]
         }] : []),
     ];
