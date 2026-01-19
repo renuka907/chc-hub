@@ -122,15 +122,15 @@ export default function SpecialsPage() {
             )}
 
             {isAdmin && (
-                <Card className="border-2 border-dashed border-purple-300">
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <FileUp className="w-5 h-5 text-purple-600" />
-                        Add New Special
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <Card className="border-2 border-dashed border-purple-300">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <FileUp className="w-5 h-5 text-purple-600" />
+                                Add New Special
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
                             <Label htmlFor="title">Title (Optional)</Label>
                             <Input
