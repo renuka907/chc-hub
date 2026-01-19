@@ -36,42 +36,64 @@ export default function SpecialsPage() {
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["specials"] }),
     });
 
-    const handleFileUpload = async (e) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+    const handleFileSelect = (e) => {
+        const selectedFile = e.target.files?.[0];
+        if (!selectedFile) return;
 
-        // Validate file type
         const validTypes = ["application/pdf", "image/jpeg", "image/jpg"];
-        if (!validTypes.includes(file.type)) {
+        if (!validTypes.includes(selectedFile.type)) {
             setError("Please upload a PDF or JPG file");
             return;
         }
 
         setError("");
-        setSuccess("");
+        setFile(selectedFile);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!file || !formData.date_from || !formData.date_to) {
+            setError("Please fill in all required fields and select a file");
+            return;
+        }
+
+        if (new Date(formData.date_from) > new Date(formData.date_to)) {
+            setError("Start date must be before end date");
+            return;
+        }
+
         setUploading(true);
+        setError("");
 
         try {
             const { file_url } = await base44.integrations.Core.UploadFile({ file });
-            setUploadedFile({
-                name: file.name,
-                url: file_url,
-                type: file.type,
-                uploadedAt: new Date().toLocaleString()
+            await base44.entities.Special.create({
+                title: formData.title || file.name,
+                file_url,
+                date_from: formData.date_from,
+                date_to: formData.date_to,
             });
-            setSuccess("File uploaded successfully!");
+            setSuccess("Special added successfully!");
+            setFormData({ title: "", date_from: "", date_to: "" });
+            setFile(null);
+            queryClient.invalidateQueries({ queryKey: ["specials"] });
+            setTimeout(() => setSuccess(""), 3000);
         } catch (err) {
-            setError("Failed to upload file. Please try again.");
-            console.error("Upload error:", err);
+            setError("Failed to add special. Please try again.");
+            console.error("Error:", err);
         } finally {
             setUploading(false);
         }
     };
 
-    const handleClearFile = () => {
-        setUploadedFile(null);
-        setSuccess("");
-    };
+    const filteredSpecials = specials.filter(
+        (special) =>
+            !special.is_archived &&
+            (special.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                special.file_url.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
+    const archivedSpecials = specials.filter((special) => special.is_archived);
 
     return (
         <div className="max-w-2xl mx-auto">
