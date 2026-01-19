@@ -15,6 +15,10 @@ export default function CalendarView({ reminders, viewMode = "month", onViewChan
     const [editingReminder, setEditingReminder] = React.useState(null);
     const queryClient = useQueryClient();
 
+    React.useEffect(() => {
+        console.log("CalendarView reminders:", reminders);
+    }, [reminders]);
+
     const handleDragEnd = async (result) => {
         if (!result.destination) return;
         
