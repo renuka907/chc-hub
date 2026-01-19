@@ -273,17 +273,12 @@ export default function EducationDetail() {
             <PrintableDocument title={topic.title} showLogo={false}>
                 <div className="space-y-6">
                     {/* Metadata */}
-                    <div className="flex flex-wrap gap-3 items-center">
-                        <Badge className={`${categoryColors[topic.category]} text-sm px-3 py-1`}>
-                            {topic.category}
-                        </Badge>
-                        {topic.last_reviewed && (
-                            <div className="flex items-center text-sm text-gray-600">
-                                <Calendar className="w-4 h-4 mr-1" />
-                                Last Reviewed: {new Date(topic.last_reviewed).toLocaleDateString()}
-                            </div>
-                        )}
-                    </div>
+                    {topic.last_reviewed && (
+                        <div className="flex items-center text-sm text-gray-600 mb-4">
+                            <Calendar className="w-4 h-4 mr-1" />
+                            Last Reviewed: {new Date(topic.last_reviewed).toLocaleDateString()}
+                        </div>
+                    )}
 
                     {/* Summary */}
                     {topic.summary && (
