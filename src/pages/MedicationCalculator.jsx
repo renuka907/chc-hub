@@ -200,6 +200,8 @@ export default function MedicationCalculator() {
                                         {result.units && <span> • <span className="font-bold">{result.units} units</span> on insulin syringe</span>}
                                     </AlertDescription>
                                 </Alert>
+
+                                <SyringeVisualization result={result} />
                             </CardContent>
                         </Card>
                     )}
