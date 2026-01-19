@@ -725,34 +725,41 @@ function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, o
                         <ExternalLink className="w-3 h-3 ml-1" />
                     </a>
                 )}
-                {test.panel_id && (
-                    <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-xs">
-                            {panels.find(p => p.id === test.panel_id)?.panel_name}
-                        </Badge>
+                {testPanelIds.length > 0 && (
+                    <div className="flex flex-wrap gap-1">
+                        {testPanelIds.map(panelId => {
+                            const panel = panels.find(p => p.id === panelId);
+                            return panel ? (
+                                <Badge key={panelId} variant="outline" className="text-xs">
+                                    {panel.panel_name}
+                                </Badge>
+                            ) : null;
+                        })}
+                    </div>
+                )}
+                {panels.length > 0 && (
+                    <div>
+                        <p className="text-xs font-semibold text-gray-600 mb-2">Panels</p>
+                        <div className="space-y-1">
+                            {panels.map(panel => (
+                                <label key={panel.id} className="flex items-center gap-2 text-xs cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        checked={testPanelIds.includes(panel.id)}
+                                        onChange={(e) => {
+                                            const newPanelIds = e.target.checked
+                                                ? [...testPanelIds, panel.id]
+                                                : testPanelIds.filter(id => id !== panel.id);
+                                            onUpdatePanels?.({ testId: test.id, panelIds: newPanelIds });
+                                        }}
+                                        className="rounded"
+                                    />
+                                    <span className="text-gray-700">{panel.panel_name}</span>
+                                </label>
+                            ))}
                         </div>
-                        )}
-                        {panels.length > 0 && (
-                        <div>
-                            <p className="text-xs font-semibold text-gray-600 mb-2">Assign to Panel</p>
-                            <select
-                                value={test.panel_id || ""}
-                                onChange={(e) => {
-                                    if (e.target.value) {
-                                        onAssignToPanel?.({ testId: test.id, panelId: e.target.value });
-                                    } else if (test.panel_id) {
-                                        onRemoveFromPanel?.(test.id);
-                                    }
-                                }}
-                                className="w-full text-xs border border-gray-300 rounded px-2 py-1 bg-white"
-                            >
-                                <option value="">None</option>
-                                {panels.map(panel => (
-                                    <option key={panel.id} value={panel.id}>{panel.panel_name}</option>
-                                ))}
-                            </select>
-                        </div>
-                        )}
+                    </div>
+                )}
                 {test.diagnosis_codes && (
                     <div>
                         <p className="text-xs font-semibold text-gray-600 mb-1">Diagnosis Codes</p>
