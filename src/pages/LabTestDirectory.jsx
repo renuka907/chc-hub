@@ -231,6 +231,7 @@ Only return found: false if you truly cannot identify what test they're asking a
             quest_url: testData.quest_url || "",
             category: testData.category || "General",
             notes: testData.notes || "",
+            diagnosis_codes: testData.diagnosis_codes ? JSON.stringify(testData.diagnosis_codes) : "[]",
             is_favorite: false
         };
         saveTestMutation.mutate(payload, {
