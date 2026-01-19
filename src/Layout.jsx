@@ -57,7 +57,26 @@ export default function Layout({ children, currentPageName }) {
         const fetchReminderCount = async () => {
             try {
                 const reminders = await base44.entities.Reminder.filter({ completed: false });
-                setReminderCount(reminders.length);
+                const now = new Date();
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const tomorrow = new Date(today);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+
+                const relevantCount = reminders.filter(r => {
+                    // Exclude snoozed reminders
+                    if (r.show_after && new Date(r.show_after) > now) return false;
+
+                    if (!r.due_date) return false;
+
+                    const dueDate = new Date(r.due_date);
+                    dueDate.setHours(0, 0, 0, 0);
+
+                    // Count overdue or today
+                    return dueDate < tomorrow;
+                }).length;
+
+                setReminderCount(relevantCount);
             } catch (e) {
                 // silently fail
             }
