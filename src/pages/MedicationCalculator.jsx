@@ -56,6 +56,7 @@ export default function MedicationCalculator() {
     const handleReset = () => {
         setAmountNeeded("");
         setVialStrength("");
+        setUnitsPerMl("");
         setResult(null);
         setError("");
     };
