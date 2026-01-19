@@ -145,12 +145,19 @@ export default function Reminders() {
 
     const handleSnoozeReminder = async (reminder, hours) => {
         try {
-            const now = new Date();
-            const showAfter = new Date(now.getTime() + hours * 60 * 60 * 1000);
-            await base44.entities.Reminder.update(reminder.id, { show_after: showAfter.toISOString() });
-            queryClient.invalidateQueries({ queryKey: ['reminders'] });
-            const timeLabel = hours < 24 ? `${hours} hour${hours > 1 ? 's' : ''}` : `${hours / 24} day${hours / 24 > 1 ? 's' : ''}`;
-            toast.info(`Reminder hidden for ${timeLabel}`);
+            if (hours === null) {
+                // Un-snooze: clear the show_after field
+                await base44.entities.Reminder.update(reminder.id, { show_after: null });
+                queryClient.invalidateQueries({ queryKey: ['reminders'] });
+                toast.info('Reminder un-snoozed');
+            } else {
+                const now = new Date();
+                const showAfter = new Date(now.getTime() + hours * 60 * 60 * 1000);
+                await base44.entities.Reminder.update(reminder.id, { show_after: showAfter.toISOString() });
+                queryClient.invalidateQueries({ queryKey: ['reminders'] });
+                const timeLabel = hours < 24 ? `${hours} hour${hours > 1 ? 's' : ''}` : `${hours / 24} day${hours / 24 > 1 ? 's' : ''}`;
+                toast.info(`Reminder hidden for ${timeLabel}`);
+            }
         } catch (error) {
             toast.error('Failed to snooze reminder');
         }
