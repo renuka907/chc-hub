@@ -15,7 +15,10 @@ export default function CalendarView({ reminders, viewMode = "month", onViewChan
     const handleDragEnd = async (result) => {
         if (!result.destination) return;
         
-        const reminder = JSON.parse(result.draggableId);
+        const reminderId = result.draggableId.replace('reminder-', '');
+        const reminder = reminders.find(r => r.id === reminderId);
+        if (!reminder) return;
+        
         const targetDate = new Date(result.destination.droppableId);
         
         try {
@@ -47,7 +50,7 @@ export default function CalendarView({ reminders, viewMode = "month", onViewChan
         });
     };
 
-    const ReminderCell = ({ reminder }) => {
+    const ReminderCell = ({ reminder, index }) => {
         const isOverdue = new Date(reminder.due_date) < new Date() && !reminder.completed;
         const priorityColor = {
             low: "bg-blue-100 text-blue-800",
@@ -57,19 +60,19 @@ export default function CalendarView({ reminders, viewMode = "month", onViewChan
 
         return (
             <Draggable
-                draggableId={JSON.stringify(reminder)}
-                index={reminders.indexOf(reminder)}
+                draggableId={`reminder-${reminder.id}`}
+                index={index}
             >
                 {(provided, snapshot) => (
                     <div
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        className={`p-1 mb-1 rounded text-xs cursor-move transition-all ${
+                        className={`p-2 mb-1 rounded text-xs cursor-move transition-all font-medium ${
                             snapshot.isDragging 
-                                ? "opacity-50 shadow-lg scale-105" 
+                                ? "opacity-50 shadow-lg scale-105 z-50" 
                                 : "opacity-100"
-                        } ${priorityColor} truncate`}
+                        } ${priorityColor} truncate hover:shadow-md`}
                         title={reminder.title}
                     >
                         {reminder.title}
@@ -124,7 +127,7 @@ export default function CalendarView({ reminders, viewMode = "month", onViewChan
                                             </div>
                                             <div className="space-y-1">
                                                 {getRemindersForDate(day).map((reminder, i) => (
-                                                    <ReminderCell key={reminder.id} reminder={reminder} />
+                                                    <ReminderCell key={reminder.id} reminder={reminder} index={i} />
                                                 ))}
                                             </div>
                                             {provided.placeholder}
@@ -169,8 +172,8 @@ export default function CalendarView({ reminders, viewMode = "month", onViewChan
                                         {format(day, "MMM d")}
                                     </div>
                                     <div className="space-y-1">
-                                        {getRemindersForDate(day).map(reminder => (
-                                            <ReminderCell key={reminder.id} reminder={reminder} />
+                                        {getRemindersForDate(day).map((reminder, i) => (
+                                            <ReminderCell key={reminder.id} reminder={reminder} index={i} />
                                         ))}
                                     </div>
                                     {provided.placeholder}
@@ -208,8 +211,8 @@ export default function CalendarView({ reminders, viewMode = "month", onViewChan
                             {dayReminders.length === 0 ? (
                                 <p className="text-gray-400 italic">No reminders for this day</p>
                             ) : (
-                                dayReminders.map(reminder => (
-                                    <ReminderCell key={reminder.id} reminder={reminder} />
+                                dayReminders.map((reminder, i) => (
+                                    <ReminderCell key={reminder.id} reminder={reminder} index={i} />
                                 ))
                             )}
                         </div>
