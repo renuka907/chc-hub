@@ -100,115 +100,95 @@ export default function AftercareDetail() {
                 {`
                     @media print {
                         @page {
-                            margin: 0.75in 0.5in 0.5in 0.5in;
+                            margin: 0.5in 0.5in 0.75in 0.5in;
                             size: letter;
                         }
+                        
                         body {
                             -webkit-print-color-adjust: exact;
                             print-color-adjust: exact;
                         }
+                        
                         body * {
                             visibility: hidden;
                         }
-                        .printable-document,
-                        .printable-document * {
+                        
+                        .print-container,
+                        .print-container * {
                             visibility: visible;
-                            color: #000 !important;
                         }
-                        .printable-document {
-                            position: absolute !important;
-                            left: 0 !important;
-                            top: 0 !important;
-                            width: 100% !important;
-                            max-width: 100% !important;
-                            padding: 0 !important;
-                            margin: 0 !important;
-                            font-family: 'Times New Roman', serif !important;
-                            font-size: 11pt !important;
-                            line-height: 1.6 !important;
+                        
+                        .print-container {
+                            position: absolute;
+                            left: 0;
+                            top: 0;
+                            width: 100%;
+                            font-family: 'Times New Roman', serif;
+                            font-size: 11pt;
+                            line-height: 1.6;
+                            color: #000;
                         }
-                        .printable-document > div:first-child,
-                        .printable-document > * {
-                            margin-top: 0 !important;
-                            padding-top: 0 !important;
+                        
+                        .print-logo {
+                            text-align: center;
+                            margin-bottom: 8pt;
                         }
-                        .printable-document img:first-of-type {
-                            display: none !important;
+                        
+                        .print-logo img {
+                            height: 50px;
+                            width: auto;
                         }
-                        .printable-document h1 {
-                            font-size: 18pt !important;
-                            font-weight: bold !important;
-                            margin-top: 0 !important;
-                            margin-bottom: 14pt !important;
-                            page-break-after: avoid !important;
-                            text-align: center !important;
-                            border-bottom: 2px solid #000 !important;
-                            padding-bottom: 8pt !important;
+                        
+                        .print-contact {
+                            text-align: center;
+                            font-size: 9pt;
+                            margin-bottom: 12pt;
+                            padding-bottom: 8pt;
+                            border-bottom: 1px solid #ccc;
                         }
-                        .printable-document h2 {
-                            font-size: 14pt !important;
-                            font-weight: bold !important;
-                            margin-top: 16pt !important;
-                            margin-bottom: 10pt !important;
-                            page-break-after: avoid !important;
+                        
+                        .print-title {
+                            font-size: 18pt;
+                            font-weight: bold;
+                            text-align: center;
+                            margin: 12pt 0;
+                            padding-bottom: 8pt;
+                            border-bottom: 2px solid #000;
+                            text-transform: uppercase;
                         }
-                        .printable-document h3 {
-                            font-size: 12pt !important;
-                            font-weight: bold !important;
-                            margin-top: 12pt !important;
-                            margin-bottom: 8pt !important;
-                            page-break-after: avoid !important;
+                        
+                        .print-container h2 {
+                            font-size: 14pt;
+                            font-weight: bold;
+                            margin-top: 14pt;
+                            margin-bottom: 8pt;
                         }
-                        .printable-document p {
-                            margin-bottom: 10pt !important;
-                            orphans: 3 !important;
-                            widows: 3 !important;
-                            text-align: justify !important;
+                        
+                        .print-container p {
+                            margin-bottom: 8pt;
+                            text-align: justify;
                         }
-                        .printable-document li {
-                            margin-bottom: 6pt !important;
-                            orphans: 2 !important;
-                            widows: 2 !important;
+                        
+                        .print-container ul,
+                        .print-container ol {
+                            margin-bottom: 8pt;
+                            padding-left: 24pt;
                         }
-                        .printable-document ul,
-                        .printable-document ol {
-                            margin-bottom: 10pt !important;
-                            padding-left: 24pt !important;
-                            page-break-inside: avoid !important;
+                        
+                        .print-container li {
+                            margin-bottom: 4pt;
                         }
-                        .printable-document img {
-                            max-width: 100% !important;
-                            max-height: 3.5in !important;
-                            page-break-inside: avoid !important;
-                            display: block !important;
-                            margin: 14pt auto !important;
+                        
+                        .print-section {
+                            background: #f8f9fa;
+                            border: 1px solid #ddd;
+                            padding: 10pt;
+                            margin: 10pt 0;
+                            page-break-inside: avoid;
                         }
-                        .printable-document .card,
-                        .printable-document [class*="bg-"] {
-                            background: #f8f9fa !important;
-                            border: 1px solid #ddd !important;
-                            padding: 12pt !important;
-                            margin: 10pt 0 !important;
-                            page-break-inside: avoid !important;
-                        }
+                        
                         .no-print {
                             display: none !important;
-                        }
-                        .print-header-table {
-                            display: table !important;
-                            width: 100% !important;
-                            position: static !important;
-                        }
-                        .print-header-table thead {
-                            display: table-header-group !important;
-                        }
-                        .print-header-table tbody {
-                            display: table-row-group !important;
-                        }
-                        .print-header-row {
-                            text-align: center !important;
-                            padding-bottom: 4pt !important;
-                            border-bottom: 1px solid #ccc !important;
                         }
                     }
                 `}
@@ -254,18 +234,26 @@ export default function AftercareDetail() {
                 </div>
             </div>
 
-            {/* Printable Content with repeating header */}
-            <table className="print-header-table">
-                <thead className="no-print">
-                    <tr>
-                        <th className="print-header-row">
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <PrintableDocument title={`Aftercare Instructions: ${instruction.procedure_name}`} showLogo={false}>
+            {/* Printable Content */}
+            <div className="print-container">
+                {/* Print Header - Logo and Contact */}
+                <div className="print-logo">
+                    <img 
+                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png"
+                        alt="Contemporary Health Center"
+                    />
+                </div>
+                <div className="print-contact">
+                    <div style={{fontWeight: '600'}}>6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
+                    <div>Phone: 239-561-9191 | Fax: 239-561-9188 | contemporaryhealthcenter.com</div>
+                </div>
+                
+                {/* Title */}
+                <div className="print-title">
+                    Aftercare Instructions: {instruction.procedure_name}
+                </div>
+                
+                {/* Content */}
                 <div className="space-y-6">
                     {/* Metadata */}
                     {instruction.category && (
@@ -276,69 +264,54 @@ export default function AftercareDetail() {
 
                     {/* Duration */}
                     {instruction.duration && (
-                        <Card className="bg-blue-50 border-blue-200 card-compact">
-                            <CardContent className="pt-6 card-compact-content">
-                                <div className="flex items-center space-x-2">
-                                    <Clock className="w-5 h-5 text-blue-600" />
-                                    <div>
-                                        <span className="font-semibold text-blue-900">Expected Recovery: </span>
-                                        <span className="text-blue-800">{instruction.duration}</span>
-                                    </div>
+                        <div className="print-section">
+                            <div className="flex items-center space-x-2">
+                                <Clock className="w-5 h-5 text-blue-600 no-print" />
+                                <div>
+                                    <strong>Expected Recovery:</strong> {instruction.duration}
                                 </div>
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </div>
                     )}
 
                     {/* Main Instructions */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-lg font-bold uppercase tracking-wide border-b pb-2">Post-Procedure Instructions</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div 
-                                className="text-gray-900 text-base prose prose-sm max-w-none"
-                                style={{lineHeight: '1.8', fontFamily: 'Times New Roman, serif'}}
-                                dangerouslySetInnerHTML={{ __html: instruction.instructions }}
-                            />
-                        </CardContent>
-                    </Card>
+                    <div className="print-section">
+                        <h2>Post-Procedure Instructions</h2>
+                        <div 
+                            className="text-gray-900 prose prose-sm max-w-none"
+                            style={{lineHeight: '1.8'}}
+                            dangerouslySetInnerHTML={{ __html: instruction.instructions }}
+                        />
+                    </div>
 
                     {/* Warning Signs */}
                     {instruction.warning_signs && (
-                        <Card className="bg-amber-50 border-2 border-amber-400 card-compact">
-                            <CardHeader className="card-compact-header">
-                                <CardTitle className="flex items-center text-amber-900 text-lg font-bold uppercase tracking-wide">
-                                    <AlertTriangle className="w-5 h-5 mr-2" />
-                                    Warning Signs - Contact Us Immediately
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="card-compact-content">
-                                <div 
-                                    className="text-amber-900 text-base font-medium prose prose-sm max-w-none"
-                                    style={{lineHeight: '1.8', fontFamily: 'Times New Roman, serif'}}
-                                    dangerouslySetInnerHTML={{ __html: instruction.warning_signs }}
-                                />
-                            </CardContent>
-                        </Card>
+                        <div className="print-section" style={{background: '#fef3c7', borderColor: '#f59e0b', borderWidth: '2px'}}>
+                            <h2 style={{display: 'flex', alignItems: 'center'}}>
+                                <AlertTriangle className="w-5 h-5 mr-2 no-print" />
+                                Warning Signs - Contact Us Immediately
+                            </h2>
+                            <div 
+                                className="prose prose-sm max-w-none"
+                                style={{lineHeight: '1.8', fontWeight: '500'}}
+                                dangerouslySetInnerHTML={{ __html: instruction.warning_signs }}
+                            />
+                        </div>
                     )}
 
                     {/* Follow-up */}
                     {instruction.follow_up && (
-                        <Card className="bg-green-50 border-green-200 card-compact">
-                            <CardHeader className="card-compact-header">
-                                <CardTitle className="flex items-center text-green-900">
-                                    <CalendarIcon className="w-5 h-5 mr-2" />
-                                    Follow-Up Appointment
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="card-compact-content">
-                                <div 
-                                    className="text-green-900 text-base prose prose-sm max-w-none"
-                                    style={{lineHeight: '1.8', fontFamily: 'Times New Roman, serif'}}
-                                    dangerouslySetInnerHTML={{ __html: instruction.follow_up }}
-                                />
-                            </CardContent>
-                        </Card>
+                        <div className="print-section" style={{background: '#ecfdf5', borderColor: '#10b981'}}>
+                            <h2 style={{display: 'flex', alignItems: 'center'}}>
+                                <CalendarIcon className="w-5 h-5 mr-2 no-print" />
+                                Follow-Up Appointment
+                            </h2>
+                            <div 
+                                className="prose prose-sm max-w-none"
+                                style={{lineHeight: '1.8'}}
+                                dangerouslySetInnerHTML={{ __html: instruction.follow_up }}
+                            />
+                        </div>
                     )}
 
                     {/* Uploaded Document */}
@@ -375,25 +348,23 @@ export default function AftercareDetail() {
                     )}
 
                     {/* Contact Information */}
-                    <Card className="bg-slate-100 border-2 border-slate-300 card-compact">
-                        <CardContent className="pt-6 card-compact-content">
-                            <div className="text-sm text-slate-900 leading-relaxed">
-                                <p className="font-bold text-base mb-3 uppercase tracking-wide">Questions or Concerns?</p>
-                                <p className="mb-3">Please contact our office if you have any questions about your recovery or if you experience any concerning symptoms.</p>
-                                <div className="border-t border-slate-300 pt-3 mt-3">
-                                    <p className="font-semibold">📞 Phone: 239-561-9191 (call or text)</p>
-                                    <p className="font-semibold mt-1">📧 Email: office@contemporaryhealthcenter.com</p>
-                                    <p className="font-semibold mt-1">🌐 Web: contemporaryhealthcenter.com</p>
-                                </div>
+                    <div className="print-section" style={{background: '#f1f5f9', borderColor: '#475569', borderWidth: '2px'}}>
+                        <div className="text-sm leading-relaxed">
+                            <p style={{fontWeight: 'bold', fontSize: '14pt', marginBottom: '10pt', textTransform: 'uppercase'}}>
+                                Questions or Concerns?
+                            </p>
+                            <p style={{marginBottom: '10pt'}}>
+                                Please contact our office if you have any questions about your recovery or if you experience any concerning symptoms.
+                            </p>
+                            <div style={{borderTop: '1px solid #cbd5e1', paddingTop: '8pt', marginTop: '8pt'}}>
+                                <p style={{fontWeight: '600'}}>📞 Phone: 239-561-9191 (call or text)</p>
+                                <p style={{fontWeight: '600', marginTop: '4pt'}}>📧 Email: office@contemporaryhealthcenter.com</p>
+                                <p style={{fontWeight: '600', marginTop: '4pt'}}>🌐 Web: contemporaryhealthcenter.com</p>
                             </div>
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </div>
                 </div>
-            </PrintableDocument>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            </div>
 
             {instruction && (
                 <AftercareForm
