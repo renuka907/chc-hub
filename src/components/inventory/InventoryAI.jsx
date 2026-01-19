@@ -107,7 +107,11 @@ CRITICAL INSTRUCTION - YOU MUST FOLLOW THIS:
                 const thirtyDaysAgo = new Date();
                 thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
                 
-                const recentUsage = usageLogs.filter(log => new Date(log.usage_date) >= thirtyDaysAgo);
+                // Filter usage logs by selected location
+                let recentUsage = usageLogs.filter(log => new Date(log.usage_date) >= thirtyDaysAgo);
+                if (selectedLocation !== "all") {
+                    recentUsage = recentUsage.filter(log => log.location_id === selectedLocation);
+                }
                 
                 const itemPopularity = {};
                 recentUsage.forEach(log => {
