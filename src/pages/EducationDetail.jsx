@@ -193,54 +193,64 @@ export default function EducationDetail() {
                 </div>
             </div>
 
-            {/* Printable Content with repeating header */}
-            <table className="print-header-table">
-                <thead className="no-print">
-                    <tr>
-                        <th className="print-header-row">
-                            <img 
-                                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png"
-                                alt="Contemporary Health Center Logo"
-                            />
-                            <div className="header-info">
-                                <div style={{fontWeight: 600}}>6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
-                                <div style={{marginTop: '2pt'}}>Phone: 239-561-9191 | Fax: 239-561-9188</div>
-                                <div style={{marginTop: '2pt'}}>contemporaryhealthcenter.com</div>
-                            </div>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-            <PrintableDocument title={topic.title} showLogo={false}>
+            {/* Printable Content */}
+            <div className="print-container">
+                {/* Print Header - Logo and Contact */}
+                <div className="print-logo">
+                    <img 
+                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png"
+                        alt="Contemporary Health Center"
+                    />
+                </div>
+                <div className="print-contact">
+                    <div style={{fontWeight: '600'}}>6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
+                    <div>Phone: 239-561-9191 | Fax: 239-561-9188 | contemporaryhealthcenter.com</div>
+                </div>
+                
+                {/* Title */}
+                <div className="print-title">
+                    Patient Education: {topic.title}
+                </div>
+                
+                {/* Content */}
                 <div className="space-y-6">
-                    {/* Metadata */}
+                    {/* Category Badge */}
+                    {topic.category && (
+                        <Badge className={`${categoryColors[topic.category]} text-sm px-3 py-1 no-print`}>
+                            {topic.category}
+                        </Badge>
+                    )}
+
+                    {/* Last Reviewed */}
                     {topic.last_reviewed && (
-                        <div className="flex items-center text-sm text-gray-600 mb-4">
-                            <Calendar className="w-4 h-4 mr-1" />
-                            Last Reviewed: {new Date(topic.last_reviewed).toLocaleDateString()}
+                        <div className="print-section">
+                            <div className="flex items-center space-x-2">
+                                <Calendar className="w-5 h-5 text-blue-600 no-print" />
+                                <div>
+                                    <strong>Last Reviewed:</strong> {new Date(topic.last_reviewed).toLocaleDateString()}
+                                </div>
+                            </div>
                         </div>
                     )}
 
                     {/* Summary */}
                     {topic.summary && (
-                        <Card className="bg-blue-50 border-blue-200">
-                            <CardContent className="pt-6">
-                                <p className="text-gray-800 font-medium">{topic.summary}</p>
-                            </CardContent>
-                        </Card>
+                        <div className="print-section" style={{background: '#ecfdf5', borderColor: '#10b981'}}>
+                            <h2>Summary</h2>
+                            <p className="text-gray-800 font-medium">{topic.summary}</p>
+                        </div>
                     )}
 
                     {/* Main Content */}
-                    <div className="prose max-w-none">
+                    <div className="print-section">
                         {topic.content?.includes('<') ? (
                             <div 
-                                className="text-gray-800 leading-relaxed"
+                                className="text-gray-900 prose prose-sm max-w-none"
+                                style={{lineHeight: '1.8'}}
                                 dangerouslySetInnerHTML={{ __html: topic.content }}
                             />
                         ) : (
-                            <div className="whitespace-pre-wrap text-gray-800 leading-relaxed">
+                            <div className="whitespace-pre-wrap text-gray-900" style={{lineHeight: '1.8'}}>
                                 {topic.content}
                             </div>
                         )}
@@ -248,31 +258,42 @@ export default function EducationDetail() {
 
                     {/* Medical References */}
                     {topic.medical_references && (
-                        <Card className="bg-slate-50 border-slate-200">
-                            <CardContent className="pt-6">
-                                <div className="flex items-start space-x-2">
-                                    <ExternalLink className="w-5 h-5 text-slate-600 mt-1 flex-shrink-0" />
-                                    <div>
-                                        <h3 className="font-semibold text-slate-900 mb-2">Medical References</h3>
-                                        <p className="text-sm text-slate-700 whitespace-pre-wrap">
-                                            {topic.medical_references}
-                                        </p>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <div className="print-section">
+                            <h2 style={{display: 'flex', alignItems: 'center'}}>
+                                <ExternalLink className="w-5 h-5 mr-2 no-print" />
+                                Medical References
+                            </h2>
+                            <p className="text-sm text-gray-700 whitespace-pre-wrap" style={{lineHeight: '1.8'}}>
+                                {topic.medical_references}
+                            </p>
+                        </div>
                     )}
 
                     {/* Disclaimer */}
-                    <div className="text-xs text-gray-500 italic border-t pt-4 mt-8">
-                        <p>This information is for educational purposes only and should not replace professional medical advice. Please consult with a healthcare provider for personalized medical guidance.</p>
+                    <div className="print-section" style={{background: '#f1f5f9', borderColor: '#475569', borderWidth: '2px'}}>
+                        <p style={{fontStyle: 'italic', fontSize: '10pt'}}>
+                            <strong>Disclaimer:</strong> This information is for educational purposes only and should not replace professional medical advice. Please consult with a healthcare provider for personalized medical guidance.
+                        </p>
+                    </div>
+
+                    {/* Contact Information */}
+                    <div className="print-section" style={{background: '#f1f5f9', borderColor: '#475569', borderWidth: '2px'}}>
+                        <div className="text-sm leading-relaxed">
+                            <p style={{fontWeight: 'bold', fontSize: '14pt', marginBottom: '10pt', textTransform: 'uppercase'}}>
+                                Questions or Want to Learn More?
+                            </p>
+                            <p style={{marginBottom: '10pt'}}>
+                                Our medical team is here to help answer any questions about this topic or discuss treatment options that may be right for you.
+                            </p>
+                            <div style={{borderTop: '1px solid #cbd5e1', paddingTop: '8pt', marginTop: '8pt'}}>
+                                <p style={{fontWeight: '600'}}>📞 Phone: 239-561-9191 (call or text)</p>
+                                <p style={{fontWeight: '600', marginTop: '4pt'}}>📧 Email: office@contemporaryhealthcenter.com</p>
+                                <p style={{fontWeight: '600', marginTop: '4pt'}}>🌐 Web: contemporaryhealthcenter.com</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </PrintableDocument>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            </div>
 
             {topic && (
                 <EducationTopicForm
