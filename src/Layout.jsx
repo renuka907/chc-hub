@@ -211,7 +211,7 @@ export default function Layout({ children, currentPageName }) {
                                     )}
                                 </Link>
                                 <Link 
-                                    to={createPageUrl("AdminProfile")} 
+                                    to={createPageUrl("UserProfile")} 
                                     className="flex items-center gap-2 bg-white border-2 border-purple-300 text-purple-700 px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
                                 >
                                     <span>Profile</span>
