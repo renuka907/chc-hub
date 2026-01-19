@@ -64,7 +64,7 @@ export default function EducationDetail() {
                 {`
                     @media print {
                         @page {
-                            margin: 0.3in 0.5in 0.5in 0.5in;
+                            margin: 0.15in 0.5in 0.5in 0.5in;
                             size: letter;
                         }
                         body {
