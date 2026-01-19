@@ -8,7 +8,8 @@ import {
     DollarSign,
     Stethoscope,
     Package,
-    MessageSquare
+    MessageSquare,
+    TestTube
 } from "lucide-react";
 
 export default function Home() {
