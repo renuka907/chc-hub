@@ -624,9 +624,9 @@ Only return found: false if you truly cannot identify what test they're asking a
                 ) : (
                     <div className="grid md:grid-cols-2 gap-4">
                         {panels.map(panel => {
-                            const panelTests = savedTests.filter(t => t.panel_id === panel.id);
-                            const tubeCount = calculatePanelTubes(panel.id);
-                            const totalTubes = Object.values(tubeCount).reduce((a, b) => a + b, 0);
+                             const panelTests = savedTests.filter(t => t.panel_id === panel.id);
+                             const tubeCount = calculatePanelTubes(panel.id, panel.panel_name);
+                             const totalTubes = Object.values(tubeCount).reduce((a, b) => a + b, 0);
                             return (
                                 <Card key={panel.id} className="hover:shadow-md transition-shadow">
                                     <CardHeader>
