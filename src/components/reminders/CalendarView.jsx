@@ -45,7 +45,7 @@ export default function CalendarView({ reminders, viewMode = "month", onViewChan
     };
 
     const getRemindersForDate = (date) => {
-        return reminders.filter(r => {
+        const result = reminders.filter(r => {
             if (!r.due_date) return false;
             if (r.completed) return false;
             // Filter by show_after time - only show if show_after is in the past or not set
@@ -55,6 +55,10 @@ export default function CalendarView({ reminders, viewMode = "month", onViewChan
             const checkDate = new Date(date);
             return isSameDay(remDate, checkDate);
         });
+        if (result.length > 0) {
+            console.log(`Reminders for ${format(date, "MMM d, yyyy")}:`, result);
+        }
+        return result;
     };
 
     const ReminderCell = ({ reminder, index }) => {
