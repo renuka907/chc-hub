@@ -249,13 +249,13 @@ export default function CalendarView({ reminders, viewMode = "month", onViewChan
                         </Button>
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
                         <Button
                             variant="outline"
-                            size="icon"
                             onClick={() => setCurrentDate(addDays(currentDate, viewMode === "week" ? -7 : viewMode === "day" ? -1 : -30))}
                         >
-                            <ChevronLeft className="w-4 h-4" />
+                            <ChevronLeft className="w-4 h-4 mr-1" />
+                            Prev
                         </Button>
 
                         <div className="min-w-48 text-center font-semibold text-gray-700">
@@ -266,15 +266,14 @@ export default function CalendarView({ reminders, viewMode = "month", onViewChan
 
                         <Button
                             variant="outline"
-                            size="icon"
                             onClick={() => setCurrentDate(addDays(currentDate, viewMode === "week" ? 7 : viewMode === "day" ? 1 : 30))}
                         >
-                            <ChevronRight className="w-4 h-4" />
+                            Next
+                            <ChevronRight className="w-4 h-4 ml-1" />
                         </Button>
 
                         <Button
                             variant="outline"
-                            size="sm"
                             onClick={() => setCurrentDate(new Date())}
                         >
                             Today
