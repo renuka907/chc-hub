@@ -679,6 +679,20 @@ function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, o
                         <ExternalLink className="w-3 h-3 ml-1" />
                     </a>
                 )}
+                {test.panel_id && (
+                    <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="text-xs">
+                            {panels.find(p => p.id === test.panel_id)?.panel_name}
+                        </Badge>
+                        <button
+                            onClick={() => onRemoveFromPanel?.(test.id)}
+                            className="text-gray-400 hover:text-red-600"
+                            title="Remove from panel"
+                        >
+                            <Minus className="w-3 h-3" />
+                        </button>
+                    </div>
+                )}
             </CardContent>
         </Card>
     );
