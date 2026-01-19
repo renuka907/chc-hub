@@ -96,27 +96,15 @@ export default function LabTestDirectory() {
         }
     });
 
-    const assignTestToPanelMutation = useMutation({
-        mutationFn: ({ testId, panelId }) => 
-            base44.entities.LabTestInfo.update(testId, { panel_id: panelId }),
+    const updateTestPanelsMutation = useMutation({
+        mutationFn: ({ testId, panelIds }) => 
+            base44.entities.LabTestInfo.update(testId, { panel_ids: JSON.stringify(panelIds) }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['labTests'] });
-            toast.success("Test assigned to panel");
+            toast.success("Panel assignment updated");
         },
         onError: () => {
-            toast.error('Failed to assign test');
-        }
-    });
-
-    const removeTestFromPanelMutation = useMutation({
-        mutationFn: (testId) => 
-            base44.entities.LabTestInfo.update(testId, { panel_id: null }),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['labTests'] });
-            toast.success("Test removed from panel");
-        },
-        onError: () => {
-            toast.error('Failed to remove test');
+            toast.error('Failed to update panels');
         }
     });
 
