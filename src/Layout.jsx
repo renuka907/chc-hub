@@ -332,6 +332,17 @@ export default function Layout({ children, currentPageName }) {
                     {/* Mobile Navigation */}
                     {mobileMenuOpen && (
                         <div className="lg:hidden py-4 border-t border-slate-200">
+                            <Link
+                                to={createPageUrl("AdminProfile")}
+                                onClick={() => setMobileMenuOpen(false)}
+                                className={`flex items-center space-x-3 px-4 py-3 text-sm font-medium ${
+                                    currentPageName === "AdminProfile"
+                                        ? "bg-purple-50 text-purple-900 border-l-4 border-purple-600"
+                                        : "text-gray-600 hover:bg-purple-50"
+                                }`}
+                            >
+                                <span>Profile</span>
+                            </Link>
                             {menuGroups.map((group, idx) => {
                                 if (group.single) {
                                     const Icon = group.icon;
