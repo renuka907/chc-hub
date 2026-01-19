@@ -371,17 +371,16 @@ Only return found: false if you truly cannot identify what test they're asking a
                                                     </Badge>
                                                 )}
                                                 </div>
-                                                )}
-                                            <Button
+                                                <Button
                                                 size="sm"
                                                 onClick={() => handleSaveTest(searchResults)}
                                                 disabled={saveTestMutation.isPending}
                                                 className="text-black"
-                                            >
+                                                >
                                                 <Plus className="w-4 h-4 mr-2" />
                                                 Save to Directory
-                                            </Button>
-                                        </div>
+                                                </Button>
+                                                </div>
 
                                         <div className="grid md:grid-cols-2 gap-4">
                                             <div>
