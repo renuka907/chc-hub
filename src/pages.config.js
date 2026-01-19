@@ -24,6 +24,7 @@ import Reminders from './pages/Reminders';
 import UserManagement from './pages/UserManagement';
 import ViewSharedForm from './pages/ViewSharedForm';
 import InventoryReports from './pages/InventoryReports';
+import InventoryUsageTracking from './pages/InventoryUsageTracking';
 import __Layout from './Layout.jsx';
 
 
@@ -54,6 +55,7 @@ export const PAGES = {
     "UserManagement": UserManagement,
     "ViewSharedForm": ViewSharedForm,
     "InventoryReports": InventoryReports,
+    "InventoryUsageTracking": InventoryUsageTracking,
 }
 
 export const pagesConfig = {
