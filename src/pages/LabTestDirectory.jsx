@@ -314,6 +314,21 @@ Only return found: false if you truly cannot identify what test they're asking a
     const favoriteTests = filteredTests.filter(t => t.is_favorite);
     const otherTests = filteredTests.filter(t => !t.is_favorite);
 
+    const normalizeTubeType = (tubeType) => {
+        if (!tubeType) return 'Unknown';
+        const lowerTube = tubeType.toLowerCase();
+        if (lowerTube.includes('red')) return 'Red-top';
+        if (lowerTube.includes('lavender') || lowerTube.includes('purple') || lowerTube.includes('edta')) return 'Lavender-top (EDTA)';
+        if (lowerTube.includes('gold') || lowerTube.includes('sst')) return 'Gold-top (SST)';
+        if (lowerTube.includes('blue') || lowerTube.includes('sodium citrate')) return 'Blue-top (Citrate)';
+        if (lowerTube.includes('green')) return 'Green-top';
+        if (lowerTube.includes('yellow')) return 'Yellow-top';
+        if (lowerTube.includes('gray')) return 'Gray-top';
+        if (lowerTube.includes('pink')) return 'Pink-top';
+        if (lowerTube.includes('black')) return 'Black-top';
+        return tubeType;
+    };
+
     const getTubeCapacity = (tubeType) => {
         if (!tubeType) return 5;
         const lowerTube = tubeType.toLowerCase();
