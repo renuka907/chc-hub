@@ -1,3 +1,4 @@
+import AdminProfile from './pages/AdminProfile';
 import AftercareDetail from './pages/AftercareDetail';
 import AftercareLibrary from './pages/AftercareLibrary';
 import CheckoutQuote from './pages/CheckoutQuote';
@@ -26,12 +27,12 @@ import QuotesManagement from './pages/QuotesManagement';
 import Reminders from './pages/Reminders';
 import UserManagement from './pages/UserManagement';
 import ViewSharedForm from './pages/ViewSharedForm';
-import AdminProfile from './pages/AdminProfile';
 import ActivityDashboard from './pages/ActivityDashboard';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AdminProfile": AdminProfile,
     "AftercareDetail": AftercareDetail,
     "AftercareLibrary": AftercareLibrary,
     "CheckoutQuote": CheckoutQuote,
@@ -60,7 +61,6 @@ export const PAGES = {
     "Reminders": Reminders,
     "UserManagement": UserManagement,
     "ViewSharedForm": ViewSharedForm,
-    "AdminProfile": AdminProfile,
     "ActivityDashboard": ActivityDashboard,
 }
 

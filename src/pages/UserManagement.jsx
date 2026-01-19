@@ -404,40 +404,18 @@ export default function UserManagement() {
                         <DialogTitle>Invite New User</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="email">Email Address</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                placeholder="user@example.com"
-                                value={inviteEmail}
-                                onChange={(e) => setInviteEmail(e.target.value)}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="role">Role</Label>
-                            <Select value={inviteRole} onValueChange={setInviteRole}>
-                                <SelectTrigger>
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="read_only">Read-Only</SelectItem>
-                                    <SelectItem value="staff">Staff</SelectItem>
-                                    <SelectItem value="manager">Manager</SelectItem>
-                                    <SelectItem value="admin">Administrator</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <p className="text-xs text-gray-500">
-                                {inviteRole === 'admin' 
-                                    ? 'Full access to all features and user management' 
-                                    : inviteRole === 'manager'
-                                    ? 'Can manage content and forms, view discounts'
-                                    : inviteRole === 'staff'
-                                    ? 'Can create and edit forms, limited delete permissions'
-                                    : 'View-only access to forms and content'}
-                            </p>
-                        </div>
-                    </div>
+                         <div className="space-y-2">
+                             <Label htmlFor="email">Email Address</Label>
+                             <Input
+                                 id="email"
+                                 type="email"
+                                 placeholder="user@example.com"
+                                 value={inviteEmail}
+                                 onChange={(e) => setInviteEmail(e.target.value)}
+                             />
+                         </div>
+                         <p className="text-sm text-gray-600">Users will be invited as standard staff members. You can change their role after they accept the invitation.</p>
+                     </div>
                     {inviteError && (
                         <p className="text-sm text-red-600">{inviteError}</p>
                     )}
