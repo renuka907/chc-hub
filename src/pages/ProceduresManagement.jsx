@@ -108,6 +108,7 @@ export default function ProceduresManagement() {
                                 variant={selectedCategory === category ? "default" : "outline"}
                                 size="sm"
                                 onClick={() => setSelectedCategory(category)}
+                                className="text-black"
                             >
                                 {category === "all" ? "All Categories" : category}
                             </Button>
