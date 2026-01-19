@@ -150,7 +150,7 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                                 Saving...
                             </>
                         ) : (
-                            "Save"
+                            isNew ? "Add Provider" : "Save"
                         )}
                     </Button>
                 </DialogFooter>
