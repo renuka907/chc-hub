@@ -558,6 +558,16 @@ export default function Reminders() {
 
                         return (
                             <>
+                                {groups.snoozed.length > 0 && (
+                                    <div>
+                                        <h2 className="text-lg font-semibold text-gray-400 mb-3">Snoozed</h2>
+                                        <div className="space-y-3 opacity-60">
+                                            {groups.snoozed.map(reminder => (
+                                                <ReminderCard key={reminder.id} reminder={reminder} />
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                                 {groups.overdue.length > 0 && (
                                     <div>
                                         <h2 className="text-lg font-semibold text-red-600 mb-3">Overdue</h2>
