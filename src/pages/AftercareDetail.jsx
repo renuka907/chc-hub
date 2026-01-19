@@ -99,8 +99,12 @@ export default function AftercareDetail() {
                 {`
                     @media print {
                         @page {
-                            margin: 0.3in 0.5in 0.5in 0.5in;
+                            margin: 0.75in 0.5in 0.5in 0.5in;
                             size: letter;
+                        }
+                        body {
+                            -webkit-print-color-adjust: exact;
+                            print-color-adjust: exact;
                         }
                         body * {
                             visibility: hidden;
@@ -118,60 +122,77 @@ export default function AftercareDetail() {
                             max-width: 100% !important;
                             padding: 0 !important;
                             margin: 0 !important;
+                            font-family: 'Times New Roman', serif !important;
                             font-size: 11pt !important;
-                            line-height: 1.5 !important;
+                            line-height: 1.6 !important;
                         }
                         .printable-document > div:first-child,
                         .printable-document > * {
                             margin-top: 0 !important;
                             padding-top: 0 !important;
                         }
-                        .printable-document .mb-4 {
-                            margin-bottom: 0 !important;
-                        }
                         .printable-document img:first-of-type {
                             display: none !important;
                         }
-                        .printable-document .mb-6:first-child,
-                        .printable-document > div > div:first-child {
-                            display: none !important;
-                        }
                         .printable-document h1 {
+                            font-size: 18pt !important;
+                            font-weight: bold !important;
                             margin-top: 0 !important;
-                            padding-top: 0 !important;
-                        }
-                        .printable-document h1,
-                        .printable-document h2,
-                        .printable-document h3 {
+                            margin-bottom: 14pt !important;
                             page-break-after: avoid !important;
-                            break-after: avoid !important;
-                            orphans: 3 !important;
-                            widows: 3 !important;
+                            text-align: center !important;
+                            border-bottom: 2px solid #000 !important;
+                            padding-bottom: 8pt !important;
                         }
-                        .printable-document p,
-                        .printable-document li {
+                        .printable-document h2 {
+                            font-size: 14pt !important;
+                            font-weight: bold !important;
+                            margin-top: 16pt !important;
+                            margin-bottom: 10pt !important;
+                            page-break-after: avoid !important;
+                        }
+                        .printable-document h3 {
+                            font-size: 12pt !important;
+                            font-weight: bold !important;
+                            margin-top: 12pt !important;
+                            margin-bottom: 8pt !important;
+                            page-break-after: avoid !important;
+                        }
+                        .printable-document p {
+                            margin-bottom: 10pt !important;
                             orphans: 3 !important;
                             widows: 3 !important;
+                            text-align: justify !important;
+                        }
+                        .printable-document li {
+                            margin-bottom: 6pt !important;
+                            orphans: 2 !important;
+                            widows: 2 !important;
                         }
                         .printable-document ul,
                         .printable-document ol {
-                            page-break-inside: auto !important;
-                            break-inside: auto !important;
+                            margin-bottom: 10pt !important;
+                            padding-left: 24pt !important;
+                            page-break-inside: avoid !important;
                         }
-                        .printable-document .card-compact,
-                        .printable-document .bg-blue-50,
-                        .printable-document .bg-amber-50,
-                        .printable-document .bg-green-50,
-                        .printable-document .bg-slate-100 {
-                            page-break-inside: auto !important;
-                            break-inside: auto !important;
-                            overflow: visible !important;
+                        .printable-document img {
+                            max-width: 100% !important;
+                            max-height: 3.5in !important;
+                            page-break-inside: avoid !important;
+                            display: block !important;
+                            margin: 14pt auto !important;
+                        }
+                        .printable-document .card,
+                        .printable-document [class*="bg-"] {
+                            background: #f8f9fa !important;
+                            border: 1px solid #ddd !important;
+                            padding: 12pt !important;
+                            margin: 10pt 0 !important;
+                            page-break-inside: avoid !important;
                         }
                         .no-print {
                             display: none !important;
                         }
-                        
-                        /* Repeating header on each page - use thead/table approach */
                         .print-header-table {
                             display: table !important;
                             width: 100% !important;
@@ -187,16 +208,6 @@ export default function AftercareDetail() {
                             text-align: center !important;
                             padding-bottom: 4pt !important;
                             border-bottom: 1px solid #ccc !important;
-                        }
-                        .print-header-row img {
-                            height: 30pt !important;
-                            margin: 0 auto 2pt !important;
-                            display: block !important;
-                        }
-                        .print-header-row div {
-                            font-size: 8pt !important;
-                            color: #666 !important;
-                            margin-bottom: 4pt !important;
                         }
                     }
                 `}

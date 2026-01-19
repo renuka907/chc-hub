@@ -146,11 +146,12 @@ export default function ConsentFormDetail() {
                 {`
                     @media print {
                         @page {
-                            margin-top: 0.75in;
-                            margin-bottom: 0.5in;
-                            margin-left: 0.5in;
-                            margin-right: 0.5in;
+                            margin: 0.75in 0.5in 0.5in 0.5in;
                             size: letter;
+                        }
+                        body {
+                            -webkit-print-color-adjust: exact;
+                            print-color-adjust: exact;
                         }
                         body * {
                             visibility: hidden;
@@ -162,73 +163,81 @@ export default function ConsentFormDetail() {
                         }
                         .printable-document {
                             position: static !important;
-                            left: auto !important;
-                            top: auto !important;
                             width: 100% !important;
                             max-width: 100% !important;
                             padding: 0 !important;
                             margin: 0 !important;
+                            font-family: 'Times New Roman', serif !important;
                             font-size: 11pt !important;
-                            line-height: 1.5 !important;
-                        }
-                        @page {
-                            @top-center {
-                                content: element(header);
-                            }
-                        }
-                        .print-header {
-                            position: running(header) !important;
-                            display: block !important;
-                            text-align: center !important;
-                            padding: 8pt 0 !important;
-                            border-bottom: 1px solid #ccc !important;
-                            font-size: 9pt !important;
-                        }
-                        .print-header img {
-                            height: 24pt !important;
-                            margin: 0 auto 4pt !important;
-                            display: block !important;
+                            line-height: 1.6 !important;
                         }
                         .printable-document > div:first-child {
                             margin-top: 0 !important;
                             padding-top: 0 !important;
                         }
-                        .printable-document img:first-of-type {
+                        .printable-document h1 {
+                            font-size: 18pt !important;
+                            font-weight: bold !important;
                             margin-top: 0 !important;
-                        }
-                        .printable-document h1:first-of-type {
-                            margin-top: 0 !important;
-                            padding-top: 0 !important;
-                        }
-                        .printable-document h1,
-                        .printable-document h2,
-                        .printable-document h3 {
+                            margin-bottom: 14pt !important;
                             page-break-after: avoid !important;
-                            break-after: avoid !important;
-                            orphans: 3 !important;
-                            widows: 3 !important;
+                            text-align: center !important;
+                            border-bottom: 2px solid #000 !important;
+                            padding-bottom: 8pt !important;
                         }
-                        .printable-document p,
-                        .printable-document li {
+                        .printable-document h2 {
+                            font-size: 14pt !important;
+                            font-weight: bold !important;
+                            margin-top: 16pt !important;
+                            margin-bottom: 10pt !important;
+                            page-break-after: avoid !important;
+                        }
+                        .printable-document h3 {
+                            font-size: 12pt !important;
+                            font-weight: bold !important;
+                            margin-top: 12pt !important;
+                            margin-bottom: 8pt !important;
+                            page-break-after: avoid !important;
+                        }
+                        .printable-document p {
+                            margin-bottom: 10pt !important;
                             orphans: 3 !important;
                             widows: 3 !important;
+                            text-align: justify !important;
                         }
                         .printable-document ul,
-                        .printable-document ol,
+                        .printable-document ol {
+                            margin-bottom: 10pt !important;
+                            padding-left: 24pt !important;
+                            page-break-inside: avoid !important;
+                        }
+                        .printable-document li {
+                            margin-bottom: 6pt !important;
+                            orphans: 2 !important;
+                            widows: 2 !important;
+                        }
+                        .printable-document img {
+                            max-width: 100% !important;
+                            max-height: 3.5in !important;
+                            page-break-inside: avoid !important;
+                            display: block !important;
+                            margin: 14pt auto !important;
+                        }
                         .printable-document table {
                             page-break-inside: auto !important;
-                            break-inside: auto !important;
+                        }
+                        .printable-document .field-row {
+                            margin-bottom: 12pt !important;
+                            page-break-inside: avoid !important;
                         }
                         .no-print {
                             display: none !important;
                         }
-                        .no-print-screen {
-                            display: none;
+                        .print-header {
+                            display: none !important;
                         }
-                        @media print {
-                            .no-print-screen {
-                                display: block !important;
-                            }
+                        .no-print-screen {
+                            display: none !important;
                         }
                     }
                 `}
