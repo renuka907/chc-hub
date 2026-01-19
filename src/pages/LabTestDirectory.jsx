@@ -465,6 +465,7 @@ Only return found: false if you truly cannot identify what test they're asking a
             </Card>
 
             {/* Panels Section */}
+            {isAdmin && (
             <div>
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-bold text-gray-900">Test Panels</h2>
