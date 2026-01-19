@@ -12,10 +12,16 @@ export default function EditSpecialDialog({ special, open, onOpenChange, onSave 
 
     useEffect(() => {
         if (open && special) {
+            const formatDateForInput = (dateString) => {
+                if (!dateString) return "";
+                const date = new Date(dateString + "T00:00:00");
+                return date.toISOString().split('T')[0];
+            };
+            
             setFormData({
                 title: special.title || "",
-                date_from: special.date_from || "",
-                date_to: special.date_to || "",
+                date_from: formatDateForInput(special.date_from),
+                date_to: formatDateForInput(special.date_to),
             });
         }
     }, [special, open]);
