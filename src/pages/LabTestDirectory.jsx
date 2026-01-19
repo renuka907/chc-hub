@@ -711,6 +711,27 @@ function TestCard({ test, onToggleFavorite, getTubeColor, onSyncTube, syncing, o
                         </button>
                     </div>
                 )}
+                {test.diagnosis_codes && (
+                    <div>
+                        <p className="text-xs font-semibold text-gray-600 mb-1">Diagnosis Codes</p>
+                        <div className="flex flex-wrap gap-1">
+                            {(() => {
+                                try {
+                                    const codes = typeof test.diagnosis_codes === 'string' 
+                                        ? JSON.parse(test.diagnosis_codes) 
+                                        : test.diagnosis_codes;
+                                    return Array.isArray(codes) ? codes : [];
+                                } catch {
+                                    return [];
+                                }
+                            })().map((code) => (
+                                <Badge key={code} className="bg-blue-100 text-blue-800 text-xs">
+                                    {code}
+                                </Badge>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </CardContent>
         </Card>
     );
