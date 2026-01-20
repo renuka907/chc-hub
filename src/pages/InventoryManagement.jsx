@@ -26,6 +26,7 @@ export default function InventoryManagement() {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedType, setSelectedType] = useState("all");
     const [selectedLocation, setSelectedLocation] = useState("all");
+    const [selectedStorageLocation, setSelectedStorageLocation] = useState("all");
     const [showLowStockOnly, setShowLowStockOnly] = useState(false);
     const [showExpiringOnly, setShowExpiringOnly] = useState(false);
     const [expiryThresholdDays, setExpiryThresholdDays] = useState(30);
@@ -133,6 +134,17 @@ export default function InventoryManagement() {
 
     const normalizeText = (text) => text.toLowerCase().replace(/[-.\s]/g, '');
 
+    // Get unique storage locations
+    const availableStorageLocations = React.useMemo(() => {
+        const locations = new Set();
+        inventoryItems.forEach(item => {
+            if (item.storage_location && item.status === 'active') {
+                locations.add(item.storage_location);
+            }
+        });
+        return ["all", ...Array.from(locations).sort()];
+    }, [inventoryItems]);
+
     const isExpiringSoon = (expiryDate) => {
         if (!expiryDate) return false;
         const today = new Date();
@@ -153,11 +165,12 @@ export default function InventoryManagement() {
             
             const matchesType = selectedType === "all" || item.item_type === selectedType;
             const matchesLocation = selectedLocation === "all" || item.location_id === selectedLocation;
+            const matchesStorageLocation = selectedStorageLocation === "all" || item.storage_location === selectedStorageLocation;
             const matchesLowStock = !showLowStockOnly || (item.quantity <= item.low_stock_threshold);
             const matchesExpiring = !showExpiringOnly || isExpiringSoon(item.expiry_date);
             const matchesStatus = showArchived ? item.status === 'archived' : item.status === 'active';
 
-            return matchesSearch && matchesType && matchesLocation && matchesLowStock && matchesExpiring && matchesStatus;
+            return matchesSearch && matchesType && matchesLocation && matchesStorageLocation && matchesLowStock && matchesExpiring && matchesStatus;
         })
         .sort((a, b) => a.item_name.localeCompare(b.item_name));
 
@@ -491,6 +504,31 @@ export default function InventoryManagement() {
                     ))}
                 </div>
             </div>
+
+            {/* Storage Location Filters */}
+            {availableStorageLocations.length > 1 && (
+                <div className="bg-white rounded-3xl p-6 shadow-md">
+                    <div className="flex items-center gap-3 mb-3">
+                        <Package className="w-5 h-5 text-orange-600" />
+                        <span className="text-sm font-semibold text-gray-700">Storage Location</span>
+                    </div>
+                    <div className="flex flex-wrap gap-3 items-center">
+                        {availableStorageLocations.map(storageLocation => (
+                            <button
+                                key={storageLocation}
+                                onClick={() => setSelectedStorageLocation(storageLocation)}
+                                className={`px-6 py-2.5 rounded-2xl text-sm font-medium transition-all ${
+                                    selectedStorageLocation === storageLocation 
+                                        ? "bg-purple-600 text-white shadow-md" 
+                                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                }`}
+                            >
+                                {storageLocation === "all" ? "All Storage Locations" : storageLocation}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             {/* Inventory Items Grouped by Location */}
             {isLoading ? (
