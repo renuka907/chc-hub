@@ -20,6 +20,7 @@ import BulkActionsBar from "../components/BulkActionsBar";
 import TagManager from "../components/forms/TagManager";
 import DocumentUploadDialog from "../components/library/DocumentUploadDialog";
 import DocumentPrintDialog from "../components/library/DocumentPrintDialog";
+import DocumentEditDialog from "../components/library/DocumentEditDialog";
 import { usePermissions } from "../components/permissions/usePermissions";
 import { FileText, Printer, Plus, Star, Filter, X, CalendarIcon, BookOpen, ExternalLink, Upload, Trash2 } from "lucide-react";
 import { format } from "date-fns";
@@ -43,6 +44,7 @@ export default function Library() {
     const [showTagManager, setShowTagManager] = useState(false);
     const [showDocumentUpload, setShowDocumentUpload] = useState(false);
     const [printDocument, setPrintDocument] = useState(null);
+    const [editDocument, setEditDocument] = useState(null);
     const queryClient = useQueryClient();
     const { can } = usePermissions();
 
@@ -867,6 +869,17 @@ export default function Library() {
                 open={!!printDocument}
                 onOpenChange={(open) => !open && setPrintDocument(null)}
                 document={printDocument}
+                onEdit={(doc) => {
+                    setPrintDocument(null);
+                    setEditDocument(doc);
+                }}
+            />
+
+            <DocumentEditDialog
+                open={!!editDocument}
+                onOpenChange={(open) => !open && setEditDocument(null)}
+                document={editDocument}
+                onSuccess={handleSuccess}
             />
 
             {activeTab !== "education" && activeTab !== "documents" && (
