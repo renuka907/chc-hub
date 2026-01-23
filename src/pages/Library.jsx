@@ -18,8 +18,10 @@ import ConsentFormForm from "../components/ConsentFormForm";
 import EducationTopicForm from "../components/EducationTopicForm";
 import BulkActionsBar from "../components/BulkActionsBar";
 import TagManager from "../components/forms/TagManager";
+import DocumentUploadDialog from "../components/library/DocumentUploadDialog";
+import DocumentPrintDialog from "../components/library/DocumentPrintDialog";
 import { usePermissions } from "../components/permissions/usePermissions";
-import { FileText, Printer, Plus, Star, Filter, X, CalendarIcon, BookOpen, ExternalLink } from "lucide-react";
+import { FileText, Printer, Plus, Star, Filter, X, CalendarIcon, BookOpen, ExternalLink, Upload, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 
 export default function Library() {
@@ -39,6 +41,8 @@ export default function Library() {
     const [selectedItems, setSelectedItems] = useState(new Set());
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [showTagManager, setShowTagManager] = useState(false);
+    const [showDocumentUpload, setShowDocumentUpload] = useState(false);
+    const [printDocument, setPrintDocument] = useState(null);
     const queryClient = useQueryClient();
     const { can } = usePermissions();
 
@@ -57,10 +61,16 @@ export default function Library() {
         queryFn: () => base44.entities.EducationTopic.list('-updated_date', 100),
     });
 
+    const { data: documents = [] } = useQuery({
+        queryKey: ['libraryDocuments'],
+        queryFn: () => base44.entities.LibraryDocument.list('-updated_date', 100),
+    });
+
     const handleSuccess = () => {
         queryClient.invalidateQueries({ queryKey: ['aftercareInstructions'] });
         queryClient.invalidateQueries({ queryKey: ['consentForms'] });
         queryClient.invalidateQueries({ queryKey: ['educationTopics'] });
+        queryClient.invalidateQueries({ queryKey: ['libraryDocuments'] });
     };
 
     const toggleAftercareFavorite = async (id, currentValue) => {
@@ -77,6 +87,18 @@ export default function Library() {
         await base44.entities.EducationTopic.update(id, { is_favorite: !currentValue });
         queryClient.invalidateQueries({ queryKey: ['educationTopics'] });
     };
+
+    const toggleDocumentFavorite = async (id, currentValue) => {
+        await base44.entities.LibraryDocument.update(id, { is_favorite: !currentValue });
+        queryClient.invalidateQueries({ queryKey: ['libraryDocuments'] });
+    };
+
+    const deleteDocumentMutation = useMutation({
+        mutationFn: (id) => base44.entities.LibraryDocument.delete(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['libraryDocuments'] });
+        }
+    });
 
     const toggleSelection = (id) => {
         const newSelection = new Set(selectedItems);
@@ -170,6 +192,19 @@ export default function Library() {
         
         return matchesSearch && matchesCategory && matchesFavorite && matchesDateFrom && matchesDateTo;
     });
+
+    const filteredDocuments = documents.filter(doc => {
+        const matchesSearch = doc.document_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            doc.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            doc.category?.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesFavorite = !showFavoritesOnly || doc.is_favorite;
+        
+        const docDate = new Date(doc.updated_date || doc.created_date);
+        const matchesDateFrom = !dateFrom || docDate >= dateFrom;
+        const matchesDateTo = !dateTo || docDate <= dateTo;
+        
+        return matchesSearch && matchesFavorite && matchesDateFrom && matchesDateTo;
+    });
     
     const clearAllFilters = () => {
         setSearchQuery("");
@@ -222,11 +257,15 @@ export default function Library() {
                                 else if (activeTab === "consent") setShowConsentForm(true);
                                 else if (activeTab === "clinic") setShowClinicForm(true);
                                 else if (activeTab === "education") setShowEducationForm(true);
+                                else if (activeTab === "documents") setShowDocumentUpload(true);
                             }}
                             className="bg-purple-600 hover:bg-purple-700"
                         >
-                            <Plus className="w-4 h-4 mr-2" />
-                            Create {activeTab === "aftercare" ? "Aftercare" : activeTab === "consent" ? "Consent Form" : activeTab === "clinic" ? "Clinic Form" : "Education Topic"}
+                            {activeTab === "documents" ? <Upload className="w-4 h-4 mr-2" /> : <Plus className="w-4 h-4 mr-2" />}
+                            {activeTab === "aftercare" ? "Create Aftercare" : 
+                             activeTab === "consent" ? "Create Consent Form" : 
+                             activeTab === "clinic" ? "Create Clinic Form" : 
+                             activeTab === "documents" ? "Upload Document" : "Create Education Topic"}
                         </Button>
                     )}
                 </div>
@@ -360,6 +399,7 @@ export default function Library() {
                                         {activeTab === "consent" && `${filteredForms.length} results`}
                                         {activeTab === "clinic" && `${filteredClinicForms.length} results`}
                                         {activeTab === "education" && `${filteredEducation.length} results`}
+                                        {activeTab === "documents" && `${filteredDocuments.length} results`}
                                     </span>
                                     <Button variant="ghost" size="sm" onClick={clearAllFilters}>
                                         <X className="w-4 h-4 mr-2" />
@@ -374,7 +414,7 @@ export default function Library() {
 
             {/* Tabs */}
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-                <TabsList className="grid w-full md:w-auto md:inline-grid grid-cols-4 gap-4">
+                <TabsList className="grid w-full md:w-auto md:inline-grid grid-cols-5 gap-4">
                     <TabsTrigger value="education" className="text-base">
                         Education
                     </TabsTrigger>
@@ -386,6 +426,9 @@ export default function Library() {
                     </TabsTrigger>
                     <TabsTrigger value="clinic" className="text-base">
                         Clinic Forms
+                    </TabsTrigger>
+                    <TabsTrigger value="documents" className="text-base">
+                        Documents
                     </TabsTrigger>
                 </TabsList>
 
@@ -705,6 +748,89 @@ export default function Library() {
                         </div>
                     )}
                 </TabsContent>
+
+                {/* Documents Tab */}
+                <TabsContent value="documents" className="space-y-4">
+                    {filteredDocuments.length === 0 ? (
+                        <Card className="text-center py-12">
+                            <CardContent>
+                                <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                                <p className="text-gray-500 text-lg">No documents found</p>
+                                <p className="text-gray-400 text-sm mt-2">Upload documents to get started</p>
+                            </CardContent>
+                        </Card>
+                    ) : (
+                        <div className="space-y-6">
+                            {["General", "Forms", "Policies", "Training", "Other"].map(category => {
+                                const categoryDocs = filteredDocuments.filter(d => d.category === category);
+                                if (categoryDocs.length === 0) return null;
+                                
+                                return (
+                                    <div key={category} className="bg-white rounded-2xl p-6 shadow-md">
+                                        <h3 className="text-xl font-bold mb-4 text-gray-900 flex items-center">
+                                            <span className="px-3 py-1 rounded-lg text-sm mr-3 bg-blue-100 text-blue-800">
+                                                {category}
+                                            </span>
+                                            <span className="text-gray-400 text-sm font-normal">({categoryDocs.length})</span>
+                                        </h3>
+                                        <div className="space-y-2">
+                                            {categoryDocs.map(doc => (
+                                                <div key={doc.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors group">
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            toggleDocumentFavorite(doc.id, doc.is_favorite);
+                                                        }}
+                                                        className="flex-shrink-0 w-6 h-6 flex items-center justify-center hover:scale-110 transition-transform"
+                                                    >
+                                                        <Star className={`w-4 h-4 ${doc.is_favorite ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`} />
+                                                    </button>
+                                                    <div className="flex-1 min-w-0">
+                                                        <h4 className="font-semibold text-gray-900 truncate">
+                                                            {doc.document_name}
+                                                        </h4>
+                                                        {doc.description && (
+                                                            <p className="text-sm text-gray-600 line-clamp-1">
+                                                                {doc.description}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex gap-1">
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                e.stopPropagation();
+                                                                setPrintDocument(doc);
+                                                            }}
+                                                            className="flex-shrink-0 w-8 h-8 flex items-center justify-center hover:scale-110 transition-transform"
+                                                        >
+                                                            <Printer className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                                                        </button>
+                                                        {can("aftercare", "delete") && (
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    e.stopPropagation();
+                                                                    if (confirm('Delete this document?')) {
+                                                                        deleteDocumentMutation.mutate(doc.id);
+                                                                    }
+                                                                }}
+                                                                className="flex-shrink-0 w-8 h-8 flex items-center justify-center hover:scale-110 transition-transform"
+                                                            >
+                                                                <Trash2 className="w-4 h-4 text-gray-400 group-hover:text-red-600 transition-colors" />
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </TabsContent>
             </Tabs>
 
             <AftercareForm
@@ -731,7 +857,19 @@ export default function Library() {
                 onSuccess={handleSuccess}
             />
 
-            {activeTab !== "education" && (
+            <DocumentUploadDialog
+                open={showDocumentUpload}
+                onOpenChange={setShowDocumentUpload}
+                onSuccess={handleSuccess}
+            />
+
+            <DocumentPrintDialog
+                open={!!printDocument}
+                onOpenChange={(open) => !open && setPrintDocument(null)}
+                document={printDocument}
+            />
+
+            {activeTab !== "education" && activeTab !== "documents" && (
                 <BulkActionsBar
                     selectedCount={selectedItems.size}
                     onDelete={() => setShowDeleteDialog(true)}
