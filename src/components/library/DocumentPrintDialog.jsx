@@ -64,14 +64,23 @@ export default function DocumentPrintDialog({ open, onOpenChange, document }) {
                         </div>
                     )}
                     {isPDF ? (
-                        <iframe 
+                        <object 
                             ref={iframeRef}
-                            src={document.document_url + '#view=FitH'} 
+                            data={document.document_url} 
+                            type="application/pdf"
                             width="100%" 
                             height="600px"
-                            className="rounded-lg border-0"
+                            className="rounded-lg"
                             onLoad={() => setIsLoaded(true)}
-                        />
+                        >
+                            <iframe 
+                                src={`https://docs.google.com/viewer?url=${encodeURIComponent(document.document_url)}&embedded=true`}
+                                width="100%" 
+                                height="600px"
+                                className="rounded-lg border-0"
+                                onLoad={() => setIsLoaded(true)}
+                            />
+                        </object>
                     ) : isImage ? (
                         <img 
                             src={document.document_url} 
@@ -82,7 +91,7 @@ export default function DocumentPrintDialog({ open, onOpenChange, document }) {
                     ) : (
                         <iframe 
                             ref={iframeRef}
-                            src={document.document_url} 
+                            src={`https://docs.google.com/viewer?url=${encodeURIComponent(document.document_url)}&embedded=true`}
                             width="100%" 
                             height="600px"
                             className="rounded-lg border-0"
