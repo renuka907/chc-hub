@@ -1,9 +1,9 @@
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Printer, X } from "lucide-react";
+import { Printer, X, Pencil } from "lucide-react";
 
-export default function DocumentPrintDialog({ open, onOpenChange, document: doc }) {
+export default function DocumentPrintDialog({ open, onOpenChange, document: doc, onEdit }) {
     if (!doc) return null;
 
     const iframeRef = React.useRef(null);
@@ -57,6 +57,17 @@ export default function DocumentPrintDialog({ open, onOpenChange, document: doc 
                     <div className="flex items-center justify-between">
                         <DialogTitle>{doc.document_name}</DialogTitle>
                         <div className="flex gap-2">
+                            <Button 
+                                onClick={() => {
+                                    onOpenChange(false);
+                                    onEdit?.(doc);
+                                }} 
+                                size="sm" 
+                                variant="outline"
+                            >
+                                <Pencil className="w-4 h-4 mr-2" />
+                                Edit
+                            </Button>
                             <Button 
                                 onClick={handlePrint} 
                                 size="sm" 
