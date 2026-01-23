@@ -230,15 +230,7 @@ export default function Layout({ children, currentPageName }) {
                                     <span>Profile</span>
                                 </Link>
 
-                                <Link 
-                                                        to={createPageUrl("Specials")} 
-                                                        className="flex items-center gap-2 bg-white border-2 border-purple-300 text-purple-700 px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
-                                                    >
-                                                        <Upload className="w-4 h-4" />
-                                                        <span>Specials</span>
-                                                    </Link>
-
-                                                {/* Single Dropdown Menu */}
+                                {/* Single Dropdown Menu */}
                                                     <div className="relative">
                                                         <button
                                                             onMouseEnter={() => {
@@ -276,28 +268,40 @@ export default function Layout({ children, currentPageName }) {
                                         }}
                                         className="absolute top-full right-0 mt-1 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 max-h-96 overflow-y-auto"
                                     >
-                                        {menuGroups.map((group, idx) => {
-                                            if (group.single) {
-                                                const Icon = group.icon;
-                                                const isActive = currentPageName === group.path;
-                                                return (
-                                                    <Link
-                                                        key={group.path}
-                                                        to={createPageUrl(group.path)}
-                                                        onClick={() => setOpenDropdown(null)}
-                                                        className={`flex items-center space-x-3 px-4 py-2 text-sm transition-colors ${
-                                                            isActive
-                                                                ? "bg-purple-50 text-purple-900 font-medium"
-                                                                : "text-gray-700 hover:bg-gray-50"
-                                                        }`}
-                                                    >
-                                                        <Icon className="w-4 h-4" />
-                                                        <span>{group.name}</span>
-                                                    </Link>
-                                                );
-                                            }
-                                            
-                                            return (
+                                        <Link
+                                                                            to={createPageUrl("Specials")}
+                                                                            onClick={() => setOpenDropdown(null)}
+                                                                            className={`flex items-center space-x-3 px-4 py-2 text-sm transition-colors ${
+                                                                                currentPageName === "Specials"
+                                                                                    ? "bg-purple-50 text-purple-900 font-medium"
+                                                                                    : "text-gray-700 hover:bg-gray-50"
+                                                                            }`}
+                                                                        >
+                                                                            <Upload className="w-4 h-4" />
+                                                                            <span>Specials</span>
+                                                                        </Link>
+                                                                        {menuGroups.map((group, idx) => {
+                                                                            if (group.single) {
+                                                                                const Icon = group.icon;
+                                                                                const isActive = currentPageName === group.path;
+                                                                                return (
+                                                                                    <Link
+                                                                                        key={group.path}
+                                                                                        to={createPageUrl(group.path)}
+                                                                                        onClick={() => setOpenDropdown(null)}
+                                                                                        className={`flex items-center space-x-3 px-4 py-2 text-sm transition-colors ${
+                                                                                            isActive
+                                                                                                ? "bg-purple-50 text-purple-900 font-medium"
+                                                                                                : "text-gray-700 hover:bg-gray-50"
+                                                                                        }`}
+                                                                                    >
+                                                                                        <Icon className="w-4 h-4" />
+                                                                                        <span>{group.name}</span>
+                                                                                    </Link>
+                                                                                );
+                                                                            }
+
+                                                                            return (
                                                 <div key={idx}>
                                                     <div className="px-4 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider mt-2">
                                                         {group.name}
