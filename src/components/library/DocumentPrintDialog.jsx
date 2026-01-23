@@ -16,13 +16,17 @@ export default function DocumentPrintDialog({ open, onOpenChange, document }) {
     }, [open]);
 
     const handlePrint = () => {
-        if (!isLoaded) return;
-        
-        if (isPDF && iframeRef.current) {
-            try {
-                iframeRef.current.contentWindow.print();
-            } catch (e) {
-                window.print();
+        if (isPDF) {
+            // Open with Google Viewer's print interface which respects orientation
+            const printUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(document.document_url)}&embedded=true&print=true`;
+            window.open(printUrl, '_blank');
+        } else if (isImage) {
+            // For images, open in new window and print
+            const printWindow = window.open(document.document_url, '_blank');
+            if (printWindow) {
+                printWindow.onload = () => {
+                    printWindow.print();
+                };
             }
         } else {
             window.print();
