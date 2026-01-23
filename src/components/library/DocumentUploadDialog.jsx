@@ -108,6 +108,7 @@ export default function DocumentUploadDialog({ open, onOpenChange, onSuccess }) 
                     <Button 
                         onClick={handleSubmit} 
                         disabled={!form.file || !form.document_name || uploading}
+                        className="text-black"
                     >
                         {uploading ? "Uploading..." : "Upload"}
                     </Button>
