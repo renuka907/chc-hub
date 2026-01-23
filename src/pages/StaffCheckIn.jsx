@@ -368,7 +368,7 @@ export default function StaffCheckInPage() {
                     </div>
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setShowCheckInDialog(false)}>Cancel</Button>
-                        <Button onClick={handleCheckIn} disabled={!checkInForm.location_id || checkInMutation.isPending}>
+                        <Button onClick={handleCheckIn} disabled={!checkInForm.location_id || checkInMutation.isPending} className="text-black">
                             Check In
                         </Button>
                     </DialogFooter>
