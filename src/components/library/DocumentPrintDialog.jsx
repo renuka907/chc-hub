@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Printer, X } from "lucide-react";
 
 export default function DocumentPrintDialog({ open, onOpenChange, document }) {
+    if (!document) return null;
+
     const iframeRef = React.useRef(null);
     const [isLoaded, setIsLoaded] = React.useState(false);
-
-    if (!document) return null;
 
     React.useEffect(() => {
         if (open) {
