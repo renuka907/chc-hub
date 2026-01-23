@@ -49,7 +49,7 @@ export default function DocumentPrintDialog({ open, onOpenChange, document }) {
                     <div className="flex items-center justify-between">
                         <DialogTitle>{document.document_name}</DialogTitle>
                         <div className="flex gap-2">
-                            <Button onClick={handlePrint} size="sm">
+                            <Button onClick={handlePrint} size="sm" className="text-black">
                                 <Printer className="w-4 h-4 mr-2" />
                                 Print
                             </Button>
