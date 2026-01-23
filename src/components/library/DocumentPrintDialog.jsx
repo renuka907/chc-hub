@@ -39,7 +39,7 @@ export default function DocumentPrintDialog({ open, onOpenChange, document }) {
         printWindow.document.close();
     };
 
-    const isPDF = document.file_type?.includes('pdf');
+    const isPDF = document.file_type?.includes('pdf') || document.document_url?.endsWith('.pdf');
     const isImage = document.file_type?.includes('image') || document.document_url?.match(/\.(jpg|jpeg|png)$/i);
 
     return (
@@ -61,12 +61,11 @@ export default function DocumentPrintDialog({ open, onOpenChange, document }) {
                 </DialogHeader>
                 <div className="overflow-auto max-h-[calc(90vh-120px)]">
                     {isPDF ? (
-                        <embed 
+                        <iframe 
                             src={document.document_url} 
-                            type="application/pdf" 
                             width="100%" 
                             height="600px"
-                            className="rounded-lg"
+                            className="rounded-lg border-0"
                         />
                     ) : isImage ? (
                         <img 
@@ -80,7 +79,7 @@ export default function DocumentPrintDialog({ open, onOpenChange, document }) {
                             <Button 
                                 onClick={() => window.open(document.document_url, '_blank')}
                                 variant="outline"
-                                className="mt-4"
+                                className="mt-4 text-black"
                             >
                                 Open in New Tab
                             </Button>
