@@ -103,6 +103,12 @@ export default function Layout({ children, currentPageName }) {
             single: true
         },
         {
+            name: "Staff Check-In",
+            path: "StaffCheckIn",
+            icon: Users,
+            single: true
+        },
+        {
             name: "Messaging",
             path: "Messaging",
             icon: MessageSquare,
