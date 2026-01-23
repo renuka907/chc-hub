@@ -80,16 +80,14 @@ export default function DocumentPrintDialog({ open, onOpenChange, document }) {
                             onLoad={() => setIsLoaded(true)}
                         />
                     ) : (
-                        <div className="text-center py-12">
-                            <p className="text-gray-500">Preview not available</p>
-                            <Button 
-                                onClick={() => window.open(document.document_url, '_blank')}
-                                variant="outline"
-                                className="mt-4 text-black"
-                            >
-                                Open in New Tab
-                            </Button>
-                        </div>
+                        <iframe 
+                            ref={iframeRef}
+                            src={document.document_url} 
+                            width="100%" 
+                            height="600px"
+                            className="rounded-lg border-0"
+                            onLoad={() => setIsLoaded(true)}
+                        />
                     )}
                 </div>
             </DialogContent>
