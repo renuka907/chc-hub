@@ -20,11 +20,12 @@ export default function DocumentEditDialog({ open, onOpenChange, document: doc, 
 
     React.useEffect(() => {
         if (doc) {
+            const tagsArray = doc.tags ? JSON.parse(doc.tags) : [];
             setFormData({
                 document_name: doc.document_name || "",
                 category: doc.category || "General",
                 description: doc.description || "",
-                tags: doc.tags || ""
+                tags: Array.isArray(tagsArray) ? tagsArray.join(', ') : ""
             });
         }
     }, [doc]);
