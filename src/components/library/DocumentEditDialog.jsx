@@ -16,6 +16,7 @@ export default function DocumentEditDialog({ open, onOpenChange, document: doc, 
         tags: ""
     });
     const [additionalFiles, setAdditionalFiles] = React.useState([]);
+    const [replacementFiles, setReplacementFiles] = React.useState([]);
     const [isUploading, setIsUploading] = React.useState(false);
 
     React.useEffect(() => {
@@ -42,7 +43,17 @@ export default function DocumentEditDialog({ open, onOpenChange, document: doc, 
                 tags: formData.tags
             };
 
-            if (additionalFiles.length > 0) {
+            if (replacementFiles.length > 0) {
+                const newUrls = [];
+                
+                for (const file of replacementFiles) {
+                    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                    newUrls.push(file_url);
+                }
+                
+                updateData.file_urls = JSON.stringify(newUrls);
+                updateData.document_url = newUrls[0];
+            } else if (additionalFiles.length > 0) {
                 const existingUrls = doc.file_urls ? JSON.parse(doc.file_urls) : [doc.document_url];
                 
                 for (const file of additionalFiles) {
@@ -62,6 +73,7 @@ export default function DocumentEditDialog({ open, onOpenChange, document: doc, 
             onSuccess?.();
             onOpenChange(false);
             setAdditionalFiles([]);
+            setReplacementFiles([]);
         } catch (error) {
             console.error("Failed to update document:", error);
             alert("Failed to update document");
@@ -140,13 +152,36 @@ export default function DocumentEditDialog({ open, onOpenChange, document: doc, 
                     </div>
 
                     <div>
-                        <Label htmlFor="additional_files">Add More Files</Label>
+                        <Label htmlFor="replacement_files">Replace All Files</Label>
+                        <Input
+                            id="replacement_files"
+                            type="file"
+                            onChange={(e) => {
+                                setReplacementFiles(Array.from(e.target.files));
+                                setAdditionalFiles([]);
+                            }}
+                            accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                            multiple
+                        />
+                        {replacementFiles.length > 0 && (
+                            <p className="text-sm text-orange-600 mt-2">
+                                Will replace with {replacementFiles.length} new file{replacementFiles.length !== 1 ? 's' : ''}
+                            </p>
+                        )}
+                    </div>
+
+                    <div>
+                        <Label htmlFor="additional_files">Or Add More Files</Label>
                         <Input
                             id="additional_files"
                             type="file"
-                            onChange={(e) => setAdditionalFiles(Array.from(e.target.files))}
+                            onChange={(e) => {
+                                setAdditionalFiles(Array.from(e.target.files));
+                                setReplacementFiles([]);
+                            }}
                             accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
                             multiple
+                            disabled={replacementFiles.length > 0}
                         />
                         {additionalFiles.length > 0 && (
                             <p className="text-sm text-gray-600 mt-2">
