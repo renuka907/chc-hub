@@ -802,6 +802,15 @@ export default function Library() {
                                                                 {JSON.parse(doc.file_urls).length} files
                                                             </p>
                                                         )}
+                                                        {doc.tags && JSON.parse(doc.tags).length > 0 && (
+                                                            <div className="flex flex-wrap gap-1 mt-2">
+                                                                {JSON.parse(doc.tags).map((tag, idx) => (
+                                                                    <span key={idx} className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded">
+                                                                        {tag}
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                        )}
                                                     </div>
                                                     <div className="flex gap-1">
                                                         <button

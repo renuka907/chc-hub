@@ -14,7 +14,8 @@ export default function DocumentUploadDialog({ open, onOpenChange, onSuccess }) 
         document_name: "",
         category: "General",
         description: "",
-        files: []
+        files: [],
+        tags: ""
     });
 
     const handleFileChange = (e) => {
@@ -42,10 +43,11 @@ export default function DocumentUploadDialog({ open, onOpenChange, onSuccess }) 
                 file_urls: JSON.stringify(uploadedUrls),
                 category: form.category,
                 description: form.description,
-                file_type: form.files[0].type
+                file_type: form.files[0].type,
+                tags: form.tags ? JSON.stringify(form.tags.split(',').map(t => t.trim()).filter(t => t)) : "[]"
             });
 
-            setForm({ document_name: "", category: "General", description: "", files: [] });
+            setForm({ document_name: "", category: "General", description: "", files: [], tags: "" });
             onSuccess();
             onOpenChange(false);
         } catch (error) {
@@ -108,6 +110,14 @@ export default function DocumentUploadDialog({ open, onOpenChange, onSuccess }) 
                             value={form.description}
                             onChange={(e) => setForm({ ...form, description: e.target.value })}
                             placeholder="Brief description..."
+                        />
+                    </div>
+                    <div>
+                        <Label>Tags (comma-separated)</Label>
+                        <Input
+                            value={form.tags}
+                            onChange={(e) => setForm({ ...form, tags: e.target.value })}
+                            placeholder="urgent, policy, training"
                         />
                     </div>
                 </div>

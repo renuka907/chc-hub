@@ -52,6 +52,10 @@ export default function DocumentEditDialog({ open, onOpenChange, document: doc, 
                 updateData.file_urls = JSON.stringify(existingUrls);
             }
 
+            if (updateData.tags) {
+                updateData.tags = JSON.stringify(formData.tags.split(',').map(t => t.trim()).filter(t => t));
+            }
+
             await base44.entities.LibraryDocument.update(doc.id, updateData);
             
             onSuccess?.();
