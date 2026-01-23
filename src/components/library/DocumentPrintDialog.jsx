@@ -4,39 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Printer, X } from "lucide-react";
 
 export default function DocumentPrintDialog({ open, onOpenChange, document }) {
+    const iframeRef = React.useRef(null);
+
     if (!document) return null;
 
     const handlePrint = () => {
-        const printWindow = window.open('', '_blank');
-        if (document.file_type?.includes('pdf')) {
-            printWindow.document.write(`
-                <html>
-                    <head><title>Print ${document.document_name}</title></head>
-                    <body style="margin:0">
-                        <embed src="${document.document_url}" width="100%" height="100%" type="application/pdf" />
-                        <script>
-                            window.onload = function() { window.print(); }
-                        </script>
-                    </body>
-                </html>
-            `);
+        if (iframeRef.current) {
+            iframeRef.current.contentWindow.print();
         } else {
-            printWindow.document.write(`
-                <html>
-                    <head>
-                        <title>Print ${document.document_name}</title>
-                        <style>
-                            body { margin: 0; display: flex; justify-content: center; align-items: center; }
-                            img { max-width: 100%; height: auto; }
-                        </style>
-                    </head>
-                    <body>
-                        <img src="${document.document_url}" onload="window.print()" />
-                    </body>
-                </html>
-            `);
+            window.print();
         }
-        printWindow.document.close();
     };
 
     const isPDF = document.file_type?.includes('pdf') || document.document_url?.endsWith('.pdf');
@@ -62,6 +39,7 @@ export default function DocumentPrintDialog({ open, onOpenChange, document }) {
                 <div className="overflow-auto max-h-[calc(90vh-120px)]">
                     {isPDF ? (
                         <iframe 
+                            ref={iframeRef}
                             src={document.document_url} 
                             width="100%" 
                             height="600px"
