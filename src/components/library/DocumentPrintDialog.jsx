@@ -63,25 +63,7 @@ export default function DocumentPrintDialog({ open, onOpenChange, document }) {
                             </div>
                         </div>
                     )}
-                    {isPDF ? (
-                        <object 
-                            ref={iframeRef}
-                            data={document.document_url} 
-                            type="application/pdf"
-                            width="100%" 
-                            height="600px"
-                            className="rounded-lg"
-                            onLoad={() => setIsLoaded(true)}
-                        >
-                            <iframe 
-                                src={`https://docs.google.com/viewer?url=${encodeURIComponent(document.document_url)}&embedded=true`}
-                                width="100%" 
-                                height="600px"
-                                className="rounded-lg border-0"
-                                onLoad={() => setIsLoaded(true)}
-                            />
-                        </object>
-                    ) : isImage ? (
+                    {isImage ? (
                         <img 
                             src={document.document_url} 
                             alt={document.document_name}
@@ -89,12 +71,13 @@ export default function DocumentPrintDialog({ open, onOpenChange, document }) {
                             onLoad={() => setIsLoaded(true)}
                         />
                     ) : (
-                        <iframe 
+                        <embed 
                             ref={iframeRef}
-                            src={`https://docs.google.com/viewer?url=${encodeURIComponent(document.document_url)}&embedded=true`}
+                            src={document.document_url} 
+                            type={isPDF ? "application/pdf" : ""}
                             width="100%" 
                             height="600px"
-                            className="rounded-lg border-0"
+                            className="rounded-lg"
                             onLoad={() => setIsLoaded(true)}
                         />
                     )}
