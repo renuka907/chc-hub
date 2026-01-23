@@ -14,32 +14,38 @@ export default function DocumentUploadDialog({ open, onOpenChange, onSuccess }) 
         document_name: "",
         category: "General",
         description: "",
-        file: null
+        files: []
     });
 
     const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setForm({ ...form, file, document_name: form.document_name || file.name.split('.')[0] });
+        const files = Array.from(e.target.files);
+        if (files.length > 0) {
+            setForm({ ...form, files, document_name: form.document_name || files[0].name.split('.')[0] });
         }
     };
 
     const handleSubmit = async () => {
-        if (!form.file || !form.document_name) return;
+        if (form.files.length === 0 || !form.document_name) return;
 
         setUploading(true);
         try {
-            const { file_url } = await base44.integrations.Core.UploadFile({ file: form.file });
+            const uploadedUrls = [];
+            
+            for (const file of form.files) {
+                const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                uploadedUrls.push(file_url);
+            }
             
             await base44.entities.LibraryDocument.create({
                 document_name: form.document_name,
-                document_url: file_url,
+                document_url: uploadedUrls[0],
+                file_urls: JSON.stringify(uploadedUrls),
                 category: form.category,
                 description: form.description,
-                file_type: form.file.type
+                file_type: form.files[0].type
             });
 
-            setForm({ document_name: "", category: "General", description: "", file: null });
+            setForm({ document_name: "", category: "General", description: "", files: [] });
             onSuccess();
             onOpenChange(false);
         } catch (error) {
@@ -57,17 +63,19 @@ export default function DocumentUploadDialog({ open, onOpenChange, onSuccess }) 
                 </DialogHeader>
                 <div className="space-y-4">
                     <div>
-                        <Label>File</Label>
+                        <Label>Files (multiple allowed)</Label>
                         <div className="mt-2">
                             <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
                                 <div className="flex flex-col items-center justify-center py-6">
                                     <Upload className="w-8 h-8 text-gray-400 mb-2" />
                                     <p className="text-sm text-gray-600">
-                                        {form.file ? form.file.name : "Click to select a file"}
+                                        {form.files.length > 0 
+                                            ? `${form.files.length} file${form.files.length > 1 ? 's' : ''} selected` 
+                                            : "Click to select files"}
                                     </p>
                                     <p className="text-xs text-gray-400 mt-1">PDF, JPG, PNG supported</p>
                                 </div>
-                                <input type="file" className="hidden" onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png" />
+                                <input type="file" className="hidden" onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png" multiple />
                             </label>
                         </div>
                     </div>
@@ -107,7 +115,7 @@ export default function DocumentUploadDialog({ open, onOpenChange, onSuccess }) 
                     <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
                     <Button 
                         onClick={handleSubmit} 
-                        disabled={!form.file || !form.document_name || uploading}
+                        disabled={form.files.length === 0 || !form.document_name || uploading}
                         className="text-black"
                     >
                         {uploading ? "Uploading..." : "Upload"}
