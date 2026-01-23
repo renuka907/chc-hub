@@ -8,10 +8,15 @@ export default function DocumentPrintDialog({ open, onOpenChange, document: doc,
 
     const iframeRef = React.useRef(null);
     const [isLoaded, setIsLoaded] = React.useState(false);
+    const [selectedFileIndex, setSelectedFileIndex] = React.useState(0);
+    
+    const fileUrls = doc.file_urls ? JSON.parse(doc.file_urls) : [doc.document_url];
+    const currentFileUrl = fileUrls[selectedFileIndex];
 
     React.useEffect(() => {
         if (open) {
             setIsLoaded(false);
+            setSelectedFileIndex(0);
         }
     }, [open]);
 
@@ -38,7 +43,7 @@ export default function DocumentPrintDialog({ open, onOpenChange, document: doc,
                 }
             };
             
-            printFrame.src = doc.document_url;
+            printFrame.src = currentFileUrl;
         } else if (isImage) {
             // Print current window with image
             window.print();
@@ -47,8 +52,8 @@ export default function DocumentPrintDialog({ open, onOpenChange, document: doc,
         }
     };
 
-    const isPDF = doc.file_type?.includes('pdf') || doc.document_url?.endsWith('.pdf');
-    const isImage = doc.file_type?.includes('image') || doc.document_url?.match(/\.(jpg|jpeg|png)$/i);
+    const isPDF = doc.file_type?.includes('pdf') || currentFileUrl?.endsWith('.pdf');
+    const isImage = doc.file_type?.includes('image') || currentFileUrl?.match(/\.(jpg|jpeg|png)$/i);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -83,10 +88,27 @@ export default function DocumentPrintDialog({ open, onOpenChange, document: doc,
                         </div>
                     </div>
                 </DialogHeader>
+                {fileUrls.length > 1 && (
+                    <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
+                        {fileUrls.map((url, index) => (
+                            <Button
+                                key={index}
+                                variant={selectedFileIndex === index ? "default" : "outline"}
+                                size="sm"
+                                onClick={() => {
+                                    setSelectedFileIndex(index);
+                                    setIsLoaded(false);
+                                }}
+                            >
+                                File {index + 1}
+                            </Button>
+                        ))}
+                    </div>
+                )}
                 <div className="overflow-auto max-h-[calc(90vh-120px)] relative bg-white">
                     {isImage ? (
                         <img 
-                            src={doc.document_url} 
+                            src={currentFileUrl} 
                             alt={doc.document_name}
                             className="w-full h-auto rounded-lg"
                             onLoad={() => setIsLoaded(true)}
@@ -94,7 +116,7 @@ export default function DocumentPrintDialog({ open, onOpenChange, document: doc,
                     ) : (
                         <iframe 
                             ref={iframeRef}
-                            src={`https://docs.google.com/viewer?url=${encodeURIComponent(doc.document_url)}&embedded=true`}
+                            src={`https://docs.google.com/viewer?url=${encodeURIComponent(currentFileUrl)}&embedded=true`}
                             width="100%" 
                             height="600px"
                             className="rounded-lg border-0 bg-white"

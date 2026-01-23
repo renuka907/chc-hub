@@ -797,6 +797,11 @@ export default function Library() {
                                                                 {doc.description}
                                                             </p>
                                                         )}
+                                                        {doc.file_urls && JSON.parse(doc.file_urls).length > 1 && (
+                                                            <p className="text-xs text-purple-600 mt-1">
+                                                                {JSON.parse(doc.file_urls).length} files
+                                                            </p>
+                                                        )}
                                                     </div>
                                                     <div className="flex gap-1">
                                                         <button

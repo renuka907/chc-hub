@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
 
 export default function DocumentEditDialog({ open, onOpenChange, document: doc, onSuccess }) {
@@ -14,6 +15,8 @@ export default function DocumentEditDialog({ open, onOpenChange, document: doc, 
         description: "",
         tags: ""
     });
+    const [additionalFiles, setAdditionalFiles] = React.useState([]);
+    const [isUploading, setIsUploading] = React.useState(false);
 
     React.useEffect(() => {
         if (doc) {
@@ -28,20 +31,37 @@ export default function DocumentEditDialog({ open, onOpenChange, document: doc, 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsUploading(true);
         
         try {
-            await base44.entities.LibraryDocument.update(doc.id, {
+            const updateData = {
                 document_name: formData.document_name,
                 category: formData.category,
                 description: formData.description,
                 tags: formData.tags
-            });
+            };
+
+            if (additionalFiles.length > 0) {
+                const existingUrls = doc.file_urls ? JSON.parse(doc.file_urls) : [doc.document_url];
+                
+                for (const file of additionalFiles) {
+                    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                    existingUrls.push(file_url);
+                }
+                
+                updateData.file_urls = JSON.stringify(existingUrls);
+            }
+
+            await base44.entities.LibraryDocument.update(doc.id, updateData);
             
             onSuccess?.();
             onOpenChange(false);
+            setAdditionalFiles([]);
         } catch (error) {
             console.error("Failed to update document:", error);
             alert("Failed to update document");
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -103,11 +123,40 @@ export default function DocumentEditDialog({ open, onOpenChange, document: doc, 
                         />
                     </div>
 
+                    <div className="border-t pt-4">
+                        <Label>Current Files</Label>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                            {(doc.file_urls ? JSON.parse(doc.file_urls) : [doc.document_url]).map((url, index) => (
+                                <Badge key={index} variant="secondary">
+                                    File {index + 1}
+                                </Badge>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div>
+                        <Label htmlFor="additional_files">Add More Files</Label>
+                        <Input
+                            id="additional_files"
+                            type="file"
+                            onChange={(e) => setAdditionalFiles(Array.from(e.target.files))}
+                            accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                            multiple
+                        />
+                        {additionalFiles.length > 0 && (
+                            <p className="text-sm text-gray-600 mt-2">
+                                {additionalFiles.length} new file{additionalFiles.length !== 1 ? 's' : ''} to add
+                            </p>
+                        )}
+                    </div>
+
                     <div className="flex gap-2 justify-end">
                         <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                             Cancel
                         </Button>
-                        <Button type="submit">Save Changes</Button>
+                        <Button type="submit" disabled={isUploading}>
+                            {isUploading ? 'Saving...' : 'Save Changes'}
+                        </Button>
                     </div>
                 </form>
             </DialogContent>
