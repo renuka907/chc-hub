@@ -17,17 +17,31 @@ export default function DocumentPrintDialog({ open, onOpenChange, document }) {
 
     const handlePrint = () => {
         if (isPDF) {
-            // Open with Google Viewer's print interface which respects orientation
-            const printUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(document.document_url)}&embedded=true&print=true`;
-            window.open(printUrl, '_blank');
+            // Create hidden iframe to print PDF directly
+            const printFrame = document.createElement('iframe');
+            printFrame.style.position = 'fixed';
+            printFrame.style.right = '0';
+            printFrame.style.bottom = '0';
+            printFrame.style.width = '0';
+            printFrame.style.height = '0';
+            printFrame.style.border = 'none';
+            document.body.appendChild(printFrame);
+            
+            printFrame.onload = () => {
+                try {
+                    printFrame.contentWindow.focus();
+                    printFrame.contentWindow.print();
+                    setTimeout(() => document.body.removeChild(printFrame), 1000);
+                } catch (e) {
+                    console.error('Print error:', e);
+                    document.body.removeChild(printFrame);
+                }
+            };
+            
+            printFrame.src = document.document_url;
         } else if (isImage) {
-            // For images, open in new window and print
-            const printWindow = window.open(document.document_url, '_blank');
-            if (printWindow) {
-                printWindow.onload = () => {
-                    printWindow.print();
-                };
-            }
+            // Print current window with image
+            window.print();
         } else {
             window.print();
         }
