@@ -54,15 +54,7 @@ export default function DocumentPrintDialog({ open, onOpenChange, document }) {
                         </div>
                     </div>
                 </DialogHeader>
-                <div className="overflow-auto max-h-[calc(90vh-120px)] relative">
-                    {!isLoaded && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-gray-50 rounded-lg">
-                            <div className="text-center">
-                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-2"></div>
-                                <p className="text-sm text-gray-500">Loading preview...</p>
-                            </div>
-                        </div>
-                    )}
+                <div className="overflow-auto max-h-[calc(90vh-120px)] relative bg-white">
                     {isImage ? (
                         <img 
                             src={document.document_url} 
@@ -71,14 +63,14 @@ export default function DocumentPrintDialog({ open, onOpenChange, document }) {
                             onLoad={() => setIsLoaded(true)}
                         />
                     ) : (
-                        <embed 
+                        <iframe 
                             ref={iframeRef}
                             src={document.document_url} 
-                            type={isPDF ? "application/pdf" : ""}
                             width="100%" 
                             height="600px"
-                            className="rounded-lg"
+                            className="rounded-lg border-0 bg-white"
                             onLoad={() => setIsLoaded(true)}
+                            title={document.document_name}
                         />
                     )}
                 </div>
