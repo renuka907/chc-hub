@@ -42,6 +42,7 @@ export default function Library() {
     const [selectedItems, setSelectedItems] = useState(new Set());
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [showTagManager, setShowTagManager] = useState(false);
+    const [selectedTags, setSelectedTags] = useState([]);
     const [showDocumentUpload, setShowDocumentUpload] = useState(false);
     const [printDocument, setPrintDocument] = useState(null);
     const [editDocument, setEditDocument] = useState(null);
@@ -195,6 +196,23 @@ export default function Library() {
         return matchesSearch && matchesCategory && matchesFavorite && matchesDateFrom && matchesDateTo;
     });
 
+    const allDocumentTags = React.useMemo(() => {
+        const tagSet = new Set();
+        documents.forEach(doc => {
+            if (doc.tags) {
+                try {
+                    const docTags = JSON.parse(doc.tags);
+                    if (Array.isArray(docTags)) {
+                        docTags.forEach(tag => tagSet.add(tag));
+                    }
+                } catch (e) {
+                    // ignore parsing errors
+                }
+            }
+        });
+        return Array.from(tagSet).sort();
+    }, [documents]);
+
     const filteredDocuments = documents.filter(doc => {
         const matchesSearch = doc.document_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                             doc.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -205,7 +223,17 @@ export default function Library() {
         const matchesDateFrom = !dateFrom || docDate >= dateFrom;
         const matchesDateTo = !dateTo || docDate <= dateTo;
         
-        return matchesSearch && matchesFavorite && matchesDateFrom && matchesDateTo;
+        let matchesTags = true;
+        if (selectedTags.length > 0) {
+            try {
+                const docTags = doc.tags ? JSON.parse(doc.tags) : [];
+                matchesTags = selectedTags.some(tag => docTags.includes(tag));
+            } catch (e) {
+                matchesTags = false;
+            }
+        }
+        
+        return matchesSearch && matchesFavorite && matchesDateFrom && matchesDateTo && matchesTags;
     });
     
     const clearAllFilters = () => {
