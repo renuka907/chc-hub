@@ -781,6 +781,42 @@ export default function Library() {
 
                 {/* Documents Tab */}
                 <TabsContent value="documents" className="space-y-4">
+                    {allDocumentTags.length > 0 && (
+                        <Card className="bg-white">
+                            <CardContent className="pt-6">
+                                <h4 className="text-sm font-medium text-gray-700 mb-3">Filter by Tags</h4>
+                                <div className="flex flex-wrap gap-2">
+                                    {allDocumentTags.map(tag => (
+                                        <button
+                                            key={tag}
+                                            onClick={() => {
+                                                setSelectedTags(prev => 
+                                                    prev.includes(tag) 
+                                                        ? prev.filter(t => t !== tag)
+                                                        : [...prev, tag]
+                                                );
+                                            }}
+                                            className={`text-sm px-4 py-2 rounded-full transition-colors ${
+                                                selectedTags.includes(tag)
+                                                    ? 'bg-purple-600 text-white'
+                                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                            }`}
+                                        >
+                                            {tag}
+                                        </button>
+                                    ))}
+                                    {selectedTags.length > 0 && (
+                                        <button
+                                            onClick={() => setSelectedTags([])}
+                                            className="text-sm px-4 py-2 rounded-full bg-red-100 text-red-700 hover:bg-red-200"
+                                        >
+                                            Clear Tags
+                                        </button>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    )}
                     {filteredDocuments.length === 0 ? (
                         <Card className="text-center py-12">
                             <CardContent>
