@@ -22,7 +22,7 @@ import DocumentUploadDialog from "../components/library/DocumentUploadDialog";
 import DocumentPrintDialog from "../components/library/DocumentPrintDialog";
 import DocumentEditDialog from "../components/library/DocumentEditDialog";
 import { usePermissions } from "../components/permissions/usePermissions";
-import { FileText, Printer, Plus, Star, Filter, X, CalendarIcon, BookOpen, ExternalLink, Upload, Trash2 } from "lucide-react";
+import { FileText, Printer, Plus, Star, Filter, X, CalendarIcon, BookOpen, ExternalLink, Upload, Trash2, Pencil } from "lucide-react";
 import { format } from "date-fns";
 
 export default function Library() {
@@ -799,6 +799,16 @@ export default function Library() {
                                                         )}
                                                     </div>
                                                     <div className="flex gap-1">
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                e.stopPropagation();
+                                                                setEditDocument(doc);
+                                                            }}
+                                                            className="flex-shrink-0 w-8 h-8 flex items-center justify-center hover:scale-110 transition-transform"
+                                                        >
+                                                            <Pencil className="w-4 h-4 text-gray-400 group-hover:text-purple-600 transition-colors" />
+                                                        </button>
                                                         <button
                                                             onClick={(e) => {
                                                                 e.preventDefault();
