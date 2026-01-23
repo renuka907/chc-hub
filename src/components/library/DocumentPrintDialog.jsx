@@ -65,7 +65,7 @@ export default function DocumentPrintDialog({ open, onOpenChange, document }) {
                     ) : (
                         <iframe 
                             ref={iframeRef}
-                            src={document.document_url} 
+                            src={`https://docs.google.com/viewer?url=${encodeURIComponent(document.document_url)}&embedded=true`}
                             width="100%" 
                             height="600px"
                             className="rounded-lg border-0 bg-white"
