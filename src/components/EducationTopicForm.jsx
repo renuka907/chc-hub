@@ -474,7 +474,7 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                                     className={`flex-1 ${!saveAsNewVersion ? 'text-black' : ''}`}
                                 >
                                     <Save className="w-4 h-4 mr-2" />
-                                    Update Current
+                                    Overwrite
                                 </Button>
                             </div>
                             {saveAsNewVersion && (
