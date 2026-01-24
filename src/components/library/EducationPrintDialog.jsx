@@ -133,14 +133,14 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
         }
         
         ul, ol {
-            margin: 12pt 0;
-            padding-left: 28pt;
-            line-height: 2;
+            margin: 16pt 0;
+            padding-left: 30pt;
+            line-height: 2.2;
         }
         
         li {
-            margin-bottom: 8pt;
-            line-height: 1.9;
+            margin-bottom: 10pt;
+            line-height: 2.1;
         }
         
         strong {
