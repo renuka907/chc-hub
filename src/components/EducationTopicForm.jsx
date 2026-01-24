@@ -47,6 +47,7 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                 - Use <ul> and <li> for ALL content (make bullet lists, not paragraphs)
                 - Use <strong> for emphasis within bullets
                 - Keep each bullet point concise (1-2 sentences max)
+                - DO NOT include any URLs or links in the content
 
                 Include these sections with bullet points:
                 1. Overview (3-5 key bullet points about what it is)
@@ -57,7 +58,7 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
 
                 Also provide:
                 - A brief 2-3 sentence summary
-                - Medical references (cite sources like Medscape, Mayo Clinic, medical journals)
+                - Medical references: List EXACTLY 3 credible sources (e.g., "Mayo Clinic", "American College of Obstetrics and Gynecology", "Medscape"). DO NOT include URLs, only source names.
 
                 Make it patient-friendly, scannable, and medically accurate.`,
                 response_json_schema: {
