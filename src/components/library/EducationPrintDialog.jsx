@@ -1,7 +1,10 @@
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Printer, X, Pencil } from "lucide-react";
+import { Printer, X, Pencil, Settings } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import EducationTopicForm from "@/components/EducationTopicForm";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -11,6 +14,9 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
     const iframeRef = React.useRef(null);
     const [isLoaded, setIsLoaded] = React.useState(false);
     const [showEditForm, setShowEditForm] = React.useState(false);
+    const [printTemplate, setPrintTemplate] = React.useState('detailed');
+    const [showCustomize, setShowCustomize] = React.useState(false);
+    const [customFooter, setCustomFooter] = React.useState('');
     const queryClient = useQueryClient();
 
     React.useEffect(() => {
@@ -55,6 +61,9 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
     };
 
     const generatePrintHTML = () => {
+        const isSimple = printTemplate === 'simple';
+        const footerText = customFooter || `${topic.title} | Contemporary Health Center | Page`;
+        
         return `
 <!DOCTYPE html>
 <html>
@@ -63,8 +72,16 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
     <title>${topic.title}</title>
     <style>
         @page {
-            margin: 0.5in 0.5in 0.75in 0.5in;
+            margin: ${isSimple ? '0.75in' : '0.5in 0.5in 0.75in 0.5in'};
             size: letter;
+        }
+        
+        @page {
+            @bottom-center {
+                content: "${footerText} " counter(page);
+                font-size: 9pt;
+                color: #666;
+            }
         }
         
         body {
@@ -203,10 +220,12 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
         <div class="print-title">
             Patient Education: ${topic.title}
         </div>
-    
+
+    ${!isSimple ? `
     <div class="print-logo">
         <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png" alt="Contemporary Health Center" />
     </div>
+    ` : ''}
     
     ${topic.summary ? `
     <div class="print-section compact" style="background: #ecfdf5; border-color: #10b981;">
@@ -219,18 +238,20 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
         ${topic.content || ''}
     </div>
     
-    ${topic.medical_references ? `
+    ${!isSimple && topic.medical_references ? `
     <div class="print-section">
         <h2>Medical References</h2>
         <p style="font-size: 10pt; white-space: pre-wrap;">${topic.medical_references}</p>
     </div>
     ` : ''}
-    
+
+    ${!isSimple ? `
     <div class="print-section" style="background: #f1f5f9; border-color: #475569; border-width: 2px;">
         <p style="font-style: italic; font-size: 10pt;">
             <strong>Disclaimer:</strong> This information is for educational purposes only and should not replace professional medical advice. Please consult with a healthcare provider for personalized medical guidance.
         </p>
     </div>
+    ` : ''}
     
     <div class="print-section compact" style="background: #f1f5f9; border-color: #475569; border-width: 2px; padding: 4pt; margin: 2pt 0;">
         <p style="font-weight: bold; font-size: 13pt; margin-bottom: 3pt; text-transform: uppercase;">
@@ -272,6 +293,14 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
                                 Edit
                             </Button>
                             <Button 
+                                onClick={() => setShowCustomize(!showCustomize)} 
+                                size="sm" 
+                                variant="outline"
+                            >
+                                <Settings className="w-4 h-4 mr-2" />
+                                Customize
+                            </Button>
+                            <Button 
                                 onClick={handlePrint} 
                                 size="sm" 
                                 className="text-black"
@@ -285,8 +314,37 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
                             </Button>
                         </div>
                     </div>
-                </DialogHeader>
-                <div className="overflow-auto max-h-[calc(90vh-120px)] relative bg-white">
+                    </DialogHeader>
+
+                    {showCustomize && (
+                    <div className="border rounded-lg p-4 space-y-4 bg-gray-50">
+                        <div className="space-y-2">
+                            <Label>Print Template</Label>
+                            <Select value={printTemplate} onValueChange={setPrintTemplate}>
+                                <SelectTrigger>
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="detailed">Detailed (with logo, references, disclaimer)</SelectItem>
+                                    <SelectItem value="simple">Simple (content only)</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label>Custom Footer Text (optional)</Label>
+                            <Textarea
+                                value={customFooter}
+                                onChange={(e) => setCustomFooter(e.target.value)}
+                                placeholder="Leave blank for default footer"
+                                rows={2}
+                            />
+                            <p className="text-xs text-gray-500">Page number will be added automatically</p>
+                        </div>
+                    </div>
+                    )}
+
+                    <div className="overflow-auto max-h-[calc(90vh-120px)] relative bg-white">
                     <iframe 
                         ref={iframeRef}
                         srcDoc={generatePrintHTML()}
