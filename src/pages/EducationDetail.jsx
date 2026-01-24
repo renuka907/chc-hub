@@ -7,7 +7,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import PrintableDocument from "../components/PrintableDocument";
 import EducationTopicForm from "../components/EducationTopicForm";
 import EducationPrintDialog from "../components/library/EducationPrintDialog";
-import { Printer, ArrowLeft, Calendar, ExternalLink, Pencil, Star } from "lucide-react";
+import EducationVersionHistory from "../components/education/EducationVersionHistory";
+import { Printer, ArrowLeft, Calendar, ExternalLink, Pencil, Star, History } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 
@@ -17,6 +18,7 @@ export default function EducationDetail() {
     const autoPrint = urlParams.get('autoprint') === 'true';
     const [showEditForm, setShowEditForm] = useState(false);
     const [showPrintDialog, setShowPrintDialog] = useState(false);
+    const [showVersionHistory, setShowVersionHistory] = useState(false);
     const queryClient = useQueryClient();
 
     const { data: topics = [] } = useQuery({
@@ -27,6 +29,24 @@ export default function EducationDetail() {
     const topic = topics.find(t => t.id === topicId);
 
     const handleSuccess = () => {
+        queryClient.invalidateQueries({ queryKey: ['educationTopics'] });
+    };
+
+    const handleRestoreVersion = async (version) => {
+        // Create a new version based on the restored content
+        const restoredData = {
+            ...version,
+            parent_id: topic.id,
+            version: topic.version ? `${parseFloat(topic.version) + 0.1}` : "1.1",
+            change_summary: `Restored from version ${version.version || 'previous'}`,
+            is_favorite: topic.is_favorite
+        };
+        
+        delete restoredData.id;
+        delete restoredData.created_date;
+        delete restoredData.updated_date;
+        
+        await base44.entities.EducationTopic.create(restoredData);
         queryClient.invalidateQueries({ queryKey: ['educationTopics'] });
     };
 
@@ -210,6 +230,10 @@ export default function EducationDetail() {
                         <Star className={`w-4 h-4 mr-2 ${topic.is_favorite ? 'fill-yellow-500' : ''}`} />
                         {topic.is_favorite ? 'Unfavorite' : 'Favorite'}
                     </Button>
+                    <Button variant="outline" onClick={() => setShowVersionHistory(true)}>
+                        <History className="w-4 h-4 mr-2" />
+                        Version History
+                    </Button>
                     <Button variant="outline" onClick={() => setShowEditForm(true)}>
                         <Pencil className="w-4 h-4 mr-2" />
                         Edit
@@ -325,6 +349,12 @@ export default function EducationDetail() {
                         open={showPrintDialog}
                         onOpenChange={setShowPrintDialog}
                         topic={topic}
+                    />
+                    <EducationVersionHistory
+                        open={showVersionHistory}
+                        onOpenChange={setShowVersionHistory}
+                        topicId={topic.id}
+                        onRestore={handleRestoreVersion}
                     />
                 </>
             )}

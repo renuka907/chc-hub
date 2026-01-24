@@ -27,6 +27,7 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
     const [isSaving, setIsSaving] = useState(false);
     const [showTemplates, setShowTemplates] = useState(false);
     const [templates, setTemplates] = useState([]);
+    const [changeSummary, setChangeSummary] = useState("");
 
     const handleGenerate = async () => {
         if (!formData.title || !formData.category) {
@@ -142,12 +143,31 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
         setIsSaving(true);
         try {
             if (editTopic) {
-                await base44.entities.EducationTopic.update(editTopic.id, formData);
+                // Create a new version by creating a new record with parent_id
+                const newVersion = {
+                    ...formData,
+                    parent_id: editTopic.id,
+                    version: editTopic.version ? `${parseFloat(editTopic.version) + 0.1}` : "1.1",
+                    change_summary: changeSummary || "Content updated"
+                };
+                
+                // Create new version
+                const createdVersion = await base44.entities.EducationTopic.create(newVersion);
+                
+                // Update the original topic to mark it as having a newer version
+                await base44.entities.EducationTopic.update(editTopic.id, {
+                    is_favorite: false // Remove favorite from old version
+                });
             } else {
-                await base44.entities.EducationTopic.create(formData);
+                await base44.entities.EducationTopic.create({
+                    ...formData,
+                    version: "1.0",
+                    change_summary: "Initial version"
+                });
             }
             onSuccess();
             onOpenChange(false);
+            setChangeSummary("");
         } catch (error) {
             alert('Failed to save topic. Please try again.');
         }
@@ -156,13 +176,29 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
 
     const quillModules = {
         toolbar: [
-            [{ 'header': [3, 4, false] }],
-            ['bold', 'italic', 'underline'],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-            ['link'],
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            [{ 'size': ['small', false, 'large', 'huge'] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'script': 'sub'}, { 'script': 'super' }],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
+            [{ 'align': [] }],
+            ['blockquote', 'code-block'],
+            ['link', 'image', 'video'],
             ['clean']
         ]
     };
+
+    const quillFormats = [
+        'header', 'size',
+        'bold', 'italic', 'underline', 'strike',
+        'color', 'background',
+        'script',
+        'list', 'bullet', 'indent',
+        'align',
+        'blockquote', 'code-block',
+        'link', 'image', 'video'
+    ];
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -292,8 +328,9 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                                 value={formData.content}
                                 onChange={(value) => setFormData({...formData, content: value})}
                                 modules={quillModules}
+                                formats={quillFormats}
                                 className="bg-white"
-                                style={{ height: '300px', marginBottom: '50px' }}
+                                style={{ height: '400px', marginBottom: '50px' }}
                             />
                         </div>
 
@@ -354,13 +391,29 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                     </TabsContent>
                 </Tabs>
 
-                <DialogFooter>
-                    <Button variant="outline" onClick={() => onOpenChange(false)}>
-                        Cancel
-                    </Button>
-                    <Button onClick={handleSave} disabled={isSaving} className="text-black">
-                        {isSaving ? 'Saving...' : (editTopic ? 'Update Topic' : 'Create Topic')}
-                    </Button>
+                <DialogFooter className="flex-col sm:flex-row gap-3">
+                    {editTopic && (
+                        <div className="flex-1 mr-auto">
+                            <Label htmlFor="change-summary" className="text-sm text-gray-600">
+                                What changed? (optional)
+                            </Label>
+                            <Input
+                                id="change-summary"
+                                value={changeSummary}
+                                onChange={(e) => setChangeSummary(e.target.value)}
+                                placeholder="e.g., Updated dosage information"
+                                className="mt-1"
+                            />
+                        </div>
+                    )}
+                    <div className="flex gap-2">
+                        <Button variant="outline" onClick={() => onOpenChange(false)}>
+                            Cancel
+                        </Button>
+                        <Button onClick={handleSave} disabled={isSaving} className="text-black">
+                            {isSaving ? 'Saving...' : (editTopic ? 'Save as New Version' : 'Create Topic')}
+                        </Button>
+                    </div>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
