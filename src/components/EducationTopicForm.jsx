@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sparkles, Loader2, Image as ImageIcon, Wand2, GitBranch, Save } from "lucide-react";
+import { Sparkles, Loader2, Image as ImageIcon, Wand2, GitBranch, Save, X } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -434,8 +434,18 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                                 {isUploading && <Loader2 className="w-5 h-5 animate-spin mt-2" />}
                             </div>
                             {formData.image_url && (
-                                <div className="mt-4">
+                                <div className="mt-4 relative group">
                                     <img src={formData.image_url} alt="Preview" className="w-full max-h-96 rounded-lg object-contain border bg-gray-50" />
+                                    <div className="absolute top-2 right-2 flex gap-2">
+                                        <Button
+                                            type="button"
+                                            size="sm"
+                                            variant="destructive"
+                                            onClick={() => setFormData({...formData, image_url: ''})}
+                                        >
+                                            <X className="w-4 h-4" />
+                                        </Button>
+                                    </div>
                                 </div>
                             )}
                         </div>
