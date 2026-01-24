@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sparkles, Loader2, Image as ImageIcon, Wand2 } from "lucide-react";
+import { Sparkles, Loader2, Image as ImageIcon, Wand2, GitBranch, Save } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -29,6 +29,7 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
     const [showTemplates, setShowTemplates] = useState(false);
     const [templates, setTemplates] = useState([]);
     const [changeSummary, setChangeSummary] = useState("");
+    const [saveAsNewVersion, setSaveAsNewVersion] = useState(true);
 
     const handleGenerate = async () => {
         if (!formData.title || !formData.category) {
@@ -144,21 +145,26 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
         setIsSaving(true);
         try {
             if (editTopic) {
-                // Create a new version by creating a new record with parent_id
-                const newVersion = {
-                    ...formData,
-                    parent_id: editTopic.id,
-                    version: editTopic.version ? `${parseFloat(editTopic.version) + 0.1}` : "1.1",
-                    change_summary: changeSummary || "Content updated"
-                };
-                
-                // Create new version
-                const createdVersion = await base44.entities.EducationTopic.create(newVersion);
-                
-                // Update the original topic to mark it as having a newer version
-                await base44.entities.EducationTopic.update(editTopic.id, {
-                    is_favorite: false // Remove favorite from old version
-                });
+                if (saveAsNewVersion) {
+                    // Create a new version by creating a new record with parent_id
+                    const newVersion = {
+                        ...formData,
+                        parent_id: editTopic.id,
+                        version: editTopic.version ? `${parseFloat(editTopic.version) + 0.1}` : "1.1",
+                        change_summary: changeSummary || "Content updated"
+                    };
+                    
+                    // Create new version
+                    await base44.entities.EducationTopic.create(newVersion);
+                    
+                    // Update the original topic to mark it as having a newer version
+                    await base44.entities.EducationTopic.update(editTopic.id, {
+                        is_favorite: false // Remove favorite from old version
+                    });
+                } else {
+                    // Update existing record in place
+                    await base44.entities.EducationTopic.update(editTopic.id, formData);
+                }
             } else {
                 await base44.entities.EducationTopic.create({
                     ...formData,
@@ -169,6 +175,7 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
             onSuccess();
             onOpenChange(false);
             setChangeSummary("");
+            setSaveAsNewVersion(true);
         } catch (error) {
             alert('Failed to save topic. Please try again.');
         }
@@ -437,17 +444,43 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
 
                 <DialogFooter className="flex-col sm:flex-row gap-3">
                     {editTopic && (
-                        <div className="flex-1 mr-auto">
-                            <Label htmlFor="change-summary" className="text-sm text-gray-600">
-                                What changed? (optional)
-                            </Label>
-                            <Input
-                                id="change-summary"
-                                value={changeSummary}
-                                onChange={(e) => setChangeSummary(e.target.value)}
-                                placeholder="e.g., Updated dosage information"
-                                className="mt-1"
-                            />
+                        <div className="flex-1 mr-auto space-y-3">
+                            <div className="flex gap-2">
+                                <Button
+                                    type="button"
+                                    variant={saveAsNewVersion ? "default" : "outline"}
+                                    size="sm"
+                                    onClick={() => setSaveAsNewVersion(true)}
+                                    className="flex-1"
+                                >
+                                    <GitBranch className="w-4 h-4 mr-2" />
+                                    New Version
+                                </Button>
+                                <Button
+                                    type="button"
+                                    variant={!saveAsNewVersion ? "default" : "outline"}
+                                    size="sm"
+                                    onClick={() => setSaveAsNewVersion(false)}
+                                    className="flex-1"
+                                >
+                                    <Save className="w-4 h-4 mr-2" />
+                                    Update Current
+                                </Button>
+                            </div>
+                            {saveAsNewVersion && (
+                                <div>
+                                    <Label htmlFor="change-summary" className="text-sm text-gray-600">
+                                        What changed? (optional)
+                                    </Label>
+                                    <Input
+                                        id="change-summary"
+                                        value={changeSummary}
+                                        onChange={(e) => setChangeSummary(e.target.value)}
+                                        placeholder="e.g., Updated dosage information"
+                                        className="mt-1"
+                                    />
+                                </div>
+                            )}
                         </div>
                     )}
                     <div className="flex gap-2">
@@ -455,7 +488,7 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                             Cancel
                         </Button>
                         <Button onClick={handleSave} disabled={isSaving} className="text-black">
-                            {isSaving ? 'Saving...' : (editTopic ? 'Save as New Version' : 'Create Topic')}
+                            {isSaving ? 'Saving...' : (editTopic ? (saveAsNewVersion ? 'Save as New Version' : 'Update Current') : 'Create Topic')}
                         </Button>
                     </div>
                 </DialogFooter>
