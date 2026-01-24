@@ -1,12 +1,15 @@
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Printer, X, Pencil, Settings } from "lucide-react";
+import { Printer, X, Pencil, Settings, Save, Download, Calendar } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import EducationTopicForm from "@/components/EducationTopicForm";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { base44 } from "@/api/base44Client";
+import jsPDF from "jspdf";
 
 export default function EducationPrintDialog({ open, onOpenChange, topic }) {
     if (!topic) return null;
@@ -17,13 +20,104 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
     const [printTemplate, setPrintTemplate] = React.useState('detailed');
     const [showCustomize, setShowCustomize] = React.useState(false);
     const [customFooter, setCustomFooter] = React.useState('');
+    const [customHeader, setCustomHeader] = React.useState('');
+    const [templateName, setTemplateName] = React.useState('');
+    const [selectedTemplate, setSelectedTemplate] = React.useState('');
+    const [showSchedule, setShowSchedule] = React.useState(false);
+    const [scheduleDate, setScheduleDate] = React.useState('');
     const queryClient = useQueryClient();
+
+    const { data: savedTemplates = [] } = useQuery({
+        queryKey: ['print-templates'],
+        queryFn: () => base44.entities.PrintTemplate.list()
+    });
 
     React.useEffect(() => {
         if (open) {
             setIsLoaded(false);
+            // Load default template if exists
+            const defaultTemplate = savedTemplates.find(t => t.is_default);
+            if (defaultTemplate) {
+                loadTemplate(defaultTemplate);
+            }
         }
-    }, [open]);
+    }, [open, savedTemplates]);
+
+    const loadTemplate = (template) => {
+        setPrintTemplate(template.template_type);
+        setCustomHeader(template.custom_header || '');
+        setCustomFooter(template.custom_footer || '');
+        setSelectedTemplate(template.id);
+    };
+
+    const saveTemplate = async () => {
+        if (!templateName) {
+            alert('Please enter a template name');
+            return;
+        }
+        try {
+            await base44.entities.PrintTemplate.create({
+                template_name: templateName,
+                template_type: printTemplate,
+                custom_header: customHeader,
+                custom_footer: customFooter,
+                is_default: savedTemplates.length === 0
+            });
+            queryClient.invalidateQueries({ queryKey: ['print-templates'] });
+            setTemplateName('');
+            alert('Template saved successfully!');
+        } catch (error) {
+            alert('Failed to save template');
+        }
+    };
+
+    const handleExportPDF = async () => {
+        try {
+            const printContent = generatePrintHTML();
+            const pdf = new jsPDF('p', 'pt', 'letter');
+            
+            // Create a temporary div to render HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = printContent;
+            tempDiv.style.width = '612px'; // Letter width in pts
+            document.body.appendChild(tempDiv);
+            
+            await pdf.html(tempDiv, {
+                callback: function(doc) {
+                    doc.save(`${topic.title}.pdf`);
+                    document.body.removeChild(tempDiv);
+                },
+                x: 40,
+                y: 40,
+                width: 532,
+                windowWidth: 612
+            });
+        } catch (error) {
+            alert('Failed to export PDF. Using alternative method...');
+            // Fallback: trigger print dialog
+            handlePrint();
+        }
+    };
+
+    const scheduleReminder = async () => {
+        if (!scheduleDate) {
+            alert('Please select a date');
+            return;
+        }
+        try {
+            await base44.entities.Reminder.create({
+                title: `Print: ${topic.title}`,
+                description: `Scheduled print for education topic: ${topic.title}`,
+                due_date: new Date(scheduleDate).toISOString(),
+                priority: 'medium'
+            });
+            alert('Print reminder scheduled successfully!');
+            setShowSchedule(false);
+            setScheduleDate('');
+        } catch (error) {
+            alert('Failed to schedule reminder');
+        }
+    };
 
     const handlePrint = () => {
         // Generate HTML content for printing
@@ -62,6 +156,7 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
 
     const generatePrintHTML = () => {
         const isSimple = printTemplate === 'simple';
+        const headerText = customHeader || topic.header || '';
         const footerText = customFooter || `${topic.title} | Contemporary Health Center | Page`;
         
         return `
@@ -214,8 +309,8 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
     </style>
 </head>
 <body>
-    ${topic.header ? `<div class="page-header">${topic.header}</div>` : ''}
-    
+    ${headerText ? `<div class="page-header">${headerText}</div>` : ''}
+
     <div class="content-wrapper">
         <div class="print-title">
             Patient Education: ${topic.title}
@@ -283,7 +378,7 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
                 <DialogHeader>
                     <div className="flex items-center justify-between">
                         <DialogTitle>{topic.title}</DialogTitle>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 flex-wrap">
                             <Button 
                                 onClick={() => setShowEditForm(true)} 
                                 size="sm" 
@@ -301,13 +396,30 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
                                 Customize
                             </Button>
                             <Button 
+                                onClick={handleExportPDF} 
+                                size="sm" 
+                                variant="outline"
+                                disabled={!isLoaded}
+                            >
+                                <Download className="w-4 h-4 mr-2" />
+                                PDF
+                            </Button>
+                            <Button 
+                                onClick={() => setShowSchedule(!showSchedule)} 
+                                size="sm" 
+                                variant="outline"
+                            >
+                                <Calendar className="w-4 h-4 mr-2" />
+                                Schedule
+                            </Button>
+                            <Button 
                                 onClick={handlePrint} 
                                 size="sm" 
                                 className="text-black"
                                 disabled={!isLoaded}
                             >
                                 <Printer className="w-4 h-4 mr-2" />
-                                {isLoaded ? 'Print' : 'Loading...'}
+                                Print
                             </Button>
                             <Button variant="ghost" size="sm" onClick={() => onOpenChange(false)}>
                                 <X className="w-4 h-4" />
@@ -317,31 +429,91 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
                     </DialogHeader>
 
                     {showCustomize && (
-                    <div className="border rounded-lg p-4 space-y-4 bg-gray-50">
-                        <div className="space-y-2">
-                            <Label>Print Template</Label>
-                            <Select value={printTemplate} onValueChange={setPrintTemplate}>
-                                <SelectTrigger>
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="detailed">Detailed (with logo, references, disclaimer)</SelectItem>
-                                    <SelectItem value="simple">Simple (content only)</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+                        <div className="border rounded-lg p-4 space-y-4 bg-gray-50">
+                            <div className="space-y-2">
+                                <Label>Load Saved Template</Label>
+                                <Select value={selectedTemplate} onValueChange={(id) => {
+                                    const template = savedTemplates.find(t => t.id === id);
+                                    if (template) loadTemplate(template);
+                                }}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Choose a template..." />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {savedTemplates.map(template => (
+                                            <SelectItem key={template.id} value={template.id}>
+                                                {template.template_name} {template.is_default ? '(Default)' : ''}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
 
-                        <div className="space-y-2">
-                            <Label>Custom Footer Text (optional)</Label>
-                            <Textarea
-                                value={customFooter}
-                                onChange={(e) => setCustomFooter(e.target.value)}
-                                placeholder="Leave blank for default footer"
-                                rows={2}
-                            />
-                            <p className="text-xs text-gray-500">Page number will be added automatically</p>
+                            <div className="space-y-2">
+                                <Label>Print Template</Label>
+                                <Select value={printTemplate} onValueChange={setPrintTemplate}>
+                                    <SelectTrigger>
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="detailed">Detailed (with logo, references, disclaimer)</SelectItem>
+                                        <SelectItem value="simple">Simple (content only)</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label>Custom Header Text (optional)</Label>
+                                <Input
+                                    value={customHeader}
+                                    onChange={(e) => setCustomHeader(e.target.value)}
+                                    placeholder="Leave blank to use topic header"
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label>Custom Footer Text (optional)</Label>
+                                <Textarea
+                                    value={customFooter}
+                                    onChange={(e) => setCustomFooter(e.target.value)}
+                                    placeholder="Leave blank for default footer"
+                                    rows={2}
+                                />
+                                <p className="text-xs text-gray-500">Page number will be added automatically</p>
+                            </div>
+
+                            <div className="border-t pt-4 space-y-2">
+                                <Label>Save as Template</Label>
+                                <div className="flex gap-2">
+                                    <Input
+                                        value={templateName}
+                                        onChange={(e) => setTemplateName(e.target.value)}
+                                        placeholder="Template name"
+                                    />
+                                    <Button onClick={saveTemplate} size="sm">
+                                        <Save className="w-4 h-4 mr-2" />
+                                        Save
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    )}
+
+                    {showSchedule && (
+                        <div className="border rounded-lg p-4 space-y-4 bg-blue-50">
+                            <div className="space-y-2">
+                                <Label>Schedule Print Reminder</Label>
+                                <Input
+                                    type="datetime-local"
+                                    value={scheduleDate}
+                                    onChange={(e) => setScheduleDate(e.target.value)}
+                                />
+                            </div>
+                            <Button onClick={scheduleReminder} size="sm" className="w-full">
+                                <Calendar className="w-4 h-4 mr-2" />
+                                Schedule Reminder
+                            </Button>
+                        </div>
                     )}
 
                     <div className="overflow-auto max-h-[calc(90vh-120px)] relative bg-white">
