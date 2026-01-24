@@ -167,7 +167,7 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
     <title>${topic.title}</title>
     <style>
         @page {
-            margin: ${isSimple ? '0.75in' : '0.5in 0.5in 0.75in 0.5in'};
+            margin: ${isSimple ? '0.5in' : '0.4in 0.4in 0.5in 0.4in'};
             size: letter;
         }
         
@@ -181,8 +181,8 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
         
         body {
             font-family: 'Times New Roman', serif;
-            font-size: 11pt;
-            line-height: 2;
+            font-size: 10.5pt;
+            line-height: 1.5;
             color: #000;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
@@ -207,56 +207,56 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
         }
         
         .print-title {
-            font-size: 18pt;
+            font-size: 16pt;
             font-weight: bold;
             text-align: center;
-            margin: 12pt 0;
-            padding-bottom: 8pt;
+            margin: 8pt 0;
+            padding-bottom: 6pt;
             border-bottom: 2px solid #000;
             text-transform: uppercase;
         }
         
         .print-logo {
             text-align: center;
-            margin: 20pt 0;
+            margin: 10pt 0;
         }
-        
+
         .print-logo img {
-            height: 50px;
+            height: 40px;
             width: auto;
         }
         
         h2 {
-            font-size: 14pt;
-            font-weight: bold;
-            margin-top: 12pt;
-            margin-bottom: 8pt;
-            page-break-after: avoid;
-        }
-
-        h3 {
-            font-size: 12pt;
+            font-size: 13pt;
             font-weight: bold;
             margin-top: 10pt;
             margin-bottom: 6pt;
             page-break-after: avoid;
         }
 
+        h3 {
+            font-size: 11.5pt;
+            font-weight: bold;
+            margin-top: 8pt;
+            margin-bottom: 5pt;
+            page-break-after: avoid;
+        }
+
         p {
-            margin-bottom: 8pt;
+            margin-bottom: 6pt;
             text-align: left;
-            line-height: 1.6;
+            line-height: 1.45;
         }
 
         ul, ol {
-            margin: 10pt 0;
-            padding-left: 30pt;
-            line-height: 1.6;
+            margin: 8pt 0;
+            padding-left: 26pt;
+            line-height: 1.45;
         }
 
         li {
-            margin-bottom: 6pt;
-            line-height: 1.5;
+            margin-bottom: 4pt;
+            line-height: 1.4;
         }
         
         strong {
@@ -266,14 +266,14 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
         .print-section {
             background: #f8f9fa;
             border: 1px solid #ddd;
-            padding: 8pt;
-            margin: 8pt 0;
+            padding: 6pt;
+            margin: 6pt 0;
             page-break-inside: avoid;
         }
 
         .print-section.compact {
-            padding: 6pt;
-            margin: 6pt 0;
+            padding: 4pt;
+            margin: 4pt 0;
         }
 
         /* Preserve rich text editor formatting */
