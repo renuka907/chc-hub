@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import PrintableDocument from "../components/PrintableDocument";
 import EducationTopicForm from "../components/EducationTopicForm";
+import EducationPrintDialog from "../components/library/EducationPrintDialog";
 import { Printer, ArrowLeft, Calendar, ExternalLink, Pencil, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
@@ -15,6 +16,7 @@ export default function EducationDetail() {
     const topicId = urlParams.get('id');
     const autoPrint = urlParams.get('autoprint') === 'true';
     const [showEditForm, setShowEditForm] = useState(false);
+    const [showPrintDialog, setShowPrintDialog] = useState(false);
     const queryClient = useQueryClient();
 
     const { data: topics = [] } = useQuery({
@@ -186,7 +188,7 @@ export default function EducationDetail() {
                         <Pencil className="w-4 h-4 mr-2" />
                         Edit
                     </Button>
-                    <Button onClick={() => window.print()} className="bg-blue-600 hover:bg-blue-700">
+                    <Button onClick={() => setShowPrintDialog(true)} className="bg-blue-600 hover:bg-blue-700">
                         <Printer className="w-4 h-4 mr-2" />
                         Print / PDF
                     </Button>
@@ -274,12 +276,19 @@ export default function EducationDetail() {
             </div>
 
             {topic && (
-                <EducationTopicForm
-                    open={showEditForm}
-                    onOpenChange={setShowEditForm}
-                    onSuccess={handleSuccess}
-                    editTopic={topic}
-                />
+                <>
+                    <EducationTopicForm
+                        open={showEditForm}
+                        onOpenChange={setShowEditForm}
+                        onSuccess={handleSuccess}
+                        editTopic={topic}
+                    />
+                    <EducationPrintDialog
+                        open={showPrintDialog}
+                        onOpenChange={setShowPrintDialog}
+                        topic={topic}
+                    />
+                </>
             )}
         </div>
     );
