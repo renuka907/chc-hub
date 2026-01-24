@@ -200,6 +200,18 @@ export default function EducationDetail() {
                 <div className="print-title">
                     Patient Education: {topic.title}
                 </div>
+
+                {/* Print Header - Logo and Contact */}
+                <div className="print-logo">
+                    <img 
+                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png"
+                        alt="Contemporary Health Center"
+                    />
+                </div>
+                <div className="print-contact">
+                    <div style={{fontWeight: '600'}}>6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
+                    <div>Phone: 239-561-9191 | Fax: 239-561-9188 | contemporaryhealthcenter.com</div>
+                </div>
                 
                 {/* Content */}
                 <div className="space-y-6">
@@ -243,18 +255,6 @@ export default function EducationDetail() {
                                 {topic.content}
                             </div>
                         )}
-                    </div>
-
-                    {/* Print Header - Logo and Contact */}
-                    <div className="print-logo">
-                        <img 
-                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png"
-                            alt="Contemporary Health Center"
-                        />
-                    </div>
-                    <div className="print-contact">
-                        <div style={{fontWeight: '600'}}>6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
-                        <div>Phone: 239-561-9191 | Fax: 239-561-9188 | contemporaryhealthcenter.com</div>
                     </div>
 
                     {/* Medical References */}
