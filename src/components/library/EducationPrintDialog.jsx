@@ -158,10 +158,41 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
             margin: 8pt 0;
             page-break-inside: avoid;
         }
-        
+
         .print-section.compact {
             padding: 6pt;
             margin: 6pt 0;
+        }
+
+        /* Preserve rich text editor formatting */
+        .content-section {
+            background: white !important;
+            border: none !important;
+        }
+
+        .content-section * {
+            color: inherit !important;
+            background-color: inherit !important;
+        }
+
+        .content-section [style*="color"] {
+            color: revert !important;
+        }
+
+        .content-section [style*="background"] {
+            background-color: revert !important;
+        }
+
+        .content-section [style*="margin"] {
+            margin: revert !important;
+        }
+
+        .content-section [style*="padding"] {
+            padding: revert !important;
+        }
+
+        .content-section [style*="line-height"] {
+            line-height: revert !important;
         }
     </style>
 </head>
@@ -184,7 +215,7 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
     </div>
     ` : ''}
     
-    <div class="print-section">
+    <div class="print-section content-section">
         ${topic.content || ''}
     </div>
     
