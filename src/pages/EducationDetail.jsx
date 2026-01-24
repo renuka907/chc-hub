@@ -159,6 +159,20 @@ export default function EducationDetail() {
                             margin: 10pt 0;
                             page-break-inside: avoid;
                         }
+
+                        .print-container h3 {
+                            margin-top: 16pt;
+                            margin-bottom: 10pt;
+                        }
+
+                        .print-container ul,
+                        .print-container ol {
+                            margin: 10pt 0;
+                        }
+
+                        .print-container li {
+                            margin-bottom: 6pt;
+                        }
                         
                         .no-print {
                             display: none !important;
@@ -230,12 +244,12 @@ export default function EducationDetail() {
                     <div className="print-section">
                         {topic.content?.includes('<') ? (
                             <div 
-                                className="text-gray-900 prose prose-sm max-w-none"
-                                style={{lineHeight: '1.8'}}
+                                className="text-gray-900 prose prose-lg max-w-none"
+                                style={{lineHeight: '1.9', fontSize: '1.05rem', letterSpacing: '0.01em'}}
                                 dangerouslySetInnerHTML={{ __html: topic.content }}
                             />
                         ) : (
-                            <div className="whitespace-pre-wrap text-gray-900" style={{lineHeight: '1.8'}}>
+                            <div className="whitespace-pre-wrap text-gray-900 text-lg" style={{lineHeight: '1.9', letterSpacing: '0.01em'}}>
                                 {topic.content}
                             </div>
                         )}
