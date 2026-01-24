@@ -358,7 +358,7 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                     <Button variant="outline" onClick={() => onOpenChange(false)}>
                         Cancel
                     </Button>
-                    <Button onClick={handleSave} disabled={isSaving}>
+                    <Button onClick={handleSave} disabled={isSaving} className="text-black">
                         {isSaving ? 'Saving...' : (editTopic ? 'Update Topic' : 'Create Topic')}
                     </Button>
                 </DialogFooter>
