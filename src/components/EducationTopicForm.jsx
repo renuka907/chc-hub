@@ -15,6 +15,7 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
     const [formData, setFormData] = useState(editTopic || {
         category: "",
         title: "",
+        header: "",
         summary: "",
         content: "",
         image_url: "",
@@ -245,6 +246,16 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                                     </SelectContent>
                                 </Select>
                             </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="header">Print Header (Optional)</Label>
+                            <Input
+                                id="header"
+                                value={formData.header}
+                                onChange={(e) => setFormData({...formData, header: e.target.value})}
+                                placeholder="Custom header text that appears on every printed page"
+                            />
                         </div>
 
                         <div className="space-y-2">
