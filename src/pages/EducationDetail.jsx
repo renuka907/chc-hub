@@ -36,6 +36,7 @@ export default function EducationDetail() {
 
     const handleSuccess = () => {
         queryClient.invalidateQueries({ queryKey: ['educationTopics'] });
+        queryClient.invalidateQueries({ queryKey: ['education-topics'] });
     };
 
     const handleRestoreVersion = async (version) => {
