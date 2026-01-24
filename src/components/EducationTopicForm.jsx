@@ -435,7 +435,7 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                             </div>
                             {formData.image_url && (
                                 <div className="mt-4">
-                                    <img src={formData.image_url} alt="Preview" className="w-full h-64 rounded-lg object-cover border" />
+                                    <img src={formData.image_url} alt="Preview" className="w-full max-h-96 rounded-lg object-contain border bg-gray-50" />
                                 </div>
                             )}
                         </div>
