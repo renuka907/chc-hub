@@ -1,13 +1,17 @@
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Printer, X } from "lucide-react";
+import { Printer, X, Pencil } from "lucide-react";
+import EducationTopicForm from "@/components/EducationTopicForm";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function EducationPrintDialog({ open, onOpenChange, topic }) {
     if (!topic) return null;
 
     const iframeRef = React.useRef(null);
     const [isLoaded, setIsLoaded] = React.useState(false);
+    const [showEditForm, setShowEditForm] = React.useState(false);
+    const queryClient = useQueryClient();
 
     React.useEffect(() => {
         if (open) {
@@ -229,6 +233,14 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
                         <DialogTitle>{topic.title}</DialogTitle>
                         <div className="flex gap-2">
                             <Button 
+                                onClick={() => setShowEditForm(true)} 
+                                size="sm" 
+                                variant="outline"
+                            >
+                                <Pencil className="w-4 h-4 mr-2" />
+                                Edit
+                            </Button>
+                            <Button 
                                 onClick={handlePrint} 
                                 size="sm" 
                                 className="text-black"
@@ -254,7 +266,17 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
                         title={topic.title}
                     />
                 </div>
-            </DialogContent>
-        </Dialog>
-    );
-}
+                </DialogContent>
+
+                <EducationTopicForm
+                open={showEditForm}
+                onOpenChange={setShowEditForm}
+                editTopic={topic}
+                onSuccess={() => {
+                    queryClient.invalidateQueries({ queryKey: ['education-topics'] });
+                    setShowEditForm(false);
+                }}
+                />
+                </Dialog>
+                );
+                }
