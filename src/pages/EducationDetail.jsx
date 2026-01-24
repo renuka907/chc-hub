@@ -197,6 +197,11 @@ export default function EducationDetail() {
 
             {/* Printable Content */}
             <div className="print-container">
+                {topic.header && (
+                    <div className="text-center font-bold text-lg mb-4 pb-2 border-b-2 border-black no-print">
+                        {topic.header}
+                    </div>
+                )}
                 
                 {/* Title */}
                 <div className="print-title">

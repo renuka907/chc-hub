@@ -59,7 +59,7 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
     <title>${topic.title}</title>
     <style>
         @page {
-            margin: 0.5in 0.5in 0.75in 0.5in;
+            margin: 1in 0.5in 0.75in 0.5in;
             size: letter;
         }
         
@@ -70,6 +70,24 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
             color: #000;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
+        }
+        
+        .page-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 0.6in;
+            text-align: center;
+            font-weight: bold;
+            font-size: 12pt;
+            padding: 10pt 0;
+            border-bottom: 2px solid #000;
+            background: white;
+        }
+        
+        .content-wrapper {
+            margin-top: 0.7in;
         }
         
         .print-title {
@@ -130,9 +148,12 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
     </style>
 </head>
 <body>
-    <div class="print-title">
-        Patient Education: ${topic.title}
-    </div>
+    ${topic.header ? `<div class="page-header">${topic.header}</div>` : ''}
+    
+    <div class="content-wrapper">
+        <div class="print-title">
+            Patient Education: ${topic.title}
+        </div>
     
     <div class="print-logo">
         <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png" alt="Contemporary Health Center" />
@@ -174,6 +195,7 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
             <p style="font-weight: 600; margin-top: 4pt;">📧 Email: office@contemporaryhealthcenter.com</p>
             <p style="font-weight: 600; margin-top: 4pt;">🌐 Web: contemporaryhealthcenter.com</p>
         </div>
+    </div>
     </div>
 </body>
 </html>
