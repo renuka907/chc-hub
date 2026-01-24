@@ -59,7 +59,7 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
     <title>${topic.title}</title>
     <style>
         @page {
-            margin: 1in 0.5in 0.75in 0.5in;
+            margin: 0.5in 0.5in 0.75in 0.5in;
             size: letter;
         }
         
@@ -77,17 +77,17 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
             top: 0;
             left: 0;
             right: 0;
-            height: 0.6in;
+            height: 0.3in;
             text-align: center;
             font-weight: bold;
-            font-size: 12pt;
-            padding: 10pt 0;
+            font-size: 11pt;
+            padding: 5pt 0;
             border-bottom: 2px solid #000;
             background: white;
         }
         
         .content-wrapper {
-            margin-top: 0.7in;
+            margin-top: 0.35in;
         }
         
         .print-title {
