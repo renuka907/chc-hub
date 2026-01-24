@@ -461,7 +461,7 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                                     variant={saveAsNewVersion ? "default" : "outline"}
                                     size="sm"
                                     onClick={() => setSaveAsNewVersion(true)}
-                                    className="flex-1"
+                                    className={`flex-1 ${saveAsNewVersion ? 'text-black' : ''}`}
                                 >
                                     <GitBranch className="w-4 h-4 mr-2" />
                                     New Version
@@ -471,7 +471,7 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                                     variant={!saveAsNewVersion ? "default" : "outline"}
                                     size="sm"
                                     onClick={() => setSaveAsNewVersion(false)}
-                                    className="flex-1"
+                                    className={`flex-1 ${!saveAsNewVersion ? 'text-black' : ''}`}
                                 >
                                     <Save className="w-4 h-4 mr-2" />
                                     Update Current
