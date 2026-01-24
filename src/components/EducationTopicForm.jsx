@@ -30,6 +30,8 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
     const [templates, setTemplates] = useState([]);
     const [changeSummary, setChangeSummary] = useState("");
     const [saveAsNewVersion, setSaveAsNewVersion] = useState(true);
+    const [showCustomCategory, setShowCustomCategory] = useState(false);
+    const [customCategory, setCustomCategory] = useState("");
 
     const handleGenerate = async () => {
         if (!formData.title || !formData.category) {
@@ -239,20 +241,54 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="category">Category *</Label>
-                                <Select
-                                    value={formData.category}
-                                    onValueChange={(value) => setFormData({...formData, category: value})}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select category" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="Gynecology">Gynecology</SelectItem>
-                                        <SelectItem value="Hormone Replacement Therapy">Hormone Replacement Therapy</SelectItem>
-                                        <SelectItem value="Mens Health">Mens Health</SelectItem>
-                                        <SelectItem value="Medication Education">Medication Education</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                {!showCustomCategory ? (
+                                    <Select
+                                        value={formData.category}
+                                        onValueChange={(value) => {
+                                            if (value === "custom") {
+                                                setShowCustomCategory(true);
+                                                setCustomCategory("");
+                                                setFormData({...formData, category: ""});
+                                            } else {
+                                                setFormData({...formData, category: value});
+                                            }
+                                        }}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select category" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="Gynecology">Gynecology</SelectItem>
+                                            <SelectItem value="Hormone Replacement Therapy">Hormone Replacement Therapy</SelectItem>
+                                            <SelectItem value="Mens Health">Mens Health</SelectItem>
+                                            <SelectItem value="Medication Education">Medication Education</SelectItem>
+                                            <SelectItem value="custom">+ Create New Category</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                ) : (
+                                    <div className="flex gap-2">
+                                        <Input
+                                            value={customCategory}
+                                            onChange={(e) => {
+                                                setCustomCategory(e.target.value);
+                                                setFormData({...formData, category: e.target.value});
+                                            }}
+                                            placeholder="Enter custom category name"
+                                            autoFocus
+                                        />
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={() => {
+                                                setShowCustomCategory(false);
+                                                setCustomCategory("");
+                                                setFormData({...formData, category: ""});
+                                            }}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
