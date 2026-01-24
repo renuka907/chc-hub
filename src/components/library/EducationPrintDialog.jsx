@@ -197,17 +197,17 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
         </p>
     </div>
     
-    <div class="print-section compact" style="background: #f1f5f9; border-color: #475569; border-width: 2px; padding: 3pt; margin: 3pt 0;">
-        <p style="font-weight: bold; font-size: 13pt; margin-bottom: 6pt; text-transform: uppercase;">
+    <div class="print-section compact" style="background: #f1f5f9; border-color: #475569; border-width: 2px; padding: 4pt; margin: 2pt 0;">
+        <p style="font-weight: bold; font-size: 13pt; margin-bottom: 3pt; text-transform: uppercase;">
             Questions or Want to Learn More?
         </p>
-        <p style="margin-bottom: 6pt;">
+        <p style="margin-bottom: 3pt;">
             Our medical team is here to help answer any questions about this topic or discuss treatment options that may be right for you.
         </p>
-        <div style="border-top: 1px solid #cbd5e1; padding-top: 6pt; margin-top: 4pt;">
-            <p style="font-weight: 600; margin-bottom: 2pt;">📞 Phone: 239-561-9191 (call or text)</p>
-            <p style="font-weight: 600; margin-bottom: 2pt;">📧 Email: office@contemporaryhealthcenter.com</p>
-            <p style="font-weight: 600;">🌐 Web: contemporaryhealthcenter.com</p>
+        <div style="border-top: 1px solid #cbd5e1; padding-top: 3pt; margin-top: 2pt;">
+            <p style="font-weight: 600; margin-bottom: 1pt;">📞 Phone: 239-561-9191 (call or text)</p>
+            <p style="font-weight: 600; margin-bottom: 1pt;">📧 Email: office@contemporaryhealthcenter.com</p>
+            <p style="font-weight: 600; margin-bottom: 0;">🌐 Web: contemporaryhealthcenter.com</p>
         </div>
     </div>
     </div>
