@@ -8,7 +8,7 @@ import PrintableDocument from "../components/PrintableDocument";
 import EducationTopicForm from "../components/EducationTopicForm";
 import EducationPrintDialog from "../components/library/EducationPrintDialog";
 import EducationVersionHistory from "../components/education/EducationVersionHistory";
-import { Printer, ArrowLeft, Calendar, ExternalLink, Pencil, Star, History } from "lucide-react";
+import { Printer, ArrowLeft, Calendar, ExternalLink, Pencil, Star, History, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 
@@ -26,7 +26,13 @@ export default function EducationDetail() {
         queryFn: () => base44.entities.EducationTopic.list(),
     });
 
+    const { data: currentUser } = useQuery({
+        queryKey: ['currentUser'],
+        queryFn: () => base44.auth.me()
+    });
+
     const topic = topics.find(t => t.id === topicId);
+    const isAdmin = currentUser?.role === 'admin';
 
     const handleSuccess = () => {
         queryClient.invalidateQueries({ queryKey: ['educationTopics'] });
@@ -53,6 +59,18 @@ export default function EducationDetail() {
     const toggleFavorite = async () => {
         await base44.entities.EducationTopic.update(topic.id, { is_favorite: !topic.is_favorite });
         queryClient.invalidateQueries({ queryKey: ['educationTopics'] });
+    };
+
+    const handleDelete = async () => {
+        if (!isAdmin) {
+            alert('Only administrators can delete education topics');
+            return;
+        }
+        if (confirm(`Are you sure you want to delete "${topic.title}"? This action cannot be undone.`)) {
+            await base44.entities.EducationTopic.delete(topic.id);
+            queryClient.invalidateQueries({ queryKey: ['educationTopics'] });
+            window.location.href = createPageUrl('Library');
+        }
     };
 
     const categoryColors = {
@@ -238,6 +256,12 @@ export default function EducationDetail() {
                         <Pencil className="w-4 h-4 mr-2" />
                         Edit
                     </Button>
+                    {isAdmin && (
+                        <Button variant="destructive" onClick={handleDelete}>
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Delete
+                        </Button>
+                    )}
                     <Button onClick={() => setShowPrintDialog(true)} className="bg-blue-600 hover:bg-blue-700">
                         <Printer className="w-4 h-4 mr-2" />
                         Print / PDF
