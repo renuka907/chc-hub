@@ -41,7 +41,7 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
                 loadTemplate(defaultTemplate);
             }
         }
-    }, [open, savedTemplates]);
+    }, [open, savedTemplates, topic?.updated_date]);
 
     const loadTemplate = (template) => {
         setPrintTemplate(template.template_type);
