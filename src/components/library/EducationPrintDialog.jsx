@@ -66,7 +66,7 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
         body {
             font-family: 'Times New Roman', serif;
             font-size: 11pt;
-            line-height: 1.6;
+            line-height: 2;
             color: #000;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
@@ -127,8 +127,9 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
         }
         
         p {
-            margin-bottom: 12pt;
-            text-align: justify;
+            margin-bottom: 14pt;
+            text-align: left;
+            line-height: 2.2;
         }
         
         ul, ol {
