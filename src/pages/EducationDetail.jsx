@@ -160,18 +160,30 @@ export default function EducationDetail() {
                             page-break-inside: avoid;
                         }
 
+                        .print-container h2,
                         .print-container h3 {
-                            margin-top: 16pt;
-                            margin-bottom: 10pt;
+                            margin-top: 18pt;
+                            margin-bottom: 12pt;
+                            page-break-after: avoid;
                         }
 
                         .print-container ul,
                         .print-container ol {
-                            margin: 10pt 0;
+                            margin: 12pt 0;
+                            line-height: 2;
                         }
 
                         .print-container li {
-                            margin-bottom: 6pt;
+                            margin-bottom: 8pt;
+                            line-height: 1.9;
+                        }
+
+                        .print-container p {
+                            margin-bottom: 12pt;
+                        }
+
+                        .print-container strong {
+                            font-weight: 600;
                         }
                         
                         .no-print {
@@ -245,11 +257,18 @@ export default function EducationDetail() {
                         {topic.content?.includes('<') ? (
                             <div 
                                 className="text-gray-900 prose prose-lg max-w-none"
-                                style={{lineHeight: '1.9', fontSize: '1.05rem', letterSpacing: '0.01em'}}
+                                style={{
+                                    lineHeight: '1.9', 
+                                    fontSize: '1.05rem', 
+                                    letterSpacing: '0.01em'
+                                }}
                                 dangerouslySetInnerHTML={{ __html: topic.content }}
                             />
                         ) : (
-                            <div className="whitespace-pre-wrap text-gray-900 text-lg" style={{lineHeight: '1.9', letterSpacing: '0.01em'}}>
+                            <div className="whitespace-pre-wrap text-gray-900 text-lg" style={{
+                                lineHeight: '1.9', 
+                                letterSpacing: '0.01em'
+                            }}>
                                 {topic.content}
                             </div>
                         )}

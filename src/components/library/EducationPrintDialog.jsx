@@ -113,29 +113,37 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
         h2 {
             font-size: 14pt;
             font-weight: bold;
-            margin-top: 14pt;
-            margin-bottom: 8pt;
+            margin-top: 18pt;
+            margin-bottom: 12pt;
+            page-break-after: avoid;
         }
         
         h3 {
             font-size: 12pt;
             font-weight: bold;
-            margin-top: 12pt;
-            margin-bottom: 8pt;
+            margin-top: 16pt;
+            margin-bottom: 10pt;
+            page-break-after: avoid;
         }
         
         p {
-            margin-bottom: 8pt;
+            margin-bottom: 12pt;
             text-align: justify;
         }
         
         ul, ol {
-            margin-bottom: 8pt;
-            padding-left: 24pt;
+            margin: 12pt 0;
+            padding-left: 28pt;
+            line-height: 2;
         }
         
         li {
-            margin-bottom: 4pt;
+            margin-bottom: 8pt;
+            line-height: 1.9;
+        }
+        
+        strong {
+            font-weight: 600;
         }
         
         .print-section {
