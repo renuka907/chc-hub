@@ -150,9 +150,14 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
         .print-section {
             background: #f8f9fa;
             border: 1px solid #ddd;
-            padding: 10pt;
-            margin: 10pt 0;
+            padding: 8pt;
+            margin: 8pt 0;
             page-break-inside: avoid;
+        }
+        
+        .print-section.compact {
+            padding: 6pt;
+            margin: 6pt 0;
         }
     </style>
 </head>
@@ -169,9 +174,9 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
     </div>
     
     ${topic.summary ? `
-    <div class="print-section" style="background: #ecfdf5; border-color: #10b981;">
-        <h2>Summary</h2>
-        <p style="font-weight: 500;">${topic.summary}</p>
+    <div class="print-section compact" style="background: #ecfdf5; border-color: #10b981;">
+        <h2 style="margin-top: 4pt; margin-bottom: 6pt;">Summary</h2>
+        <p style="font-weight: 500; margin-bottom: 4pt;">${topic.summary}</p>
     </div>
     ` : ''}
     
@@ -192,17 +197,17 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
         </p>
     </div>
     
-    <div class="print-section" style="background: #f1f5f9; border-color: #475569; border-width: 2px;">
-        <p style="font-weight: bold; font-size: 14pt; margin-bottom: 10pt; text-transform: uppercase;">
+    <div class="print-section compact" style="background: #f1f5f9; border-color: #475569; border-width: 2px;">
+        <p style="font-weight: bold; font-size: 13pt; margin-bottom: 6pt; text-transform: uppercase;">
             Questions or Want to Learn More?
         </p>
-        <p style="margin-bottom: 10pt;">
+        <p style="margin-bottom: 6pt;">
             Our medical team is here to help answer any questions about this topic or discuss treatment options that may be right for you.
         </p>
-        <div style="border-top: 1px solid #cbd5e1; padding-top: 8pt; margin-top: 8pt;">
-            <p style="font-weight: 600;">📞 Phone: 239-561-9191 (call or text)</p>
-            <p style="font-weight: 600; margin-top: 4pt;">📧 Email: office@contemporaryhealthcenter.com</p>
-            <p style="font-weight: 600; margin-top: 4pt;">🌐 Web: contemporaryhealthcenter.com</p>
+        <div style="border-top: 1px solid #cbd5e1; padding-top: 6pt; margin-top: 4pt;">
+            <p style="font-weight: 600; margin-bottom: 2pt;">📞 Phone: 239-561-9191 (call or text)</p>
+            <p style="font-weight: 600; margin-bottom: 2pt;">📧 Email: office@contemporaryhealthcenter.com</p>
+            <p style="font-weight: 600;">🌐 Web: contemporaryhealthcenter.com</p>
         </div>
     </div>
     </div>
