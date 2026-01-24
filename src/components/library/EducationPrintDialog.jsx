@@ -197,7 +197,7 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
         </p>
     </div>
     
-    <div class="print-section compact" style="background: #f1f5f9; border-color: #475569; border-width: 2px;">
+    <div class="print-section compact" style="background: #f1f5f9; border-color: #475569; border-width: 2px; padding: 3pt; margin: 3pt 0;">
         <p style="font-weight: bold; font-size: 13pt; margin-bottom: 6pt; text-transform: uppercase;">
             Questions or Want to Learn More?
         </p>
