@@ -39,24 +39,24 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
             const result = await base44.integrations.Core.InvokeLLM({
                 prompt: `Create comprehensive patient education content about "${formData.title}" in the ${formData.category} category. 
 
-                Structure the content as HTML with proper headings and formatting:
+                IMPORTANT: Use bullet points instead of long paragraphs. Structure as HTML:
                 - Use <h3> for main section headings
-                - Use <p> for paragraphs
-                - Use <ul> and <li> for bullet points
-                - Use <strong> for emphasis
-                
-                Include these sections:
-                1. Overview (2-3 paragraphs explaining what it is)
-                2. Key Benefits (bullet list)
-                3. What to Expect (detailed explanation)
-                4. Important Considerations (bullet list)
-                5. Common Questions
-                
+                - Use <ul> and <li> for ALL content (make bullet lists, not paragraphs)
+                - Use <strong> for emphasis within bullets
+                - Keep each bullet point concise (1-2 sentences max)
+
+                Include these sections with bullet points:
+                1. Overview (3-5 key bullet points about what it is)
+                2. Key Benefits (5-7 bullet points)
+                3. What to Expect (5-7 bullet points describing the process/experience)
+                4. Important Considerations (4-6 bullet points with key warnings/tips)
+                5. Common Questions (3-5 Q&A pairs as bullet points)
+
                 Also provide:
                 - A brief 2-3 sentence summary
                 - Medical references (cite sources like Medscape, Mayo Clinic, medical journals)
-                
-                Make it patient-friendly but medically accurate.`,
+
+                Make it patient-friendly, scannable, and medically accurate.`,
                 response_json_schema: {
                     type: "object",
                     properties: {
