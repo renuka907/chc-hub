@@ -321,7 +321,13 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
         <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png" alt="Contemporary Health Center" />
     </div>
     ` : ''}
-    
+
+    ${topic.image_url ? `
+    <div class="print-section" style="text-align: center;">
+        <img src="${topic.image_url}" alt="${topic.title}" style="max-width: 100%; max-height: 400px; margin: 0 auto; object-fit: contain;" />
+    </div>
+    ` : ''}
+
     ${topic.summary ? `
     <div class="print-section compact" style="background: #ecfdf5; border-color: #10b981;">
         <h2 style="margin-top: 4pt; margin-bottom: 6pt;">Summary</h2>

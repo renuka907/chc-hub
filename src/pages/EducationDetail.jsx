@@ -300,6 +300,17 @@ export default function EducationDetail() {
                         </div>
                     )}
 
+                    {/* Image */}
+                    {topic.image_url && (
+                        <div className="print-section" style={{textAlign: 'center'}}>
+                            <img 
+                                src={topic.image_url} 
+                                alt={topic.title}
+                                style={{maxWidth: '100%', maxHeight: '400px', margin: '0 auto', objectFit: 'contain'}}
+                            />
+                        </div>
+                    )}
+
                     {/* Main Content */}
                     <div className="print-section">
                         {topic.content?.includes('<') ? (
