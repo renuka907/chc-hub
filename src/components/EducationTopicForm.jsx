@@ -334,6 +334,39 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
 
                         <div className="space-y-2">
                             <Label htmlFor="content">Educational Content *</Label>
+                            <style>
+                                {`
+                                    .ql-editor h2 {
+                                        font-size: 1.3rem !important;
+                                        font-weight: 700 !important;
+                                        margin-top: 1.5rem !important;
+                                        margin-bottom: 0.75rem !important;
+                                    }
+                                    .ql-editor h3 {
+                                        font-size: 1.15rem !important;
+                                        font-weight: 700 !important;
+                                        margin-top: 1.25rem !important;
+                                        margin-bottom: 0.65rem !important;
+                                    }
+                                    .ql-editor p {
+                                        margin-bottom: 1rem !important;
+                                        line-height: 2 !important;
+                                    }
+                                    .ql-editor ul,
+                                    .ql-editor ol {
+                                        margin: 1.25rem 0 !important;
+                                        padding-left: 2rem !important;
+                                        line-height: 2.2 !important;
+                                    }
+                                    .ql-editor li {
+                                        margin-bottom: 0.75rem !important;
+                                        line-height: 2.1 !important;
+                                    }
+                                    .ql-editor strong {
+                                        font-weight: 600 !important;
+                                    }
+                                `}
+                            </style>
                             <ReactQuill
                                 theme="snow"
                                 value={formData.content}
