@@ -195,6 +195,12 @@ export default function EducationDetail() {
 
             {/* Printable Content */}
             <div className="print-container">
+                
+                {/* Title */}
+                <div className="print-title">
+                    Patient Education: {topic.title}
+                </div>
+
                 {/* Print Header - Logo and Contact */}
                 <div className="print-logo">
                     <img 
@@ -205,11 +211,6 @@ export default function EducationDetail() {
                 <div className="print-contact">
                     <div style={{fontWeight: '600'}}>6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
                     <div>Phone: 239-561-9191 | Fax: 239-561-9188 | contemporaryhealthcenter.com</div>
-                </div>
-                
-                {/* Title */}
-                <div className="print-title">
-                    Patient Education: {topic.title}
                 </div>
                 
                 {/* Content */}
