@@ -194,7 +194,7 @@ export default function DocumentEditDialog({ open, onOpenChange, document: doc, 
                         <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                             Cancel
                         </Button>
-                        <Button type="submit" disabled={isUploading}>
+                        <Button type="submit" disabled={isUploading} className="text-black">
                             {isUploading ? 'Saving...' : 'Save Changes'}
                         </Button>
                     </div>
