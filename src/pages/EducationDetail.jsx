@@ -385,6 +385,7 @@ export default function EducationDetail() {
                         open={showPrintDialog}
                         onOpenChange={setShowPrintDialog}
                         topic={topic}
+                        onSuccess={handleSuccess}
                     />
                     <EducationVersionHistory
                         open={showVersionHistory}

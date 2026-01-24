@@ -11,7 +11,7 @@ import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import jsPDF from "jspdf";
 
-export default function EducationPrintDialog({ open, onOpenChange, topic }) {
+export default function EducationPrintDialog({ open, onOpenChange, topic, onSuccess }) {
     if (!topic) return null;
 
     const iframeRef = React.useRef(null);
@@ -541,6 +541,8 @@ export default function EducationPrintDialog({ open, onOpenChange, topic }) {
                 editTopic={topic}
                 onSuccess={() => {
                     queryClient.invalidateQueries({ queryKey: ['education-topics'] });
+                    queryClient.invalidateQueries({ queryKey: ['educationTopics'] });
+                    if (onSuccess) onSuccess();
                     setShowEditForm(false);
                 }}
                 />
