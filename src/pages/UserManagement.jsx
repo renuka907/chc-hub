@@ -414,7 +414,21 @@ export default function UserManagement() {
                                  onChange={(e) => setInviteEmail(e.target.value)}
                              />
                          </div>
-                         <p className="text-sm text-gray-600">Users will be invited as standard staff members. You can change their role after they accept the invitation.</p>
+                         <div className="space-y-2">
+                             <Label htmlFor="role">Role</Label>
+                             <Select value={inviteRole} onValueChange={setInviteRole}>
+                                 <SelectTrigger id="role">
+                                     <SelectValue />
+                                 </SelectTrigger>
+                                 <SelectContent>
+                                     <SelectItem value="read_only">Read-Only</SelectItem>
+                                     <SelectItem value="staff">Staff</SelectItem>
+                                     <SelectItem value="manager">Manager</SelectItem>
+                                     <SelectItem value="admin">Administrator</SelectItem>
+                                 </SelectContent>
+                             </Select>
+                         </div>
+                         <p className="text-sm text-gray-600">User will be added immediately and can log in right away without email verification.</p>
                      </div>
                     {inviteError && (
                         <p className="text-sm text-red-600">{inviteError}</p>
