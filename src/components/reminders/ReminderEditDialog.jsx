@@ -6,10 +6,11 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { base44 } from "@/api/base44Client";
 
-export default function ReminderEditDialog({ open, onOpenChange, reminder, onSaved }) {
+export default function ReminderEditDialog({ open, onOpenChange, reminder, users = [], onSaved }) {
   const [form, setForm] = React.useState({
     title: "",
     description: "",
+    assigned_to: "",
     due_date_local: "",
     recurrence_type: "none",
     recurrence_interval: 1,
@@ -31,6 +32,7 @@ export default function ReminderEditDialog({ open, onOpenChange, reminder, onSav
       setForm({
         title: reminder.title || "",
         description: reminder.description || "",
+        assigned_to: reminder.assigned_to || "",
         due_date_local: dueLocal,
         recurrence_type: reminder.recurrence_type || "none",
         recurrence_interval: reminder.recurrence_interval || 1,
@@ -42,6 +44,7 @@ export default function ReminderEditDialog({ open, onOpenChange, reminder, onSav
       setForm({
         title: "",
         description: "",
+        assigned_to: "",
         due_date_local: "",
         recurrence_type: "none",
         recurrence_interval: 1,
@@ -74,6 +77,7 @@ export default function ReminderEditDialog({ open, onOpenChange, reminder, onSav
       const payload = {
         title: form.title,
         description: form.description,
+        assigned_to: form.assigned_to || undefined,
         due_date: form.due_date_local ? toISO(form.due_date_local) : undefined,
         recurrence_type: form.recurrence_type,
         recurrence_interval: form.recurrence_interval,
@@ -127,6 +131,26 @@ export default function ReminderEditDialog({ open, onOpenChange, reminder, onSav
                 value={form.description}
                 onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
               />
+            </div>
+
+            <div>
+              <Label>Assign to</Label>
+              <Select
+                value={form.assigned_to || ""}
+                onValueChange={(v) => setForm((f) => ({ ...f, assigned_to: v }))}
+              >
+                <SelectTrigger className="mt-1">
+                  <SelectValue placeholder="Select team member" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={null}>Unassigned</SelectItem>
+                  {users.map((u) => (
+                    <SelectItem key={u.id} value={u.email}>
+                      {u.full_name || u.email}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div>

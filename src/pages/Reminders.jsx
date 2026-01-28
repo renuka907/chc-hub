@@ -37,8 +37,16 @@ export default function Reminders() {
         queryKey: ['reminders'],
         queryFn: async () => {
             const user = await base44.auth.me();
-            return base44.entities.Reminder.filter({ created_by: user.email }, '-due_date', 100);
+            const allReminders = await base44.entities.Reminder.list('-due_date', 200);
+            return allReminders.filter(r => 
+                r.created_by === user.email || r.assigned_to === user.email
+            );
         },
+    });
+
+    const { data: teamMembers = [] } = useQuery({
+        queryKey: ['teamMembers'],
+        queryFn: () => base44.entities.User.list(),
     });
 
 
@@ -638,6 +646,7 @@ export default function Reminders() {
                 open={showCreateDialog}
                 onOpenChange={setShowCreateDialog}
                 reminder={editingReminder}
+                users={teamMembers}
                 onSaved={() => {
                     queryClient.invalidateQueries({ queryKey: ['reminders'] });
                     setShowCreateDialog(false);
