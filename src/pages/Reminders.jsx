@@ -28,20 +28,20 @@ export default function Reminders() {
     const [showNotificationPrefs, setShowNotificationPrefs] = useState(false);
     const queryClient = useQueryClient();
 
-    const { data: reminders = [], isLoading } = useQuery({
-        queryKey: ['reminders'],
-        queryFn: () => base44.entities.Reminder.list('-due_date', 100),
-    });
-
     const { data: currentUser } = useQuery({
         queryKey: ['currentUser'],
         queryFn: () => base44.auth.me(),
     });
 
-    const { data: teamMembers = [] } = useQuery({
-        queryKey: ['teamMembers'],
-        queryFn: () => base44.entities.User.list(),
+    const { data: reminders = [], isLoading } = useQuery({
+        queryKey: ['reminders'],
+        queryFn: async () => {
+            const user = await base44.auth.me();
+            return base44.entities.Reminder.filter({ created_by: user.email }, '-due_date', 100);
+        },
     });
+
+
 
     const toggleCompleteMutation = useMutation({
         mutationFn: ({ id, completed }) => 
@@ -497,12 +497,7 @@ export default function Reminders() {
                                                         {format(new Date(reminder.due_date), "MMM d, yyyy h:mm a")}
                                                     </div>
                                                 )}
-                                                {reminder.assigned_to && (
-                                                    <div className="flex items-center gap-1">
-                                                        <span className="text-xs">Assigned to:</span>
-                                                        <span className="font-medium">{reminder.assigned_to}</span>
-                                                    </div>
-                                                )}
+
                                                 {reminder.recurrence_type && reminder.recurrence_type !== "none" && (
                                                     <Badge variant="outline" className="text-xs">
                                                         Recurring: {reminder.recurrence_type}
@@ -643,7 +638,6 @@ export default function Reminders() {
                 open={showCreateDialog}
                 onOpenChange={setShowCreateDialog}
                 reminder={editingReminder}
-                users={teamMembers}
                 onSaved={() => {
                     queryClient.invalidateQueries({ queryKey: ['reminders'] });
                     setShowCreateDialog(false);
