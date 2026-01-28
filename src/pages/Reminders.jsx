@@ -499,18 +499,23 @@ export default function Reminders() {
                                             )}
 
                                             <div className="flex items-center gap-4 text-sm text-gray-500">
-                                                {reminder.due_date && (
-                                                    <div className="flex items-center gap-1">
-                                                        <Calendar className="w-4 h-4" />
-                                                        {format(new Date(reminder.due_date), "MMM d, yyyy h:mm a")}
-                                                    </div>
-                                                )}
-
-                                                {reminder.recurrence_type && reminder.recurrence_type !== "none" && (
-                                                    <Badge variant="outline" className="text-xs">
-                                                        Recurring: {reminder.recurrence_type}
-                                                    </Badge>
-                                                )}
+                                               {reminder.due_date && (
+                                                   <div className="flex items-center gap-1">
+                                                       <Calendar className="w-4 h-4" />
+                                                       {format(new Date(reminder.due_date), "MMM d, yyyy h:mm a")}
+                                                   </div>
+                                               )}
+                                               {reminder.assigned_to && (
+                                                   <div className="flex items-center gap-1">
+                                                       <span className="text-xs">Assigned to:</span>
+                                                       <span className="font-medium">{reminder.assigned_to}</span>
+                                                   </div>
+                                               )}
+                                               {reminder.recurrence_type && reminder.recurrence_type !== "none" && (
+                                                   <Badge variant="outline" className="text-xs">
+                                                       Recurring: {reminder.recurrence_type}
+                                                   </Badge>
+                                               )}
                                             </div>
                                         </div>
 
