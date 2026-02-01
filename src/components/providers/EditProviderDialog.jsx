@@ -4,11 +4,15 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Plus, Trash2, Globe, Printer } from "lucide-react";
+import { Loader2, Plus, Trash2, Globe, Printer, Search, X } from "lucide-react";
 
 export default function EditProviderDialog({ provider, open, onOpenChange, onSave }) {
     const [formData, setFormData] = useState(null);
     const [saving, setSaving] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [searching, setSearching] = useState(false);
+    const [searchResults, setSearchResults] = useState([]);
+    const [showSearch, setShowSearch] = useState(false);
     const isNew = !provider;
 
     useEffect(() => {
@@ -30,6 +34,7 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                     group_member_ids: provider.group_member_ids ? JSON.parse(provider.group_member_ids) : [],
                     addresses: provider.addresses ? JSON.parse(provider.addresses) : [],
                 });
+                setShowSearch(false);
             } else {
                 setFormData({
                     full_name: "",
@@ -47,9 +52,48 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                     group_member_ids: [],
                     addresses: [{ location_name: "Main Office", address: "", phone: "", is_primary: true }],
                 });
+                setShowSearch(true);
             }
+            setSearchTerm("");
+            setSearchResults([]);
         }
     }, [provider, open]);
+
+    const handleNPISearch = async () => {
+        if (!searchTerm || searchTerm.length < 2) return;
+        
+        setSearching(true);
+        try {
+            const { data } = await base44.functions.invoke('searchNPIRegistry', { searchTerm });
+            setSearchResults(data.results || []);
+        } catch (error) {
+            console.error('Search failed:', error);
+            setSearchResults([]);
+        } finally {
+            setSearching(false);
+        }
+    };
+
+    const handleSelectProvider = (npiProvider) => {
+        setFormData({
+            ...formData,
+            full_name: npiProvider.full_name,
+            specialty: npiProvider.specialty,
+            credentials: npiProvider.credentials,
+            phone: npiProvider.phone,
+            fax: npiProvider.fax,
+            address: npiProvider.address,
+            addresses: npiProvider.address ? [{ 
+                location_name: "Main Office", 
+                address: npiProvider.address, 
+                phone: npiProvider.phone,
+                is_primary: true 
+            }] : formData.addresses,
+        });
+        setShowSearch(false);
+        setSearchResults([]);
+        setSearchTerm("");
+    };
 
     const handleSave = async () => {
         setSaving(true);
@@ -81,6 +125,88 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                 <DialogHeader>
                     <DialogTitle>{isNew ? "Add Provider" : "Edit Provider"}</DialogTitle>
                 </DialogHeader>
+
+                {showSearch && isNew && (
+                    <div className="border rounded-lg p-4 bg-purple-50 space-y-3">
+                        <div className="flex items-center justify-between">
+                            <Label className="text-sm font-semibold">Search NPI Registry</Label>
+                            <Button
+                                type="button"
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => setShowSearch(false)}
+                            >
+                                <X className="w-4 h-4" />
+                            </Button>
+                        </div>
+                        <div className="flex gap-2">
+                            <Input
+                                placeholder="Enter name or NPI number..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && handleNPISearch()}
+                            />
+                            <Button
+                                type="button"
+                                onClick={handleNPISearch}
+                                disabled={searching || searchTerm.length < 2}
+                                className="bg-purple-600 hover:bg-purple-700"
+                            >
+                                {searching ? (
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                ) : (
+                                    <Search className="w-4 h-4" />
+                                )}
+                            </Button>
+                        </div>
+
+                        {searchResults.length > 0 && (
+                            <div className="max-h-60 overflow-y-auto space-y-2 mt-3">
+                                {searchResults.map((result, idx) => (
+                                    <div
+                                        key={idx}
+                                        onClick={() => handleSelectProvider(result)}
+                                        className="p-3 bg-white border rounded-lg cursor-pointer hover:bg-purple-100 transition-colors"
+                                    >
+                                        <div className="font-semibold text-sm">{result.full_name} {result.credentials}</div>
+                                        <div className="text-xs text-gray-600">{result.specialty}</div>
+                                        <div className="text-xs text-gray-500 mt-1">{result.address}</div>
+                                        <div className="text-xs text-purple-600 mt-1">NPI: {result.npi}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {searchResults.length === 0 && searchTerm && !searching && (
+                            <p className="text-sm text-gray-500 text-center py-2">No results found</p>
+                        )}
+
+                        <div className="border-t pt-3 mt-3">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setShowSearch(false)}
+                                className="w-full"
+                            >
+                                Skip and Enter Manually
+                            </Button>
+                        </div>
+                    </div>
+                )}
+
+                {!showSearch && isNew && (
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setShowSearch(true)}
+                        className="w-full mb-4"
+                    >
+                        <Search className="w-4 h-4 mr-2" />
+                        Search NPI Registry
+                    </Button>
+                )}
 
                 <div className="space-y-4">
                     <div>
