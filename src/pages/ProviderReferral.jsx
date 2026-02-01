@@ -180,7 +180,7 @@ export default function ProviderReferral() {
                         onClick={handlePrint}
                         className="gap-2 bg-purple-600 hover:bg-purple-700 text-white"
                     >
-                        <Printer className="w-4 h-4" />
+                        <PrinterIcon className="w-4 h-4" />
                         Print Directory
                     </Button>
                     {selectedProviders.size > 0 && (
@@ -188,7 +188,7 @@ export default function ProviderReferral() {
                             onClick={() => handlePrintCard()}
                             className="gap-2 bg-blue-600 hover:bg-blue-700 text-white"
                         >
-                            <Printer className="w-4 h-4" />
+                            <PrinterIcon className="w-4 h-4" />
                             Print Selected ({selectedProviders.size})
                         </Button>
                     )}
@@ -324,7 +324,7 @@ export default function ProviderReferral() {
                                                         className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
                                                         title="Print provider card"
                                                     >
-                                                        <Printer className="w-4 h-4 text-gray-600 hover:text-purple-600" />
+                                                        <PrinterIcon className="w-4 h-4 text-gray-600 hover:text-purple-600" />
                                                     </button>
                                                     <button
                                                         onClick={() => handleEditProvider(provider)}
