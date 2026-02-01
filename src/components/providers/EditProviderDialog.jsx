@@ -21,15 +21,25 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                 const parseAddress = (addr) => {
                     if (!addr) return { street: "", suite: "", city: "", state: "", zip: "" };
                     const parts = addr.split(',').map(p => p.trim());
-                    if (parts.length >= 3) {
-                        const street = parts[0] || "";
-                        const cityState = parts[parts.length - 2] || "";
-                        const cityStateParts = cityState.split(' ');
-                        const state = cityStateParts.length > 1 ? cityStateParts[cityStateParts.length - 2] : "";
-                        const zip = cityStateParts.length > 1 ? cityStateParts[cityStateParts.length - 1] : "";
-                        const city = cityStateParts.slice(0, cityStateParts.length - 2).join(' ');
-                        return { street, suite: "", city, state, zip };
+
+                    if (parts.length >= 2) {
+                        // Last part should be "City State Zip"
+                        const cityStateZip = parts[parts.length - 1] || "";
+                        const cityStateZipParts = cityStateZip.split(' ').filter(p => p);
+
+                        // Extract zip (last part), state (second to last), city (everything before)
+                        const zip = cityStateZipParts.length > 0 ? cityStateZipParts[cityStateZipParts.length - 1] : "";
+                        const state = cityStateZipParts.length > 1 ? cityStateZipParts[cityStateZipParts.length - 2] : "";
+                        const city = cityStateZipParts.slice(0, -2).join(' ');
+
+                        // First part(s) are street address (might include suite)
+                        const streetParts = parts.slice(0, -1);
+                        const street = streetParts[0] || "";
+                        const suite = streetParts.length > 1 ? streetParts.slice(1).join(', ') : "";
+
+                        return { street, suite, city, state, zip };
                     }
+
                     return { street: addr, suite: "", city: "", state: "", zip: "" };
                 };
 
@@ -99,15 +109,25 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
         const parseAddress = (addr) => {
             if (!addr) return { street: "", suite: "", city: "", state: "", zip: "" };
             const parts = addr.split(',').map(p => p.trim());
-            if (parts.length >= 3) {
-                const street = parts[0] || "";
-                const cityState = parts[parts.length - 2] || "";
-                const cityStateParts = cityState.split(' ');
-                const state = cityStateParts.length > 1 ? cityStateParts[cityStateParts.length - 2] : "";
-                const zip = cityStateParts.length > 1 ? cityStateParts[cityStateParts.length - 1] : "";
-                const city = cityStateParts.slice(0, cityStateParts.length - 2).join(' ');
-                return { street, suite: "", city, state, zip };
+
+            if (parts.length >= 2) {
+                // Last part should be "City State Zip"
+                const cityStateZip = parts[parts.length - 1] || "";
+                const cityStateZipParts = cityStateZip.split(' ').filter(p => p);
+
+                // Extract zip (last part), state (second to last), city (everything before)
+                const zip = cityStateZipParts.length > 0 ? cityStateZipParts[cityStateZipParts.length - 1] : "";
+                const state = cityStateZipParts.length > 1 ? cityStateZipParts[cityStateZipParts.length - 2] : "";
+                const city = cityStateZipParts.slice(0, -2).join(' ');
+
+                // First part(s) are street address (might include suite)
+                const streetParts = parts.slice(0, -1);
+                const street = streetParts[0] || "";
+                const suite = streetParts.length > 1 ? streetParts.slice(1).join(', ') : "";
+
+                return { street, suite, city, state, zip };
             }
+
             return { street: addr, suite: "", city: "", state: "", zip: "" };
         };
 
