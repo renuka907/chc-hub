@@ -377,11 +377,6 @@ export default function ProviderReferral() {
                                                                 {provider.credentials}
                                                             </p>
                                                         )}
-                                                        {provider.group_name && (
-                                                            <p className="text-sm text-purple-600 mt-1">
-                                                                {provider.group_name}
-                                                            </p>
-                                                        )}
                                                     </div>
                                                 </div>
                                                 <div className="flex items-start gap-2">
@@ -406,11 +401,17 @@ export default function ProviderReferral() {
                                                         <Edit className="w-4 h-4 text-gray-600 hover:text-purple-600" />
                                                     </button>
                                                 </div>
-                                            </div>
+                                                </div>
 
-                                            {provider.bio && (
+                                                {provider.group_name && (
+                                                <p className="text-sm text-purple-600 mt-3 font-medium">
+                                                    {provider.group_name}
+                                                </p>
+                                                )}
+
+                                                {provider.bio && (
                                                 <p className="text-sm text-gray-600 mt-3">{provider.bio}</p>
-                                            )}
+                                                )}
 
                                             <div className="mt-4 space-y-2 text-sm">
                                                 {provider.email && (
