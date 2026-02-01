@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Mail, Phone, MapPin, Star, Filter, X, Printer, Edit, Plus } from "lucide-react";
+import { Search, Mail, Phone, MapPin, Star, Filter, X, Printer, Edit, Plus, CheckSquare } from "lucide-react";
 import PrintableProviderCard from "@/components/providers/PrintableProviderCard";
 import EditProviderDialog from "@/components/providers/EditProviderDialog";
 
@@ -15,6 +15,7 @@ export default function ProviderReferral() {
     const [showPrintPreview, setShowPrintPreview] = useState(false);
     const [editingProvider, setEditingProvider] = useState(null);
     const [showEditDialog, setShowEditDialog] = useState(false);
+    const [selectedProviders, setSelectedProviders] = useState(new Set());
     const queryClient = useQueryClient();
 
     const { data: providers, isLoading } = useQuery({
@@ -72,25 +73,53 @@ export default function ProviderReferral() {
         window.print();
     };
 
-    const handlePrintCard = (provider) => {
-        const printContent = `
-            <div style="font-family: Arial, sans-serif; padding: 40px; max-width: 600px; margin: 0 auto;">
-                <h2 style="color: #6d28d9; margin-bottom: 20px;">${provider.full_name}</h2>
-                ${provider.credentials ? `<p style="color: #8b5cf6; font-weight: bold; margin-bottom: 10px;">${provider.credentials}</p>` : ''}
-                <p style="color: #666; font-size: 14px; margin-bottom: 20px;">${provider.specialty}</p>
-                
-                ${provider.bio ? `<p style="color: #333; margin-bottom: 20px;">${provider.bio}</p>` : ''}
-                
-                <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; margin-bottom: 20px;">
-                    ${provider.email ? `<p style="margin: 8px 0;"><strong>Email:</strong> ${provider.email}</p>` : ''}
-                    ${provider.phone ? `<p style="margin: 8px 0;"><strong>Phone:</strong> ${provider.phone}</p>` : ''}
-                    ${provider.address ? `<p style="margin: 8px 0;"><strong>Address:</strong> ${provider.address}</p>` : ''}
-                    <p style="margin: 8px 0;"><strong>Clinic:</strong> ${getClinicName(provider.clinic_location_id)}</p>
+    const handlePrintCard = (providersToprint = null) => {
+        const providers = providersToprint || (selectedProviders.size > 0 ? 
+            filteredProviders.filter(p => selectedProviders.has(p.id)) : 
+            []);
+        
+        if (providers.length === 0) return;
+        
+        const printContent = providers.map(provider => {
+            const addresses = provider.addresses ? JSON.parse(provider.addresses) : [];
+            const addressesHTML = addresses.length > 0 ? `
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e7eb;">
+                    <p style="font-weight: bold; margin-bottom: 10px;">All Locations:</p>
+                    ${addresses.map(addr => `
+                        <div style="margin-left: 20px; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #f3f4f6;">
+                            <p style="font-weight: 600; color: #374151;">
+                                ${addr.location_name}
+                                ${addr.is_primary ? '<span style="margin-left: 10px; font-size: 11px; background: #ede9fe; color: #6d28d9; padding: 2px 8px; border-radius: 4px;">Primary</span>' : ''}
+                            </p>
+                            ${addr.address ? `<p style="margin: 4px 0; font-size: 13px; color: #6b7280;">${addr.address}</p>` : ''}
+                            ${addr.phone ? `<p style="margin: 4px 0; font-size: 13px; color: #6b7280;">Phone: ${addr.phone}</p>` : ''}
+                        </div>
+                    `).join('')}
                 </div>
-                
-                ${provider.languages ? `<p style="font-size: 12px; color: #666;">Languages: ${JSON.parse(provider.languages || '[]').join(", ") || "English"}</p>` : ''}
-            </div>
-        `;
+            ` : '';
+
+            return `
+                <div style="font-family: Arial, sans-serif; padding: 40px; max-width: 600px; margin: 0 auto; page-break-after: always;">
+                    <h2 style="color: #6d28d9; margin-bottom: 20px;">${provider.full_name}</h2>
+                    ${provider.credentials ? `<p style="color: #8b5cf6; font-weight: bold; margin-bottom: 10px;">${provider.credentials}</p>` : ''}
+                    <p style="color: #666; font-size: 14px; margin-bottom: 20px;">${provider.specialty}</p>
+                    ${provider.group_name ? `<p style="color: #666; font-size: 14px; margin-bottom: 15px;"><strong>Group:</strong> ${provider.group_name}</p>` : ''}
+                    
+                    ${provider.bio ? `<p style="color: #333; margin-bottom: 20px;">${provider.bio}</p>` : ''}
+                    
+                    <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; margin-bottom: 20px;">
+                        ${provider.email ? `<p style="margin: 8px 0;"><strong>Email:</strong> ${provider.email}</p>` : ''}
+                        ${provider.phone ? `<p style="margin: 8px 0;"><strong>Phone:</strong> ${provider.phone}</p>` : ''}
+                        ${provider.address ? `<p style="margin: 8px 0;"><strong>Address:</strong> ${provider.address}</p>` : ''}
+                        <p style="margin: 8px 0;"><strong>Clinic:</strong> ${getClinicName(provider.clinic_location_id)}</p>
+                    </div>
+                    
+                    ${addressesHTML}
+                    
+                    ${provider.languages ? `<p style="font-size: 12px; color: #666;">Languages: ${JSON.parse(provider.languages || '[]').join(", ") || "English"}</p>` : ''}
+                </div>
+            `;
+        }).join('');
         
         const newWindow = window.open('', '', 'width=600,height=700');
         newWindow.document.write(printContent);
@@ -152,6 +181,15 @@ export default function ProviderReferral() {
                         <Printer className="w-4 h-4" />
                         Print Directory
                     </Button>
+                    {selectedProviders.size > 0 && (
+                        <Button
+                            onClick={() => handlePrintCard()}
+                            className="gap-2 bg-blue-600 hover:bg-blue-700 text-white"
+                        >
+                            <Printer className="w-4 h-4" />
+                            Print Selected ({selectedProviders.size})
+                        </Button>
+                    )}
                 </div>
 
                 {showFilters && (
@@ -230,9 +268,29 @@ export default function ProviderReferral() {
                             </h2>
                             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {providerList.map((provider) => (
-                                    <Card key={provider.id} className="hover:shadow-lg transition-shadow">
+                                    <Card key={provider.id} className="hover:shadow-lg transition-shadow relative">
+                                        <button
+                                            onClick={() => {
+                                                const newSelected = new Set(selectedProviders);
+                                                if (newSelected.has(provider.id)) {
+                                                    newSelected.delete(provider.id);
+                                                } else {
+                                                    newSelected.add(provider.id);
+                                                }
+                                                setSelectedProviders(newSelected);
+                                            }}
+                                            className={`absolute top-3 left-3 w-6 h-6 border-2 rounded flex items-center justify-center transition-colors ${
+                                                selectedProviders.has(provider.id) 
+                                                    ? 'bg-purple-600 border-purple-600' 
+                                                    : 'border-gray-300 bg-white hover:border-purple-400'
+                                            }`}
+                                        >
+                                            {selectedProviders.has(provider.id) && (
+                                                <CheckSquare className="w-4 h-4 text-white" />
+                                            )}
+                                        </button>
                                         <CardContent className="pt-6">
-                                            <div className="flex gap-4">
+                                            <div className="flex gap-4 ml-8">
                                                 {provider.profile_image_url && (
                                                     <img
                                                         src={provider.profile_image_url}
@@ -260,7 +318,7 @@ export default function ProviderReferral() {
                                                          </span>
                                                      )}
                                                     <button
-                                                        onClick={() => handlePrintCard(provider)}
+                                                        onClick={() => handlePrintCard([provider])}
                                                         className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
                                                         title="Print provider card"
                                                     >

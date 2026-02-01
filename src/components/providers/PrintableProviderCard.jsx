@@ -54,7 +54,19 @@ export default function PrintableProviderCard({ providers, locations, clinicName
                                     </p>
                                 )}
 
+                                {provider.group_name && (
+                                    <p className="text-sm text-gray-700 mb-2">
+                                        <span className="font-semibold">Group:</span> {provider.group_name}
+                                    </p>
+                                )}
+
                                 <div className="text-sm space-y-1">
+                                    {provider.email && (
+                                        <div className="flex gap-2">
+                                            <span className="font-semibold text-gray-700 w-16">Email:</span>
+                                            <span>{provider.email}</span>
+                                        </div>
+                                    )}
                                     {provider.phone && (
                                         <div className="flex gap-2">
                                             <span className="font-semibold text-gray-700 w-16">Phone:</span>
@@ -67,10 +79,19 @@ export default function PrintableProviderCard({ providers, locations, clinicName
                                             <span>{provider.address}</span>
                                         </div>
                                     )}
-                                    {provider.email && (
-                                        <div className="flex gap-2">
-                                            <span className="font-semibold text-gray-700 w-16">Email:</span>
-                                            <span>{provider.email}</span>
+                                    {provider.addresses && JSON.parse(provider.addresses).length > 0 && (
+                                        <div className="mt-2 pt-2 border-t border-gray-300">
+                                            <p className="font-semibold text-gray-700 mb-1">All Locations:</p>
+                                            {JSON.parse(provider.addresses).map((addr, idx) => (
+                                                <div key={idx} className="ml-4 mb-2 pb-2 border-b border-gray-200 last:border-0">
+                                                    <p className="font-medium text-gray-800">
+                                                        {addr.location_name}
+                                                        {addr.is_primary && <span className="ml-2 text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded">Primary</span>}
+                                                    </p>
+                                                    {addr.address && <p className="text-xs text-gray-600">{addr.address}</p>}
+                                                    {addr.phone && <p className="text-xs text-gray-600">Phone: {addr.phone}</p>}
+                                                </div>
+                                            ))}
                                         </div>
                                     )}
                                 </div>
