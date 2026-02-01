@@ -142,6 +142,7 @@ export default function ProviderReferral() {
                             </p>
                             ${addr.address ? `<p style="margin: 4px 0; font-size: 13px; color: #6b7280;">${addr.address}</p>` : ''}
                             ${addr.phone ? `<p style="margin: 4px 0; font-size: 13px; color: #6b7280;">Phone: ${addr.phone}</p>` : ''}
+                            ${addr.fax ? `<p style="margin: 4px 0; font-size: 13px; color: #6b7280;">Fax: ${addr.fax}</p>` : ''}
                         </div>
                     `).join('')}
                 </div>
@@ -499,11 +500,17 @@ export default function ProviderReferral() {
                                                                             </div>
                                                                         )}
                                                                         {addr.phone && (
-                                                                            <div className="flex items-center gap-2 text-gray-600 text-xs">
+                                                                            <div className="flex items-center gap-2 text-gray-600 text-xs mb-1">
                                                                                 <Phone className="w-3 h-3 text-purple-400" />
                                                                                 <a href={`tel:${addr.phone}`} className="hover:text-purple-600">
                                                                                     {addr.phone}
                                                                                 </a>
+                                                                            </div>
+                                                                        )}
+                                                                        {addr.fax && (
+                                                                            <div className="flex items-center gap-2 text-gray-600 text-xs">
+                                                                                <PrinterIcon className="w-3 h-3 text-purple-400" />
+                                                                                <span>Fax: {addr.fax}</span>
                                                                             </div>
                                                                         )}
                                                                     </div>
