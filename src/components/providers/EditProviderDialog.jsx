@@ -497,19 +497,18 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                                         placeholder="Location name (e.g., Main Office)"
                                         className="flex-1 mr-2"
                                     />
-                                    {formData.addresses.length > 1 && (
-                                        <Button
-                                            type="button"
-                                            size="sm"
-                                            variant="ghost"
-                                            onClick={() => {
-                                                const newAddresses = formData.addresses.filter((_, i) => i !== idx);
-                                                setFormData({ ...formData, addresses: newAddresses });
-                                            }}
-                                        >
-                                            <Trash2 className="w-4 h-4 text-red-500" />
-                                        </Button>
-                                    )}
+                                    <Button
+                                        type="button"
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => {
+                                            const newAddresses = formData.addresses.filter((_, i) => i !== idx);
+                                            setFormData({ ...formData, addresses: newAddresses });
+                                        }}
+                                        title="Remove this location"
+                                    >
+                                        <Trash2 className="w-4 h-4 text-red-500" />
+                                    </Button>
                                 </div>
                                 <Input
                                     value={addr.address}
