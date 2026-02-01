@@ -69,14 +69,31 @@ Deno.serve(async (req) => {
                  const response = await fetch(url);
                  data = await response.json();
              } else if (nameParts.length === 1) {
-                 // Single word - try as last name first, then as first name
-                 let npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&last_name=${encodeURIComponent(nameParts[0])}*`;
+                 // Single word - try multiple strategies
+                 const term = nameParts[0];
+                 
+                 // Strategy 1: Last name with wildcard
+                 let npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&last_name=${encodeURIComponent(term)}*`;
                  let response = await fetch(npiUrl);
                  data = await response.json();
 
-                 // If no results, try as first name
+                 // Strategy 2: First name with wildcard
                  if (!data.results || data.results.length === 0) {
-                     npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&first_name=${encodeURIComponent(nameParts[0])}*`;
+                     npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&first_name=${encodeURIComponent(term)}*`;
+                     response = await fetch(npiUrl);
+                     data = await response.json();
+                 }
+
+                 // Strategy 3: Last name without wildcard
+                 if (!data.results || data.results.length === 0) {
+                     npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&last_name=${encodeURIComponent(term)}`;
+                     response = await fetch(npiUrl);
+                     data = await response.json();
+                 }
+
+                 // Strategy 4: First name without wildcard
+                 if (!data.results || data.results.length === 0) {
+                     npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&first_name=${encodeURIComponent(term)}`;
                      response = await fetch(npiUrl);
                      data = await response.json();
                  }
@@ -104,9 +121,23 @@ Deno.serve(async (req) => {
                      data = await response.json();
                  }
 
-                 // Strategy 4: last name alone (no wildcard)
+                 // Strategy 4: just first name with wildcard
+                 if (!data.results || data.results.length === 0) {
+                     npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&first_name=${encodeURIComponent(firstName)}*`;
+                     response = await fetch(npiUrl);
+                     data = await response.json();
+                 }
+
+                 // Strategy 5: last name alone (no wildcard)
                  if (!data.results || data.results.length === 0) {
                      npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&last_name=${encodeURIComponent(lastName)}`;
+                     response = await fetch(npiUrl);
+                     data = await response.json();
+                 }
+
+                 // Strategy 6: first name alone (no wildcard)
+                 if (!data.results || data.results.length === 0) {
+                     npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&first_name=${encodeURIComponent(firstName)}`;
                      response = await fetch(npiUrl);
                      data = await response.json();
                  }
