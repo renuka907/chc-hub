@@ -72,6 +72,13 @@ Deno.serve(async (req) => {
             }
         }
 
+        // If no results and search term looks like it could be an org/practice name, try organization search
+        if ((!data.results || data.results.length === 0) && !searchTerm.match(/^\d+$/)) {
+            const orgUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&organization_name=${encodeURIComponent(searchTerm)}*`;
+            const orgResponse = await fetch(orgUrl);
+            data = await orgResponse.json();
+        }
+
         if (!data.results || data.results.length === 0) {
             return Response.json({ results: [] });
         }
