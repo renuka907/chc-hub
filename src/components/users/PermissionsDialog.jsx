@@ -120,6 +120,38 @@ export default function PermissionsDialog({ open, onOpenChange, user, onSave, is
         return (permissions[pageId]?.actions?.length || 0) > 0;
     };
 
+    const applyPreset = (presetKey) => {
+        setPermissions(ROLE_PRESETS[presetKey].permissions);
+    };
+
+    const toggleCategoryAll = (category, enable) => {
+        const pages = PAGES_BY_CATEGORY[category];
+        setPermissions(prev => {
+            const newPerms = { ...prev };
+            pages.forEach(page => {
+                if (enable) {
+                    newPerms[page.id] = { actions: page.actions };
+                } else {
+                    delete newPerms[page.id];
+                }
+            });
+            return newPerms;
+        });
+    };
+
+    const getCategoryStats = (category) => {
+        const pages = PAGES_BY_CATEGORY[category];
+        const pagesWithPerms = pages.filter(p => hasAnyAction(p.id));
+        return { granted: pagesWithPerms.length, total: pages.length };
+    };
+
+    const getActionColor = (pageId, action) => {
+        if (hasAction(pageId, action)) {
+            return 'bg-green-100 text-green-700 border-green-300';
+        }
+        return 'bg-gray-100 text-gray-500 border-gray-300';
+    };
+
     const handleSave = () => {
         onSave(permissions);
     };
