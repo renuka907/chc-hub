@@ -83,15 +83,40 @@ Deno.serve(async (req) => {
             return Response.json({ results: [] });
         }
 
-        // Transform NPI data to our format
-        const providers = data.results.map(result => {
+        // Transform NPI data to our format, filtering for physicians/surgeons
+        const providers = data.results
+            .filter(result => {
+                // Filter to include only physicians, surgeons, and related medical providers
+                const taxonomies = result.taxonomies || [];
+                if (taxonomies.length === 0) return true; // Include if no taxonomy info
+
+                const physicianCodes = [
+                    '207Q00000X', // Allopathic & Osteopathic Physicians
+                    '2083P0901X', // Physician - Surgery
+                    '207R00000X', // Osteopathic Manipulative Treatment Physicians
+                    '208000000X', // Physicians
+                    '2084A0401X', // Physician - Surgery - General
+                ];
+
+                return taxonomies.some(t => 
+                    t.code && (
+                        physicianCodes.includes(t.code) || 
+                        t.desc?.toLowerCase().includes('physician') ||
+                        t.desc?.toLowerCase().includes('surgeon') ||
+                        t.desc?.toLowerCase().includes('doctor') ||
+                        t.desc?.toLowerCase().includes('md') ||
+                        t.desc?.toLowerCase().includes('do')
+                    )
+                );
+            })
+            .map(result => {
             const basic = result.basic || {};
             const addresses = result.addresses || [];
             const taxonomies = result.taxonomies || [];
-            
+
             // Get primary taxonomy
             const primaryTaxonomy = taxonomies.find(t => t.primary) || taxonomies[0] || {};
-            
+
             // Get practice location (location address) or mailing address
             const practiceAddress = addresses.find(a => a.address_purpose === 'LOCATION') || addresses[0] || {};
             
