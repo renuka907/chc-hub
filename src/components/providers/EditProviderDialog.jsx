@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Plus, Trash2, Globe } from "lucide-react";
+import { Loader2, Plus, Trash2, Globe, Printer } from "lucide-react";
 
 export default function EditProviderDialog({ provider, open, onOpenChange, onSave }) {
     const [formData, setFormData] = useState(null);
@@ -20,6 +20,7 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                     category: provider.category || "",
                     email: provider.email || "",
                     phone: provider.phone || "",
+                    fax: provider.fax || "",
                     website: provider.website || "",
                     address: provider.address || "",
                     credentials: provider.credentials || "",
@@ -36,6 +37,7 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                     category: "",
                     email: "",
                     phone: "",
+                    fax: "",
                     website: "",
                     address: "",
                     credentials: "",
@@ -149,6 +151,17 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                             value={formData.phone}
                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                             placeholder="Phone number"
+                        />
+                    </div>
+
+                    <div>
+                        <Label htmlFor="fax">Fax</Label>
+                        <Input
+                            id="fax"
+                            type="tel"
+                            value={formData.fax}
+                            onChange={(e) => setFormData({ ...formData, fax: e.target.value })}
+                            placeholder="Fax number"
                         />
                     </div>
 

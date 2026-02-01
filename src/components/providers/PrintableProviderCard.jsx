@@ -73,6 +73,12 @@ export default function PrintableProviderCard({ providers, locations, clinicName
                                             <span>{provider.phone}</span>
                                         </div>
                                     )}
+                                    {provider.fax && (
+                                        <div className="flex gap-2">
+                                            <span className="font-semibold text-gray-700 w-16">Fax:</span>
+                                            <span>{provider.fax}</span>
+                                        </div>
+                                    )}
                                     {provider.website && (
                                         <div className="flex gap-2">
                                             <span className="font-semibold text-gray-700 w-16">Website:</span>
