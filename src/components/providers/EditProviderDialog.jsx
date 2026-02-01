@@ -137,20 +137,40 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
         try {
             const buildAddress = () => {
                 const parts = [];
-                if (formData.street) parts.push(formData.street);
-                if (formData.suite) parts[0] = `${parts[0]}, ${formData.suite}`;
-                if (formData.city || formData.state || formData.zip) {
-                    parts.push(`${formData.city} ${formData.state} ${formData.zip}`.trim());
+
+                // Build street part with optional suite
+                let streetPart = formData.street || '';
+                if (formData.suite && streetPart) {
+                    streetPart = `${streetPart}, ${formData.suite}`;
+                } else if (formData.suite) {
+                    streetPart = formData.suite;
                 }
+                if (streetPart) parts.push(streetPart);
+
+                // Add city, state, zip
+                const cityStateZip = `${formData.city || ''} ${formData.state || ''} ${formData.zip || ''}`.trim();
+                if (cityStateZip) parts.push(cityStateZip);
+
                 return parts.join(', ');
             };
 
             const dataToSave = {
-                ...formData,
+                full_name: formData.full_name,
+                specialty: formData.specialty,
+                category: formData.category,
+                email: formData.email,
+                phone: formData.phone,
+                fax: formData.fax,
+                website: formData.website,
                 address: buildAddress(),
+                credentials: formData.credentials,
+                bio: formData.bio,
+                notes: formData.notes,
+                group_name: formData.group_name,
                 group_member_ids: JSON.stringify(formData.group_member_ids || []),
                 addresses: JSON.stringify(formData.addresses || []),
             };
+
             if (isNew) {
                 await base44.entities.Provider.create(dataToSave);
             } else {
