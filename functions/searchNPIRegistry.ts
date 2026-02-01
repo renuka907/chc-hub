@@ -16,7 +16,23 @@ Deno.serve(async (req) => {
         }
 
         // Search NPI Registry
-        const npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&skip=0&${searchTerm.match(/^\d+$/) ? `number=${searchTerm}` : `first_name=&last_name=${encodeURIComponent(searchTerm)}`}`;
+        let npiUrl;
+        if (searchTerm.match(/^\d+$/)) {
+            // If search term is numeric, search by NPI number
+            npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&number=${searchTerm}`;
+        } else {
+            // Parse name - try to detect first and last name
+            const nameParts = searchTerm.trim().split(/\s+/);
+            if (nameParts.length === 1) {
+                // Single word - search as last name
+                npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&last_name=${encodeURIComponent(nameParts[0])}`;
+            } else {
+                // Multiple words - treat first as first name, last as last name
+                const firstName = nameParts[0];
+                const lastName = nameParts[nameParts.length - 1];
+                npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&first_name=${encodeURIComponent(firstName)}&last_name=${encodeURIComponent(lastName)}`;
+            }
+        }
         
         const response = await fetch(npiUrl);
         const data = await response.json();
