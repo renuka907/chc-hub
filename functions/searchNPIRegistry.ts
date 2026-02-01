@@ -101,14 +101,6 @@ Deno.serve(async (req) => {
                      '207R00000X', // Osteopathic Manipulative Treatment Physicians
                      '208000000X', // Physicians
                      '2084A0401X', // Physician - Surgery - General
-                     '2084A0402X', // Physician - Surgery - Pediatric
-                     '2084A2500X', // Physician - Surgery - Cardiovascular
-                     '2084A2600X', // Physician - Surgery - Thoracic
-                     '2084N0008X', // Physician - Neurosurgery
-                     '2084P0800X', // Physician - Otolaryngology
-                     '2084F0202X', // Physician - Family Medicine
-                     '2084M0001X', // Physician - Orthopedic Surgery
-                     '2083X0100X', // Physician - Anesthesiology
                  ];
 
                  return taxonomies.some(t => 
