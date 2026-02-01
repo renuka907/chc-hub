@@ -443,7 +443,17 @@ export default function ProviderReferral() {
                                                                 {hasMainAddress && (
                                                                     <div className="pl-2 border-l-2 border-purple-200">
                                                                         <div className="flex items-center gap-2 mb-1">
-                                                                            <span className="font-medium text-gray-900">Main Office</span>
+                                                                            <span className="font-medium text-gray-900">
+                                                                                {(() => {
+                                                                                    if (provider.address) {
+                                                                                        const parts = provider.address.split(',');
+                                                                                        if (parts.length >= 2) {
+                                                                                            return parts[parts.length - 2].trim().split(' ')[0];
+                                                                                        }
+                                                                                    }
+                                                                                    return "Main Office";
+                                                                                })()}
+                                                                            </span>
                                                                         </div>
                                                                         {provider.address && (
                                                                             <div className="flex items-start gap-2 text-gray-600 text-xs mb-1">
