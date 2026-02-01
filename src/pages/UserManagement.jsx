@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Users, Mail, Shield, UserPlus, Calendar, Trash2, Edit, UserX, UserCheck, FileDown, CheckCircle2 } from "lucide-react";
 import EditUserDialog from "../components/users/EditUserDialog";
 import RoleManagementDialog from "../components/users/RoleManagementDialog";
-import PermissionsDialog from "../components/users/PermissionsDialog";
+import PermissionsDialogImproved from "../components/users/PermissionsDialogImproved";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ROLE_LABELS } from "../components/permissions/usePermissions";
 import {
