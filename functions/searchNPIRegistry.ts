@@ -15,27 +15,62 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Search term must be at least 2 characters' }, { status: 400 });
         }
 
-        // Search NPI Registry
-        let npiUrl;
+        // Search NPI Registry with multiple strategies
+        let data = null;
+
         if (searchTerm.match(/^\d+$/)) {
             // If search term is numeric, search by NPI number
-            npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&number=${searchTerm}`;
+            const npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&number=${searchTerm}`;
+            const response = await fetch(npiUrl);
+            data = await response.json();
         } else {
             // Parse name - try to detect first and last name
-            const nameParts = searchTerm.trim().split(/\s+/);
+            const nameParts = searchTerm.trim().split(/\s+/).filter(p => p);
+
             if (nameParts.length === 1) {
-                // Single word - search as last name
-                npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&last_name=${encodeURIComponent(nameParts[0])}`;
+                // Single word - try as last name first, then as first name
+                let npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&last_name=${encodeURIComponent(nameParts[0])}*`;
+                let response = await fetch(npiUrl);
+                data = await response.json();
+
+                // If no results, try as first name
+                if (!data.results || data.results.length === 0) {
+                    npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&first_name=${encodeURIComponent(nameParts[0])}*`;
+                    response = await fetch(npiUrl);
+                    data = await response.json();
+                }
             } else {
                 // Multiple words - treat first as first name, last as last name
                 const firstName = nameParts[0];
                 const lastName = nameParts[nameParts.length - 1];
-                npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&first_name=${encodeURIComponent(firstName)}&last_name=${encodeURIComponent(lastName)}`;
+
+                // Strategy 1: exact first and last name
+                let npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&first_name=${encodeURIComponent(firstName)}&last_name=${encodeURIComponent(lastName)}`;
+                let response = await fetch(npiUrl);
+                data = await response.json();
+
+                // Strategy 2: wildcard on both names
+                if (!data.results || data.results.length === 0) {
+                    npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&first_name=${encodeURIComponent(firstName)}*&last_name=${encodeURIComponent(lastName)}*`;
+                    response = await fetch(npiUrl);
+                    data = await response.json();
+                }
+
+                // Strategy 3: just last name with wildcard
+                if (!data.results || data.results.length === 0) {
+                    npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&last_name=${encodeURIComponent(lastName)}*`;
+                    response = await fetch(npiUrl);
+                    data = await response.json();
+                }
+
+                // Strategy 4: last name alone (no wildcard)
+                if (!data.results || data.results.length === 0) {
+                    npiUrl = `https://npiregistry.cms.hhs.gov/api/?version=2.1&limit=20&last_name=${encodeURIComponent(lastName)}`;
+                    response = await fetch(npiUrl);
+                    data = await response.json();
+                }
             }
         }
-        
-        const response = await fetch(npiUrl);
-        const data = await response.json();
 
         if (!data.results || data.results.length === 0) {
             return Response.json({ results: [] });
