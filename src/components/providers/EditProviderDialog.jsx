@@ -18,6 +18,21 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
     useEffect(() => {
         if (open) {
             if (provider) {
+                const parseAddress = (addr) => {
+                    if (!addr) return { street: "", suite: "", city: "", state: "", zip: "" };
+                    const parts = addr.split(',').map(p => p.trim());
+                    if (parts.length >= 3) {
+                        const street = parts[0] || "";
+                        const cityState = parts[parts.length - 2] || "";
+                        const cityStateParts = cityState.split(' ');
+                        const state = cityStateParts.length > 1 ? cityStateParts[cityStateParts.length - 2] : "";
+                        const zip = cityStateParts.length > 1 ? cityStateParts[cityStateParts.length - 1] : "";
+                        const city = cityStateParts.slice(0, cityStateParts.length - 2).join(' ');
+                        return { street, suite: "", city, state, zip };
+                    }
+                    return { street: addr, suite: "", city: "", state: "", zip: "" };
+                };
+
                 setFormData({
                     full_name: provider.full_name || "",
                     specialty: provider.specialty || "",
@@ -27,6 +42,7 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                     fax: provider.fax || "",
                     website: provider.website || "",
                     address: provider.address || "",
+                    ...parseAddress(provider.address),
                     credentials: provider.credentials || "",
                     bio: provider.bio || "",
                     notes: provider.notes || "",
@@ -45,6 +61,11 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                     fax: "",
                     website: "",
                     address: "",
+                    street: "",
+                    suite: "",
+                    city: "",
+                    state: "",
+                    zip: "",
                     credentials: "",
                     bio: "",
                     notes: "",
@@ -75,6 +96,21 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
     };
 
     const handleSelectProvider = (npiProvider) => {
+        const parseAddress = (addr) => {
+            if (!addr) return { street: "", suite: "", city: "", state: "", zip: "" };
+            const parts = addr.split(',').map(p => p.trim());
+            if (parts.length >= 3) {
+                const street = parts[0] || "";
+                const cityState = parts[parts.length - 2] || "";
+                const cityStateParts = cityState.split(' ');
+                const state = cityStateParts.length > 1 ? cityStateParts[cityStateParts.length - 2] : "";
+                const zip = cityStateParts.length > 1 ? cityStateParts[cityStateParts.length - 1] : "";
+                const city = cityStateParts.slice(0, cityStateParts.length - 2).join(' ');
+                return { street, suite: "", city, state, zip };
+            }
+            return { street: addr, suite: "", city: "", state: "", zip: "" };
+        };
+
         setFormData({
             ...formData,
             full_name: npiProvider.full_name,
@@ -83,6 +119,7 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
             phone: npiProvider.phone,
             fax: npiProvider.fax,
             address: npiProvider.address,
+            ...parseAddress(npiProvider.address),
             addresses: npiProvider.address ? [{ 
                 location_name: "Main Office", 
                 address: npiProvider.address, 
@@ -98,8 +135,19 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
     const handleSave = async () => {
         setSaving(true);
         try {
+            const buildAddress = () => {
+                const parts = [];
+                if (formData.street) parts.push(formData.street);
+                if (formData.suite) parts[0] = `${parts[0]}, ${formData.suite}`;
+                if (formData.city || formData.state || formData.zip) {
+                    parts.push(`${formData.city} ${formData.state} ${formData.zip}`.trim());
+                }
+                return parts.join(', ');
+            };
+
             const dataToSave = {
                 ...formData,
+                address: buildAddress(),
                 group_member_ids: JSON.stringify(formData.group_member_ids || []),
                 addresses: JSON.stringify(formData.addresses || []),
             };
@@ -259,14 +307,56 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                         />
                     </div>
 
-                    <div>
-                        <Label htmlFor="address">Address</Label>
-                        <Input
-                            id="address"
-                            value={formData.address}
-                            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                            placeholder="Office address"
-                        />
+                    <div className="space-y-4">
+                        <div>
+                            <Label htmlFor="street">Street Address</Label>
+                            <Input
+                                id="street"
+                                value={formData.street}
+                                onChange={(e) => setFormData({ ...formData, street: e.target.value })}
+                                placeholder="Street address"
+                            />
+                        </div>
+
+                        <div>
+                            <Label htmlFor="suite">Suite/Building/Unit</Label>
+                            <Input
+                                id="suite"
+                                value={formData.suite}
+                                onChange={(e) => setFormData({ ...formData, suite: e.target.value })}
+                                placeholder="Suite, building, or unit number (optional)"
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-2">
+                            <div>
+                                <Label htmlFor="city">City</Label>
+                                <Input
+                                    id="city"
+                                    value={formData.city}
+                                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                                    placeholder="City"
+                                />
+                            </div>
+                            <div>
+                                <Label htmlFor="state">State</Label>
+                                <Input
+                                    id="state"
+                                    value={formData.state}
+                                    onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                                    placeholder="State"
+                                />
+                            </div>
+                            <div>
+                                <Label htmlFor="zip">Zip Code</Label>
+                                <Input
+                                    id="zip"
+                                    value={formData.zip}
+                                    onChange={(e) => setFormData({ ...formData, zip: e.target.value })}
+                                    placeholder="Zip"
+                                />
+                            </div>
+                        </div>
                     </div>
 
                     <div>
