@@ -377,6 +377,11 @@ export default function ProviderReferral() {
                                                                 {provider.credentials}
                                                             </p>
                                                         )}
+                                                        {provider.group_name && (
+                                                            <p className="text-sm text-purple-600 mt-1">
+                                                                {provider.group_name}
+                                                            </p>
+                                                        )}
                                                     </div>
                                                 </div>
                                                 <div className="flex items-start gap-2">
