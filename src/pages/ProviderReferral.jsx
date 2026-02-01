@@ -446,9 +446,15 @@ export default function ProviderReferral() {
                                                                             <span className="font-medium text-gray-900">
                                                                                 {(() => {
                                                                                     if (provider.address) {
-                                                                                        const parts = provider.address.split(',');
-                                                                                        if (parts.length >= 2) {
-                                                                                            return parts[parts.length - 2].trim().split(' ')[0];
+                                                                                        const parts = provider.address.split(',').map(p => p.trim());
+                                                                                        if (parts.length >= 3) {
+                                                                                            // Format: "Street, City, State Zip"
+                                                                                            return parts[parts.length - 2];
+                                                                                        } else if (parts.length === 2) {
+                                                                                            // Format: "Street, City State Zip"
+                                                                                            const cityStateZip = parts[1].split(' ');
+                                                                                            // Remove last 2 words (State and Zip) to get city
+                                                                                            return cityStateZip.slice(0, -2).join(' ');
                                                                                         }
                                                                                     }
                                                                                     return "Main Office";
