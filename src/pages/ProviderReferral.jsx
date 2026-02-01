@@ -452,17 +452,12 @@ export default function ProviderReferral() {
                                                                                         if (lastPart) {
                                                                                             const cityStateZip = lastPart.split(' ').filter(p => p);
                                                                                             // Remove last 2 words (State and Zip) to get city
-                                                                                            if (cityStateZip.length >= 3) {
+                                                                                            if (cityStateZip.length > 2) {
                                                                                                 return cityStateZip.slice(0, -2).join(' ');
-                                                                                            } else if (cityStateZip.length === 2) {
-                                                                                                // Just State Zip, no city
-                                                                                                return cityStateZip[0];
-                                                                                            } else if (cityStateZip.length === 1) {
-                                                                                                return cityStateZip[0];
                                                                                             }
                                                                                         }
                                                                                     }
-                                                                                    return "Office";
+                                                                                    return "Main Office";
                                                                                 })()}
                                                                             </span>
                                                                         </div>
