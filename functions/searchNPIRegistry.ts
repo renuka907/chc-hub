@@ -138,7 +138,7 @@ Deno.serve(async (req) => {
             };
         });
 
-        return Response.json({ results: providers });
+        return Response.json({ results: providers.slice(0, 20) });
     } catch (error) {
         console.error('NPI search error:', error);
         return Response.json({ error: error.message }, { status: 500 });
