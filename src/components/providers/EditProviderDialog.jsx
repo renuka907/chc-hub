@@ -34,6 +34,9 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                         credentials: "",
                         bio: "",
                         notes: "",
+                                    group_name: "",
+                                                group_member_ids: [],
+                                                            addresses: [{ location_name: "Main Office", address: "", phone: "", is_primary: true }],
                     });
                 }
         }
