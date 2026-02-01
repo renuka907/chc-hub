@@ -447,14 +447,14 @@ export default function ProviderReferral() {
                                                                                 {(() => {
                                                                                     if (provider.address) {
                                                                                         const parts = provider.address.split(',').map(p => p.trim());
-                                                                                        if (parts.length >= 3) {
-                                                                                            // Format: "Street, City, State Zip"
-                                                                                            return parts[parts.length - 2];
-                                                                                        } else if (parts.length === 2) {
-                                                                                            // Format: "Street, City State Zip"
-                                                                                            const cityStateZip = parts[1].split(' ');
+                                                                                        // Last part should be "City State Zip"
+                                                                                        const lastPart = parts[parts.length - 1];
+                                                                                        if (lastPart) {
+                                                                                            const cityStateZip = lastPart.split(' ').filter(p => p);
                                                                                             // Remove last 2 words (State and Zip) to get city
-                                                                                            return cityStateZip.slice(0, -2).join(' ');
+                                                                                            if (cityStateZip.length > 2) {
+                                                                                                return cityStateZip.slice(0, -2).join(' ');
+                                                                                            }
                                                                                         }
                                                                                     }
                                                                                     return "Main Office";
