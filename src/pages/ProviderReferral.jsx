@@ -11,6 +11,7 @@ import EditProviderDialog from "@/components/providers/EditProviderDialog";
 export default function ProviderReferral() {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedSpecialty, setSelectedSpecialty] = useState("");
+    const [selectedCity, setSelectedCity] = useState("");
     const [showFilters, setShowFilters] = useState(false);
     const [showPrintPreview, setShowPrintPreview] = useState(false);
     const [editingProvider, setEditingProvider] = useState(null);
@@ -35,15 +36,63 @@ export default function ProviderReferral() {
         return unique.sort();
     }, [providers]);
 
+    const cities = useMemo(() => {
+        const citySet = new Set();
+        providers.forEach(provider => {
+            // Extract city from main address
+            if (provider.address) {
+                const parts = provider.address.split(',');
+                if (parts.length >= 2) {
+                    const city = parts[parts.length - 2].trim().split(' ')[0];
+                    if (city) citySet.add(city);
+                }
+            }
+            // Extract cities from additional addresses
+            if (provider.addresses) {
+                try {
+                    const addresses = JSON.parse(provider.addresses);
+                    addresses.forEach(addr => {
+                        if (addr.address) {
+                            const parts = addr.address.split(',');
+                            if (parts.length >= 2) {
+                                const city = parts[parts.length - 2].trim().split(' ')[0];
+                                if (city) citySet.add(city);
+                            }
+                        }
+                    });
+                } catch (e) {}
+            }
+        });
+        return Array.from(citySet).sort();
+    }, [providers]);
+
     const filteredProviders = useMemo(() => {
         return providers.filter(provider => {
             const matchesSearch = 
                 provider.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 provider.specialty.toLowerCase().includes(searchTerm.toLowerCase());
             const matchesSpecialty = !selectedSpecialty || provider.specialty === selectedSpecialty;
-            return matchesSearch && matchesSpecialty;
+            
+            let matchesCity = !selectedCity;
+            if (selectedCity && !matchesCity) {
+                // Check main address
+                if (provider.address && provider.address.toLowerCase().includes(selectedCity.toLowerCase())) {
+                    matchesCity = true;
+                }
+                // Check additional addresses
+                if (!matchesCity && provider.addresses) {
+                    try {
+                        const addresses = JSON.parse(provider.addresses);
+                        matchesCity = addresses.some(addr => 
+                            addr.address && addr.address.toLowerCase().includes(selectedCity.toLowerCase())
+                        );
+                    } catch (e) {}
+                }
+            }
+            
+            return matchesSearch && matchesSpecialty && matchesCity;
         });
-    }, [providers, searchTerm, selectedSpecialty]);
+    }, [providers, searchTerm, selectedSpecialty, selectedCity]);
 
     const groupedBySpecialty = useMemo(() => {
         const grouped = {};
@@ -215,13 +264,31 @@ export default function ProviderReferral() {
                                         ))}
                                     </select>
                                 </div>
-                                {(selectedSpecialty || searchTerm) && (
+                                <div>
+                                    <label className="text-sm font-medium text-gray-700 block mb-2">
+                                        Filter by City
+                                    </label>
+                                    <select
+                                        value={selectedCity}
+                                        onChange={(e) => setSelectedCity(e.target.value)}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                                    >
+                                        <option value="">All Cities</option>
+                                        {cities.map(city => (
+                                            <option key={city} value={city}>
+                                                {city}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                {(selectedSpecialty || selectedCity || searchTerm) && (
                                     <Button
                                         variant="ghost"
                                         size="sm"
                                         onClick={() => {
                                             setSearchTerm("");
                                             setSelectedSpecialty("");
+                                            setSelectedCity("");
                                         }}
                                         className="text-purple-600 hover:bg-purple-50"
                                     >
