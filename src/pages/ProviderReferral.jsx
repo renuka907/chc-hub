@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Mail, Phone, MapPin, Star, Filter, X, Printer, Edit, Plus, CheckSquare } from "lucide-react";
+import { Search, Mail, Phone, MapPin, Star, Filter, X, Printer, Edit, Plus, CheckSquare, Globe } from "lucide-react";
 import PrintableProviderCard from "@/components/providers/PrintableProviderCard";
 import EditProviderDialog from "@/components/providers/EditProviderDialog";
 
@@ -110,6 +110,7 @@ export default function ProviderReferral() {
                     <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; margin-bottom: 20px;">
                         ${provider.email ? `<p style="margin: 8px 0;"><strong>Email:</strong> ${provider.email}</p>` : ''}
                         ${provider.phone ? `<p style="margin: 8px 0;"><strong>Phone:</strong> ${provider.phone}</p>` : ''}
+                        ${provider.website ? `<p style="margin: 8px 0;"><strong>Website:</strong> <a href="${provider.website}" target="_blank" rel="noopener noreferrer">${provider.website}</a></p>` : ''}
                         ${provider.address ? `<p style="margin: 8px 0;"><strong>Address:</strong> ${provider.address}</p>` : ''}
                         <p style="margin: 8px 0;"><strong>Clinic:</strong> ${getClinicName(provider.clinic_location_id)}</p>
                     </div>
@@ -352,6 +353,14 @@ export default function ProviderReferral() {
                                                         <Phone className="w-4 h-4 text-purple-500" />
                                                         <a href={`tel:${provider.phone}`} className="hover:text-purple-600">
                                                             {provider.phone}
+                                                        </a>
+                                                    </div>
+                                                )}
+                                                {provider.website && (
+                                                    <div className="flex items-center gap-2 text-gray-700">
+                                                        <Globe className="w-4 h-4 text-purple-500" />
+                                                        <a href={provider.website} target="_blank" rel="noopener noreferrer" className="hover:text-purple-600">
+                                                            {provider.website}
                                                         </a>
                                                     </div>
                                                 )}

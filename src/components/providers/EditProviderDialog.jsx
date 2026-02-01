@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Plus, Trash2 } from "lucide-react";
+import { Loader2, Plus, Trash2, Globe } from "lucide-react";
 
 export default function EditProviderDialog({ provider, open, onOpenChange, onSave }) {
     const [formData, setFormData] = useState(null);
@@ -19,6 +19,7 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                     specialty: provider.specialty || "",
                     email: provider.email || "",
                     phone: provider.phone || "",
+                    website: provider.website || "",
                     address: provider.address || "",
                     credentials: provider.credentials || "",
                     bio: provider.bio || "",
@@ -33,6 +34,7 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                     specialty: "",
                     email: "",
                     phone: "",
+                    website: "",
                     address: "",
                     credentials: "",
                     bio: "",
@@ -146,6 +148,17 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                             placeholder="Email address"
+                        />
+                    </div>
+
+                    <div>
+                        <Label htmlFor="website">Website</Label>
+                        <Input
+                            id="website"
+                            type="url"
+                            value={formData.website}
+                            onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                            placeholder="https://example.com"
                         />
                     </div>
 
