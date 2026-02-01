@@ -47,10 +47,17 @@ export default function ProviderReferral() {
     const groupedBySpecialty = useMemo(() => {
         const grouped = {};
         filteredProviders.forEach(provider => {
-            if (!grouped[provider.specialty]) {
-                grouped[provider.specialty] = [];
+            // Normalize specialty to title case for grouping
+            const normalizedSpecialty = provider.specialty
+                .toLowerCase()
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+            
+            if (!grouped[normalizedSpecialty]) {
+                grouped[normalizedSpecialty] = [];
             }
-            grouped[provider.specialty].push(provider);
+            grouped[normalizedSpecialty].push(provider);
         });
         return grouped;
     }, [filteredProviders]);
