@@ -112,7 +112,7 @@ export default function ProviderReferral() {
                         ${provider.phone ? `<p style="margin: 8px 0;"><strong>Phone:</strong> ${provider.phone}</p>` : ''}
                         ${provider.website ? `<p style="margin: 8px 0;"><strong>Website:</strong> <a href="${provider.website}" target="_blank" rel="noopener noreferrer">${provider.website}</a></p>` : ''}
                         ${provider.address ? `<p style="margin: 8px 0;"><strong>Address:</strong> ${provider.address}</p>` : ''}
-                        <p style="margin: 8px 0;"><strong>Clinic:</strong> ${getClinicName(provider.clinic_location_id)}</p>
+                        ${getClinicName(provider.clinic_location_id) !== "Not assigned" ? `<p style="margin: 8px 0;"><strong>Clinic:</strong> ${getClinicName(provider.clinic_location_id)}</p>` : ''}
                     </div>
                     
                     ${addressesHTML}
