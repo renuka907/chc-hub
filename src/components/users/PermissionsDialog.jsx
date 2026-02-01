@@ -3,25 +3,71 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Loader2, CheckCircle2, Circle } from "lucide-react";
 
-const AVAILABLE_PAGES = [
-    { id: 'home', name: 'Home', actions: ['view'] },
-    { id: 'procedures', name: 'Procedures', actions: ['view', 'create', 'edit', 'delete'] },
-    { id: 'labTests', name: 'Lab Tests', actions: ['view', 'create', 'edit', 'delete'] },
-    { id: 'medicationCalculator', name: 'Medication Calculator', actions: ['view', 'use'] },
-    { id: 'library', name: 'Resource Library', actions: ['view', 'create', 'edit', 'delete'] },
-    { id: 'formTemplates', name: 'Form Templates', actions: ['view', 'create', 'edit', 'delete'] },
-    { id: 'clinicDirectory', name: 'Clinic Directory', actions: ['view', 'create', 'edit', 'delete'] },
-    { id: 'pricing', name: 'Pricing', actions: ['view', 'create', 'edit', 'delete'] },
-    { id: 'quotes', name: 'Quotes', actions: ['view', 'create', 'edit', 'delete'] },
-    { id: 'inventory', name: 'Inventory', actions: ['view', 'create', 'edit', 'delete'] },
-    { id: 'usageTracking', name: 'Usage Tracking', actions: ['view', 'create', 'edit'] },
-    { id: 'discounts', name: 'Discounts', actions: ['view', 'create', 'edit', 'delete'] },
-    { id: 'messaging', name: 'Messaging', actions: ['view', 'send'] },
-    { id: 'reminders', name: 'Reminders', actions: ['view', 'create', 'edit', 'delete'] },
-    { id: 'followUpDates', name: 'Follow-up Dates', actions: ['view', 'create', 'edit', 'delete'] },
-];
+const PAGES_BY_CATEGORY = {
+    'Patient Management': [
+        { id: 'followUpDates', name: 'Follow-up Dates', actions: ['view', 'create', 'edit', 'delete'] },
+    ],
+    'Clinical': [
+        { id: 'procedures', name: 'Procedures', actions: ['view', 'create', 'edit', 'delete'] },
+        { id: 'labTests', name: 'Lab Tests', actions: ['view', 'create', 'edit', 'delete'] },
+        { id: 'medicationCalculator', name: 'Medication Calculator', actions: ['view', 'use'] },
+    ],
+    'Documents & Forms': [
+        { id: 'library', name: 'Resource Library', actions: ['view', 'create', 'edit', 'delete'] },
+        { id: 'formTemplates', name: 'Form Templates', actions: ['view', 'create', 'edit', 'delete'] },
+    ],
+    'Business': [
+        { id: 'clinicDirectory', name: 'Clinic Directory', actions: ['view', 'create', 'edit', 'delete'] },
+        { id: 'pricing', name: 'Pricing', actions: ['view', 'create', 'edit', 'delete'] },
+        { id: 'quotes', name: 'Quotes', actions: ['view', 'create', 'edit', 'delete'] },
+        { id: 'inventory', name: 'Inventory', actions: ['view', 'create', 'edit', 'delete'] },
+        { id: 'usageTracking', name: 'Usage Tracking', actions: ['view', 'create', 'edit'] },
+        { id: 'discounts', name: 'Discounts', actions: ['view', 'create', 'edit', 'delete'] },
+    ],
+    'Tools': [
+        { id: 'home', name: 'Home', actions: ['view'] },
+        { id: 'messaging', name: 'Messaging', actions: ['view', 'send'] },
+        { id: 'reminders', name: 'Reminders', actions: ['view', 'create', 'edit', 'delete'] },
+    ],
+};
+
+const ROLE_PRESETS = {
+    admin: {
+        name: 'Admin',
+        description: 'Full access to all features',
+        permissions: Object.values(PAGES_BY_CATEGORY).flat().reduce((acc, page) => ({
+            ...acc,
+            [page.id]: { actions: page.actions }
+        }), {})
+    },
+    editor: {
+        name: 'Editor',
+        description: 'Can view, create, and edit',
+        permissions: Object.values(PAGES_BY_CATEGORY).flat().reduce((acc, page) => ({
+            ...acc,
+            [page.id]: { actions: page.actions.filter(a => ['view', 'create', 'edit'].includes(a)) }
+        }), {})
+    },
+    viewer: {
+        name: 'Viewer',
+        description: 'View-only access',
+        permissions: Object.values(PAGES_BY_CATEGORY).flat().reduce((acc, page) => ({
+            ...acc,
+            [page.id]: { actions: ['view'] }
+        }), {})
+    },
+    readonly: {
+        name: 'Read-Only',
+        description: 'Very limited access',
+        permissions: {
+            home: { actions: ['view'] },
+            messaging: { actions: ['view'] },
+            reminders: { actions: ['view'] },
+        }
+    }
+};
 
 export default function PermissionsDialog({ open, onOpenChange, user, onSave, isSaving }) {
     const [permissions, setPermissions] = useState({});
