@@ -416,20 +416,6 @@ export default function ProviderReferral() {
                                                         </a>
                                                     </div>
                                                 )}
-                                                {provider.phone && (
-                                                    <div className="flex items-center gap-2 text-gray-700">
-                                                        <Phone className="w-4 h-4 text-purple-500" />
-                                                        <a href={`tel:${provider.phone}`} className="hover:text-purple-600">
-                                                            {provider.phone}
-                                                        </a>
-                                                    </div>
-                                                )}
-                                                {provider.fax && (
-                                                    <div className="flex items-center gap-2 text-gray-700">
-                                                        <PrinterIcon className="w-4 h-4 text-purple-500" />
-                                                        <span>Fax: {provider.fax}</span>
-                                                    </div>
-                                                )}
                                                 {provider.website && (
                                                     <div className="flex items-center gap-2 text-gray-700">
                                                         <Globe className="w-4 h-4 text-purple-500" />
@@ -438,16 +424,66 @@ export default function ProviderReferral() {
                                                         </a>
                                                     </div>
                                                 )}
-                                                {provider.address && (
-                                                    <div className="flex items-start gap-2 text-gray-700 text-sm">
-                                                        <MapPin className="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0" />
-                                                        <span>{provider.address}</span>
-                                                    </div>
-                                                )}
-                                                <div className="flex items-center gap-2 text-gray-700 text-xs text-gray-500">
-                                                    <MapPin className="w-4 h-4 text-gray-400" />
-                                                    {getClinicName(provider.clinic_location_id)}
-                                                </div>
+
+                                                {(() => {
+                                                    const addresses = provider.addresses ? JSON.parse(provider.addresses) : [];
+                                                    if (addresses.length > 0) {
+                                                        return (
+                                                            <div className="border-t pt-3 mt-3 space-y-3">
+                                                                <div className="font-semibold text-xs text-gray-500 uppercase">Locations</div>
+                                                                {addresses.map((addr, idx) => (
+                                                                    <div key={idx} className="pl-2 border-l-2 border-purple-200">
+                                                                        <div className="flex items-center gap-2 mb-1">
+                                                                            <span className="font-medium text-gray-900">{addr.location_name}</span>
+                                                                            {addr.is_primary && (
+                                                                                <span className="bg-purple-100 text-purple-700 text-xs px-2 py-0.5 rounded">Primary</span>
+                                                                            )}
+                                                                        </div>
+                                                                        {addr.address && (
+                                                                            <div className="flex items-start gap-2 text-gray-600 text-xs mb-1">
+                                                                                <MapPin className="w-3 h-3 text-purple-400 mt-0.5 flex-shrink-0" />
+                                                                                <span>{addr.address}</span>
+                                                                            </div>
+                                                                        )}
+                                                                        {addr.phone && (
+                                                                            <div className="flex items-center gap-2 text-gray-600 text-xs">
+                                                                                <Phone className="w-3 h-3 text-purple-400" />
+                                                                                <a href={`tel:${addr.phone}`} className="hover:text-purple-600">
+                                                                                    {addr.phone}
+                                                                                </a>
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        );
+                                                    } else if (provider.phone || provider.fax || provider.address) {
+                                                        return (
+                                                            <div className="border-t pt-3 mt-3 space-y-2">
+                                                                {provider.phone && (
+                                                                    <div className="flex items-center gap-2 text-gray-700">
+                                                                        <Phone className="w-4 h-4 text-purple-500" />
+                                                                        <a href={`tel:${provider.phone}`} className="hover:text-purple-600">
+                                                                            {provider.phone}
+                                                                        </a>
+                                                                    </div>
+                                                                )}
+                                                                {provider.fax && (
+                                                                    <div className="flex items-center gap-2 text-gray-700">
+                                                                        <PrinterIcon className="w-4 h-4 text-purple-500" />
+                                                                        <span>Fax: {provider.fax}</span>
+                                                                    </div>
+                                                                )}
+                                                                {provider.address && (
+                                                                    <div className="flex items-start gap-2 text-gray-700 text-sm">
+                                                                        <MapPin className="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0" />
+                                                                        <span>{provider.address}</span>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    }
+                                                })()}
                                             </div>
 
                                             {provider.languages && (
