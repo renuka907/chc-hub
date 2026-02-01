@@ -17,6 +17,7 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                 setFormData({
                     full_name: provider.full_name || "",
                     specialty: provider.specialty || "",
+                    category: provider.category || "",
                     email: provider.email || "",
                     phone: provider.phone || "",
                     website: provider.website || "",
@@ -32,6 +33,7 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                 setFormData({
                     full_name: "",
                     specialty: "",
+                    category: "",
                     email: "",
                     phone: "",
                     website: "",
@@ -96,6 +98,16 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                             value={formData.specialty}
                             onChange={(e) => setFormData({ ...formData, specialty: e.target.value })}
                             placeholder="Medical specialty"
+                        />
+                    </div>
+
+                    <div>
+                        <Label htmlFor="category">Category</Label>
+                        <Input
+                            id="category"
+                            value={formData.category}
+                            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                            placeholder="Provider category (optional)"
                         />
                     </div>
 
