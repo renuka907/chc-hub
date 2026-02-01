@@ -81,7 +81,7 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                     notes: "",
                     group_name: "",
                     group_member_ids: [],
-                    addresses: [{ location_name: "Main Office", address: "", phone: "", is_primary: true }],
+                    addresses: [{ location_name: "Main Office", address: "", phone: "", fax: "", is_primary: true }],
                 });
                 setShowSearch(true);
             }
@@ -144,6 +144,7 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                 location_name: "Main Office", 
                 address: npiProvider.address, 
                 phone: npiProvider.phone,
+                fax: npiProvider.fax || "",
                 is_primary: true 
             }] : formData.addresses,
         });
@@ -476,7 +477,7 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                                 variant="outline"
                                 onClick={() => setFormData({
                                     ...formData,
-                                    addresses: [...(formData.addresses || []), { location_name: "", address: "", phone: "", is_primary: false }]
+                                    addresses: [...(formData.addresses || []), { location_name: "", address: "", phone: "", fax: "", is_primary: false }]
                                 })}
                             >
                                 <Plus className="w-4 h-4 mr-1" />
@@ -527,6 +528,15 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                                         setFormData({ ...formData, addresses: newAddresses });
                                     }}
                                     placeholder="Phone"
+                                />
+                                <Input
+                                    value={addr.fax || ""}
+                                    onChange={(e) => {
+                                        const newAddresses = [...formData.addresses];
+                                        newAddresses[idx].fax = e.target.value;
+                                        setFormData({ ...formData, addresses: newAddresses });
+                                    }}
+                                    placeholder="Fax"
                                 />
                                 <label className="flex items-center gap-2 text-sm">
                                     <input
