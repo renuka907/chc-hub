@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2 } from "lucide-react";
+import { Loader2, Plus, Trash2 } from "lucide-react";
 
 export default function EditProviderDialog({ provider, open, onOpenChange, onSave }) {
     const [formData, setFormData] = useState(null);
@@ -23,32 +23,40 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                     credentials: provider.credentials || "",
                     bio: provider.bio || "",
                     notes: provider.notes || "",
+                    group_name: provider.group_name || "",
+                    group_member_ids: provider.group_member_ids ? JSON.parse(provider.group_member_ids) : [],
+                    addresses: provider.addresses ? JSON.parse(provider.addresses) : [],
                 });
-                } else {
-                    setFormData({
-                        full_name: "",
-                        specialty: "",
-                        email: "",
-                        phone: "",
-                        address: "",
-                        credentials: "",
-                        bio: "",
-                        notes: "",
-                                    group_name: "",
-                                                group_member_ids: [],
-                                                            addresses: [{ location_name: "Main Office", address: "", phone: "", is_primary: true }],
-                    });
-                }
+            } else {
+                setFormData({
+                    full_name: "",
+                    specialty: "",
+                    email: "",
+                    phone: "",
+                    address: "",
+                    credentials: "",
+                    bio: "",
+                    notes: "",
+                    group_name: "",
+                    group_member_ids: [],
+                    addresses: [{ location_name: "Main Office", address: "", phone: "", is_primary: true }],
+                });
+            }
         }
     }, [provider, open]);
 
     const handleSave = async () => {
         setSaving(true);
         try {
+            const dataToSave = {
+                ...formData,
+                group_member_ids: JSON.stringify(formData.group_member_ids || []),
+                addresses: JSON.stringify(formData.addresses || []),
+            };
             if (isNew) {
-                await base44.entities.Provider.create(formData);
+                await base44.entities.Provider.create(dataToSave);
             } else {
-                await base44.entities.Provider.update(provider.id, formData);
+                await base44.entities.Provider.update(provider.id, dataToSave);
             }
             onSave();
             onOpenChange(false);
@@ -63,7 +71,7 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-md">
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>{isNew ? "Add Provider" : "Edit Provider"}</DialogTitle>
                 </DialogHeader>
@@ -96,6 +104,16 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                             value={formData.credentials}
                             onChange={(e) => setFormData({ ...formData, credentials: e.target.value })}
                             placeholder="e.g., MD, DO, NP"
+                        />
+                    </div>
+
+                    <div>
+                        <Label htmlFor="group_name">Group Name</Label>
+                        <Input
+                            id="group_name"
+                            value={formData.group_name}
+                            onChange={(e) => setFormData({ ...formData, group_name: e.target.value })}
+                            placeholder="Practice or provider group name"
                         />
                     </div>
 
@@ -153,6 +171,85 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                             rows="2"
                         />
+                    </div>
+
+                    <div>
+                        <div className="flex justify-between items-center mb-2">
+                            <Label>Additional Locations</Label>
+                            <Button
+                                type="button"
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setFormData({
+                                    ...formData,
+                                    addresses: [...(formData.addresses || []), { location_name: "", address: "", phone: "", is_primary: false }]
+                                })}
+                            >
+                                <Plus className="w-4 h-4 mr-1" />
+                                Add Location
+                            </Button>
+                        </div>
+                        {(formData.addresses || []).map((addr, idx) => (
+                            <div key={idx} className="border rounded-lg p-3 mb-2 space-y-2 bg-gray-50">
+                                <div className="flex justify-between items-center">
+                                    <Input
+                                        value={addr.location_name}
+                                        onChange={(e) => {
+                                            const newAddresses = [...formData.addresses];
+                                            newAddresses[idx].location_name = e.target.value;
+                                            setFormData({ ...formData, addresses: newAddresses });
+                                        }}
+                                        placeholder="Location name (e.g., Main Office)"
+                                        className="flex-1 mr-2"
+                                    />
+                                    {formData.addresses.length > 1 && (
+                                        <Button
+                                            type="button"
+                                            size="sm"
+                                            variant="ghost"
+                                            onClick={() => {
+                                                const newAddresses = formData.addresses.filter((_, i) => i !== idx);
+                                                setFormData({ ...formData, addresses: newAddresses });
+                                            }}
+                                        >
+                                            <Trash2 className="w-4 h-4 text-red-500" />
+                                        </Button>
+                                    )}
+                                </div>
+                                <Input
+                                    value={addr.address}
+                                    onChange={(e) => {
+                                        const newAddresses = [...formData.addresses];
+                                        newAddresses[idx].address = e.target.value;
+                                        setFormData({ ...formData, addresses: newAddresses });
+                                    }}
+                                    placeholder="Address"
+                                />
+                                <Input
+                                    value={addr.phone}
+                                    onChange={(e) => {
+                                        const newAddresses = [...formData.addresses];
+                                        newAddresses[idx].phone = e.target.value;
+                                        setFormData({ ...formData, addresses: newAddresses });
+                                    }}
+                                    placeholder="Phone"
+                                />
+                                <label className="flex items-center gap-2 text-sm">
+                                    <input
+                                        type="checkbox"
+                                        checked={addr.is_primary}
+                                        onChange={(e) => {
+                                            const newAddresses = formData.addresses.map((a, i) => ({
+                                                ...a,
+                                                is_primary: i === idx ? e.target.checked : false
+                                            }));
+                                            setFormData({ ...formData, addresses: newAddresses });
+                                        }}
+                                    />
+                                    Primary Location
+                                </label>
+                            </div>
+                        ))}
                     </div>
                 </div>
 
