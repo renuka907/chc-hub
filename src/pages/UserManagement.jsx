@@ -482,7 +482,7 @@ export default function UserManagement() {
                 user={editUser}
             />
 
-            <PermissionsDialog
+            <PermissionsDialogImproved
                 open={showPermissionsDialog}
                 onOpenChange={setShowPermissionsDialog}
                 user={permissionsUser}
