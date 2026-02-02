@@ -260,7 +260,7 @@ export default function CheckoutQuote() {
                 {`
                     @media print {
                         @page {
-                            margin: 0.3cm;
+                            margin: 0.2cm 0.3cm;
                         }
                         body * {
                             visibility: hidden;
@@ -275,7 +275,7 @@ export default function CheckoutQuote() {
                             left: 0 !important;
                             top: 0 !important;
                             width: 100%;
-                            padding: 5px !important;
+                            padding: 0 5px 5px 5px !important;
                             font-size: 15px !important;
                             line-height: 1.5 !important;
                         }
