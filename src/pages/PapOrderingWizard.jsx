@@ -122,21 +122,6 @@ export default function PapOrderingWizard() {
         } 
         // Post-hysterectomy NO cervix
         else if (!hasCervix) {
-            if (formData.postHystHistory === "no-history") {
-                warnings.push("⚠️ Pap NOT indicated per USPSTF (no history of dysplasia/cancer)");
-                return {
-                    labName: "NOT INDICATED",
-                    testCodes: [],
-                    cptCodes: [],
-                    primaryICD10: "",
-                    secondaryICD10: [],
-                    specimenSource: "",
-                    warnings,
-                    requiresHPV: false,
-                    requiredFields: []
-                };
-            }
-
             requiresHPV = false;
             labName = hasLeeHealth ? "AmeriPath" : "Quest Diagnostics";
             testCodes = hasLeeHealth ? ["Q0091"] : ["58315"];
@@ -144,7 +129,13 @@ export default function PapOrderingWizard() {
             specimenSource = "Vaginal cuff";
             secondaryICD10 = ["Z90.710"];
 
-            if (formData.postHystHistory === "dysplasia") {
+            if (formData.postHystHistory === "no-history") {
+                warnings.push("⚠️ Pap NOT typically indicated per USPSTF (no history of dysplasia/cancer)");
+                if (isMedicare) {
+                    warnings.push("🔵 Medicare coverage may require documentation of medical necessity");
+                }
+                primaryICD10 = "Z01.419"; // Screening code if ordered anyway
+            } else if (formData.postHystHistory === "dysplasia") {
                 primaryICD10 = "Z87.410";
             } else if (formData.postHystHistory === "cin") {
                 primaryICD10 = "Z86.001";
