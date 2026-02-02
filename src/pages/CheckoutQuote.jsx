@@ -50,7 +50,7 @@ export default function CheckoutQuote() {
             setSavedQuote(data);
             setTimeout(() => {
                 window.print();
-            }, 100);
+            }, 1000);
         },
     });
 
