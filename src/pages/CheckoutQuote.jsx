@@ -187,7 +187,7 @@ export default function CheckoutQuote() {
     const handleSaveQuote = () => {
         const quoteData = {
             quote_number: `Q-${Math.floor(10000 + Math.random() * 90000)}`,
-            clinic_location_id: selectedLocationId || undefined,
+            clinic_location_id: selectedLocationId,
             patient_name: patientName || undefined,
             items: JSON.stringify(selectedItems),
             discount_id: selectedDiscountId || undefined,
@@ -474,16 +474,15 @@ export default function CheckoutQuote() {
                 <CardHeader>
                     <CardTitle className="flex items-center text-blue-900">
                         <ShoppingCart className="w-5 h-5 mr-2" />
-                        Select Clinic Location (Optional)
+                        Select Clinic Location *
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Select value={selectedLocationId} onValueChange={setSelectedLocationId}>
                         <SelectTrigger className="bg-white">
-                            <SelectValue placeholder="No location (show all items)" />
+                            <SelectValue placeholder="Select a clinic location" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value={null}>No Location</SelectItem>
                             {locations.filter(loc => loc.status === 'active').map(location => (
                                 <SelectItem key={location.id} value={location.id}>
                                     {location.name} - Tax: {location.tax_rate}%
@@ -752,7 +751,7 @@ export default function CheckoutQuote() {
 
                                 <Button
                                     onClick={handleSaveQuote}
-                                    disabled={selectedItems.length === 0 || saveQuoteMutation.isPending}
+                                    disabled={selectedItems.length === 0 || !selectedLocationId || saveQuoteMutation.isPending}
                                     className="w-full bg-blue-600 hover:bg-blue-700 h-12"
                                 >
                                     <Printer className="w-5 h-5 mr-2" />
