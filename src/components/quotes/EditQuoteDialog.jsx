@@ -146,7 +146,7 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
 
     const handleSave = () => {
         const quoteData = {
-            clinic_location_id: selectedLocationId || undefined,
+            clinic_location_id: selectedLocationId,
             patient_name: patientName || undefined,
             items: JSON.stringify(selectedItems),
             discount_id: selectedDiscountId || undefined,
@@ -256,13 +256,13 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div>
-                                    <Label>Clinic Location (Optional)</Label>
+                                    <Label>Clinic Location *</Label>
                                     <select
                                         value={selectedLocationId}
                                         onChange={(e) => setSelectedLocationId(e.target.value)}
                                         className="w-full h-10 px-3 rounded-lg border border-gray-300 bg-white"
                                     >
-                                        <option value="">No Location</option>
+                                        <option value="">Select a clinic location</option>
                                         {locations.filter(loc => loc.status === 'active').map(location => (
                                             <option key={location.id} value={location.id}>
                                                 {location.name} - Tax: {location.tax_rate}%
@@ -414,7 +414,7 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
                                     </Button>
                                     <Button
                                         onClick={handleSave}
-                                        disabled={selectedItems.length === 0 || updateQuoteMutation.isPending}
+                                        disabled={selectedItems.length === 0 || !selectedLocationId || updateQuoteMutation.isPending}
                                         className="flex-1 bg-blue-600 hover:bg-blue-700"
                                     >
                                         {updateQuoteMutation.isPending ? "Saving..." : "Save Changes"}
