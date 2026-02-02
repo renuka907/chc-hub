@@ -260,7 +260,7 @@ export default function CheckoutQuote() {
                 {`
                     @media print {
                         @page {
-                            margin: 2cm 0.3cm 0.3cm 0.3cm;
+                            margin: 0.5cm 0.3cm 0.3cm 0.3cm;
                         }
                         body * {
                             visibility: hidden;
@@ -275,7 +275,7 @@ export default function CheckoutQuote() {
                             left: 0 !important;
                             top: 0 !important;
                             width: 100%;
-                            padding: 0 5px 5px 5px !important;
+                            padding: 0 5px 0 5px !important;
                             font-size: 15px !important;
                             line-height: 1.5 !important;
                         }
@@ -288,7 +288,7 @@ export default function CheckoutQuote() {
                             margin-bottom: 4px !important;
                         }
                         .printable-quote .space-y-6 > * + * {
-                            margin-top: 3px !important;
+                            margin-top: 1px !important;
                         }
                         .printable-quote table {
                             font-size: 13px !important;
@@ -338,10 +338,10 @@ export default function CheckoutQuote() {
                             padding-top: 2px !important;
                         }
                         .printable-quote .mt-8 {
-                            margin-top: 3px !important;
+                            margin-top: 1px !important;
                         }
                         .printable-quote .mt-6 {
-                            margin-top: 3px !important;
+                            margin-top: 1px !important;
                         }
                         .printable-quote .mb-6 {
                             margin-bottom: 2px !important;
