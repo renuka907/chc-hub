@@ -765,12 +765,8 @@ export default function Library() {
                                             onClick={(e) => {
                                                 e.preventDefault();
                                                 e.stopPropagation();
-                                                const newWindow = window.open(createPageUrl(`AftercareDetail?id=${instruction.id}`), '_blank');
-                                                if (newWindow) {
-                                                    newWindow.onload = () => {
-                                                        setTimeout(() => newWindow.print(), 500);
-                                                    };
-                                                }
+                                                window.open(createPageUrl(`AftercareDetail?id=${instruction.id}`), '_blank');
+                                                setTimeout(() => window.print(), 500);
                                             }}
                                             className="flex-shrink-0 w-6 h-6 flex items-center justify-center hover:scale-110 transition-transform"
                                         >
