@@ -184,16 +184,7 @@ export default function CheckoutQuote() {
         return calculateSubtotal() - calculateDiscountAmount() + calculateTax();
     };
 
-    const hasTaxableItems = () => {
-        return selectedItems.some(item => item.taxable);
-    };
-
     const handleSaveQuote = () => {
-        if (hasTaxableItems() && !selectedLocationId) {
-            alert("Please select a clinic location for quotes with taxable items.");
-            return;
-        }
-
         const quoteData = {
             quote_number: `Q-${Math.floor(10000 + Math.random() * 90000)}`,
             clinic_location_id: selectedLocationId || undefined,
@@ -479,16 +470,16 @@ export default function CheckoutQuote() {
             </div>
 
             {/* Location Selection */}
-            <Card className={`border-2 no-print ${hasTaxableItems() && !selectedLocationId ? 'border-red-500 bg-red-50' : 'border-blue-200 bg-blue-50'}`}>
+            <Card className="border-2 border-blue-200 bg-blue-50 no-print">
                 <CardHeader>
-                    <CardTitle className={`flex items-center ${hasTaxableItems() && !selectedLocationId ? 'text-red-900' : 'text-blue-900'}`}>
+                    <CardTitle className="flex items-center text-blue-900">
                         <ShoppingCart className="w-5 h-5 mr-2" />
-                        Select Clinic Location {hasTaxableItems() && <span className="text-red-500 ml-1">*</span>}
+                        Select Clinic Location (Optional)
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Select value={selectedLocationId} onValueChange={setSelectedLocationId}>
-                        <SelectTrigger className={`bg-white ${hasTaxableItems() && !selectedLocationId ? 'border-red-500' : ''}`}>
+                        <SelectTrigger className="bg-white">
                             <SelectValue placeholder="No location (show all items)" />
                         </SelectTrigger>
                         <SelectContent>
@@ -500,11 +491,6 @@ export default function CheckoutQuote() {
                             ))}
                         </SelectContent>
                     </Select>
-                    {hasTaxableItems() && !selectedLocationId && (
-                        <p className="text-xs text-red-600 mt-2 font-medium">
-                            Location required for taxable items
-                        </p>
-                    )}
                 </CardContent>
             </Card>
 
@@ -766,7 +752,7 @@ export default function CheckoutQuote() {
 
                                 <Button
                                     onClick={handleSaveQuote}
-                                    disabled={selectedItems.length === 0 || saveQuoteMutation.isPending || (hasTaxableItems() && !selectedLocationId)}
+                                    disabled={selectedItems.length === 0 || saveQuoteMutation.isPending}
                                     className="w-full bg-blue-600 hover:bg-blue-700 h-12"
                                 >
                                     <Printer className="w-5 h-5 mr-2" />
