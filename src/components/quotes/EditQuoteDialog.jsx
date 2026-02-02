@@ -144,7 +144,16 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
         return calculateSubtotal() - calculateDiscountAmount() + calculateTax();
     };
 
+    const hasTaxableItems = () => {
+        return selectedItems.some(item => item.taxable);
+    };
+
     const handleSave = () => {
+        if (hasTaxableItems() && !selectedLocationId) {
+            alert("Please select a clinic location for quotes with taxable items.");
+            return;
+        }
+
         const quoteData = {
             clinic_location_id: selectedLocationId || undefined,
             patient_name: patientName || undefined,
@@ -256,11 +265,13 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div>
-                                    <Label>Clinic Location (Optional)</Label>
+                                    <Label>
+                                        Clinic Location {hasTaxableItems() && <span className="text-red-500">*</span>}
+                                    </Label>
                                     <select
                                         value={selectedLocationId}
                                         onChange={(e) => setSelectedLocationId(e.target.value)}
-                                        className="w-full h-10 px-3 rounded-lg border border-gray-300 bg-white"
+                                        className={`w-full h-10 px-3 rounded-lg border bg-white ${hasTaxableItems() && !selectedLocationId ? 'border-red-500' : 'border-gray-300'}`}
                                     >
                                         <option value="">No Location</option>
                                         {locations.filter(loc => loc.status === 'active').map(location => (
@@ -269,6 +280,11 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
                                             </option>
                                         ))}
                                     </select>
+                                    {hasTaxableItems() && !selectedLocationId && (
+                                        <p className="text-xs text-red-500 mt-1">
+                                            Location required for taxable items
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div>
@@ -414,7 +430,7 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
                                     </Button>
                                     <Button
                                         onClick={handleSave}
-                                        disabled={selectedItems.length === 0 || updateQuoteMutation.isPending}
+                                        disabled={selectedItems.length === 0 || updateQuoteMutation.isPending || (hasTaxableItems() && !selectedLocationId)}
                                         className="flex-1 bg-blue-600 hover:bg-blue-700"
                                     >
                                         {updateQuoteMutation.isPending ? "Saving..." : "Save Changes"}
