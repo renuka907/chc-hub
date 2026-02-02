@@ -49,8 +49,32 @@ export default function CheckoutQuote() {
             queryClient.invalidateQueries(['quotes']);
             setSavedQuote(data);
             setTimeout(() => {
-                window.print();
-            }, 100);
+                // Wait for all images to load before printing
+                const images = document.querySelectorAll('.printable-quote img');
+                let loadedCount = 0;
+                const totalImages = images.length;
+                
+                if (totalImages === 0) {
+                    window.print();
+                    return;
+                }
+                
+                const checkAllLoaded = () => {
+                    loadedCount++;
+                    if (loadedCount === totalImages) {
+                        window.print();
+                    }
+                };
+                
+                images.forEach(img => {
+                    if (img.complete) {
+                        checkAllLoaded();
+                    } else {
+                        img.onload = checkAllLoaded;
+                        img.onerror = checkAllLoaded;
+                    }
+                });
+            }, 300);
         },
     });
 
