@@ -260,7 +260,7 @@ export default function CheckoutQuote() {
                 {`
                     @media print {
                         @page {
-                            margin: 2.54cm 0.3cm 0.3cm 0.3cm;
+                            margin: 2cm 0.3cm 0.3cm 0.3cm;
                         }
                         body * {
                             visibility: hidden;
