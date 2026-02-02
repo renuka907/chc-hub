@@ -7,7 +7,7 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                 {`
                     @page {
                         size: letter;
-                        margin: 0.1in;
+                        margin: 0.5in;
                     }
 
                     .printable-document input[type="text"],
