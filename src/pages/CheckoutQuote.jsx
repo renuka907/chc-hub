@@ -48,9 +48,10 @@ export default function CheckoutQuote() {
         onSuccess: (data) => {
             queryClient.invalidateQueries(['quotes']);
             setSavedQuote(data);
+            // Scroll to preview
             setTimeout(() => {
-                window.print();
-            }, 1000);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 100);
         },
     });
 
@@ -344,9 +345,21 @@ export default function CheckoutQuote() {
                 `}
             </style>
 
-            {/* Printable Quote (hidden on screen, shown when printing) */}
+            {/* Printable Quote */}
             {savedQuote && (
-                <div className="printable-quote hidden print:block w-full bg-white">
+                <div className="printable-quote w-full bg-white p-6 border-2 border-blue-500 rounded-lg mb-6">
+                    <div className="flex justify-between items-center mb-4 no-print">
+                        <h2 className="text-xl font-bold text-blue-900">Quote Preview</h2>
+                        <div className="flex gap-2">
+                            <Button onClick={() => window.print()} className="bg-blue-600 hover:bg-blue-700">
+                                <Printer className="w-4 h-4 mr-2" />
+                                Print
+                            </Button>
+                            <Button onClick={() => setSavedQuote(null)} variant="outline">
+                                Close Preview
+                            </Button>
+                        </div>
+                    </div>
                     <PrintableDocument title="Price Quote">
                         <div className="space-y-6">
                             {/* Header Info */}
