@@ -285,10 +285,10 @@ export default function CheckoutQuote() {
                         }
                         .printable-quote h3 {
                             font-size: 16px !important;
-                            margin-bottom: 4px !important;
+                            margin-bottom: 2px !important;
                         }
-                        .printable-quote .space-y-6 > * + * {
-                            margin-top: 1px !important;
+                        .printable-quote .space-y-2 > * + * {
+                            margin-top: 6px !important;
                         }
                         .printable-quote table {
                             font-size: 13px !important;
@@ -469,7 +469,7 @@ export default function CheckoutQuote() {
                             )}
 
                             {/* Footer */}
-                            <div className="text-sm text-gray-500 border-t pt-4 mt-8">
+                            <div className="text-sm text-gray-500 border-t pt-2 mt-2">
                                 <p>This quote is valid for 30 days from the date of issue.</p>
                                 <p className="mt-2">Payment is due at the time of service unless required to schedule procedure.</p>
                                 <p className="mt-3 font-semibold text-gray-700">Cherry Financing and Care Credit Available</p>
