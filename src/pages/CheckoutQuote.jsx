@@ -260,7 +260,7 @@ export default function CheckoutQuote() {
                 {`
                     @media print {
                         @page {
-                            margin: 0.5cm 0.3cm 0.3cm 0.3cm;
+                            margin: 0.3cm 0.3cm 0.3cm 0.3cm;
                         }
                         body * {
                             visibility: hidden;
@@ -323,7 +323,7 @@ export default function CheckoutQuote() {
                             object-fit: contain !important;
                         }
                         .printable-quote .pb-6 {
-                            padding-bottom: 2px !important;
+                            padding-bottom: 4px !important;
                         }
                         .printable-quote .mb-4 {
                             margin-bottom: 2px !important;
@@ -363,9 +363,9 @@ export default function CheckoutQuote() {
             {savedQuote && (
                 <div className="printable-quote fixed top-0 left-[-9999px] w-full bg-white">
                     <PrintableDocument title="Price Quote">
-                        <div className="space-y-6">
+                        <div className="space-y-2">
                             {/* Header Info */}
-                            <div className="pb-6 border-b space-y-3">
+                            <div className="pb-2 border-b space-y-2">
                                 <div>
                                     <div className="text-sm text-gray-500 mb-1">Quote Number</div>
                                     <div className="font-bold text-lg">{savedQuote.quote_number}</div>
