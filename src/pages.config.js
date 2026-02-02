@@ -69,6 +69,7 @@ import LabTestDirectory from './pages/LabTestDirectory';
 import Library from './pages/Library';
 import MedicationCalculator from './pages/MedicationCalculator';
 import Messaging from './pages/Messaging';
+import PapOrderingWizard from './pages/PapOrderingWizard';
 import PricingManagement from './pages/PricingManagement';
 import ProcedureDetail from './pages/ProcedureDetail';
 import ProceduresManagement from './pages/ProceduresManagement';
@@ -81,7 +82,6 @@ import StaffCheckIn from './pages/StaffCheckIn';
 import UserManagement from './pages/UserManagement';
 import UserProfile from './pages/UserProfile';
 import ViewSharedForm from './pages/ViewSharedForm';
-import PapOrderingWizard from './pages/PapOrderingWizard';
 import __Layout from './Layout.jsx';
 
 
@@ -108,6 +108,7 @@ export const PAGES = {
     "Library": Library,
     "MedicationCalculator": MedicationCalculator,
     "Messaging": Messaging,
+    "PapOrderingWizard": PapOrderingWizard,
     "PricingManagement": PricingManagement,
     "ProcedureDetail": ProcedureDetail,
     "ProceduresManagement": ProceduresManagement,
@@ -120,7 +121,6 @@ export const PAGES = {
     "UserManagement": UserManagement,
     "UserProfile": UserProfile,
     "ViewSharedForm": ViewSharedForm,
-    "PapOrderingWizard": PapOrderingWizard,
 }
 
 export const pagesConfig = {

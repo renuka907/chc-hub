@@ -120,6 +120,7 @@ export default function Layout({ children, currentPageName }) {
             items: [
                 { name: "Procedures", path: "ProceduresManagement", icon: Stethoscope },
                 { name: "Lab Tests", path: "LabTestDirectory", icon: Stethoscope },
+                { name: "Pap Ordering Wizard", path: "PapOrderingWizard", icon: FileText },
                 { name: "Medication Calculator", path: "MedicationCalculator", icon: Stethoscope },
                 { name: "Provider Directory", path: "ProviderReferral", icon: Users },
             ]
