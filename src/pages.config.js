@@ -81,6 +81,7 @@ import StaffCheckIn from './pages/StaffCheckIn';
 import UserManagement from './pages/UserManagement';
 import UserProfile from './pages/UserProfile';
 import ViewSharedForm from './pages/ViewSharedForm';
+import PapOrderingWizard from './pages/PapOrderingWizard';
 import __Layout from './Layout.jsx';
 
 
@@ -119,6 +120,7 @@ export const PAGES = {
     "UserManagement": UserManagement,
     "UserProfile": UserProfile,
     "ViewSharedForm": ViewSharedForm,
+    "PapOrderingWizard": PapOrderingWizard,
 }
 
 export const pagesConfig = {
