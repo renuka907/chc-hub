@@ -365,20 +365,22 @@ export default function CheckoutQuote() {
                     <PrintableDocument title="Price Quote">
                         <div className="space-y-6">
                             {/* Header Info */}
-                            <div className="grid md:grid-cols-2 gap-6 pb-6 border-b">
+                            <div className="pb-6 border-b space-y-3">
                                 <div>
                                     <div className="text-sm text-gray-500 mb-1">Quote Number</div>
                                     <div className="font-bold text-lg">{savedQuote.quote_number}</div>
                                 </div>
-                                <div>
-                                    <div className="text-sm text-gray-500 mb-1">Date</div>
-                                    <div className="font-semibold">{new Date().toLocaleDateString()}</div>
-                                </div>
-                                <div className="no-print">
-                                    <div className="text-sm text-gray-500 mb-1">Status</div>
-                                    <Badge className={getStatusColor(savedQuote.status)}>
-                                        {savedQuote.status.charAt(0).toUpperCase() + savedQuote.status.slice(1)}
-                                    </Badge>
+                                <div className="grid grid-cols-2 gap-6">
+                                    <div>
+                                        <div className="text-sm text-gray-500 mb-1">Date</div>
+                                        <div className="font-semibold">{new Date().toLocaleDateString()}</div>
+                                    </div>
+                                    {selectedLocation && (
+                                        <div>
+                                            <div className="text-sm text-gray-500 mb-1">Clinic Location</div>
+                                            <div className="font-semibold">{selectedLocation.name}</div>
+                                        </div>
+                                    )}
                                 </div>
                                 {savedQuote.patient_name && (
                                     <div>
@@ -386,12 +388,12 @@ export default function CheckoutQuote() {
                                         <div className="font-semibold">{savedQuote.patient_name}</div>
                                     </div>
                                 )}
-                                {selectedLocation && (
-                                    <div>
-                                        <div className="text-sm text-gray-500 mb-1">Clinic Location</div>
-                                        <div className="font-semibold">{selectedLocation.name}</div>
-                                    </div>
-                                )}
+                                <div className="no-print">
+                                    <div className="text-sm text-gray-500 mb-1">Status</div>
+                                    <Badge className={getStatusColor(savedQuote.status)}>
+                                        {savedQuote.status.charAt(0).toUpperCase() + savedQuote.status.slice(1)}
+                                    </Badge>
+                                </div>
                             </div>
 
                             {/* Items Table */}
