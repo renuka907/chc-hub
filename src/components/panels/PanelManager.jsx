@@ -164,10 +164,10 @@ export default function PanelManager({ isOpen, onClose }) {
                                                             <p className="text-sm text-gray-600 mt-1">{panel.description}</p>
                                                         )}
                                                         <div className="flex items-center gap-2 mt-2">
-                                                            <Badge variant="outline">
+                                                            <Badge variant="outline" className="text-black">
                                                                 {testCount} test{testCount !== 1 ? 's' : ''}
                                                             </Badge>
-                                                            <Badge variant={panel.status === 'active' ? 'default' : 'outline'}>
+                                                            <Badge variant={panel.status === 'active' ? 'default' : 'outline'} className="text-black">
                                                                 {panel.status}
                                                             </Badge>
                                                         </div>
