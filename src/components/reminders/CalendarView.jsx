@@ -7,8 +7,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { useQueryClient } from "@tanstack/react-query";
 import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
-import { supabase } from "@/api/supabaseClient";
-import { useAuth } from "@/lib/AuthContext";
 import { toast } from "sonner";
 
 export default function CalendarView({ reminders, viewMode = "month", onViewChange }) {

@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
-import { supabase } from "@/api/supabaseClient";
-import { useAuth } from "@/lib/AuthContext";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat, getCurrentUser } from "@/api/supabaseHelpers";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,7 +29,7 @@ export default function AgentChat({ agentName }) {
 
     const { data: user } = useQuery({
         queryKey: ['currentUser'],
-        queryFn: async () => { const { data } = await supabase.auth.getUser(); return data?.user; },
+        queryFn: () => getCurrentUser(),
     });
 
     const { data: locations = [] } = useQuery({

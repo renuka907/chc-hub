@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
-import { supabase } from "@/api/supabaseClient";
 import { useAuth } from "@/lib/AuthContext";
 
 // Permission definitions by role
@@ -60,19 +59,7 @@ const PERMISSIONS = {
 };
 
 export function usePermissions() {
-    const [user, setUser] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        supabase.auth.getUser().then(r => r.data?.user)
-            .then(currentUser => {
-                setUser(currentUser);
-                setIsLoading(false);
-            })
-            .catch(() => {
-                setIsLoading(false);
-            });
-    }, []);
+    const { user, isLoadingAuth: isLoading } = useAuth();
 
     const can = (resource, action) => {
         if (!user) return false;

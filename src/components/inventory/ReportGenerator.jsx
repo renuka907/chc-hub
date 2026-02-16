@@ -12,7 +12,6 @@ import { Input } from '@/components/ui/input';
 import { Download, BarChart3, Loader2 } from 'lucide-react';
 import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from '@/api/supabaseHelpers';
 import { supabase } from '@/api/supabaseClient';
-import { useAuth } from '@/lib/AuthContext';
 
 export default function ReportGenerator({ locations }) {
     const [reportType, setReportType] = useState('inventory-levels');

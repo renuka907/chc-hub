@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
-import { supabase } from "@/api/supabaseClient";
-import { useAuth } from "@/lib/AuthContext";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat, getCurrentUser } from "@/api/supabaseHelpers";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -32,7 +30,7 @@ export default function DiscountManagement() {
     const queryClient = useQueryClient();
 
     React.useEffect(() => {
-        supabase.auth.getUser().then(({ data }) => { if (data?.user) setCurrentUser(data.user); });
+        getCurrentUser().then(u => { if (u) setCurrentUser(u); });
     }, []);
 
     const { data: discounts = [], isLoading } = useQuery({

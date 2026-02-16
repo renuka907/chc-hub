@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
-import { supabase } from "@/api/supabaseClient";
-import { useAuth } from "@/lib/AuthContext";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat, getCurrentUser } from "@/api/supabaseHelpers";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -54,7 +52,7 @@ export default function UserManagement() {
     });
 
     React.useEffect(() => {
-        supabase.auth.getUser().then(r => r.data?.user).then(user => setCurrentUser(user));
+        getCurrentUser().then(u => { if (u) setCurrentUser(u); });
     }, []);
 
     const inviteMutation = useMutation({

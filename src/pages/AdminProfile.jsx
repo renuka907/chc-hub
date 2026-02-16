@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
-import { supabase } from "@/api/supabaseClient";
 import { useAuth } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,27 +17,15 @@ export default function AdminProfile() {
     });
     const [hasChanges, setHasChanges] = useState(false);
 
+    const { user: authUser, updateProfile, navigateToLogin } = useAuth();
+    
     useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const currentUser = await supabase.auth.getUser().then(r => r.data?.user);
-                if (currentUser) {
-                    setUser(currentUser);
-                    setFormData({
-                        full_name: currentUser.full_name || "",
-                    });
-                } else {
-                    navigateToLogin();
-                }
-            } catch (error) {
-                toast.error("Failed to load profile");
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchUser();
-    }, []);
+        if (authUser) {
+            setUser(authUser);
+            setFormData({ full_name: authUser.full_name || "" });
+            setIsLoading(false);
+        }
+    }, [authUser]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -52,7 +39,7 @@ export default function AdminProfile() {
     const handleSave = async () => {
         setIsSaving(true);
         try {
-            await supabase.auth.updateUser({
+            await updateProfile({
                 full_name: formData.full_name,
             });
             setUser(prev => ({

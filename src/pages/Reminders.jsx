@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
-import { supabase } from "@/api/supabaseClient";
-import { useAuth } from "@/lib/AuthContext";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat, getCurrentUser } from "@/api/supabaseHelpers";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -32,13 +30,13 @@ export default function Reminders() {
 
     const { data: currentUser } = useQuery({
         queryKey: ['currentUser'],
-        queryFn: async () => { const { data } = await supabase.auth.getUser(); return data?.user; },
+        queryFn: () => getCurrentUser(),
     });
 
     const { data: reminders = [], isLoading } = useQuery({
         queryKey: ['reminders'],
         queryFn: async () => {
-            const user = await supabase.auth.getUser().then(r => r.data?.user);
+            const user = await getCurrentUser();
             const allReminders = await entities.Reminder.list('-due_date', 200);
             return allReminders.filter(r => 
                 r.created_by === user.email || r.assigned_to === user.email

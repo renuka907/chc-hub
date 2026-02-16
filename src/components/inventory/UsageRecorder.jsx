@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
-import { supabase } from "@/api/supabaseClient";
-import { useAuth } from "@/lib/AuthContext";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat, getCurrentUser } from "@/api/supabaseHelpers";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     Dialog,
@@ -37,7 +35,7 @@ export default function UsageRecorder({ open, onOpenChange, onSuccess }) {
     const queryClient = useQueryClient();
 
     React.useEffect(() => {
-        supabase.auth.getUser().then(({ data }) => { if (data?.user) setCurrentUser(data.user); });
+        getCurrentUser().then(u => { if (u) setCurrentUser(u); });
     }, []);
 
     const { data: inventoryItems = [] } = useQuery({

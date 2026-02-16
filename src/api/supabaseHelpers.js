@@ -204,6 +204,29 @@ export async function logUserActivity(pageName, userEmail, userFullName) {
   }
 }
 
+// Get current authenticated user with profile data
+export async function getCurrentUser() {
+  const { data: { user: authUser } } = await supabase.auth.getUser();
+  if (!authUser) return null;
+  
+  const { data: profile } = await supabase
+    .from('users')
+    .select('*')
+    .eq('id', authUser.id)
+    .single();
+  
+  return {
+    id: authUser.id,
+    email: authUser.email,
+    full_name: profile?.full_name || authUser.user_metadata?.full_name || '',
+    role: profile?.role || 'staff',
+    page_permissions: profile?.page_permissions || {},
+    avatar_url: profile?.avatar_url || '',
+    phone: profile?.phone || '',
+    ...profile,
+  };
+}
+
 // Field name mapping helper: base44 used created_date/updated_date, Supabase uses created_at/updated_at
 // The schema already uses created_at/updated_at, but base44 data might reference created_date/updated_date
 // We handle this by mapping sort fields

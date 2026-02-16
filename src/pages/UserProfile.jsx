@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
-import { supabase } from "@/api/supabaseClient";
 import { useAuth } from "@/lib/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -35,30 +34,17 @@ export default function UserProfile() {
     const [enablePushNotifications, setEnablePushNotifications] = useState(false);
     const [notificationFrequency, setNotificationFrequency] = useState("immediate");
 
+    const { user: authUser, updateProfile, changePassword: authChangePassword, logout, navigateToLogin } = useAuth();
+    
     useEffect(() => {
-        supabase.auth.getUser().then(r => r.data?.user)
-            .then(currentUser => {
-                setUser(currentUser);
-                setFullName(currentUser.full_name || "");
-                setEmail(currentUser.email || "");
-                setPhone(currentUser.phone || "");
-                
-                // Load notification preferences if stored
-                if (currentUser.notification_preferences) {
-                    const prefs = typeof currentUser.notification_preferences === 'string' 
-                        ? JSON.parse(currentUser.notification_preferences) 
-                        : currentUser.notification_preferences;
-                    setEnableEmailNotifications(prefs.email !== false);
-                    setEnablePushNotifications(prefs.push || false);
-                    setNotificationFrequency(prefs.frequency || "immediate");
-                }
-                
-                setLoading(false);
-            })
-            .catch(() => {
-                navigateToLogin();
-            });
-    }, []);
+        if (authUser) {
+            setUser(authUser);
+            setFullName(authUser.full_name || "");
+            setEmail(authUser.email || "");
+            setPhone(authUser.phone || "");
+            setLoading(false);
+        }
+    }, [authUser]);
 
     const handleProfileUpdate = async () => {
         setSaving(true);
@@ -66,14 +52,9 @@ export default function UserProfile() {
         setSuccessMessage("");
         
         try {
-            await supabase.auth.updateUser({
+            await updateProfile({
                 full_name: fullName,
                 phone: phone,
-                notification_preferences: JSON.stringify({
-                    email: enableEmailNotifications,
-                    push: enablePushNotifications,
-                    frequency: notificationFrequency
-                })
             });
             
             setSuccessMessage("Profile updated successfully!");
@@ -105,7 +86,7 @@ export default function UserProfile() {
 
         setSaving(true);
         try {
-            await supabase.auth.updateUser({ password: newPassword });
+            await authChangePassword(newPassword);
             setSuccessMessage("Password changed successfully!");
             setShowPasswordDialog(false);
             setCurrentPassword("");

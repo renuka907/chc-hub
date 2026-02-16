@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
-import { supabase } from "@/api/supabaseClient";
-import { useAuth } from "@/lib/AuthContext";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat, getCurrentUser } from "@/api/supabaseHelpers";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,7 +29,7 @@ export default function SpecialsPage() {
     const queryClient = useQueryClient();
 
     useEffect(() => {
-        supabase.auth.getUser().then(({ data }) => { if (data?.user) setCurrentUser(data.user); });
+        getCurrentUser().then(u => { if (u) setCurrentUser(u); });
     }, []);
 
     const { data: specials = [], isLoading } = useQuery({

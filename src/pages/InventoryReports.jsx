@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from '@/api/supabaseHelpers';
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat, getCurrentUser } from '@/api/supabaseHelpers';
 import { supabase } from '@/api/supabaseClient';
-import { useAuth } from '@/lib/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import ReportGenerator from '../components/inventory/ReportGenerator';
@@ -11,7 +10,7 @@ export default function InventoryReports() {
     const [currentUser, setCurrentUser] = useState(null);
 
     React.useEffect(() => {
-        supabase.auth.getUser().then(({ data }) => { if (data?.user) setCurrentUser(data.user); });
+        getCurrentUser().then(u => { if (u) setCurrentUser(u); });
     }, []);
 
     const { data: locations = [] } = useQuery({

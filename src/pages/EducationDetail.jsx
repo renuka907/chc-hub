@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
-import { supabase } from "@/api/supabaseClient";
-import { useAuth } from "@/lib/AuthContext";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat, getCurrentUser } from "@/api/supabaseHelpers";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -30,7 +28,7 @@ export default function EducationDetail() {
 
     const { data: currentUser } = useQuery({
         queryKey: ['currentUser'],
-        queryFn: async () => { const { data } = await supabase.auth.getUser(); return data?.user; }
+        queryFn: () => getCurrentUser()
     });
 
     const topic = topics.find(t => t.id === topicId);

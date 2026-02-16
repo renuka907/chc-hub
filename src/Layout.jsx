@@ -1,8 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "./utils";
-import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
-import { supabase } from "@/api/supabaseClient";
+import { entities } from "@/api/supabaseHelpers";
 import { useAuth } from "@/lib/AuthContext";
 import { 
                         BookOpen, 
@@ -40,22 +39,10 @@ export default function Layout({ children, currentPageName }) {
     }
     
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
-    const [currentUser, setCurrentUser] = React.useState(null);
-    const [isLoading, setIsLoading] = React.useState(true);
     const [openDropdown, setOpenDropdown] = React.useState(null);
     const [reminderCount, setReminderCount] = React.useState(0);
     const closeTimerRef = React.useRef(null);
-
-    React.useEffect(() => {
-        supabase.auth.getUser().then(r => r.data?.user)
-            .then(user => {
-                setCurrentUser(user);
-                setIsLoading(false);
-            })
-            .catch(() => {
-                navigateToLogin();
-            });
-    }, []);
+    const { user: currentUser, isAuthenticated, isLoadingAuth: isLoading, logout, navigateToLogin } = useAuth();
 
     React.useEffect(() => {
         const fetchReminderCount = async () => {

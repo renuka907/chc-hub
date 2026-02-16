@@ -6,8 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { Clock, Eye } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
-import { supabase } from "@/api/supabaseClient";
-import { useAuth } from "@/lib/AuthContext";
 
 export default function VersionHistory({ open, onOpenChange, currentItem, entityName, onViewVersion }) {
     const { data: versions = [] } = useQuery({

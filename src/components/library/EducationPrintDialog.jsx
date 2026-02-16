@@ -9,8 +9,6 @@ import { Input } from "@/components/ui/input";
 import EducationTopicForm from "@/components/EducationTopicForm";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
-import { supabase } from "@/api/supabaseClient";
-import { useAuth } from "@/lib/AuthContext";
 import jsPDF from "jspdf";
 
 export default function EducationPrintDialog({ open, onOpenChange, topic, onSuccess }) {
