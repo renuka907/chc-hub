@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -20,22 +22,22 @@ export default function QuoteDetail() {
 
     const { data: quote, isLoading: quoteLoading } = useQuery({
         queryKey: ['quote', quoteId],
-        queryFn: () => base44.entities.Quote.filter({ id: quoteId }).then(quotes => quotes[0]),
+        queryFn: () => entities.Quote.filter({ id: quoteId }).then(quotes => quotes[0]),
         enabled: !!quoteId,
     });
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
-        queryFn: () => base44.entities.ClinicLocation.list(),
+        queryFn: () => entities.ClinicLocation.list(),
     });
 
     const { data: discounts = [] } = useQuery({
         queryKey: ['discounts'],
-        queryFn: () => base44.entities.Discount.list(),
+        queryFn: () => entities.Discount.list(),
     });
 
     const updateStatusMutation = useMutation({
-        mutationFn: ({ id, status }) => base44.entities.Quote.update(id, { status }),
+        mutationFn: ({ id, status }) => entities.Quote.update(id, { status }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['quote', quoteId] });
             queryClient.invalidateQueries({ queryKey: ['quotes'] });

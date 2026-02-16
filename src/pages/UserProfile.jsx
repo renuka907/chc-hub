@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,7 +36,7 @@ export default function UserProfile() {
     const [notificationFrequency, setNotificationFrequency] = useState("immediate");
 
     useEffect(() => {
-        base44.auth.me()
+        supabase.auth.getUser().then(r => r.data?.user)
             .then(currentUser => {
                 setUser(currentUser);
                 setFullName(currentUser.full_name || "");
@@ -54,7 +56,7 @@ export default function UserProfile() {
                 setLoading(false);
             })
             .catch(() => {
-                base44.auth.redirectToLogin();
+                navigateToLogin();
             });
     }, []);
 
@@ -64,7 +66,7 @@ export default function UserProfile() {
         setSuccessMessage("");
         
         try {
-            await base44.auth.updateMe({
+            await supabase.auth.updateUser({
                 full_name: fullName,
                 phone: phone,
                 notification_preferences: JSON.stringify({
@@ -103,7 +105,7 @@ export default function UserProfile() {
 
         setSaving(true);
         try {
-            await base44.auth.changePassword(currentPassword, newPassword);
+            await supabase.auth.updateUser({ password: newPassword });
             setSuccessMessage("Password changed successfully!");
             setShowPasswordDialog(false);
             setCurrentPassword("");

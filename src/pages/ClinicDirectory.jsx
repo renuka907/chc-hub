@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -28,16 +30,16 @@ export default function ClinicDirectory() {
     const queryClient = useQueryClient();
 
     React.useEffect(() => {
-        base44.auth.me().then(user => setCurrentUser(user)).catch(() => {});
+        supabase.auth.getUser().then(({ data }) => { if (data?.user) setCurrentUser(data.user); });
     }, []);
 
     const { data: locations = [], isLoading } = useQuery({
         queryKey: ['clinicLocations'],
-        queryFn: () => base44.entities.ClinicLocation.list('-created_date', 100),
+        queryFn: () => entities.ClinicLocation.list('-created_at', 100),
     });
 
     const updateMutation = useMutation({
-        mutationFn: ({ id, data }) => base44.entities.ClinicLocation.update(id, data),
+        mutationFn: ({ id, data }) => entities.ClinicLocation.update(id, data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['clinicLocations'] });
             setEditingLocation(null);
@@ -45,7 +47,7 @@ export default function ClinicDirectory() {
     });
 
     const createMutation = useMutation({
-        mutationFn: (data) => base44.entities.ClinicLocation.create(data),
+        mutationFn: (data) => entities.ClinicLocation.create(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['clinicLocations'] });
             setEditingLocation(null);
@@ -53,7 +55,7 @@ export default function ClinicDirectory() {
     });
 
     const deleteMutation = useMutation({
-        mutationFn: (id) => base44.entities.ClinicLocation.delete(id),
+        mutationFn: (id) => entities.ClinicLocation.delete(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['clinicLocations'] });
             setDeleteConfirm(null);
@@ -61,7 +63,7 @@ export default function ClinicDirectory() {
     });
 
     const toggleFavorite = async (locationId, currentValue) => {
-        await base44.entities.ClinicLocation.update(locationId, { is_favorite: !currentValue });
+        await entities.ClinicLocation.update(locationId, { is_favorite: !currentValue });
         queryClient.invalidateQueries({ queryKey: ['clinicLocations'] });
     };
 

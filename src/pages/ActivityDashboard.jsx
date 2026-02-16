@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, Users, Activity, Eye, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,7 +14,7 @@ export default function ActivityDashboard() {
     const [currentUser, setCurrentUser] = React.useState(null);
 
     useEffect(() => {
-        base44.auth.me()
+        supabase.auth.getUser().then(r => r.data?.user)
             .then(user => {
                 if (user?.role !== 'admin') {
                     window.location.href = '/';
@@ -20,14 +22,14 @@ export default function ActivityDashboard() {
                 setCurrentUser(user);
             })
             .catch(() => {
-                base44.auth.redirectToLogin();
+                navigateToLogin();
             });
     }, []);
 
     const { data: metrics, isLoading, error } = useQuery({
         queryKey: ['activityMetrics'],
         queryFn: async () => {
-            const response = await base44.functions.invoke('getUserActivityMetrics', {});
+            const response = await /* TODO: Implement getUserActivityMetrics as Supabase Edge Function */ Promise.resolve({ data: null });
             return response.data;
         },
         refetchInterval: 60000,

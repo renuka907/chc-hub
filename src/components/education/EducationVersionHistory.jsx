@@ -1,5 +1,7 @@
 import React from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -11,7 +13,7 @@ import { format } from "date-fns";
 export default function EducationVersionHistory({ open, onOpenChange, topicId, onRestore }) {
     const { data: allTopics = [], isLoading } = useQuery({
         queryKey: ['educationTopics'],
-        queryFn: () => base44.entities.EducationTopic.list(),
+        queryFn: () => entities.EducationTopic.list(),
         enabled: open
     });
 

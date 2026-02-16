@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -20,14 +22,14 @@ export default function NotificationPreferencesDialog({ open, onOpenChange }) {
 
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
+    queryFn: async () => { const { data } = await supabase.auth.getUser(); return data?.user; },
   });
 
   const { data: preferences } = useQuery({
     queryKey: ['notificationPreferences', currentUser?.email],
     queryFn: async () => {
       if (!currentUser?.email) return null;
-      const prefs = await base44.entities.NotificationPreferences.filter(
+      const prefs = await entities.NotificationPreferences.filter(
         { user_email: currentUser.email },
         undefined,
         1
@@ -57,9 +59,9 @@ export default function NotificationPreferencesDialog({ open, onOpenChange }) {
       };
 
       if (preferences) {
-        await base44.entities.NotificationPreferences.update(preferences.id, payload);
+        await entities.NotificationPreferences.update(preferences.id, payload);
       } else {
-        await base44.entities.NotificationPreferences.create(payload);
+        await entities.NotificationPreferences.create(payload);
       }
 
       queryClient.invalidateQueries({ queryKey: ['notificationPreferences'] });

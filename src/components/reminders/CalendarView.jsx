@@ -6,7 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { toast } from "sonner";
 
 export default function CalendarView({ reminders, viewMode = "month", onViewChange }) {
@@ -33,7 +35,7 @@ export default function CalendarView({ reminders, viewMode = "month", onViewChan
             const newDueDate = new Date(targetDate);
             newDueDate.setHours(originalTime.getHours(), originalTime.getMinutes(), originalTime.getSeconds());
             
-            await base44.entities.Reminder.update(reminder.id, {
+            await entities.Reminder.update(reminder.id, {
                 due_date: newDueDate.toISOString(),
                 next_trigger_at: newDueDate.toISOString()
             });

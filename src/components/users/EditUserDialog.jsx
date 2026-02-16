@@ -1,5 +1,7 @@
 import React from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -26,7 +28,7 @@ export default function EditUserDialog({ open, onOpenChange, user }) {
   }, [user]);
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.User.update(id, data),
+    mutationFn: ({ id, data }) => entities.User.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       onOpenChange(false);

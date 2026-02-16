@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -14,7 +16,7 @@ export default function TemplateSelector({ open, onOpenChange, templateType, onS
     const { data: templates = [], isLoading } = useQuery({
         queryKey: ['formTemplates', templateType],
         queryFn: async () => {
-            const allTemplates = await base44.entities.FormTemplate.list('-updated_date', 100);
+            const allTemplates = await entities.FormTemplate.list('-updated_at', 100);
             return allTemplates.filter(t => t.template_type === templateType && t.is_public);
         },
         enabled: open
@@ -27,7 +29,7 @@ export default function TemplateSelector({ open, onOpenChange, templateType, onS
 
     const handleSelect = async (template) => {
         // Increment usage count
-        await base44.entities.FormTemplate.update(template.id, {
+        await entities.FormTemplate.update(template.id, {
             usage_count: (template.usage_count || 0) + 1
         });
         onSelect(template);

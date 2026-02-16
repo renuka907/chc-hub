@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -60,9 +62,9 @@ export default function ProcedureForm({ open, onOpenChange, procedure, onSuccess
     const saveMutation = useMutation({
         mutationFn: async (data) => {
             if (procedure) {
-                return await base44.entities.Procedure.update(procedure.id, data);
+                return await entities.Procedure.update(procedure.id, data);
             } else {
-                return await base44.entities.Procedure.create(data);
+                return await entities.Procedure.create(data);
             }
         },
         onSuccess: () => {
@@ -96,7 +98,7 @@ Please provide:
 
 Format each section clearly with headers.`;
 
-            const response = await base44.integrations.Core.InvokeLLM({
+            const response = await invokeLLM({
                 prompt: prompt,
                 add_context_from_internet: true
             });

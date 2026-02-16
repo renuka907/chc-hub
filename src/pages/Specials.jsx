@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,12 +31,12 @@ export default function SpecialsPage() {
     const queryClient = useQueryClient();
 
     useEffect(() => {
-        base44.auth.me().then(setCurrentUser);
+        supabase.auth.getUser().then(({ data }) => { if (data?.user) setCurrentUser(data.user); });
     }, []);
 
     const { data: specials = [], isLoading } = useQuery({
         queryKey: ["specials"],
-        queryFn: () => base44.entities.Special.list("-updated_date"),
+        queryFn: () => entities.Special.list("-updated_at"),
     });
 
     const isAdmin = currentUser?.role === "admin";
@@ -44,12 +46,12 @@ export default function SpecialsPage() {
     };
 
     const archiveMutation = useMutation({
-        mutationFn: (special) => base44.entities.Special.update(special.id, { is_archived: !special.is_archived }),
+        mutationFn: (special) => entities.Special.update(special.id, { is_archived: !special.is_archived }),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["specials"] }),
     });
 
     const deleteMutation = useMutation({
-        mutationFn: (id) => base44.entities.Special.delete(id),
+        mutationFn: (id) => entities.Special.delete(id),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["specials"] }),
     });
 
@@ -83,8 +85,8 @@ export default function SpecialsPage() {
         setError("");
 
         try {
-            const { file_url } = await base44.integrations.Core.UploadFile({ file });
-            await base44.entities.Special.create({
+            const { file_url } = await uploadFile(file);
+            await entities.Special.create({
                 title: formData.title || file.name,
                 file_url,
                 date_from: formData.date_from,

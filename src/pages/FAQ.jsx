@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -33,16 +35,16 @@ export default function FAQ() {
 
     const { data: user } = useQuery({
         queryKey: ['currentUser'],
-        queryFn: () => base44.auth.me(),
+        queryFn: async () => { const { data } = await supabase.auth.getUser(); return data?.user; },
     });
 
     const { data: faqs = [] } = useQuery({
         queryKey: ['faqs'],
-        queryFn: () => base44.entities.FAQ.list('order', 100),
+        queryFn: () => entities.FAQ.list('order', 100),
     });
 
     const deleteFaqMutation = useMutation({
-        mutationFn: (id) => base44.entities.FAQ.delete(id),
+        mutationFn: (id) => entities.FAQ.delete(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['faqs'] });
             setDeletingFaq(null);
@@ -51,7 +53,7 @@ export default function FAQ() {
 
     const sendEmailMutation = useMutation({
         mutationFn: async (data) => {
-            await base44.integrations.Core.SendEmail({
+            await sendEmail({
                 to: "renuka@contemporaryhealthcenter.com",
                 subject: `New Question from ${data.name}`,
                 body: `Name: ${data.name}\nEmail: ${data.email}\n\nQuestion:\n${data.question}`

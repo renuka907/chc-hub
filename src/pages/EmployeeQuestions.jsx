@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,16 +23,16 @@ export default function EmployeeQuestions() {
 
     const { data: user } = useQuery({
         queryKey: ['currentUser'],
-        queryFn: () => base44.auth.me(),
+        queryFn: async () => { const { data } = await supabase.auth.getUser(); return data?.user; },
     });
 
     const { data: questions = [] } = useQuery({
         queryKey: ['employeeQuestions'],
-        queryFn: () => base44.entities.EmployeeQuestion.list('-created_date', 100),
+        queryFn: () => entities.EmployeeQuestion.list('-created_at', 100),
     });
 
     const createQuestionMutation = useMutation({
-        mutationFn: (questionData) => base44.entities.EmployeeQuestion.create(questionData),
+        mutationFn: (questionData) => entities.EmployeeQuestion.create(questionData),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['employeeQuestions'] });
             setShowAddDialog(false);
@@ -41,7 +43,7 @@ export default function EmployeeQuestions() {
     });
 
     const updateQuestionMutation = useMutation({
-        mutationFn: ({ id, data }) => base44.entities.EmployeeQuestion.update(id, data),
+        mutationFn: ({ id, data }) => entities.EmployeeQuestion.update(id, data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['employeeQuestions'] });
             setSelectedQuestion(null);

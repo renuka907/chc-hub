@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function ReminderEditDialog({ open, onOpenChange, reminder, users = [], onSaved }) {
   const [form, setForm] = React.useState({
@@ -94,9 +96,9 @@ export default function ReminderEditDialog({ open, onOpenChange, reminder, users
         }
       }
       if (reminder) {
-        await base44.entities.Reminder.update(reminder.id, payload);
+        await entities.Reminder.update(reminder.id, payload);
       } else {
-        await base44.entities.Reminder.create(payload);
+        await entities.Reminder.create(payload);
       }
       onOpenChange(false);
       onSaved?.();

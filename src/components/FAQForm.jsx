@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,9 +44,9 @@ export default function FAQForm({ open, onOpenChange, onSuccess, editFaq = null 
         setIsSaving(true);
         try {
             if (editFaq) {
-                await base44.entities.FAQ.update(editFaq.id, formData);
+                await entities.FAQ.update(editFaq.id, formData);
             } else {
-                await base44.entities.FAQ.create(formData);
+                await entities.FAQ.create(formData);
             }
             onSuccess();
             onOpenChange(false);

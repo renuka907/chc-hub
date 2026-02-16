@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,17 +29,17 @@ export default function FormTemplates() {
 
     const { data: templates = [], isLoading } = useQuery({
         queryKey: ['formTemplates'],
-        queryFn: () => base44.entities.FormTemplate.list('-updated_date', 100),
+        queryFn: () => entities.FormTemplate.list('-updated_at', 100),
     });
 
     const toggleFavoriteMutation = useMutation({
         mutationFn: ({ id, isFavorite }) => 
-            base44.entities.FormTemplate.update(id, { is_favorite: !isFavorite }),
+            entities.FormTemplate.update(id, { is_favorite: !isFavorite }),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['formTemplates'] })
     });
 
     const deleteMutation = useMutation({
-        mutationFn: (id) => base44.entities.FormTemplate.delete(id),
+        mutationFn: (id) => entities.FormTemplate.delete(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['formTemplates'] });
             setDeleteConfirm(null);
@@ -46,7 +48,7 @@ export default function FormTemplates() {
 
     const duplicateTemplate = async (template) => {
         try {
-            await base44.entities.FormTemplate.create({
+            await entities.FormTemplate.create({
                 ...template,
                 id: undefined,
                 template_name: `${template.template_name} (Copy)`,

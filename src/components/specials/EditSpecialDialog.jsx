@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,7 +41,7 @@ export default function EditSpecialDialog({ special, open, onOpenChange, onSave 
 
         setSaving(true);
         try {
-            await base44.entities.Special.update(special.id, formData);
+            await entities.Special.update(special.id, formData);
             onSave();
             onOpenChange(false);
         } catch (error) {

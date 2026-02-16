@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,14 +32,14 @@ export default function Reminders() {
 
     const { data: currentUser } = useQuery({
         queryKey: ['currentUser'],
-        queryFn: () => base44.auth.me(),
+        queryFn: async () => { const { data } = await supabase.auth.getUser(); return data?.user; },
     });
 
     const { data: reminders = [], isLoading } = useQuery({
         queryKey: ['reminders'],
         queryFn: async () => {
-            const user = await base44.auth.me();
-            const allReminders = await base44.entities.Reminder.list('-due_date', 200);
+            const user = await supabase.auth.getUser().then(r => r.data?.user);
+            const allReminders = await entities.Reminder.list('-due_date', 200);
             return allReminders.filter(r => 
                 r.created_by === user.email || r.assigned_to === user.email
             );
@@ -46,21 +48,21 @@ export default function Reminders() {
 
     const { data: teamMembers = [] } = useQuery({
         queryKey: ['teamMembers'],
-        queryFn: () => base44.entities.User.list(),
+        queryFn: () => entities.User.list(),
     });
 
 
 
     const toggleCompleteMutation = useMutation({
         mutationFn: ({ id, completed }) => 
-            base44.entities.Reminder.update(id, { completed }),
+            entities.Reminder.update(id, { completed }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['reminders'] });
         }
     });
 
     const deleteReminderMutation = useMutation({
-        mutationFn: (id) => base44.entities.Reminder.delete(id),
+        mutationFn: (id) => entities.Reminder.delete(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['reminders'] });
             setItemToDelete(null);
@@ -71,7 +73,7 @@ export default function Reminders() {
     const bulkDeleteMutation = useMutation({
         mutationFn: async () => {
             for (const id of selectedReminders) {
-                await base44.entities.Reminder.delete(id);
+                await entities.Reminder.delete(id);
             }
         },
         onSuccess: () => {
@@ -85,7 +87,7 @@ export default function Reminders() {
         mutationFn: async () => {
             for (const id of selectedReminders) {
                 const reminder = reminders.find(r => r.id === id);
-                await base44.entities.Reminder.update(id, { completed: !reminder?.completed });
+                await entities.Reminder.update(id, { completed: !reminder?.completed });
             }
         },
         onSuccess: () => {
@@ -155,13 +157,13 @@ export default function Reminders() {
         try {
             if (hours === null) {
                 // Un-snooze: clear the show_after field
-                await base44.entities.Reminder.update(reminder.id, { show_after: null });
+                await entities.Reminder.update(reminder.id, { show_after: null });
                 queryClient.invalidateQueries({ queryKey: ['reminders'] });
                 toast.info('Reminder un-snoozed');
             } else {
                 const now = new Date();
                 const showAfter = new Date(now.getTime() + hours * 60 * 60 * 1000);
-                await base44.entities.Reminder.update(reminder.id, { show_after: showAfter.toISOString() });
+                await entities.Reminder.update(reminder.id, { show_after: showAfter.toISOString() });
                 queryClient.invalidateQueries({ queryKey: ['reminders'] });
                 const timeLabel = hours < 24 ? `${hours} hour${hours > 1 ? 's' : ''}` : `${hours / 24} day${hours / 24 > 1 ? 's' : ''}`;
                 toast.info(`Reminder hidden for ${timeLabel}`);

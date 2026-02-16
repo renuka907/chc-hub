@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -42,12 +44,12 @@ export default function InventoryManagement() {
     const queryClient = useQueryClient();
 
     React.useEffect(() => {
-        base44.auth.me().then(user => setCurrentUser(user)).catch(() => {});
+        supabase.auth.getUser().then(({ data }) => { if (data?.user) setCurrentUser(data.user); });
     }, []);
 
     const { data: inventoryItems = [], isLoading } = useQuery({
         queryKey: ['inventoryItems'],
-        queryFn: () => base44.entities.InventoryItem.list('-updated_date', 500),
+        queryFn: () => entities.InventoryItem.list('-updated_at', 500),
         refetchInterval: 30000,
         refetchOnWindowFocus: false,
         retry: 1,
@@ -55,16 +57,16 @@ export default function InventoryManagement() {
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
-        queryFn: () => base44.entities.ClinicLocation.list(),
+        queryFn: () => entities.ClinicLocation.list(),
     });
 
     const { data: pricingItems = [] } = useQuery({
         queryKey: ['pricingItems'],
-        queryFn: () => base44.entities.PricingItem.list(),
+        queryFn: () => entities.PricingItem.list(),
     });
 
     const deleteMutation = useMutation({
-        mutationFn: (id) => base44.entities.InventoryItem.delete(id),
+        mutationFn: (id) => entities.InventoryItem.delete(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['inventoryItems'] });
             setDeleteConfirm(null);
@@ -72,14 +74,14 @@ export default function InventoryManagement() {
     });
 
     const archiveMutation = useMutation({
-        mutationFn: (id) => base44.entities.InventoryItem.update(id, { status: 'archived' }),
+        mutationFn: (id) => entities.InventoryItem.update(id, { status: 'archived' }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['inventoryItems'] });
         },
     });
 
     const unarchiveMutation = useMutation({
-        mutationFn: (id) => base44.entities.InventoryItem.update(id, { status: 'active' }),
+        mutationFn: (id) => entities.InventoryItem.update(id, { status: 'active' }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['inventoryItems'] });
         },
@@ -88,7 +90,7 @@ export default function InventoryManagement() {
     const bulkArchiveMutation = useMutation({
         mutationFn: async () => {
             for (const id of selectedItems) {
-                await base44.entities.InventoryItem.update(id, { status: 'archived' });
+                await entities.InventoryItem.update(id, { status: 'archived' });
             }
         },
         onSuccess: () => {
@@ -100,7 +102,7 @@ export default function InventoryManagement() {
     const bulkDeleteMutation = useMutation({
         mutationFn: async () => {
             for (const id of selectedItems) {
-                await base44.entities.InventoryItem.delete(id);
+                await entities.InventoryItem.delete(id);
             }
         },
         onSuccess: () => {
@@ -112,7 +114,7 @@ export default function InventoryManagement() {
     const bulkStatusMutation = useMutation({
         mutationFn: async (newStatus) => {
             for (const id of selectedItems) {
-                await base44.entities.InventoryItem.update(id, { status: newStatus });
+                await entities.InventoryItem.update(id, { status: newStatus });
             }
         },
         onSuccess: () => {

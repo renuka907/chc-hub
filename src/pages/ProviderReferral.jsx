@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -21,13 +23,13 @@ export default function ProviderReferral() {
 
     const { data: providers, isLoading } = useQuery({
         queryKey: ['providers'],
-        queryFn: () => base44.entities.Provider.filter({ status: 'active' }),
+        queryFn: () => entities.Provider.filter({ status: 'active' }),
         initialData: [],
     });
 
     const { data: locations } = useQuery({
         queryKey: ['clinicLocations'],
-        queryFn: () => base44.entities.ClinicLocation.list(),
+        queryFn: () => entities.ClinicLocation.list(),
         initialData: [],
     });
 

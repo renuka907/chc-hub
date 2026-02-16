@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +26,7 @@ export default function StaffCheckInPage() {
     const queryClient = useQueryClient();
 
     React.useEffect(() => {
-        base44.auth.me().then(user => {
+        supabase.auth.getUser().then(r => r.data?.user).then(user => {
             setCurrentUser(user);
             setCheckInForm(prev => ({ ...prev, staff_email: user.email, staff_name: user.full_name || user.email }));
         }).catch(() => {});
@@ -34,23 +36,23 @@ export default function StaffCheckInPage() {
 
     const { data: checkIns = [] } = useQuery({
         queryKey: ['checkIns', today],
-        queryFn: () => base44.entities.StaffCheckIn.filter({ date: today }),
+        queryFn: () => entities.StaffCheckIn.filter({ date: today }),
         refetchInterval: 30000,
     });
 
     const { data: schedules = [] } = useQuery({
         queryKey: ['injectionSchedules', today],
-        queryFn: () => base44.entities.InjectionSchedule.filter({ date: today }),
+        queryFn: () => entities.InjectionSchedule.filter({ date: today }),
         refetchInterval: 30000,
     });
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
-        queryFn: () => base44.entities.ClinicLocation.list(),
+        queryFn: () => entities.ClinicLocation.list(),
     });
 
     const checkInMutation = useMutation({
-        mutationFn: (data) => base44.entities.StaffCheckIn.create(data),
+        mutationFn: (data) => entities.StaffCheckIn.create(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['checkIns'] });
             setShowCheckInDialog(false);
@@ -59,7 +61,7 @@ export default function StaffCheckInPage() {
     });
 
     const checkOutMutation = useMutation({
-        mutationFn: (id) => base44.entities.StaffCheckIn.update(id, { check_out_time: new Date().toISOString() }),
+        mutationFn: (id) => entities.StaffCheckIn.update(id, { check_out_time: new Date().toISOString() }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['checkIns'] });
         },
@@ -67,8 +69,8 @@ export default function StaffCheckInPage() {
 
     const createScheduleMutation = useMutation({
         mutationFn: (data) => editingSchedule 
-            ? base44.entities.InjectionSchedule.update(editingSchedule.id, data)
-            : base44.entities.InjectionSchedule.create(data),
+            ? entities.InjectionSchedule.update(editingSchedule.id, data)
+            : entities.InjectionSchedule.create(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['injectionSchedules'] });
             setShowScheduleDialog(false);
@@ -78,7 +80,7 @@ export default function StaffCheckInPage() {
     });
 
     const deleteScheduleMutation = useMutation({
-        mutationFn: (id) => base44.entities.InjectionSchedule.delete(id),
+        mutationFn: (id) => entities.InjectionSchedule.delete(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['injectionSchedules'] });
             setDeleteConfirm(null);

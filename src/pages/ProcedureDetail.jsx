@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,14 +25,14 @@ export default function ProcedureDetail() {
 
     const { data: procedures = [], isLoading } = useQuery({
         queryKey: ['procedures'],
-        queryFn: () => base44.entities.Procedure.list(),
+        queryFn: () => entities.Procedure.list(),
     });
 
     const procedure = procedures.find(p => p.id === procedureId);
 
     const toggleFavoriteMutation = useMutation({
         mutationFn: () =>
-            base44.entities.Procedure.update(procedureId, { 
+            entities.Procedure.update(procedureId, { 
                 is_favorite: !procedure.is_favorite 
             }),
         onSuccess: () => {
@@ -40,7 +42,7 @@ export default function ProcedureDetail() {
     });
 
     const deleteMutation = useMutation({
-        mutationFn: () => base44.entities.Procedure.delete(procedureId),
+        mutationFn: () => entities.Procedure.delete(procedureId),
         onSuccess: () => {
             toast.success("Procedure deleted");
             window.location.href = createPageUrl("ProceduresManagement");

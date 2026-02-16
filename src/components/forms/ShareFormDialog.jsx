@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -28,7 +30,7 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
     const { data: sharedLinks = [], isLoading } = useQuery({
         queryKey: ['sharedLinks', entityType, entityId],
         queryFn: async () => {
-            const allLinks = await base44.entities.SharedFormLink.list();
+            const allLinks = await entities.SharedFormLink.list();
             return allLinks.filter(link => link.entity_type === entityType && link.entity_id === entityId);
         },
         enabled: open
@@ -46,7 +48,7 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
                 view_count: 0,
                 is_active: true
             };
-            return await base44.entities.SharedFormLink.create(linkData);
+            return await entities.SharedFormLink.create(linkData);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['sharedLinks'] });
@@ -60,7 +62,7 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
 
     const revokeLinkMutation = useMutation({
         mutationFn: async (id) => {
-            return await base44.entities.SharedFormLink.update(id, { is_active: false });
+            return await entities.SharedFormLink.update(id, { is_active: false });
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['sharedLinks'] });
@@ -71,7 +73,7 @@ export default function ShareFormDialog({ open, onOpenChange, entityType, entity
 
     const deleteLinkMutation = useMutation({
         mutationFn: async (id) => {
-            return await base44.entities.SharedFormLink.delete(id);
+            return await entities.SharedFormLink.delete(id);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['sharedLinks'] });

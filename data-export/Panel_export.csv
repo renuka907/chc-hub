@@ -1,0 +1,5 @@
+panel_name,description,status,is_favorite,id,created_date,updated_date,created_by_id,created_by,is_sample
+"Male HRT-Follow Up","","active","false","696dc6fb050a56177aa3e1c5","2026-01-19T05:54:03.634000","2026-01-19T05:54:03.634000","695939a556b8082002a35a69","renukajackson1@gmail.com","false"
+"Male HRT-Initial","","active","false","696dc6ebd41b88f9922e0cf8","2026-01-19T05:53:47.778000","2026-01-19T05:53:47.778000","695939a556b8082002a35a69","renukajackson1@gmail.com","false"
+"Female HRT-Follow Up","","active","false","696dbcd6215a9d214430f77e","2026-01-19T05:10:46.298000","2026-01-19T05:10:46.298000","695939a556b8082002a35a69","renukajackson1@gmail.com","false"
+"Female HRT-Initial","","active","false","696dbcbaf55a0485a07b47aa","2026-01-19T05:10:18.114000","2026-01-19T05:10:18.114000","695939a556b8082002a35a69","renukajackson1@gmail.com","false"

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -36,7 +38,7 @@ export default function ViewSharedForm() {
         queryFn: async () => {
             console.log('=== FETCHING SHARED LINK ===');
             console.log('Token:', token);
-            const allLinks = await base44.asServiceRole.entities.SharedFormLink.list();
+            const allLinks = await entities.SharedFormLink.list();
             console.log('All shared links:', allLinks.length, allLinks);
             const found = allLinks.find(link => link.share_token === token);
             console.log('Match found:', found);
@@ -52,17 +54,17 @@ export default function ViewSharedForm() {
             if (!sharedLink) return null;
             console.log('Fetching content for:', sharedLink.entity_type, sharedLink.entity_id);
             if (sharedLink.entity_type === "ConsentForm") {
-                const forms = await base44.asServiceRole.entities.ConsentForm.list();
+                const forms = await entities.ConsentForm.list();
                 const found = forms.find(f => f.id === sharedLink.entity_id);
                 console.log('ConsentForm found:', found);
                 return found;
             } else if (sharedLink.entity_type === "AftercareInstruction") {
-                const instructions = await base44.asServiceRole.entities.AftercareInstruction.list();
+                const instructions = await entities.AftercareInstruction.list();
                 const found = instructions.find(i => i.id === sharedLink.entity_id);
                 console.log('AftercareInstruction found:', found);
                 return found;
             } else if (sharedLink.entity_type === "Quote") {
-                const quotes = await base44.asServiceRole.entities.Quote.list();
+                const quotes = await entities.Quote.list();
                 const found = quotes.find(q => q.id === sharedLink.entity_id);
                 console.log('Quote found:', found);
                 return found;
@@ -74,14 +76,14 @@ export default function ViewSharedForm() {
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
-        queryFn: () => base44.asServiceRole.entities.ClinicLocation.list(),
+        queryFn: () => entities.ClinicLocation.list(),
         enabled: !!sharedLink && sharedLink.entity_type === "Quote"
     });
 
     const incrementViewMutation = useMutation({
         mutationFn: async (linkId) => {
             const currentCount = sharedLink.view_count || 0;
-            await base44.asServiceRole.entities.SharedFormLink.update(linkId, {
+            await entities.SharedFormLink.update(linkId, {
                 view_count: currentCount + 1
             });
         }

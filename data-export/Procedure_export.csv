@@ -1,0 +1,21 @@
+procedure_name,category,pre_procedure_prep,patient_education,required_supplies,required_tools,procedure_steps,post_procedure_notes,estimated_time,related_pricing_item_ids,related_aftercare_id,notes,is_favorite,id,created_date,updated_date,created_by_id,created_by,is_sample
+"Juliet/V-Lase Laser","Laser","<p>Can expect discharge, do not schedule if discharge will be an issue before an event</p><p>Remove any devices such as vaginal estrogen rings prior to procedure</p>","<p>Reassure that the procedure is generally painless, with most patients experiencing minimal discomfort.</p><p>Procedure will feel like a tapping with warmth sensation</p>","Gloves
+lubricant 
+blue chuck 
+4 x 4 gauze
+pad
+wipes
+1 valtrex
+water 
+Juliet laser hand piece 
+drape 
+
+","- **Prepare the Juliet Laser Device:** Verify that the Juliet laser is properly calibrated and functioning. Attach the appropriate handpiece for vaginal treatments. ","<ol><li>Allow patient to use the restroom before procedure</li><li>Sign consent forms</li><li>Give 1 valtrex</li><li>Allow patient to get undressed from the waste down</li><li>Offer blanket if room is cold</li><li>Make sure Laser is on, foot pedal is near provider</li><li>Assist during the laser and mark starting and end measurements on the treatment record</li><li>Once treatment is completed then carefully remove Juliet laser hand piece and carefully sanitize it.</li></ol>","<ul><li>Offer pad and wipes</li><li>Complete treatment record</li><li>Give aftercare instructions</li><li>Schedule next laser in 8-12 weeks</li></ul>","30","","","","false","696de0a10d4ac2b719a4b849","2026-01-19T07:43:29.709000","2026-01-19T07:43:29.709000","695939a556b8082002a35a69","renukajackson1@gmail.com","false"
+"Blood Draw","Lab","<p>Nothing to eat or drink except for plenty of water if labs are fasting. Come well hydrated.</p>","<p>Explain that the blood draw is necessary for laboratory tests to assess health status or diagnose conditions. Always ask the patient which arm they use for blood draws and how they do with blood draws, ex: do you pass out everytime?</p>","Gloves
+tourniquet
+vacutainer
+needle
+gauze
+alcohol prep
+bandaid or coban
+tubes","Lab Tubes","<p><br></p><ol><li>Wash hands,</li><li>put on gloves,</li><li>verify pt name and dob.</li></ol>","<p><br></p><ol><li>Apply pressure to stop bleeding</li><li>Document blood draw site </li><li>Do not use ""Network Management"" as the ordering provider on the lab order form </li></ol>","15-30 minutes","","","","false","695b49b5570047f4647f597e","2026-01-05T05:18:45.616000","2026-01-06T05:39:17.029000","695939a556b8082002a35a69","renukajackson1@gmail.com","false"

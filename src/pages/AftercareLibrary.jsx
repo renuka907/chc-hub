@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -41,12 +43,12 @@ export default function AftercareLibrary() {
 
     const { data: aftercareInstructions = [] } = useQuery({
         queryKey: ['aftercareInstructions'],
-        queryFn: () => base44.entities.AftercareInstruction.list('-updated_date', 100),
+        queryFn: () => entities.AftercareInstruction.list('-updated_at', 100),
     });
 
     const { data: consentForms = [] } = useQuery({
         queryKey: ['consentForms'],
-        queryFn: () => base44.entities.ConsentForm.list('-updated_date', 100),
+        queryFn: () => entities.ConsentForm.list('-updated_at', 100),
     });
 
     const handleSuccess = () => {
@@ -55,12 +57,12 @@ export default function AftercareLibrary() {
     };
 
     const toggleAftercareFavorite = async (id, currentValue) => {
-        await base44.entities.AftercareInstruction.update(id, { is_favorite: !currentValue });
+        await entities.AftercareInstruction.update(id, { is_favorite: !currentValue });
         queryClient.invalidateQueries({ queryKey: ['aftercareInstructions'] });
     };
 
     const toggleFormFavorite = async (id, currentValue) => {
-        await base44.entities.ConsentForm.update(id, { is_favorite: !currentValue });
+        await entities.ConsentForm.update(id, { is_favorite: !currentValue });
         queryClient.invalidateQueries({ queryKey: ['consentForms'] });
     };
 
@@ -78,7 +80,7 @@ export default function AftercareLibrary() {
         mutationFn: async () => {
             const entityName = activeTab === "consent" ? "ConsentForm" : "AftercareInstruction";
             for (const id of selectedItems) {
-                await base44.entities[entityName].delete(id);
+                await entities[entityName].delete(id);
             }
         },
         onSuccess: () => {
@@ -92,7 +94,7 @@ export default function AftercareLibrary() {
     const handleBulkTag = async (tagsJson) => {
         const entityName = activeTab === "consent" ? "ConsentForm" : "AftercareInstruction";
         for (const id of selectedItems) {
-            await base44.entities[entityName].update(id, { tags: tagsJson });
+            await entities[entityName].update(id, { tags: tagsJson });
         }
         queryClient.invalidateQueries({ queryKey: ['aftercareInstructions'] });
         queryClient.invalidateQueries({ queryKey: ['consentForms'] });

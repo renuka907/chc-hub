@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -16,22 +18,22 @@ export default function AISuggestTemplates({ open, onOpenChange, templateType })
     const { data: existingForms = [] } = useQuery({
         queryKey: [templateType === "ConsentForm" ? 'consentForms' : 'aftercareInstructions'],
         queryFn: () => templateType === "ConsentForm" 
-            ? base44.entities.ConsentForm.list() 
-            : base44.entities.AftercareInstruction.list(),
+            ? entities.ConsentForm.list() 
+            : entities.AftercareInstruction.list(),
         enabled: open
     });
 
     const { data: existingTemplates = [] } = useQuery({
         queryKey: ['formTemplates', templateType],
         queryFn: async () => {
-            const all = await base44.entities.FormTemplate.list();
+            const all = await entities.FormTemplate.list();
             return all.filter(t => t.template_type === templateType);
         },
         enabled: open
     });
 
     const createTemplateMutation = useMutation({
-        mutationFn: (templateData) => base44.entities.FormTemplate.create(templateData),
+        mutationFn: (templateData) => entities.FormTemplate.create(templateData),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['formTemplates'] });
             toast.success("Template created successfully");
@@ -54,7 +56,7 @@ export default function AISuggestTemplates({ open, onOpenChange, templateType })
 
             const existingTemplateNames = existingTemplates.map(t => t.template_name);
 
-            const result = await base44.integrations.Core.InvokeLLM({
+            const result = await invokeLLM({
                 prompt: `Analyze these ${templateType === "ConsentForm" ? "consent forms" : "aftercare instructions"} and suggest 3-5 useful templates that could be created to make future form creation easier.
 
 Existing forms:
@@ -99,7 +101,7 @@ Focus on templates that would cover common use cases or fill gaps in the existin
     const createTemplate = async (suggestion) => {
         setIsAnalyzing(true);
         try {
-            const result = await base44.integrations.Core.InvokeLLM({
+            const result = await invokeLLM({
                 prompt: `Create a detailed ${templateType === "ConsentForm" ? "consent form" : "aftercare instruction"} template for: ${suggestion.template_name}
 
 Category: ${suggestion.category}

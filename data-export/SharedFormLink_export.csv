@@ -1,0 +1,3 @@
+entity_type,entity_id,share_token,expires_at,password,view_count,is_active,id,created_date,updated_date,created_by_id,created_by,is_sample
+"AftercareInstruction","695b0218e0c9d47610e8fcdf","mhx4fapbdqktdrbmryfw6b","","","0","true","695b3ecedc3ed1897a3686dd","2026-01-05T04:32:14.508000","2026-01-05T04:32:14.508000","695939a556b8082002a35a69","renukajackson1@gmail.com","false"
+"Quote","695afaf4dbcf327962e9b87d","jyohghl3u8gz4r3tmtp1m","","","0","true","695afb0ce29ad0f3ae5f246c","2026-01-04T23:43:08.179000","2026-01-04T23:43:08.179000","695939a556b8082002a35a69","renukajackson1@gmail.com","false"

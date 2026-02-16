@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,23 +19,23 @@ export default function InventoryUsageTracking() {
     const queryClient = useQueryClient();
 
     React.useEffect(() => {
-        base44.auth.me().then(user => setCurrentUser(user)).catch(() => {});
+        supabase.auth.getUser().then(({ data }) => { if (data?.user) setCurrentUser(data.user); });
     }, []);
 
     const { data: usageLogs = [] } = useQuery({
         queryKey: ['usageLogs'],
-        queryFn: () => base44.entities.UsageLog.list('-usage_date', 500),
+        queryFn: () => entities.UsageLog.list('-usage_date', 500),
         refetchInterval: 30000,
     });
 
     const { data: inventoryItems = [] } = useQuery({
         queryKey: ['inventoryItems'],
-        queryFn: () => base44.entities.InventoryItem.list('', 500),
+        queryFn: () => entities.InventoryItem.list('', 500),
     });
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
-        queryFn: () => base44.entities.ClinicLocation.list(),
+        queryFn: () => entities.ClinicLocation.list(),
     });
 
     const canRecord = currentUser?.role === 'admin' || currentUser?.role === 'manager' || currentUser?.role === 'staff';

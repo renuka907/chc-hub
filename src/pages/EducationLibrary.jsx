@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,7 +26,7 @@ export default function EducationLibrary() {
 
     const { data: topics = [], isLoading } = useQuery({
         queryKey: ['educationTopics'],
-        queryFn: () => base44.entities.EducationTopic.list('-updated_date', 100),
+        queryFn: () => entities.EducationTopic.list('-updated_at', 100),
     });
 
     const handleSuccess = () => {
@@ -34,7 +36,7 @@ export default function EducationLibrary() {
     const categories = ["all", "Gynecology", "Hormone Replacement Therapy", "Mens Health", "Medication Education"];
 
     const toggleFavorite = async (topicId, currentValue) => {
-        await base44.entities.EducationTopic.update(topicId, { is_favorite: !currentValue });
+        await entities.EducationTopic.update(topicId, { is_favorite: !currentValue });
         queryClient.invalidateQueries({ queryKey: ['educationTopics'] });
     };
 

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     Dialog,
@@ -47,7 +49,7 @@ export default function CategoryManagement({ open, onOpenChange }) {
 
     const { data: pricingItems = [] } = useQuery({
         queryKey: ['pricingItems'],
-        queryFn: () => base44.entities.PricingItem.list('-updated_date', 500),
+        queryFn: () => entities.PricingItem.list('-updated_at', 500),
     });
 
     // Get unique categories
@@ -96,7 +98,7 @@ export default function CategoryManagement({ open, onOpenChange }) {
         }
         
         // Create a placeholder item with the new category to add it to the system
-        await base44.entities.PricingItem.create({
+        await entities.PricingItem.create({
             name: `_category_${catName}`,
             item_type: "Product",
             categories: JSON.stringify([catName]),
@@ -138,9 +140,9 @@ export default function CategoryManagement({ open, onOpenChange }) {
             
             // If this is a placeholder category item and now has no categories, delete it
             if (item.name.startsWith('_category_') && updatedCats.length === 0) {
-                await base44.entities.PricingItem.delete(item.id);
+                await entities.PricingItem.delete(item.id);
             } else {
-                await base44.entities.PricingItem.update(item.id, { 
+                await entities.PricingItem.update(item.id, { 
                     categories: JSON.stringify(updatedCats) 
                 });
             }

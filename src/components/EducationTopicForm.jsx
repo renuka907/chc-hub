@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,7 +43,7 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
 
         setIsGenerating(true);
         try {
-            const result = await base44.integrations.Core.InvokeLLM({
+            const result = await invokeLLM({
                 prompt: `Create comprehensive patient education content about "${formData.title}" in the ${formData.category} category. 
 
                 IMPORTANT: Use bullet points instead of long paragraphs. Structure as HTML:
@@ -94,7 +96,7 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
 
         setIsGeneratingImage(true);
         try {
-            const result = await base44.integrations.Core.GenerateImage({
+            const result = await generateImage({
                 prompt: `Medical illustration for patient education about ${formData.title}. Professional, clean, educational style. Appropriate for a medical clinic. Accurate anatomy if relevant.`
             });
             setFormData({ ...formData, image_url: result.url });
@@ -106,7 +108,7 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
 
     const loadTemplates = async () => {
         try {
-            const allTopics = await base44.entities.EducationTopic.list();
+            const allTopics = await entities.EducationTopic.list();
             const byCategory = allTopics.filter(t => t.category === formData.category);
             setTemplates(byCategory.slice(0, 5));
             setShowTemplates(true);
@@ -131,7 +133,7 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
 
         setIsUploading(true);
         try {
-            const result = await base44.integrations.Core.UploadFile({ file });
+            const result = await uploadFile(file);
             setFormData({ ...formData, image_url: result.file_url });
         } catch (error) {
             alert('Failed to upload image. Please try again.');
@@ -158,18 +160,18 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                     };
                     
                     // Create new version
-                    await base44.entities.EducationTopic.create(newVersion);
+                    await entities.EducationTopic.create(newVersion);
                     
                     // Update the original topic to mark it as having a newer version
-                    await base44.entities.EducationTopic.update(editTopic.id, {
+                    await entities.EducationTopic.update(editTopic.id, {
                         is_favorite: false // Remove favorite from old version
                     });
                 } else {
                     // Update existing record in place
-                    await base44.entities.EducationTopic.update(editTopic.id, formData);
+                    await entities.EducationTopic.update(editTopic.id, formData);
                 }
             } else {
-                await base44.entities.EducationTopic.create({
+                await entities.EducationTopic.create({
                     ...formData,
                     version: "1.0",
                     change_summary: "Initial version"

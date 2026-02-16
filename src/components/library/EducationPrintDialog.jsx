@@ -8,7 +8,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import EducationTopicForm from "@/components/EducationTopicForm";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import jsPDF from "jspdf";
 
 export default function EducationPrintDialog({ open, onOpenChange, topic, onSuccess }) {
@@ -29,7 +31,7 @@ export default function EducationPrintDialog({ open, onOpenChange, topic, onSucc
 
     const { data: savedTemplates = [] } = useQuery({
         queryKey: ['print-templates'],
-        queryFn: () => base44.entities.PrintTemplate.list()
+        queryFn: () => entities.PrintTemplate.list()
     });
 
     React.useEffect(() => {
@@ -56,7 +58,7 @@ export default function EducationPrintDialog({ open, onOpenChange, topic, onSucc
             return;
         }
         try {
-            await base44.entities.PrintTemplate.create({
+            await entities.PrintTemplate.create({
                 template_name: templateName,
                 template_type: printTemplate,
                 custom_header: customHeader,
@@ -105,7 +107,7 @@ export default function EducationPrintDialog({ open, onOpenChange, topic, onSucc
             return;
         }
         try {
-            await base44.entities.Reminder.create({
+            await entities.Reminder.create({
                 title: `Print: ${topic.title}`,
                 description: `Scheduled print for education topic: ${topic.title}`,
                 due_date: new Date(scheduleDate).toISOString(),

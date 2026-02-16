@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,14 +21,14 @@ export default function AdminProfile() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const currentUser = await base44.auth.me();
+                const currentUser = await supabase.auth.getUser().then(r => r.data?.user);
                 if (currentUser) {
                     setUser(currentUser);
                     setFormData({
                         full_name: currentUser.full_name || "",
                     });
                 } else {
-                    base44.auth.redirectToLogin();
+                    navigateToLogin();
                 }
             } catch (error) {
                 toast.error("Failed to load profile");
@@ -50,7 +52,7 @@ export default function AdminProfile() {
     const handleSave = async () => {
         setIsSaving(true);
         try {
-            await base44.auth.updateMe({
+            await supabase.auth.updateUser({
                 full_name: formData.full_name,
             });
             setUser(prev => ({

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import {
     Dialog,
@@ -68,7 +70,7 @@ export default function DiscountForm({ open, onOpenChange, onSuccess, editDiscou
 
     const { data: pricingItems = [] } = useQuery({
         queryKey: ['pricingItems'],
-        queryFn: () => base44.entities.PricingItem.list('-updated_date', 500),
+        queryFn: () => entities.PricingItem.list('-updated_at', 500),
     });
 
     React.useEffect(() => {
@@ -128,9 +130,9 @@ export default function DiscountForm({ open, onOpenChange, onSuccess, editDiscou
         };
 
         if (editDiscount) {
-            await base44.entities.Discount.update(editDiscount.id, dataToSave);
+            await entities.Discount.update(editDiscount.id, dataToSave);
         } else {
-            await base44.entities.Discount.create(dataToSave);
+            await entities.Discount.create(dataToSave);
         }
 
         setIsSaving(false);

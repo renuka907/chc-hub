@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,12 +24,12 @@ export default function ProceduresManagement() {
 
     const { data: procedures = [], isLoading } = useQuery({
         queryKey: ['procedures'],
-        queryFn: () => base44.entities.Procedure.list(),
+        queryFn: () => entities.Procedure.list(),
     });
 
     const toggleFavoriteMutation = useMutation({
         mutationFn: ({ id, isFavorite }) =>
-            base44.entities.Procedure.update(id, { is_favorite: !isFavorite }),
+            entities.Procedure.update(id, { is_favorite: !isFavorite }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['procedures'] });
         },

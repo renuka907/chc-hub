@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,12 +17,12 @@ export default function QuotesManagement() {
     
     const { data: quotes = [], isLoading } = useQuery({
         queryKey: ['quotes'],
-        queryFn: () => base44.entities.Quote.list('-created_date', 200),
+        queryFn: () => entities.Quote.list('-created_at', 200),
     });
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
-        queryFn: () => base44.entities.ClinicLocation.list(),
+        queryFn: () => entities.ClinicLocation.list(),
     });
 
     const filteredQuotes = quotes.filter(quote => {

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -57,7 +59,7 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
 
         setIsGenerating(true);
         try {
-            const result = await base44.integrations.Core.InvokeLLM({
+            const result = await invokeLLM({
                 prompt: `Create detailed aftercare instructions for "${formData.procedure_name}" in the ${formData.category} category. Include:
                 1. Step-by-step aftercare instructions
                 2. Expected recovery duration
@@ -95,7 +97,7 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
 
         setIsUploading(true);
         try {
-            const result = await base44.integrations.Core.UploadFile({ file });
+            const result = await uploadFile(file);
             setFormData({ ...formData, image_url: result.file_url });
         } catch (error) {
             alert('Failed to upload image. Please try again.');
@@ -109,7 +111,7 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
 
         setIsUploadingDoc(true);
         try {
-            const result = await base44.integrations.Core.UploadFile({ file });
+            const result = await uploadFile(file);
             setFormData({ ...formData, document_url: result.file_url });
         } catch (error) {
             alert('Failed to upload document. Please try again.');
@@ -126,9 +128,9 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
         setIsSaving(true);
         try {
             if (editInstruction) {
-                await base44.entities.AftercareInstruction.update(editInstruction.id, formData);
+                await entities.AftercareInstruction.update(editInstruction.id, formData);
             } else {
-                await base44.entities.AftercareInstruction.create(formData);
+                await entities.AftercareInstruction.create(formData);
             }
             onSuccess();
             onOpenChange(false);

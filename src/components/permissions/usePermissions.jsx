@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 
 // Permission definitions by role
 const PERMISSIONS = {
@@ -62,7 +64,7 @@ export function usePermissions() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        base44.auth.me()
+        supabase.auth.getUser().then(r => r.data?.user)
             .then(currentUser => {
                 setUser(currentUser);
                 setIsLoading(false);

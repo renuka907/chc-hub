@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -90,7 +92,7 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
 
 Format the content in HTML with proper structure, bold headings, and professional medical terminology. Include patient information fields at the top (name, DOB, date). Make it legally appropriate and easy to understand.`;
 
-            const result = await base44.integrations.Core.InvokeLLM({
+            const result = await invokeLLM({
                 prompt: prompt,
                 response_json_schema: {
                     type: "object",
@@ -117,7 +119,7 @@ Format the content in HTML with proper structure, bold headings, and professiona
 
         setIsUploading(true);
         try {
-            const result = await base44.integrations.Core.UploadFile({ file });
+            const result = await uploadFile(file);
             setFormData({ ...formData, image_url: result.file_url });
         } catch (error) {
             alert('Failed to upload image. Please try again.');
@@ -131,7 +133,7 @@ Format the content in HTML with proper structure, bold headings, and professiona
 
         setIsUploadingDoc(true);
         try {
-            const result = await base44.integrations.Core.UploadFile({ file });
+            const result = await uploadFile(file);
             setFormData({ ...formData, document_url: result.file_url });
         } catch (error) {
             alert('Failed to upload document. Please try again.');
@@ -148,9 +150,9 @@ Format the content in HTML with proper structure, bold headings, and professiona
         setIsSaving(true);
         try {
             if (editForm) {
-                await base44.entities.ConsentForm.update(editForm.id, formData);
+                await entities.ConsentForm.update(editForm.id, formData);
             } else {
-                await base44.entities.ConsentForm.create(formData);
+                await entities.ConsentForm.create(formData);
             }
             onSuccess();
             onOpenChange(false);
@@ -184,7 +186,7 @@ Format the content in HTML with proper structure, bold headings, and professiona
 
         setIsGenerating(true);
         try {
-            const result = await base44.integrations.Core.InvokeLLM({
+            const result = await invokeLLM({
                 prompt: `Analyze and summarize this medical consent form. Extract:
 1. Main purpose/procedure
 2. Key risks mentioned
@@ -220,7 +222,7 @@ Provide a clear, concise summary in professional format.`,
 
         setIsGenerating(true);
         try {
-            const result = await base44.integrations.Core.InvokeLLM({
+            const result = await invokeLLM({
                 prompt: `Extract key information from this medical consent form and structure it as JSON:
 
 Form content:

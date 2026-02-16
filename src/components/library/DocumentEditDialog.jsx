@@ -6,7 +6,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function DocumentEditDialog({ open, onOpenChange, document: doc, onSuccess }) {
     const [formData, setFormData] = React.useState({
@@ -47,7 +49,7 @@ export default function DocumentEditDialog({ open, onOpenChange, document: doc, 
                 const newUrls = [];
                 
                 for (const file of replacementFiles) {
-                    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                    const { file_url } = await uploadFile(file);
                     newUrls.push(file_url);
                 }
                 
@@ -57,7 +59,7 @@ export default function DocumentEditDialog({ open, onOpenChange, document: doc, 
                 const existingUrls = doc.file_urls ? JSON.parse(doc.file_urls) : [doc.document_url];
                 
                 for (const file of additionalFiles) {
-                    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                    const { file_url } = await uploadFile(file);
                     existingUrls.push(file_url);
                 }
                 
@@ -68,7 +70,7 @@ export default function DocumentEditDialog({ open, onOpenChange, document: doc, 
                 updateData.tags = JSON.stringify(formData.tags.split(',').map(t => t.trim()).filter(t => t));
             }
 
-            await base44.entities.LibraryDocument.update(doc.id, updateData);
+            await entities.LibraryDocument.update(doc.id, updateData);
             
             onSuccess?.();
             onOpenChange(false);

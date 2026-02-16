@@ -5,7 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Eye } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function VersionHistory({ open, onOpenChange, currentItem, entityName, onViewVersion }) {
     const { data: versions = [] } = useQuery({
@@ -14,7 +16,7 @@ export default function VersionHistory({ open, onOpenChange, currentItem, entity
             if (!currentItem) return [];
             
             // Fetch all items and filter those with this parent_id or this item itself
-            const allItems = await base44.entities[entityName].list('-created_date', 500);
+            const allItems = await entities[entityName].list('-created_at', 500);
             const versionChain = [];
             
             // Add current version

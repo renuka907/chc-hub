@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -95,7 +97,7 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
         
         setSearching(true);
         try {
-            const { data } = await base44.functions.invoke('searchNPIRegistry', { searchTerm });
+            const { data } = await /* TODO: Implement searchNPIRegistry as Supabase Edge Function */ Promise.resolve({ data: null });
             setSearchResults(data.results || []);
         } catch (error) {
             console.error('Search failed:', error);
@@ -193,9 +195,9 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
             };
 
             if (isNew) {
-                await base44.entities.Provider.create(dataToSave);
+                await entities.Provider.create(dataToSave);
             } else {
-                await base44.entities.Provider.update(provider.id, dataToSave);
+                await entities.Provider.update(provider.id, dataToSave);
             }
             onSave();
             onOpenChange(false);

@@ -1,5 +1,7 @@
 import React from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,16 +19,16 @@ export default function PanelManager({ isOpen, onClose }) {
 
     const { data: panels = [] } = useQuery({
         queryKey: ['panels'],
-        queryFn: () => base44.entities.Panel.list('-updated_date'),
+        queryFn: () => entities.Panel.list('-updated_at'),
     });
 
     const { data: allTests = [] } = useQuery({
         queryKey: ['labTests'],
-        queryFn: () => base44.entities.LabTestInfo.list(),
+        queryFn: () => entities.LabTestInfo.list(),
     });
 
     const createPanelMutation = useMutation({
-        mutationFn: (data) => base44.entities.Panel.create(data),
+        mutationFn: (data) => entities.Panel.create(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['panels'] });
             setFormData({ panel_name: "", description: "" });
@@ -35,7 +37,7 @@ export default function PanelManager({ isOpen, onClose }) {
     });
 
     const updatePanelMutation = useMutation({
-        mutationFn: ({ id, data }) => base44.entities.Panel.update(id, data),
+        mutationFn: ({ id, data }) => entities.Panel.update(id, data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['panels'] });
             setEditingPanel(null);
@@ -45,7 +47,7 @@ export default function PanelManager({ isOpen, onClose }) {
     });
 
     const deletePanelMutation = useMutation({
-        mutationFn: (id) => base44.entities.Panel.delete(id),
+        mutationFn: (id) => entities.Panel.delete(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['panels'] });
             toast.success("Panel deleted");

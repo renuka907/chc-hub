@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     Dialog,
@@ -25,12 +27,12 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
-        queryFn: () => base44.entities.ClinicLocation.list(),
+        queryFn: () => entities.ClinicLocation.list(),
     });
 
     const { data: allItems = [] } = useQuery({
         queryKey: ['inventoryItems'],
-        queryFn: () => base44.entities.InventoryItem.list('-updated_date', 500),
+        queryFn: () => entities.InventoryItem.list('-updated_at', 500),
     });
 
     // Filter active items for selected location
@@ -93,7 +95,7 @@ export default function InventoryAuditForm({ open, onOpenChange, onSuccess }) {
                     if (expiryDates[item.id] !== (item.expiry_date || '')) {
                         updateData.expiry_date = expiryDates[item.id] || undefined;
                     }
-                    return base44.entities.InventoryItem.update(item.id, updateData);
+                    return entities.InventoryItem.update(item.id, updateData);
                 });
 
             await Promise.all(updates);

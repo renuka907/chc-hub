@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,11 +35,11 @@ export default function DocumentUploadDialog({ open, onOpenChange, onSuccess }) 
             const uploadedUrls = [];
             
             for (const file of form.files) {
-                const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                const { file_url } = await uploadFile(file);
                 uploadedUrls.push(file_url);
             }
             
-            await base44.entities.LibraryDocument.create({
+            await entities.LibraryDocument.create({
                 document_name: form.document_name,
                 document_url: uploadedUrls[0],
                 file_urls: JSON.stringify(uploadedUrls),

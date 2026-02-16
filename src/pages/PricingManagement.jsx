@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -32,17 +34,17 @@ export default function PricingManagement() {
     const queryClient = useQueryClient();
 
     React.useEffect(() => {
-        base44.auth.me().then(user => setCurrentUser(user)).catch(() => {});
+        supabase.auth.getUser().then(({ data }) => { if (data?.user) setCurrentUser(data.user); });
     }, []);
 
     const { data: pricingItems = [], isLoading } = useQuery({
         queryKey: ['pricingItems'],
-        queryFn: () => base44.entities.PricingItem.filter({}),
+        queryFn: () => entities.PricingItem.filter({}),
     });
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
-        queryFn: () => base44.entities.ClinicLocation.list(),
+        queryFn: () => entities.ClinicLocation.list(),
     });
 
     // Get unique categories from existing pricing items
@@ -66,14 +68,14 @@ export default function PricingManagement() {
 
     const toggleFavoriteMutation = useMutation({
         mutationFn: ({ id, currentValue }) => 
-            base44.entities.PricingItem.update(id, { is_favorite: !currentValue }),
+            entities.PricingItem.update(id, { is_favorite: !currentValue }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['pricingItems'] });
         },
     });
 
     const deleteMutation = useMutation({
-        mutationFn: (id) => base44.entities.PricingItem.delete(id),
+        mutationFn: (id) => entities.PricingItem.delete(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['pricingItems'] });
             setDeleteConfirm(null);

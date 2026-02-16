@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,23 +23,23 @@ export default function Messaging() {
 
     const { data: user } = useQuery({
         queryKey: ['currentUser'],
-        queryFn: () => base44.auth.me(),
+        queryFn: async () => { const { data } = await supabase.auth.getUser(); return data?.user; },
     });
 
     const { data: messages = [] } = useQuery({
         queryKey: ['messages'],
-        queryFn: () => base44.entities.Message.list('-created_date', 100),
+        queryFn: () => entities.Message.list('-created_at', 100),
         refetchInterval: 2000, // Poll every 2 seconds for real-time updates
     });
 
     const { data: allUsers = [] } = useQuery({
         queryKey: ['allUsers'],
-        queryFn: () => base44.entities.User.list(),
+        queryFn: () => entities.User.list(),
     });
 
     const sendMessageMutation = useMutation({
         mutationFn: async (messageData) => {
-            await base44.entities.Message.create(messageData);
+            await entities.Message.create(messageData);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['messages'] });

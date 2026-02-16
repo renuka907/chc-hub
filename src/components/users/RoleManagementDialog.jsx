@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -17,7 +19,7 @@ export default function RoleManagementDialog({ open, onOpenChange, user: selecte
 
     const updateRoleMutation = useMutation({
         mutationFn: async () => {
-            await base44.entities.User.update(selectedUser.id, { role: selectedRole });
+            await entities.User.update(selectedUser.id, { role: selectedRole });
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['users'] });

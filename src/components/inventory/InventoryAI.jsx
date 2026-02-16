@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -52,7 +54,7 @@ export default function InventoryAI({ inventoryItems, locations }) {
 
             const locationName = selectedLocation === "all" ? "all locations" : (locations.find(l => l.id === selectedLocation)?.name || "selected location");
 
-            const response = await base44.integrations.Core.InvokeLLM({
+            const response = await invokeLLM({
                 prompt: `You are an inventory management AI assistant. Answer questions about inventory levels, locations, reorder needs, and provide recommendations.
 
 Current Location Filter: ${locationName}
@@ -103,7 +105,7 @@ CRITICAL INSTRUCTION - YOU MUST FOLLOW THIS:
             // Fetch usage data for insights
             let usageInsights = "";
             try {
-                const usageLogs = await base44.entities.UsageLog.list('-usage_date', 100);
+                const usageLogs = await entities.UsageLog.list('-usage_date', 100);
                 const thirtyDaysAgo = new Date();
                 thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
                 
@@ -145,7 +147,7 @@ ${wasteRecords.length > 0 ? `Top Waste Items: ${wasteRecords.map(r => r.item_nam
                 usageInsights = "\n(Usage data unavailable)";
             }
 
-            const response = await base44.integrations.Core.InvokeLLM({
+            const response = await invokeLLM({
                 prompt: `You are an inventory management expert. Analyze this inventory data and provide actionable recommendations:
 
 Low Stock Items (${lowStock.length}):

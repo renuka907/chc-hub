@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -30,7 +32,7 @@ export default function ConsentFormDetail() {
 
     const { data: forms = [] } = useQuery({
         queryKey: ['consentForms'],
-        queryFn: () => base44.entities.ConsentForm.list(),
+        queryFn: () => entities.ConsentForm.list(),
     });
 
     const form = forms.find(f => f.id === formId);
@@ -41,12 +43,12 @@ export default function ConsentFormDetail() {
     };
 
     const toggleFavorite = async () => {
-        await base44.entities.ConsentForm.update(form.id, { is_favorite: !form.is_favorite });
+        await entities.ConsentForm.update(form.id, { is_favorite: !form.is_favorite });
         queryClient.invalidateQueries({ queryKey: ['consentForms'] });
     };
 
     const deleteMutation = useMutation({
-        mutationFn: (id) => base44.entities.ConsentForm.delete(id),
+        mutationFn: (id) => entities.ConsentForm.delete(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['consentForms'] });
             navigate(createPageUrl("Library"));
@@ -67,14 +69,14 @@ export default function ConsentFormDetail() {
             parent_id: form.id,
             effective_date: new Date().toISOString().split('T')[0]
         };
-        const created = await base44.entities.ConsentForm.create(newForm);
+        const created = await entities.ConsentForm.create(newForm);
         queryClient.invalidateQueries({ queryKey: ['consentForms'] });
         navigate(createPageUrl(`ConsentFormDetail?id=${created.id}`));
         setShowNewVersionDialog(false);
     };
 
     const handleSaveTags = async (tagsJson) => {
-        await base44.entities.ConsentForm.update(form.id, { tags: tagsJson });
+        await entities.ConsentForm.update(form.id, { tags: tagsJson });
         queryClient.invalidateQueries({ queryKey: ['consentForms'] });
     };
 
@@ -83,13 +85,13 @@ export default function ConsentFormDetail() {
     };
 
     const removeDocument = async () => {
-        await base44.entities.ConsentForm.update(form.id, { document_url: "" });
+        await entities.ConsentForm.update(form.id, { document_url: "" });
         queryClient.invalidateQueries({ queryKey: ['consentForms'] });
     };
 
     const saveAsTemplate = async () => {
         try {
-            await base44.entities.FormTemplate.create({
+            await entities.FormTemplate.create({
                 template_name: form.form_name,
                 template_type: "ConsentForm",
                 category: form.form_type,
@@ -108,7 +110,7 @@ export default function ConsentFormDetail() {
 
     const duplicateForm = async () => {
         try {
-            const duplicated = await base44.entities.ConsentForm.create({
+            const duplicated = await entities.ConsentForm.create({
                 ...form,
                 id: undefined,
                 form_name: `${form.form_name} (Copy)`,

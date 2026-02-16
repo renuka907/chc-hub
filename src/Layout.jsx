@@ -1,7 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "./utils";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { 
                         BookOpen, 
                         FileText, 
@@ -45,20 +47,20 @@ export default function Layout({ children, currentPageName }) {
     const closeTimerRef = React.useRef(null);
 
     React.useEffect(() => {
-        base44.auth.me()
+        supabase.auth.getUser().then(r => r.data?.user)
             .then(user => {
                 setCurrentUser(user);
                 setIsLoading(false);
             })
             .catch(() => {
-                base44.auth.redirectToLogin();
+                navigateToLogin();
             });
     }, []);
 
     React.useEffect(() => {
         const fetchReminderCount = async () => {
             try {
-                const reminders = await base44.entities.Reminder.filter({ completed: false });
+                const reminders = await entities.Reminder.filter({ completed: false });
                 const now = new Date();
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
@@ -337,7 +339,7 @@ export default function Layout({ children, currentPageName }) {
                                         })}
                                         <div className="border-t mt-2 pt-2">
                                             <button
-                                                onClick={() => base44.auth.logout()}
+                                                onClick={() => logout()}
                                                 className="flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full transition-colors"
                                             >
                                                 <LogOut className="w-4 h-4" />
@@ -426,7 +428,7 @@ export default function Layout({ children, currentPageName }) {
                                 );
                             })}
                             <button
-                                onClick={() => base44.auth.logout()}
+                                onClick={() => logout()}
                                 className="flex items-center space-x-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-purple-50 w-full mt-2"
                             >
                                 <LogOut className="w-5 h-5" />

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import {
     Dialog,
@@ -76,7 +78,7 @@ export default function PricingForm({ open, onOpenChange, onSuccess, editItem = 
     }, [editItem, open]);
 
     React.useEffect(() => {
-        base44.entities.PricingItem.list('-created_date', 500).then(items => {
+        entities.PricingItem.list('-created_at', 500).then(items => {
             const cats = new Set();
             items.forEach(item => {
                 // Handle new categories array format
@@ -97,7 +99,7 @@ export default function PricingForm({ open, onOpenChange, onSuccess, editItem = 
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
-        queryFn: () => base44.entities.ClinicLocation.list(),
+        queryFn: () => entities.ClinicLocation.list(),
     });
 
     const addTier = () => {
@@ -156,9 +158,9 @@ export default function PricingForm({ open, onOpenChange, onSuccess, editItem = 
         };
 
         if (editItem) {
-            await base44.entities.PricingItem.update(editItem.id, dataToSave);
+            await entities.PricingItem.update(editItem.id, dataToSave);
         } else {
-            await base44.entities.PricingItem.create(dataToSave);
+            await entities.PricingItem.create(dataToSave);
         }
 
         setIsSaving(false);

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,23 +30,23 @@ export default function CheckoutQuote() {
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
-        queryFn: () => base44.entities.ClinicLocation.list(),
+        queryFn: () => entities.ClinicLocation.list(),
     });
 
     const { data: allPricingItems = [] } = useQuery({
         queryKey: ['pricingItems'],
-        queryFn: () => base44.entities.PricingItem.filter({ status: 'active' }),
+        queryFn: () => entities.PricingItem.filter({ status: 'active' }),
     });
 
     const { data: discounts = [] } = useQuery({
         queryKey: ['discounts'],
-        queryFn: () => base44.entities.Discount.filter({ status: 'active' }),
+        queryFn: () => entities.Discount.filter({ status: 'active' }),
     });
 
     const pricingItems = allPricingItems;
 
     const saveQuoteMutation = useMutation({
-        mutationFn: (quoteData) => base44.entities.Quote.create(quoteData),
+        mutationFn: (quoteData) => entities.Quote.create(quoteData),
         onSuccess: (data) => {
             queryClient.invalidateQueries(['quotes']);
             setSavedQuote(data);

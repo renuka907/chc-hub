@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,9 +51,9 @@ export default function TemplateForm({ open, onOpenChange, templateType, editTem
         setIsSaving(true);
         try {
             if (editTemplate) {
-                await base44.entities.FormTemplate.update(editTemplate.id, formData);
+                await entities.FormTemplate.update(editTemplate.id, formData);
             } else {
-                await base44.entities.FormTemplate.create({ ...formData, usage_count: 0 });
+                await entities.FormTemplate.create({ ...formData, usage_count: 0 });
             }
             onSuccess();
         } catch (error) {

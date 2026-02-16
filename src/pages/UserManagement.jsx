@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -48,15 +50,15 @@ export default function UserManagement() {
 
     const { data: users = [], isLoading } = useQuery({
         queryKey: ['users'],
-        queryFn: () => base44.entities.User.list('-created_date', 100),
+        queryFn: () => entities.User.list('-created_at', 100),
     });
 
     React.useEffect(() => {
-        base44.auth.me().then(user => setCurrentUser(user));
+        supabase.auth.getUser().then(r => r.data?.user).then(user => setCurrentUser(user));
     }, []);
 
     const inviteMutation = useMutation({
-        mutationFn: ({ email, role }) => base44.users.inviteUser(email, role),
+        mutationFn: ({ email, role }) => /* TODO: Implement user invitation */ Promise.resolve(),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['users'] });
             setShowInviteDialog(false);
@@ -72,7 +74,7 @@ export default function UserManagement() {
     });
 
     const deleteMutation = useMutation({
-        mutationFn: (id) => base44.entities.User.delete(id),
+        mutationFn: (id) => entities.User.delete(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['users'] });
             setDeleteConfirm(null);
@@ -80,14 +82,14 @@ export default function UserManagement() {
     });
 
     const updateUserMutation = useMutation({
-        mutationFn: ({ id, data }) => base44.entities.User.update(id, data),
+        mutationFn: ({ id, data }) => entities.User.update(id, data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['users'] });
         },
     });
 
     const updatePermissionsMutation = useMutation({
-        mutationFn: ({ id, permissions }) => base44.entities.User.update(id, { page_permissions: JSON.stringify(permissions) }),
+        mutationFn: ({ id, permissions }) => entities.User.update(id, { page_permissions: JSON.stringify(permissions) }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['users'] });
             setShowPermissionsDialog(false);
@@ -95,7 +97,7 @@ export default function UserManagement() {
     });
 
     const resendInviteMutation = useMutation({
-        mutationFn: ({ email, role }) => base44.users.inviteUser(email, role),
+        mutationFn: ({ email, role }) => /* TODO: Implement user invitation */ Promise.resolve(),
         onSuccess: (_, vars) => {
             setInviteSuccessEmail(vars.email);
         }

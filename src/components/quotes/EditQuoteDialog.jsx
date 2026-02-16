@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
     Dialog,
@@ -38,21 +40,21 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
 
     const { data: allPricingItems = [] } = useQuery({
         queryKey: ['pricingItems'],
-        queryFn: () => base44.entities.PricingItem.filter({ status: 'active' }),
+        queryFn: () => entities.PricingItem.filter({ status: 'active' }),
     });
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
-        queryFn: () => base44.entities.ClinicLocation.list(),
+        queryFn: () => entities.ClinicLocation.list(),
     });
 
     const { data: discounts = [] } = useQuery({
         queryKey: ['discounts'],
-        queryFn: () => base44.entities.Discount.filter({ status: 'active' }),
+        queryFn: () => entities.Discount.filter({ status: 'active' }),
     });
 
     const updateQuoteMutation = useMutation({
-        mutationFn: (quoteData) => base44.entities.Quote.update(quote.id, quoteData),
+        mutationFn: (quoteData) => entities.Quote.update(quote.id, quoteData),
         onSuccess: () => {
             queryClient.invalidateQueries(['quotes']);
             onSuccess();

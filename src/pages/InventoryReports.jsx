@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from '@/api/supabaseHelpers';
+import { supabase } from '@/api/supabaseClient';
+import { useAuth } from '@/lib/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import ReportGenerator from '../components/inventory/ReportGenerator';
@@ -9,17 +11,17 @@ export default function InventoryReports() {
     const [currentUser, setCurrentUser] = useState(null);
 
     React.useEffect(() => {
-        base44.auth.me().then(user => setCurrentUser(user)).catch(() => {});
+        supabase.auth.getUser().then(({ data }) => { if (data?.user) setCurrentUser(data.user); });
     }, []);
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
-        queryFn: () => base44.entities.ClinicLocation.list(),
+        queryFn: () => entities.ClinicLocation.list(),
     });
 
     const { data: inventoryItems = [] } = useQuery({
         queryKey: ['inventoryItems'],
-        queryFn: () => base44.entities.InventoryItem.list('-updated_date', 500),
+        queryFn: () => entities.InventoryItem.list('-updated_at', 500),
         refetchInterval: 30000,
         refetchOnWindowFocus: false,
         retry: 1,

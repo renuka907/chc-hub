@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -30,16 +32,16 @@ export default function DiscountManagement() {
     const queryClient = useQueryClient();
 
     React.useEffect(() => {
-        base44.auth.me().then(user => setCurrentUser(user)).catch(() => {});
+        supabase.auth.getUser().then(({ data }) => { if (data?.user) setCurrentUser(data.user); });
     }, []);
 
     const { data: discounts = [], isLoading } = useQuery({
         queryKey: ['discounts'],
-        queryFn: () => base44.entities.Discount.list('-created_date', 200),
+        queryFn: () => entities.Discount.list('-created_at', 200),
     });
 
     const deleteMutation = useMutation({
-        mutationFn: (id) => base44.entities.Discount.delete(id),
+        mutationFn: (id) => entities.Discount.delete(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['discounts'] });
             setDeleteConfirm(null);

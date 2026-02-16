@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,7 +25,7 @@ export default function AftercareDetail() {
 
     const { data: instructions = [] } = useQuery({
         queryKey: ['aftercareInstructions'],
-        queryFn: () => base44.entities.AftercareInstruction.list(),
+        queryFn: () => entities.AftercareInstruction.list(),
     });
 
     const instruction = instructions.find(i => i.id === instructionId);
@@ -33,13 +35,13 @@ export default function AftercareDetail() {
     };
 
     const toggleFavorite = async () => {
-        await base44.entities.AftercareInstruction.update(instruction.id, { is_favorite: !instruction.is_favorite });
+        await entities.AftercareInstruction.update(instruction.id, { is_favorite: !instruction.is_favorite });
         queryClient.invalidateQueries({ queryKey: ['aftercareInstructions'] });
     };
 
     const saveAsTemplate = async () => {
         try {
-            await base44.entities.FormTemplate.create({
+            await entities.FormTemplate.create({
                 template_name: instruction.procedure_name,
                 template_type: "AftercareInstruction",
                 category: instruction.category,
@@ -62,7 +64,7 @@ export default function AftercareDetail() {
 
     const duplicateInstruction = async () => {
         try {
-            const duplicated = await base44.entities.AftercareInstruction.create({
+            const duplicated = await entities.AftercareInstruction.create({
                 ...instruction,
                 id: undefined,
                 procedure_name: `${instruction.procedure_name} (Copy)`,

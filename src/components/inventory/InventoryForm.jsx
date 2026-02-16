@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import {
     Dialog,
@@ -66,17 +68,17 @@ export default function InventoryForm({ open, onOpenChange, onSuccess, editItem 
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
-        queryFn: () => base44.entities.ClinicLocation.list(),
+        queryFn: () => entities.ClinicLocation.list(),
     });
 
     const { data: pricingItems = [] } = useQuery({
         queryKey: ['pricingItems'],
-        queryFn: () => base44.entities.PricingItem.list(),
+        queryFn: () => entities.PricingItem.list(),
     });
 
     const { data: allInventoryItems = [] } = useQuery({
         queryKey: ['inventoryItems'],
-        queryFn: () => base44.entities.InventoryItem.list('-updated_date', 500),
+        queryFn: () => entities.InventoryItem.list('-updated_at', 500),
     });
 
     // Get unique storage locations from existing inventory
@@ -116,9 +118,9 @@ export default function InventoryForm({ open, onOpenChange, onSuccess, editItem 
         };
 
         if (editItem) {
-            await base44.entities.InventoryItem.update(editItem.id, dataToSave);
+            await entities.InventoryItem.update(editItem.id, dataToSave);
         } else {
-            await base44.entities.InventoryItem.create(dataToSave);
+            await entities.InventoryItem.create(dataToSave);
         }
 
         setIsSaving(false);

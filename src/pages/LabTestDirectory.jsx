@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-      import { base44 } from "@/api/base44Client";
+      import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
       import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
       import { Button } from "@/components/ui/button";
       import { Input } from "@/components/ui/input";
@@ -24,31 +26,31 @@ export default function LabTestDirectory() {
          const [currentUser, setCurrentUser] = useState(null);
 
           React.useEffect(() => {
-              base44.auth.me().then(setCurrentUser).catch(() => {});
+              supabase.auth.getUser().then(({ data }) => { if (data?.user) setCurrentUser(data.user); });
           }, []);
 
           const isAdmin = currentUser?.role === 'admin';
 
     const { data: savedTests = [], isLoading } = useQuery({
         queryKey: ['labTests'],
-        queryFn: () => base44.entities.LabTestInfo.list('-updated_date'),
+        queryFn: () => entities.LabTestInfo.list('-updated_at'),
     });
 
     const { data: panels = [] } = useQuery({
         queryKey: ['panels'],
-        queryFn: () => base44.entities.Panel.list('-updated_date'),
+        queryFn: () => entities.Panel.list('-updated_at'),
     });
 
     const toggleFavoriteMutation = useMutation({
         mutationFn: ({ id, isFavorite }) => 
-            base44.entities.LabTestInfo.update(id, { is_favorite: !isFavorite }),
+            entities.LabTestInfo.update(id, { is_favorite: !isFavorite }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['labTests'] });
         }
     });
 
     const saveTestMutation = useMutation({
-        mutationFn: (testData) => base44.entities.LabTestInfo.create(testData),
+        mutationFn: (testData) => entities.LabTestInfo.create(testData),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['labTests'] });
             toast.success("Test information saved");
@@ -57,7 +59,7 @@ export default function LabTestDirectory() {
 
     const syncTubeMutation = useMutation({
         mutationFn: async ({ id }) => {
-            const res = await base44.functions.invoke('syncQuestTubeType', { testId: id });
+            const res = await /* TODO: Implement syncQuestTubeType as Supabase Edge Function */ Promise.resolve({ data: null });
             return res.data;
         },
         onSuccess: (data) => {
@@ -74,7 +76,7 @@ export default function LabTestDirectory() {
     });
 
     const deleteTestMutation = useMutation({
-        mutationFn: (id) => base44.entities.LabTestInfo.delete(id),
+        mutationFn: (id) => entities.LabTestInfo.delete(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['labTests'] });
             toast.success("Test deleted");
@@ -86,13 +88,10 @@ export default function LabTestDirectory() {
 
     const generateICD10Mutation = useMutation({
         mutationFn: async ({ testId, testName, testCode, category }) => {
-            const { data } = await base44.functions.invoke('generateICD10Codes', { 
-                testName,
-                testCode,
-                category
-            });
+            // TODO: Implement generateICD10Codes as Supabase Edge Function
+            const { data } = { data: null };
             if (data?.codes && Array.isArray(data.codes)) {
-                await base44.entities.LabTestInfo.update(testId, { diagnosis_codes: JSON.stringify(data.codes) });
+                await entities.LabTestInfo.update(testId, { diagnosis_codes: JSON.stringify(data.codes) });
             }
             return data;
         },
@@ -106,7 +105,7 @@ export default function LabTestDirectory() {
     });
 
     const createPanelMutation = useMutation({
-        mutationFn: (panelData) => base44.entities.Panel.create(panelData),
+        mutationFn: (panelData) => entities.Panel.create(panelData),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['panels'] });
             setNewPanelName("");
@@ -120,7 +119,7 @@ export default function LabTestDirectory() {
 
     const updateTestPanelsMutation = useMutation({
         mutationFn: ({ testId, panelIds }) => 
-            base44.entities.LabTestInfo.update(testId, { panel_ids: JSON.stringify(panelIds) }),
+            entities.LabTestInfo.update(testId, { panel_ids: JSON.stringify(panelIds) }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['labTests'] });
             toast.success("Panel assignment updated");
@@ -145,7 +144,7 @@ export default function LabTestDirectory() {
         });
         toSync.forEach(t => {
             syncedRef.current.add(t.id);
-            base44.functions.invoke('syncQuestTubeType', { testId: t.id })
+            /* TODO: Implement syncQuestTubeType as Supabase Edge Function */ Promise.resolve({ data: null })
                 .then(() => queryClient.invalidateQueries({ queryKey: ['labTests'] }))
                 .catch(() => {/* ignore per-item errors */});
         });
@@ -161,7 +160,7 @@ export default function LabTestDirectory() {
         setSearchResults(null);
 
         try {
-            const response = await base44.integrations.Core.InvokeLLM({
+            const response = await invokeLLM({
                 prompt: `Find lab test information for: "${searchQuery}"
 
 This could be a test name, abbreviation, or Quest test code. Find the CLOSEST MATCH from standard medical lab tests:
@@ -220,7 +219,7 @@ Only return found: false if you truly cannot identify what test they're asking a
             setSearchResults(response);
             if (response?.quest_url) {
                 try {
-                    const { data } = await base44.functions.invoke('fetchQuestTubeType', { questUrl: response.quest_url });
+                    const { data } = await /* TODO: Implement fetchQuestTubeType as Supabase Edge Function */ Promise.resolve({ data: null });
                     if (data?.tube_type) {
                         setSearchResults({ ...response, tube_type: data.tube_type });
                     } else if (data?.error) {
@@ -233,11 +232,8 @@ Only return found: false if you truly cannot identify what test they're asking a
 
             // Auto-generate ICD-10 codes
             try {
-                const { data: icdData } = await base44.functions.invoke('generateICD10Codes', { 
-                    testName: response.test_name,
-                    testCode: response.test_code,
-                    category: response.category
-                });
+                // TODO: Implement generateICD10Codes as Supabase Edge Function
+                const { data: icdData } = { data: null };
                 if (icdData?.codes && Array.isArray(icdData.codes)) {
                     setSearchResults(prev => ({
                         ...prev,
@@ -274,7 +270,7 @@ Only return found: false if you truly cannot identify what test they're asking a
             onSuccess: async (created) => {
                 // Also trigger tube sync if quest_url is present, and only if a new item was created
                 if (testData.quest_url && created?.id) {
-                    await base44.functions.invoke('syncQuestTubeType', { testId: created.id });
+                    await /* TODO: Implement syncQuestTubeType as Supabase Edge Function */ Promise.resolve({ data: null });
                     queryClient.invalidateQueries({ queryKey: ['labTests'] });
                 }
             }

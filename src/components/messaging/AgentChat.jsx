@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,12 +31,12 @@ export default function AgentChat({ agentName }) {
 
     const { data: user } = useQuery({
         queryKey: ['currentUser'],
-        queryFn: () => base44.auth.me(),
+        queryFn: async () => { const { data } = await supabase.auth.getUser(); return data?.user; },
     });
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
-        queryFn: () => base44.entities.ClinicLocation.list(),
+        queryFn: () => entities.ClinicLocation.list(),
     });
 
     // Load or create conversation on mount
@@ -47,7 +49,7 @@ export default function AgentChat({ agentName }) {
                 if (savedConvId) {
                     // Load existing conversation
                     try {
-                        const conv = await base44.agents.getConversation(savedConvId);
+                        const conv = await agentChat.getConversation(savedConvId);
                         setConversationId(conv.id);
                         setMessages(conv.messages || []);
                         return;
@@ -57,7 +59,7 @@ export default function AgentChat({ agentName }) {
                 }
                 
                 // Create new conversation if no saved one exists
-                const conv = await base44.agents.createConversation({
+                const conv = await agentChat.createConversation({
                     agent_name: agentName,
                     metadata: {
                         name: "Messaging Chat",
@@ -80,7 +82,7 @@ export default function AgentChat({ agentName }) {
     useEffect(() => {
         if (!conversationId) return;
 
-        const unsubscribe = base44.agents.subscribeToConversation(conversationId, (data) => {
+        const unsubscribe = agentChat.subscribeToConversation(conversationId, (data) => {
             setMessages(data.messages || []);
             // Check if agent is still processing
             const lastMessage = data.messages?.[data.messages.length - 1];
@@ -127,8 +129,8 @@ export default function AgentChat({ agentName }) {
                 ? "" 
                 : `\n\nClinic Location Filter: ${locations.find(l => l.id === selectedLocation)?.name || "Selected location"}\nPlease include this clinic name when mentioning items or recommendations.`;
             
-            const conv = await base44.agents.getConversation(conversationId);
-            await base44.agents.addMessage(conv, {
+            const conv = await agentChat.getConversation(conversationId);
+            await agentChat.addMessage(conv, {
                 role: "user",
                 content: userMessage + locationContext
             });
@@ -166,7 +168,7 @@ export default function AgentChat({ agentName }) {
         try {
             setIsProcessing(false);
             localStorage.removeItem(`agent_conv_${agentName}`);
-            const conv = await base44.agents.createConversation({
+            const conv = await agentChat.createConversation({
                 agent_name: agentName,
                 metadata: {
                     name: "Messaging Chat",

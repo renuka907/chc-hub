@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     Dialog,
@@ -35,17 +37,17 @@ export default function UsageRecorder({ open, onOpenChange, onSuccess }) {
     const queryClient = useQueryClient();
 
     React.useEffect(() => {
-        base44.auth.me().then(user => setCurrentUser(user)).catch(() => {});
+        supabase.auth.getUser().then(({ data }) => { if (data?.user) setCurrentUser(data.user); });
     }, []);
 
     const { data: inventoryItems = [] } = useQuery({
         queryKey: ['inventoryItems'],
-        queryFn: () => base44.entities.InventoryItem.list('', 500),
+        queryFn: () => entities.InventoryItem.list('', 500),
     });
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
-        queryFn: () => base44.entities.ClinicLocation.list(),
+        queryFn: () => entities.ClinicLocation.list(),
     });
 
     const createUsageMutation = useMutation({
@@ -55,7 +57,7 @@ export default function UsageRecorder({ open, onOpenChange, onSuccess }) {
                 quantity_used: parseFloat(data.quantity_used),
                 recorded_by: currentUser?.email
             };
-            return base44.entities.UsageLog.create(payload);
+            return entities.UsageLog.create(payload);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['usageLogs'] });

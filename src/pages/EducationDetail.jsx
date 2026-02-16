@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
+import { supabase } from "@/api/supabaseClient";
+import { useAuth } from "@/lib/AuthContext";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,12 +25,12 @@ export default function EducationDetail() {
 
     const { data: topics = [] } = useQuery({
         queryKey: ['educationTopics'],
-        queryFn: () => base44.entities.EducationTopic.list(),
+        queryFn: () => entities.EducationTopic.list(),
     });
 
     const { data: currentUser } = useQuery({
         queryKey: ['currentUser'],
-        queryFn: () => base44.auth.me()
+        queryFn: async () => { const { data } = await supabase.auth.getUser(); return data?.user; }
     });
 
     const topic = topics.find(t => t.id === topicId);
@@ -53,12 +55,12 @@ export default function EducationDetail() {
         delete restoredData.created_date;
         delete restoredData.updated_date;
         
-        await base44.entities.EducationTopic.create(restoredData);
+        await entities.EducationTopic.create(restoredData);
         queryClient.invalidateQueries({ queryKey: ['educationTopics'] });
     };
 
     const toggleFavorite = async () => {
-        await base44.entities.EducationTopic.update(topic.id, { is_favorite: !topic.is_favorite });
+        await entities.EducationTopic.update(topic.id, { is_favorite: !topic.is_favorite });
         queryClient.invalidateQueries({ queryKey: ['educationTopics'] });
     };
 
@@ -68,7 +70,7 @@ export default function EducationDetail() {
             return;
         }
         if (confirm(`Are you sure you want to delete "${topic.title}"? This action cannot be undone.`)) {
-            await base44.entities.EducationTopic.delete(topic.id);
+            await entities.EducationTopic.delete(topic.id);
             queryClient.invalidateQueries({ queryKey: ['educationTopics'] });
             window.location.href = createPageUrl('Library');
         }
