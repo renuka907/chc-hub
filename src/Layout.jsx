@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { createPageUrl } from "./utils";
 import { entities } from "@/api/supabaseHelpers";
 import { useAuth } from "@/lib/AuthContext";
@@ -23,7 +24,8 @@ import {
                         Bell,
                         Calendar,
                         TrendingUp,
-                        Upload
+                        Upload,
+                        BarChart3
                     } from "lucide-react";
 
 export default function Layout({ children, currentPageName }) {
@@ -40,49 +42,42 @@ export default function Layout({ children, currentPageName }) {
     
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
     const [openDropdown, setOpenDropdown] = React.useState(null);
-    const [reminderCount, setReminderCount] = React.useState(0);
     const closeTimerRef = React.useRef(null);
     const { user: currentUser, isAuthenticated, isLoadingAuth: isLoading, logout, navigateToLogin } = useAuth();
 
-    React.useEffect(() => {
-        const fetchReminderCount = async () => {
-            try {
-                const reminders = await entities.Reminder.filter({ completed: false });
-                const now = new Date();
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                const tomorrow = new Date(today);
-                tomorrow.setDate(tomorrow.getDate() + 1);
+    const { data: reminderCount = 0 } = useQuery({
+        queryKey: ['reminders'],
+        queryFn: () => entities.Reminder.filter({ completed: false }),
+        select: (reminders) => {
+            const now = new Date();
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
 
-                const relevantCount = reminders.filter(r => {
-                    // Exclude snoozed reminders
-                    if (r.show_after && new Date(r.show_after) > now) return false;
-
-                    if (!r.due_date) return false;
-
-                    const dueDate = new Date(r.due_date);
-                    dueDate.setHours(0, 0, 0, 0);
-
-                    // Count overdue or today
-                    return dueDate < tomorrow;
-                }).length;
-
-                setReminderCount(relevantCount);
-            } catch (e) {
-                // silently fail
-            }
-        };
-
-        fetchReminderCount();
-        const interval = setInterval(fetchReminderCount, 30000); // Update every 30 seconds
-        return () => clearInterval(interval);
-    }, []);
+            return reminders.filter(r => {
+                if (r.show_after && new Date(r.show_after) > now) return false;
+                if (!r.due_date) return false;
+                const dueDate = new Date(r.due_date);
+                dueDate.setHours(0, 0, 0, 0);
+                return dueDate < tomorrow;
+            }).length;
+        },
+        refetchInterval: 30000,
+        staleTime: 5000,
+    });
 
     const menuGroups = [
         {
             name: "Home",
             path: "Home",
             icon: Home,
+            single: true
+        },
+        {
+            name: "Generate Quote",
+            path: "CheckoutQuote",
+            icon: FileText,
             single: true
         },
         {
@@ -128,6 +123,7 @@ export default function Layout({ children, currentPageName }) {
             items: [
                 { name: "Clinic Directory", path: "ClinicDirectory", icon: Building2 },
                 { name: "Pricing", path: "PricingManagement", icon: DollarSign },
+                { name: "Specials", path: "Specials", icon: Tag },
                 { name: "Quotes", path: "QuotesManagement", icon: FileText },
                 { name: "Inventory", path: "InventoryManagement", icon: Package },
                 { name: "Usage Tracking", path: "InventoryUsageTracking", icon: TrendingUp },
@@ -139,6 +135,7 @@ export default function Layout({ children, currentPageName }) {
             name: "Admin",
             icon: Users,
             items: [
+                { name: "Dashboard", path: "AdminDashboard", icon: BarChart3 },
                 { name: "User Management", path: "UserManagement", icon: Users },
                 { name: "Activity Dashboard", path: "ActivityDashboard", icon: TrendingUp },
             ]
@@ -193,6 +190,13 @@ export default function Layout({ children, currentPageName }) {
                             >
                                 <Home className="w-4 h-4" />
                                 <span>Home</span>
+                            </Link>
+                            <Link 
+                                to={createPageUrl("CheckoutQuote")} 
+                                className="flex items-center gap-2 bg-gradient-to-r from-teal-500 to-emerald-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
+                            >
+                                <FileText className="w-4 h-4" />
+                                <span>Generate Quote</span>
                             </Link>
                             <Link 
                                 to={createPageUrl("Messaging")} 
@@ -264,18 +268,6 @@ export default function Layout({ children, currentPageName }) {
                                             <Users className="w-4 h-4" />
                                             <span>Profile</span>
                                         </Link>
-                                        <Link
-                                                            to={createPageUrl("Specials")}
-                                                            onClick={() => setOpenDropdown(null)}
-                                                            className={`flex items-center space-x-3 px-4 py-2 text-sm transition-colors ${
-                                                                currentPageName === "Specials"
-                                                                    ? "bg-purple-50 text-purple-900 font-medium"
-                                                                    : "text-gray-700 hover:bg-gray-50"
-                                                            }`}
-                                                        >
-                                                            <Upload className="w-4 h-4" />
-                                                            <span>Specials</span>
-                                                        </Link>
                                                                         {menuGroups.map((group, idx) => {
                                                                             if (group.single) {
                                                                                 const Icon = group.icon;
