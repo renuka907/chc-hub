@@ -99,12 +99,12 @@ export default function QuoteDetail() {
         <div className="space-y-6">
             <style dangerouslySetInnerHTML={{__html: `
                 @media print {
-                    @page { margin: 0.3in 0.4in 0.25in 0.4in; size: letter; }
+                    @page { margin: 0.25in 0.4in 0.2in 0.4in; size: letter; }
                     body * { visibility: hidden; }
                     .printable-document, .printable-document * { visibility: visible; color: #000 !important; }
                     .printable-document { position: absolute; left: 0; top: 0; width: 100%; padding: 0 !important; max-width: 100% !important; font-size: 11px !important; line-height: 1.3 !important; }
                     .printable-document .mb-4, .printable-document .mb-6 { margin-bottom: 2px !important; }
-                    .printable-document .mt-8 { margin-top: 4px !important; }
+                    .printable-document .mt-8 { margin-top: 2px !important; }
                     .printable-document .p-8 { padding: 0 !important; }
                     .printable-document .pb-6 { padding-bottom: 2px !important; }
                     .printable-document .space-y-6 > * + * { margin-top: 4px !important; }
@@ -117,7 +117,7 @@ export default function QuoteDetail() {
                     .printable-document table { font-size: 11px !important; border-collapse: collapse !important; }
                     .printable-document table th, .printable-document table td { padding: 2px 4px !important; line-height: 1.2 !important; }
                     .printable-document img.logo-img { max-height: 35px !important; }
-                    .printable-document img[alt="Scan for Payment Options"] { width: 70px !important; height: auto !important; }
+                    .printable-document img[alt="Scan for Payment Options"] { width: 55px !important; height: auto !important; }
                     .printable-document .grid { gap: 0 8px !important; }
                     .printable-document .p-4 { padding: 3px !important; }
                     .printable-document .pt-4 { padding-top: 2px !important; }
