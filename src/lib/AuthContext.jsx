@@ -38,13 +38,32 @@ export const AuthProvider = ({ children }) => {
 
   const loadUserProfile = async (authUser) => {
     try {
-      const { data: profile, error } = await supabase
+      let { data: profile, error } = await supabase
         .from('users')
         .select('*')
         .eq('id', authUser.id)
         .single();
 
-      if (error && error.code !== 'PGRST116') {
+      // If no users row exists (PGRST116 = no rows), auto-create one
+      if (error && error.code === 'PGRST116') {
+        console.log('No user profile found, auto-creating for', authUser.email);
+        const newProfile = {
+          id: authUser.id,
+          email: authUser.email,
+          full_name: authUser.user_metadata?.full_name || '',
+          role: 'staff',
+        };
+        const { data: created, error: createError } = await supabase
+          .from('users')
+          .insert(newProfile)
+          .select()
+          .single();
+        if (createError) {
+          console.error('Error auto-creating user profile:', createError);
+        } else {
+          profile = created;
+        }
+      } else if (error) {
         console.error('Error loading user profile:', error);
       }
 

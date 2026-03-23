@@ -23,7 +23,6 @@ export default function AgentChat({ agentName }) {
     const [selectedLocation, setSelectedLocation] = useState("all");
     const messagesEndRef = useRef(null);
     const recognitionRef = useRef(null);
-    const timeoutRef = useRef(null);
     const [noResponse, setNoResponse] = useState(false);
     const queryClient = useQueryClient();
 
@@ -82,13 +81,6 @@ export default function AgentChat({ agentName }) {
 
         const unsubscribe = agentChat.subscribeToConversation(conversationId, (data) => {
             setMessages(data.messages || []);
-            // Check if agent is still processing
-            const lastMessage = data.messages?.[data.messages.length - 1];
-            if (lastMessage?.role === 'assistant') {
-                setIsProcessing(false);
-                if (timeoutRef.current) clearTimeout(timeoutRef.current);
-                setNoResponse(false);
-            }
         });
 
         return () => {
@@ -101,13 +93,6 @@ export default function AgentChat({ agentName }) {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
-    // Cleanup timer on unmount
-    useEffect(() => {
-        return () => {
-            if (timeoutRef.current) clearTimeout(timeoutRef.current);
-        };
-    }, []);
-
     const handleSend = async (e) => {
         e.preventDefault();
         if (!message.trim() || !conversationId || isProcessing) return;
@@ -116,24 +101,27 @@ export default function AgentChat({ agentName }) {
         setMessage("");
         setIsProcessing(true);
         setNoResponse(false);
-        if (timeoutRef.current) clearTimeout(timeoutRef.current);
-        timeoutRef.current = setTimeout(() => {
-            setIsProcessing(false);
-            setNoResponse(true);
-        }, 25000);
+
+        // Optimistically add user message to UI
+        const userMsg = { role: "user", content: userMessage, created_date: new Date().toISOString() };
+        setMessages(prev => [...prev, userMsg]);
 
         try {
-            const locationContext = selectedLocation === "all" 
-                ? "" 
-                : `\n\nClinic Location Filter: ${locations.find(l => l.id === selectedLocation)?.name || "Selected location"}\nPlease include this clinic name when mentioning items or recommendations.`;
-            
-            const conv = await agentChat.getConversation(conversationId);
-            await agentChat.addMessage(conv, {
+            const conv = { id: conversationId };
+            const locationFilter = selectedLocation === "all" ? null : selectedLocation;
+            const updated = await agentChat.addMessage(conv, {
                 role: "user",
-                content: userMessage + locationContext
-            });
+                content: userMessage
+            }, locationFilter);
+            setMessages(updated.messages || []);
         } catch (error) {
             console.error("Failed to send message:", error);
+            setMessages(prev => [...prev, { 
+                role: "assistant", 
+                content: "Sorry, something went wrong. Please try again.", 
+                created_date: new Date().toISOString() 
+            }]);
+        } finally {
             setIsProcessing(false);
         }
     };

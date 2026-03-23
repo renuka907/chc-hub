@@ -39,7 +39,12 @@ export default function InventoryForm({ open, onOpenChange, onSuccess, editItem 
     React.useEffect(() => {
         if (editItem) {
             setFormData(editItem);
-            const pricingIds = editItem.associated_pricing_item_ids ? JSON.parse(editItem.associated_pricing_item_ids) : [];
+            let pricingIds = [];
+            try {
+                const raw = editItem.associated_pricing_item_ids;
+                if (Array.isArray(raw)) pricingIds = raw;
+                else if (typeof raw === 'string' && raw) pricingIds = JSON.parse(raw);
+            } catch (e) { /* ignore parse errors */ }
             setSelectedPricingIds(pricingIds);
         } else {
             setFormData({
@@ -104,26 +109,38 @@ export default function InventoryForm({ open, onOpenChange, onSuccess, editItem 
         setIsSaving(true);
         
         const dataToSave = {
-            ...formData,
+            item_name: formData.item_name,
+            item_type: formData.item_type,
+            item_condition: formData.item_condition,
+            sku: formData.sku || null,
             quantity: parseFloat(formData.quantity) || 0,
+            unit: formData.unit || 'units',
             low_stock_threshold: parseFloat(formData.low_stock_threshold) || 0,
-            reorder_quantity: formData.reorder_quantity ? parseFloat(formData.reorder_quantity) : undefined,
-            cost_per_unit: formData.cost_per_unit ? parseFloat(formData.cost_per_unit) : undefined,
+            reorder_quantity: formData.reorder_quantity ? parseFloat(formData.reorder_quantity) : null,
+            cost_per_unit: formData.cost_per_unit ? parseFloat(formData.cost_per_unit) : null,
             associated_pricing_item_ids: JSON.stringify(selectedPricingIds),
-            location_id: formData.location_id || undefined,
-            storage_location: formData.storage_location || undefined,
-            expiry_date: formData.expiry_date || undefined
+            location_id: formData.location_id || null,
+            storage_location: formData.storage_location || null,
+            supplier: formData.supplier || null,
+            notes: formData.notes || null,
+            expiry_date: formData.expiry_date || null,
+            status: formData.status || 'active',
         };
 
-        if (editItem) {
-            await entities.InventoryItem.update(editItem.id, dataToSave);
-        } else {
-            await entities.InventoryItem.create(dataToSave);
+        try {
+            if (editItem?.id) {
+                await entities.InventoryItem.update(editItem.id, dataToSave);
+            } else {
+                await entities.InventoryItem.create(dataToSave);
+            }
+            onSuccess();
+            onOpenChange(false);
+        } catch (err) {
+            console.error('Save failed:', err);
+            alert('Failed to save: ' + (err.message || 'Unknown error'));
+        } finally {
+            setIsSaving(false);
         }
-
-        setIsSaving(false);
-        onSuccess();
-        onOpenChange(false);
     };
 
     return (

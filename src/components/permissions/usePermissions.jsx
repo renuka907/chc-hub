@@ -1,68 +1,45 @@
 import { useState, useEffect } from "react";
 import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
 import { useAuth } from "@/lib/AuthContext";
+import { getRoleDefaults } from "../admin/RoleDefaultsEditor";
 
-// Permission definitions by role
-const PERMISSIONS = {
-    admin: {
-        aftercare: { view: true, create: true, edit: true, delete: true, share: true },
-        consent: { view: true, create: true, edit: true, delete: true, share: true },
-        clinic: { view: true, create: true, edit: true, delete: true, share: true },
-        education: { view: true, create: true, edit: true, delete: true },
-        pricing: { view: true, create: true, edit: true, delete: true },
-        inventory: { view: true, create: true, edit: true, delete: true },
-        discounts: { view: true, create: true, edit: true, delete: true },
-        quotes: { view: true, create: true, edit: true, delete: true },
-        users: { view: true, invite: true, edit: true, delete: true },
-        messaging: { view: true, send: true },
-        procedure: { view: true, create: true, edit: true, delete: true, read: true }
-    },
-    manager: {
-        aftercare: { view: true, create: true, edit: true, delete: true, share: true },
-        consent: { view: true, create: true, edit: true, delete: true, share: true },
-        clinic: { view: true, create: true, edit: true, delete: true, share: true },
-        education: { view: true, create: true, edit: true, delete: true },
-        pricing: { view: true, create: true, edit: true, delete: false },
-        inventory: { view: true, create: true, edit: true, delete: false },
-        discounts: { view: true, create: true, edit: true, delete: true },
-        quotes: { view: true, create: true, edit: true, delete: true },
-        users: { view: true, invite: false, edit: false, delete: false },
-        messaging: { view: true, send: true },
-        procedure: { view: true, create: true, edit: true, delete: true, read: true }
-    },
-    staff: {
-        aftercare: { view: true, create: true, edit: true, delete: false, share: true },
-        consent: { view: true, create: true, edit: true, delete: false, share: true },
-        clinic: { view: true, create: true, edit: true, delete: false, share: true },
-        education: { view: true, create: false, edit: false, delete: false },
-        pricing: { view: true, create: false, edit: false, delete: false },
-        inventory: { view: true, create: true, edit: true, delete: false },
-        discounts: { view: true, create: false, edit: false, delete: false },
-        quotes: { view: true, create: true, edit: false, delete: false },
-        users: { view: false, invite: false, edit: false, delete: false },
-        messaging: { view: true, send: true },
-        procedure: { view: false, create: false, edit: false, delete: false, read: false }
-    },
-    read_only: {
-        aftercare: { view: true, create: false, edit: false, delete: false, share: false },
-        consent: { view: true, create: false, edit: false, delete: false, share: false },
-        clinic: { view: true, create: false, edit: false, delete: false, share: false },
-        education: { view: true, create: false, edit: false, delete: false },
-        pricing: { view: true, create: false, edit: false, delete: false },
-        inventory: { view: true, create: false, edit: false, delete: false },
-        discounts: { view: true, create: false, edit: false, delete: false },
-        quotes: { view: true, create: false, edit: false, delete: false },
-        users: { view: false, invite: false, edit: false, delete: false },
-        messaging: { view: true, send: false },
-        procedure: { view: false, create: false, edit: false, delete: false, read: false }
-    }
-};
+// Load permissions from saved role defaults (editable in Admin Dashboard)
+function getPermissions() {
+    try { return getRoleDefaults(); } catch { return {}; }
+}
+const PERMISSIONS = getPermissions();
 
 export function usePermissions() {
     const { user, isLoadingAuth: isLoading } = useAuth();
 
     const can = (resource, action) => {
         if (!user) return false;
+        
+        // Admin bypasses all checks
+        if (user.role === 'admin') return true;
+
+        // Check per-user page_permissions first (stored in Supabase)
+        if (user.page_permissions) {
+            try {
+                const userPerms = typeof user.page_permissions === 'string' 
+                    ? JSON.parse(user.page_permissions) 
+                    : user.page_permissions;
+                const resourcePerms = userPerms[resource];
+                if (resourcePerms) {
+                    // Supports both { actions: ['view','edit'] } and { view: true, edit: true } formats
+                    if (Array.isArray(resourcePerms.actions)) {
+                        return resourcePerms.actions.includes(action);
+                    }
+                    if (resourcePerms[action] !== undefined) {
+                        return !!resourcePerms[action];
+                    }
+                }
+            } catch (e) {
+                console.warn('Error parsing page_permissions:', e);
+            }
+        }
+
+        // Fall back to role-based defaults
         const userRole = user.role || 'read_only';
         const permissions = PERMISSIONS[userRole] || PERMISSIONS.read_only;
         return permissions[resource]?.[action] || false;

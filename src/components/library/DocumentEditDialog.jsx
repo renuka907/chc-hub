@@ -1,3 +1,4 @@
+function safeParse(v,f=[]){if(v==null)return f;if(typeof v!=="string")return v;try{return JSON.parse(v)}catch{return f}}
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -54,7 +55,7 @@ export default function DocumentEditDialog({ open, onOpenChange, document: doc, 
                 updateData.file_urls = JSON.stringify(newUrls);
                 updateData.document_url = newUrls[0];
             } else if (additionalFiles.length > 0) {
-                const existingUrls = doc.file_urls ? JSON.parse(doc.file_urls) : [doc.document_url];
+                const existingUrls = doc.file_urls ? safeParse(doc.file_urls) : [doc.document_url];
                 
                 for (const file of additionalFiles) {
                     const { file_url } = await uploadFile(file);
@@ -143,7 +144,7 @@ export default function DocumentEditDialog({ open, onOpenChange, document: doc, 
                     <div className="border-t pt-4">
                         <Label>Current Files</Label>
                         <div className="flex flex-wrap gap-2 mt-2">
-                            {(doc.file_urls ? JSON.parse(doc.file_urls) : [doc.document_url]).map((url, index) => (
+                            {(doc.file_urls ? safeParse(doc.file_urls) : [doc.document_url]).map((url, index) => (
                                 <Badge key={index} variant="secondary">
                                     File {index + 1}
                                 </Badge>

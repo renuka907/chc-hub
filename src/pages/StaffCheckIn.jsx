@@ -368,7 +368,7 @@ export default function StaffCheckInPage() {
                     </div>
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setShowCheckInDialog(false)}>Cancel</Button>
-                        <Button onClick={handleCheckIn} disabled={!checkInForm.location_id || checkInMutation.isPending} className="text-black">
+                        <Button onClick={handleCheckIn} disabled={!checkInForm.location_id || checkInMutation.isPending} className="bg-blue-600 hover:bg-blue-700 text-white">
                             Check In
                         </Button>
                     </DialogFooter>
@@ -452,6 +452,7 @@ export default function StaffCheckInPage() {
                     <DialogFooter>
                         <Button variant="outline" onClick={() => { setShowScheduleDialog(false); setEditingSchedule(null); resetScheduleForm(); }}>Cancel</Button>
                         <Button 
+                            className="bg-purple-600 hover:bg-purple-700 text-white"
                             onClick={handleScheduleSubmit} 
                             disabled={!scheduleForm.staff_name || !scheduleForm.staff_email || !scheduleForm.location_id || !scheduleForm.date || createScheduleMutation.isPending}
                         >

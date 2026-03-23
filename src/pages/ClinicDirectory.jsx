@@ -1,35 +1,24 @@
 import React, { useState } from "react";
-import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat, getCurrentUser } from "@/api/supabaseHelpers";
+import { entities, getCurrentUser } from "@/api/supabaseHelpers";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { MapPin, Phone, Mail, Building2, Percent, Pencil, Star, Plus, Trash2 } from "lucide-react";
+import { MapPin, Phone, Mail, Building2, Pencil, Plus, Trash2, Percent } from "lucide-react";
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
+    AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+    AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
 export default function ClinicDirectory() {
     const [editingLocation, setEditingLocation] = useState(null);
     const [formData, setFormData] = useState({});
-    const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
     const [deleteConfirm, setDeleteConfirm] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
     const queryClient = useQueryClient();
 
-    React.useEffect(() => {
-        getCurrentUser().then(u => { if (u) setCurrentUser(u); });
-    }, []);
+    React.useEffect(() => { getCurrentUser().then(u => { if (u) setCurrentUser(u); }); }, []);
 
     const { data: locations = [], isLoading } = useQuery({
         queryKey: ['clinicLocations'],
@@ -38,291 +27,149 @@ export default function ClinicDirectory() {
 
     const updateMutation = useMutation({
         mutationFn: ({ id, data }) => entities.ClinicLocation.update(id, data),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['clinicLocations'] });
-            setEditingLocation(null);
-        },
+        onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['clinicLocations'] }); setEditingLocation(null); },
     });
 
     const createMutation = useMutation({
         mutationFn: (data) => entities.ClinicLocation.create(data),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['clinicLocations'] });
-            setEditingLocation(null);
-        },
+        onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['clinicLocations'] }); setEditingLocation(null); },
     });
 
     const deleteMutation = useMutation({
         mutationFn: (id) => entities.ClinicLocation.delete(id),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['clinicLocations'] });
-            setDeleteConfirm(null);
-        },
+        onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['clinicLocations'] }); setDeleteConfirm(null); },
     });
 
-    const toggleFavorite = async (locationId, currentValue) => {
-        await entities.ClinicLocation.update(locationId, { is_favorite: !currentValue });
-        queryClient.invalidateQueries({ queryKey: ['clinicLocations'] });
-    };
-
-    const activeLocations = locations.filter(loc => {
-        const isActive = loc.status === 'active';
-        const matchesFavorite = !showFavoritesOnly || loc.is_favorite;
-        return isActive && matchesFavorite;
-    });
+    const activeLocations = locations.filter(loc => loc.status === 'active');
+    const canEdit = currentUser?.role === 'admin' || currentUser?.role === 'manager';
 
     const handleEdit = (location) => {
         setEditingLocation(location);
-        setFormData({
-            name: location.name,
-            address: location.address,
-            phone: location.phone,
-            email: location.email || '',
-            tax_rate: location.tax_rate,
-        });
+        setFormData({ name: location.name, address: location.address, phone: location.phone, email: location.email || '', tax_rate: location.tax_rate || 0 });
     };
 
     const handleAddNew = () => {
         setEditingLocation({ isNew: true });
-        setFormData({
-            name: '',
-            address: '',
-            phone: '',
-            email: '',
-            tax_rate: 0,
-            status: 'active'
-        });
+        setFormData({ name: '', address: '', phone: '', email: '', tax_rate: 0, status: 'active' });
     };
 
     const handleSave = () => {
-        if (editingLocation?.isNew) {
-            createMutation.mutate(formData);
-        } else {
-            updateMutation.mutate({
-                id: editingLocation.id,
-                data: formData,
-            });
-        }
+        if (editingLocation?.isNew) createMutation.mutate(formData);
+        else updateMutation.mutate({ id: editingLocation.id, data: formData });
     };
 
-    const canEdit = currentUser?.role === 'admin' || currentUser?.role === 'manager';
-
     return (
-        <div className="space-y-6">
+        <div className="max-w-4xl mx-auto space-y-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Clinic Directory</h1>
-                    <p className="text-gray-600">Contact information for all clinic locations</p>
-                </div>
-                <div className="flex gap-3">
-                    <Button
-                        variant={showFavoritesOnly ? "default" : "outline"}
-                        onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-                        className={showFavoritesOnly ? "bg-yellow-500 hover:bg-yellow-600" : ""}
-                    >
-                        <Star className={`w-4 h-4 mr-2 ${showFavoritesOnly ? 'fill-white' : ''}`} />
-                        {showFavoritesOnly ? 'Show All' : 'Favorites'}
-                    </Button>
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-6 shadow-lg">
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                    <div>
+                        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+                            <Building2 className="w-6 h-6" /> Clinic Directory
+                        </h1>
+                        <p className="text-blue-200 text-sm mt-1">{activeLocations.length} active locations</p>
+                    </div>
                     {canEdit && (
-                        <Button
-                            onClick={handleAddNew}
-                            className="bg-blue-600 hover:bg-blue-700"
-                        >
-                            <Plus className="w-4 h-4 mr-2" />
-                            Add Location
+                        <Button onClick={handleAddNew} size="sm" className="bg-white text-blue-700 hover:bg-blue-50 border-0 font-semibold">
+                            <Plus className="w-4 h-4 mr-1" /> Add Location
                         </Button>
                     )}
                 </div>
             </div>
 
-            {/* Locations Grid */}
+            {/* Locations */}
             {isLoading ? (
-                <div className="text-center py-12">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+                <div className="flex justify-center py-12">
+                    <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
                 </div>
             ) : activeLocations.length === 0 ? (
-                <Card className="text-center py-12">
-                    <CardContent>
-                        <Building2 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                        <p className="text-gray-500 text-lg">No clinic locations found</p>
-                    </CardContent>
-                </Card>
+                <div className="text-center py-12 text-gray-500">No clinic locations found.</div>
             ) : (
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100 overflow-hidden">
                     {activeLocations.map(location => (
-                        <Card key={location.id} className="hover:shadow-lg transition-shadow border-2 relative">
-                            <button
-                                onClick={() => toggleFavorite(location.id, location.is_favorite)}
-                                className="absolute top-4 right-4 z-10 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center hover:scale-110 transition-transform"
-                            >
-                                <Star className={`w-4 h-4 ${location.is_favorite ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`} />
-                            </button>
-                            <CardHeader className="bg-gradient-to-r from-blue-50 to-slate-50">
-                                <div className="flex items-start justify-between">
-                                    <div className="flex items-start space-x-3">
-                                        <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                                            <Building2 className="w-6 h-6 text-white" />
+                        <div key={location.id} className="p-5 hover:bg-gray-50/50 transition-colors">
+                            <div className="flex items-start justify-between gap-4">
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-3 mb-3">
+                                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center shrink-0">
+                                            <Building2 className="w-5 h-5 text-blue-600" />
                                         </div>
-                                        <div>
-                                            <CardTitle className="text-xl">{location.name}</CardTitle>
-                                            <Badge variant="outline" className="mt-2 bg-white">
-                                                Active Location
-                                            </Badge>
-                                        </div>
+                                        <h3 className="font-bold text-gray-900 text-lg">{location.name}</h3>
                                     </div>
-                                    {canEdit && (
-                                        <div className="flex gap-1">
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={() => handleEdit(location)}
-                                                className="text-gray-400 hover:text-blue-600"
-                                            >
-                                                <Pencil className="w-4 h-4" />
-                                            </Button>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={() => setDeleteConfirm(location)}
-                                                className="text-gray-400 hover:text-red-600"
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </Button>
-                                        </div>
-                                    )}
-                                </div>
-                            </CardHeader>
-                            <CardContent className="pt-6 space-y-4">
-                                {/* Address */}
-                                <div className="flex items-start space-x-3">
-                                    <MapPin className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
-                                    <div>
-                                        <div className="font-medium text-sm text-gray-500 mb-1">Address</div>
-                                        <div className="text-gray-900">{location.address}</div>
-                                    </div>
-                                </div>
 
-                                {/* Phone */}
-                                <div className="flex items-start space-x-3">
-                                    <Phone className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
-                                    <div>
-                                        <div className="font-medium text-sm text-gray-500 mb-1">Phone</div>
-                                        <a href={`tel:${location.phone}`} className="text-blue-600 hover:underline">
-                                            {location.phone}
-                                        </a>
+                                    <div className="grid sm:grid-cols-2 gap-2 text-sm">
+                                        {location.address && (
+                                            <div className="flex items-start gap-2 text-gray-700">
+                                                <MapPin className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
+                                                <span>{location.address}</span>
+                                            </div>
+                                        )}
+                                        {location.phone && (
+                                            <div className="flex items-center gap-2 text-gray-700">
+                                                <Phone className="w-4 h-4 text-blue-400" />
+                                                <a href={`tel:${location.phone}`} className="hover:text-blue-600">{location.phone}</a>
+                                            </div>
+                                        )}
+                                        {location.email && (
+                                            <div className="flex items-center gap-2 text-gray-700">
+                                                <Mail className="w-4 h-4 text-blue-400" />
+                                                <a href={`mailto:${location.email}`} className="hover:text-blue-600">{location.email}</a>
+                                            </div>
+                                        )}
+                                        {location.tax_rate != null && (
+                                            <div className="flex items-center gap-2 text-gray-700">
+                                                <Percent className="w-4 h-4 text-blue-400" />
+                                                <span>Tax: {location.tax_rate}%</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
-
-                                {/* Email */}
-                                {location.email && (
-                                    <div className="flex items-start space-x-3">
-                                        <Mail className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
-                                        <div>
-                                            <div className="font-medium text-sm text-gray-500 mb-1">Email</div>
-                                            <a href={`mailto:${location.email}`} className="text-blue-600 hover:underline">
-                                                {location.email}
-                                            </a>
-                                        </div>
+                                {canEdit && (
+                                    <div className="flex gap-1 shrink-0">
+                                        <Button variant="ghost" size="icon" onClick={() => handleEdit(location)} className="h-8 w-8 text-gray-400 hover:text-blue-600">
+                                            <Pencil className="w-4 h-4" />
+                                        </Button>
+                                        <Button variant="ghost" size="icon" onClick={() => setDeleteConfirm(location)} className="h-8 w-8 text-gray-400 hover:text-red-600">
+                                            <Trash2 className="w-4 h-4" />
+                                        </Button>
                                     </div>
                                 )}
-
-                                {/* Tax Rate */}
-                                <div className="flex items-start space-x-3 pt-4 border-t">
-                                    <Percent className="w-5 h-5 text-slate-600 mt-1 flex-shrink-0" />
-                                    <div>
-                                        <div className="font-medium text-sm text-gray-500 mb-1">Tax Rate</div>
-                                        <div className="text-gray-900 font-semibold">{location.tax_rate}%</div>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </div>
                     ))}
                 </div>
             )}
 
-            {/* Edit Dialog */}
-            <Dialog open={!!editingLocation} onOpenChange={(open) => !open && setEditingLocation(null)}>
-                <DialogContent className="sm:max-w-[500px]">
+            {/* Edit/Add Dialog */}
+            <Dialog open={!!editingLocation} onOpenChange={() => setEditingLocation(null)}>
+                <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>{editingLocation?.isNew ? 'Add New' : 'Edit'} Clinic Location</DialogTitle>
+                        <DialogTitle>{editingLocation?.isNew ? 'Add Location' : 'Edit Location'}</DialogTitle>
                     </DialogHeader>
-                    <div className="space-y-4 py-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="name">Location Name</Label>
-                            <Input
-                                id="name"
-                                value={formData.name || ''}
-                                onChange={(e) => setFormData({...formData, name: e.target.value})}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="address">Address</Label>
-                            <Input
-                                id="address"
-                                value={formData.address || ''}
-                                onChange={(e) => setFormData({...formData, address: e.target.value})}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="phone">Phone</Label>
-                            <Input
-                                id="phone"
-                                value={formData.phone || ''}
-                                onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                value={formData.email || ''}
-                                onChange={(e) => setFormData({...formData, email: e.target.value})}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="tax_rate">Tax Rate (%)</Label>
-                            <Input
-                                id="tax_rate"
-                                type="number"
-                                step="0.01"
-                                value={formData.tax_rate || ''}
-                                onChange={(e) => setFormData({...formData, tax_rate: parseFloat(e.target.value)})}
-                            />
-                        </div>
+                    <div className="space-y-4">
+                        <div><Label>Name</Label><Input value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} /></div>
+                        <div><Label>Address</Label><Input value={formData.address || ''} onChange={e => setFormData({...formData, address: e.target.value})} /></div>
+                        <div><Label>Phone</Label><Input value={formData.phone || ''} onChange={e => setFormData({...formData, phone: e.target.value})} /></div>
+                        <div><Label>Email</Label><Input value={formData.email || ''} onChange={e => setFormData({...formData, email: e.target.value})} /></div>
+                        <div><Label>Tax Rate (%)</Label><Input type="number" step="0.01" value={formData.tax_rate ?? ''} onChange={e => setFormData({...formData, tax_rate: parseFloat(e.target.value) || 0})} /></div>
                     </div>
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setEditingLocation(null)}>
-                            Cancel
-                        </Button>
-                        <Button 
-                            onClick={handleSave} 
-                            disabled={updateMutation.isPending || createMutation.isPending}
-                            className="bg-green-600 hover:bg-green-700"
-                        >
-                            {(updateMutation.isPending || createMutation.isPending) ? 'Saving...' : (editingLocation?.isNew ? 'Create Location' : 'Save Changes')}
-                        </Button>
+                        <Button variant="outline" onClick={() => setEditingLocation(null)}>Cancel</Button>
+                        <Button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700 text-white">Save</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
 
-            <AlertDialog open={!!deleteConfirm} onOpenChange={(open) => !open && setDeleteConfirm(null)}>
+            {/* Delete Confirmation */}
+            <AlertDialog open={!!deleteConfirm} onOpenChange={() => setDeleteConfirm(null)}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Delete Clinic Location?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Are you sure you want to delete "{deleteConfirm?.name}"? This action cannot be undone.
-                        </AlertDialogDescription>
+                        <AlertDialogTitle>Delete Location</AlertDialogTitle>
+                        <AlertDialogDescription>Are you sure you want to delete {deleteConfirm?.name}?</AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={() => deleteMutation.mutate(deleteConfirm.id)}
-                            className="bg-red-600 hover:bg-red-700"
-                        >
-                            Delete
-                        </AlertDialogAction>
+                        <AlertDialogAction onClick={() => deleteMutation.mutate(deleteConfirm.id)} className="bg-red-600 hover:bg-red-700">Delete</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

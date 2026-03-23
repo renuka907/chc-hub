@@ -1,3 +1,4 @@
+function safeParse(v,f=[]){if(v==null)return f;if(typeof v!=="string")return v;try{return JSON.parse(v)}catch{return f}}
 import React, { useState } from "react";
 import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
 import { useQuery } from "@tanstack/react-query";
@@ -42,8 +43,8 @@ export default function DiscountForm({ open, onOpenChange, onSuccess, editDiscou
     React.useEffect(() => {
         if (editDiscount) {
             setFormData(editDiscount);
-            setSelectedItemIds(editDiscount.applicable_item_ids ? JSON.parse(editDiscount.applicable_item_ids) : []);
-            setSelectedCategories(editDiscount.applicable_categories ? JSON.parse(editDiscount.applicable_categories) : []);
+            setSelectedItemIds(editDiscount.applicable_item_ids ? safeParse(editDiscount.applicable_item_ids) : []);
+            setSelectedCategories(editDiscount.applicable_categories ? safeParse(editDiscount.applicable_categories) : []);
         } else {
             setFormData({
                 name: "",
@@ -76,7 +77,7 @@ export default function DiscountForm({ open, onOpenChange, onSuccess, editDiscou
         pricingItems.forEach(item => {
             if (item.categories) {
                 try {
-                    const itemCats = JSON.parse(item.categories);
+                    const itemCats = safeParse(item.categories);
                     itemCats.forEach(cat => cats.add(cat));
                 } catch (e) {}
             }

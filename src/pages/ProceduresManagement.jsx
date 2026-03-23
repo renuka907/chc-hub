@@ -155,17 +155,18 @@ export default function ProceduresManagement() {
                                 )}
                             </CardHeader>
                             <CardContent className="space-y-3">
-                                {procedure.estimated_time && (
+                                {procedure.estimated_duration && (
                                     <div className="flex items-center gap-2 text-sm text-gray-600">
                                         <Clock className="w-4 h-4" />
-                                        {procedure.estimated_time}
+                                        {procedure.estimated_duration} min
                                     </div>
                                 )}
-                                {procedure.required_supplies && (
-                                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                                        <Package className="w-4 h-4" />
-                                        Supplies listed
-                                    </div>
+                                {procedure.description && (
+                                    <div className="text-sm text-gray-600 line-clamp-3 prose prose-sm max-w-none" 
+                                        dangerouslySetInnerHTML={{ __html: procedure.description }} />
+                                )}
+                                {procedure.cpt_code && (
+                                    <div className="text-xs text-gray-500">CPT: {procedure.cpt_code}</div>
                                 )}
                                 <div className="flex gap-2 pt-2">
                                     <Button

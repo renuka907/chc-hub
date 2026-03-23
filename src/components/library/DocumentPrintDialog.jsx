@@ -1,3 +1,4 @@
+function safeParse(v,f=[]){if(v==null)return f;if(typeof v!=="string")return v;try{return JSON.parse(v)}catch{return f}}
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,7 @@ export default function DocumentPrintDialog({ open, onOpenChange, document: doc,
     const [isLoaded, setIsLoaded] = React.useState(false);
     const [selectedFileIndex, setSelectedFileIndex] = React.useState(0);
     
-    const fileUrls = doc.file_urls ? JSON.parse(doc.file_urls) : [doc.document_url];
+    const fileUrls = doc.file_urls ? safeParse(doc.file_urls) : [doc.document_url];
     const currentFileUrl = fileUrls[selectedFileIndex];
 
     React.useEffect(() => {

@@ -72,7 +72,19 @@ export default function UserManagement() {
     });
 
     const deleteMutation = useMutation({
-        mutationFn: (id) => entities.User.delete(id),
+        mutationFn: async (id) => {
+            // Delete from both auth.users AND users table via serverless function
+            const res = await fetch('/api/delete-auth-user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: id }),
+            });
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(err.error || 'Failed to delete user');
+            }
+            return res.json();
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['users'] });
             setDeleteConfirm(null);

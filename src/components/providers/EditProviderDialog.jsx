@@ -1,3 +1,4 @@
+function safeParse(v,f=[]){if(v==null)return f;if(typeof v!=="string")return v;try{return JSON.parse(v)}catch{return f}}
 import React, { useState, useEffect } from "react";
 import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -57,8 +58,8 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
                     bio: provider.bio || "",
                     notes: provider.notes || "",
                     group_name: provider.group_name || "",
-                    group_member_ids: provider.group_member_ids ? JSON.parse(provider.group_member_ids) : [],
-                    addresses: provider.addresses ? JSON.parse(provider.addresses) : [],
+                    group_member_ids: safeParse(provider.group_member_ids),
+                    addresses: safeParse(provider.addresses),
                 });
                 setShowSearch(false);
             } else {
@@ -95,10 +96,11 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
         
         setSearching(true);
         try {
-            const { data } = await /* TODO: Implement searchNPIRegistry as Supabase Edge Function */ Promise.resolve({ data: null });
-            setSearchResults(data.results || []);
+            const res = await fetch(`/api/npi-search?q=${encodeURIComponent(searchTerm.trim())}`);
+            const json = await res.json();
+            setSearchResults(json.results || []);
         } catch (error) {
-            console.error('Search failed:', error);
+            console.error('NPI search failed:', error);
             setSearchResults([]);
         } finally {
             setSearching(false);
@@ -176,20 +178,18 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
             };
 
             const dataToSave = {
-                full_name: formData.full_name,
-                specialty: formData.specialty,
-                category: formData.category,
-                email: formData.email,
-                phone: formData.phone,
-                fax: formData.fax,
-                website: formData.website,
-                address: buildAddress(),
-                credentials: formData.credentials,
-                bio: formData.bio,
-                notes: formData.notes,
-                group_name: formData.group_name,
-                group_member_ids: JSON.stringify(formData.group_member_ids || []),
-                addresses: JSON.stringify(formData.addresses || []),
+                full_name: formData.full_name || null,
+                specialty: formData.specialty || null,
+                email: formData.email || null,
+                phone: formData.phone || null,
+                fax: formData.fax || null,
+                website: formData.website || null,
+                address: buildAddress() || null,
+                credentials: formData.credentials || null,
+                bio: formData.bio || null,
+                notes: formData.notes || null,
+                group_name: formData.group_name || null,
+                addresses: (formData.addresses && formData.addresses.length > 0) ? formData.addresses : null,
             };
 
             if (isNew) {
@@ -201,6 +201,7 @@ export default function EditProviderDialog({ provider, open, onOpenChange, onSav
             onOpenChange(false);
         } catch (error) {
             console.error("Error saving provider:", error);
+            alert("Error saving provider: " + (error?.message || "Unknown error"));
         } finally {
             setSaving(false);
         }

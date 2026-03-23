@@ -1,31 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat, getCurrentUser } from "@/api/supabaseHelpers";
+import { entities, getCurrentUser } from "@/api/supabaseHelpers";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import ReminderEditDialog from "../components/reminders/ReminderEditDialog";
-import NotificationPreferencesDialog from "../components/reminders/NotificationPreferencesDialog";
-import { Bell, Plus, Clock, CheckCircle2, AlertCircle, Calendar, Trash2, Search, X, Settings } from "lucide-react";
+import { Bell, Plus, Clock, CheckCircle2, AlertCircle, Calendar, Trash2, Search, MoreVertical, Eye, EyeOff, Pencil, AlarmClock } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
+
+const priorityDot = { high: "bg-red-500", medium: "bg-amber-500", low: "bg-blue-400" };
 
 export default function Reminders() {
     const [showCreateDialog, setShowCreateDialog] = useState(false);
     const [editingReminder, setEditingReminder] = useState(null);
-    const [filterStatus, setFilterStatus] = useState("all");
+    const [filter, setFilter] = useState("active"); // active, completed, all
     const [searchQuery, setSearchQuery] = useState("");
-    const [sortBy, setSortBy] = useState("due_date");
-    const [selectedReminders, setSelectedReminders] = useState(new Set());
-    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-    const [itemToDelete, setItemToDelete] = useState(null);
-    const [dueReminders, setDueReminders] = useState([]);
-    const [showNotificationPrefs, setShowNotificationPrefs] = useState(false);
+    const [selectedIds, setSelectedIds] = useState(new Set());
+    const [deleteTarget, setDeleteTarget] = useState(null); // null | id | "bulk"
     const queryClient = useQueryClient();
 
     const { data: currentUser } = useQuery({
@@ -34,661 +30,259 @@ export default function Reminders() {
     });
 
     const { data: reminders = [], isLoading } = useQuery({
-        queryKey: ['reminders'],
+        queryKey: ['reminders', currentUser?.email],
         queryFn: async () => {
             const user = await getCurrentUser();
-            const allReminders = await entities.Reminder.list('-due_date', 200);
-            return allReminders.filter(r => 
-                r.created_by === user.email || r.assigned_to === user.email
-            );
+            if (!user?.email) return [];
+            const all = await entities.Reminder.list('-due_date', 500);
+            return all.filter(r => r.created_by === user.email || r.assigned_to === user.email || (!r.created_by && !r.assigned_to));
         },
+        enabled: !!currentUser,
     });
 
-    const { data: teamMembers = [] } = useQuery({
-        queryKey: ['teamMembers'],
-        queryFn: () => entities.User.list(),
-    });
-
-
-
-    const toggleCompleteMutation = useMutation({
-        mutationFn: ({ id, completed }) => 
-            entities.Reminder.update(id, { completed }),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['reminders'] });
-        }
-    });
-
-    const deleteReminderMutation = useMutation({
-        mutationFn: (id) => entities.Reminder.delete(id),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['reminders'] });
-            setItemToDelete(null);
-            setShowDeleteDialog(false);
-        }
-    });
-
-    const bulkDeleteMutation = useMutation({
-        mutationFn: async () => {
-            for (const id of selectedReminders) {
-                await entities.Reminder.delete(id);
-            }
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['reminders'] });
-            setSelectedReminders(new Set());
-            setShowDeleteDialog(false);
-        }
-    });
-
-    const bulkCompleteMutation = useMutation({
-        mutationFn: async () => {
-            for (const id of selectedReminders) {
-                const reminder = reminders.find(r => r.id === id);
-                await entities.Reminder.update(id, { completed: !reminder?.completed });
-            }
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['reminders'] });
-            setSelectedReminders(new Set());
-        }
-    });
-
-    const handleToggleComplete = (reminder) => {
-        toggleCompleteMutation.mutate({
-            id: reminder.id,
-            completed: !reminder.completed
-        });
+    const api = async (method, body) => {
+        const resp = await fetch('/api/reminders', { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        if (!resp.ok) throw new Error('Failed');
+        return resp.json();
     };
 
-    const toggleReminderSelection = (id) => {
-        const newSelection = new Set(selectedReminders);
-        if (newSelection.has(id)) {
-            newSelection.delete(id);
+    const invalidateAll = () => { queryClient.invalidateQueries({ queryKey: ['reminders'] }); queryClient.invalidateQueries({ queryKey: ['reminderCount'] }); };
+
+    const completeMut = useMutation({
+        mutationFn: ({ id, completed }) => api('PATCH', { id, completed }),
+        onSuccess: () => invalidateAll(),
+    });
+
+    const deleteMut = useMutation({
+        mutationFn: (id) => api('DELETE', { id }),
+        onSuccess: () => { invalidateAll(); setDeleteTarget(null); },
+    });
+
+    const bulkDeleteMut = useMutation({
+        mutationFn: async () => { for (const id of selectedIds) await api('DELETE', { id }); },
+        onSuccess: () => { invalidateAll(); setSelectedIds(new Set()); setDeleteTarget(null); },
+    });
+
+    const bulkCompleteMut = useMutation({
+        mutationFn: async () => { for (const id of selectedIds) { const r = reminders.find(x => x.id === id); await api('PATCH', { id, completed: !r?.completed }); } },
+        onSuccess: () => { invalidateAll(); setSelectedIds(new Set()); },
+    });
+
+    const snooze = async (reminder, hours) => {
+        if (hours === null) {
+            await api('PATCH', { id: reminder.id, show_after: null });
+            toast.info('Reminder un-snoozed');
         } else {
-            newSelection.add(id);
+            const showAfter = new Date(Date.now() + hours * 3600000).toISOString();
+            await api('PATCH', { id: reminder.id, show_after: showAfter });
+            toast.success(`Snoozed for ${hours}h`);
         }
-        setSelectedReminders(newSelection);
+        queryClient.invalidateQueries({ queryKey: ['reminders'] });
     };
 
-    const filteredReminders = reminders
-        .filter(reminder => {
-            const matchesStatus = filterStatus === "all" || 
-                (filterStatus === "completed" ? reminder.completed : !reminder.completed);
-            const matchesSearch = reminder.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                reminder.description?.toLowerCase().includes(searchQuery.toLowerCase());
-            return matchesStatus && matchesSearch;
-        })
-        .sort((a, b) => {
-            if (sortBy === "due_date") {
-                if (!a.due_date) return 1;
-                if (!b.due_date) return -1;
-                return new Date(a.due_date) - new Date(b.due_date);
-            }
-            if (sortBy === "priority") {
-                const priorityOrder = { high: 0, medium: 1, low: 2 };
-                return (priorityOrder[a.priority] || 1) - (priorityOrder[b.priority] || 1);
-            }
-            if (sortBy === "created") {
-                return new Date(b.created_date) - new Date(a.created_date);
-            }
-            return 0;
-        });
+    const toggleSelect = (id) => setSelectedIds(prev => { const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s; });
+    const isOverdue = (d) => d && new Date(d) < new Date();
+    const isSnoozed = (r) => r.show_after && new Date(r.show_after) > new Date();
 
-    const priorityColors = {
-        low: "bg-blue-100 text-blue-800",
-        medium: "bg-yellow-100 text-yellow-800",
-        high: "bg-red-100 text-red-800"
-    };
+    // Filter & search
+    const now = new Date();
+    const filtered = reminders.filter(r => {
+        if (filter === "active" && r.completed) return false;
+        if (filter === "completed" && !r.completed) return false;
+        if (searchQuery && !r.title?.toLowerCase().includes(searchQuery.toLowerCase()) && !r.description?.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+        return true;
+    });
 
-    const getPriorityIcon = (priority) => {
-        if (priority === "high") return <AlertCircle className="w-4 h-4" />;
-        return <Clock className="w-4 h-4" />;
-    };
+    // Group
+    const today = new Date(); today.setHours(0,0,0,0);
+    const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate()+1);
+    const weekEnd = new Date(today); weekEnd.setDate(weekEnd.getDate()+7);
 
-    const isOverdue = (dueDate) => {
-        if (!dueDate) return false;
-        return new Date(dueDate) < new Date();
-    };
+    const groups = { overdue: [], today: [], tomorrow: [], thisWeek: [], later: [], noDue: [], snoozed: [], completed: [] };
+    filtered.forEach(r => {
+        if (r.completed) { groups.completed.push(r); return; }
+        if (isSnoozed(r)) { groups.snoozed.push(r); return; }
+        if (!r.due_date) { groups.noDue.push(r); return; }
+        const d = new Date(r.due_date); d.setHours(0,0,0,0);
+        if (d < today) groups.overdue.push(r);
+        else if (d.getTime() === today.getTime()) groups.today.push(r);
+        else if (d.getTime() === tomorrow.getTime()) groups.tomorrow.push(r);
+        else if (d < weekEnd) groups.thisWeek.push(r);
+        else groups.later.push(r);
+    });
 
-    const handleSnoozeReminder = async (reminder, hours) => {
-        try {
-            if (hours === null) {
-                // Un-snooze: clear the show_after field
-                await entities.Reminder.update(reminder.id, { show_after: null });
-                queryClient.invalidateQueries({ queryKey: ['reminders'] });
-                toast.info('Reminder un-snoozed');
-            } else {
-                const now = new Date();
-                const showAfter = new Date(now.getTime() + hours * 60 * 60 * 1000);
-                await entities.Reminder.update(reminder.id, { show_after: showAfter.toISOString() });
-                queryClient.invalidateQueries({ queryKey: ['reminders'] });
-                const timeLabel = hours < 24 ? `${hours} hour${hours > 1 ? 's' : ''}` : `${hours / 24} day${hours / 24 > 1 ? 's' : ''}`;
-                toast.info(`Reminder hidden for ${timeLabel}`);
-            }
-        } catch (error) {
-            toast.error('Failed to snooze reminder');
-        }
-    };
+    const activeCount = reminders.filter(r => !r.completed).length;
+    const overdueCount = reminders.filter(r => !r.completed && isOverdue(r.due_date)).length;
+    const completedCount = reminders.filter(r => r.completed).length;
 
-    // Check for due reminders and show notifications
-    useEffect(() => {
-        if (reminders.length === 0) return;
+    const ReminderRow = ({ r }) => (
+        <div className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${r.completed ? 'opacity-50' : 'hover:bg-gray-50'} ${!r.completed && isOverdue(r.due_date) ? 'bg-red-50' : ''}`}>
+            {/* Complete circle */}
+            <button onClick={() => completeMut.mutate({ id: r.id, completed: !r.completed })} className="flex-shrink-0">
+                {r.completed ? (
+                    <CheckCircle2 className="w-6 h-6 text-green-500" />
+                ) : (
+                    <div className="w-6 h-6 rounded-full border-2 border-gray-300 hover:border-purple-500 hover:bg-purple-50 transition-colors" />
+                )}
+            </button>
 
-        const now = new Date();
-        const soon = new Date(now.getTime() + 15 * 60000); // 15 minutes from now
+            {/* Content */}
+            <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                    <div className={`w-2 h-2 rounded-full flex-shrink-0 ${priorityDot[r.priority] || 'bg-gray-300'}`} />
+                    <span className={`font-medium truncate ${r.completed ? 'line-through text-gray-400' : 'text-gray-900'}`}>
+                        {r.title}
+                    </span>
+                    {!r.completed && isOverdue(r.due_date) && <Badge variant="destructive" className="text-xs px-1.5 py-0">Overdue</Badge>}
+                    {isSnoozed(r) && <Badge variant="outline" className="text-xs px-1.5 py-0 text-amber-600 border-amber-300"><EyeOff className="w-3 h-3 mr-1" />Snoozed</Badge>}
+                    {r.recurrence_type && r.recurrence_type !== "none" && <Badge variant="outline" className="text-xs px-1.5 py-0">🔁 {r.recurrence_type}</Badge>}
+                </div>
+                {r.description && <p className="text-xs text-gray-500 truncate mt-0.5 ml-4">{r.description}</p>}
+            </div>
 
-        const upcoming = reminders.filter(reminder => {
-            if (reminder.completed) return false;
-            if (!reminder.due_date) return false;
-            const dueTime = new Date(reminder.due_date);
-            return dueTime <= soon && dueTime > now;
-        });
+            {/* Due date */}
+            <div className="text-xs text-gray-400 flex-shrink-0 hidden sm:block">
+                {r.due_date ? format(new Date(r.due_date), "MMM d, h:mm a") : "No date"}
+            </div>
 
-        const overdue = reminders.filter(reminder => {
-            if (reminder.completed) return false;
-            return isOverdue(reminder.due_date);
-        });
+            {/* Actions menu */}
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <button className="p-1 rounded-md hover:bg-gray-200 flex-shrink-0">
+                        <MoreVertical className="w-4 h-4 text-gray-500" />
+                    </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-44">
+                    <DropdownMenuItem onClick={() => toggleSelect(r.id)}>
+                        <Checkbox checked={selectedIds.has(r.id)} className="w-4 h-4 mr-2 pointer-events-none" /> {selectedIds.has(r.id) ? "Deselect" : "Select"}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => completeMut.mutate({ id: r.id, completed: !r.completed })}>
+                        <CheckCircle2 className="w-4 h-4 mr-2" /> {r.completed ? "Reopen" : "Complete"}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => { setEditingReminder(r); setShowCreateDialog(true); }}>
+                        <Pencil className="w-4 h-4 mr-2" /> Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    {isSnoozed(r) ? (
+                        <DropdownMenuItem onClick={() => snooze(r, null)}>
+                            <Eye className="w-4 h-4 mr-2" /> Un-snooze
+                        </DropdownMenuItem>
+                    ) : (
+                        <>
+                            <DropdownMenuItem onClick={() => snooze(r, 1)}><AlarmClock className="w-4 h-4 mr-2" /> Snooze 1 hour</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => snooze(r, 4)}><AlarmClock className="w-4 h-4 mr-2" /> Snooze 4 hours</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => snooze(r, 24)}><AlarmClock className="w-4 h-4 mr-2" /> Snooze 1 day</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => snooze(r, 48)}><AlarmClock className="w-4 h-4 mr-2" /> Snooze 2 days</DropdownMenuItem>
+                        </>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => setDeleteTarget(r.id)} className="text-red-600 focus:text-red-600">
+                        <Trash2 className="w-4 h-4 mr-2" /> Delete
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
+    );
 
-        setDueReminders([...overdue, ...upcoming]);
-
-        // Show toast notifications for newly due reminders
-        overdue.forEach(reminder => {
-            const key = `overdue-${reminder.id}`;
-            if (!sessionStorage.getItem(key)) {
-                toast.error(`⏰ Overdue: ${reminder.title}`, { duration: 5000 });
-                sessionStorage.setItem(key, 'shown');
-            }
-        });
-
-        upcoming.forEach(reminder => {
-            const key = `upcoming-${reminder.id}`;
-            if (!sessionStorage.getItem(key)) {
-                toast.info(`📢 Coming up soon: ${reminder.title}`, { duration: 4000 });
-                sessionStorage.setItem(key, 'shown');
-            }
-        });
-    }, [reminders]);
-
-    if (isLoading) {
+    const Section = ({ label, color, items, icon: Icon }) => {
+        if (items.length === 0) return null;
         return (
-            <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+            <div className="mb-4">
+                <div className="flex items-center gap-2 mb-2 px-2">
+                    {Icon && <Icon className={`w-4 h-4 ${color}`} />}
+                    <h3 className={`text-sm font-semibold ${color}`}>{label}</h3>
+                    <span className="text-xs text-gray-400">({items.length})</span>
+                </div>
+                <div className="bg-white rounded-2xl shadow-sm border divide-y divide-gray-100">
+                    {items.map(r => <ReminderRow key={r.id} r={r} />)}
+                </div>
             </div>
         );
-    }
+    };
+
+    if (isLoading) return <div className="flex items-center justify-center py-12"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600" /></div>;
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4">
             {/* Header */}
-            <div className="bg-white rounded-3xl p-6 shadow-md">
+            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-5 shadow-lg text-white">
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
-                            <Bell className="w-6 h-6 text-purple-600" />
-                        </div>
+                    <div className="flex items-center gap-3">
+                        <Bell className="w-7 h-7" />
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900">Reminders</h1>
-                            <p className="text-gray-600">Track tasks and upcoming deadlines</p>
+                            <h1 className="text-2xl font-bold">Reminders</h1>
+                            <p className="text-purple-200 text-sm">{activeCount} active · {overdueCount > 0 ? `${overdueCount} overdue · ` : ''}{completedCount} done</p>
                         </div>
                     </div>
-                    <div className="flex gap-2">
-                        <Button 
-                            variant="outline"
-                            onClick={() => setShowNotificationPrefs(true)}
-                            className="border-purple-300"
-                        >
-                            <Settings className="w-4 h-4 mr-2" />
-                            Notification Settings
-                        </Button>
-                        <Button 
-                            onClick={() => {
-                                setEditingReminder(null);
-                                setShowCreateDialog(true);
-                            }}
-                            className="bg-purple-600 hover:bg-purple-700"
-                        >
-                            <Plus className="w-4 h-4 mr-2" />
-                            New Reminder
-                        </Button>
-                    </div>
+                    <Button onClick={() => { setEditingReminder(null); setShowCreateDialog(true); }} className="bg-white text-purple-700 hover:bg-purple-50 font-semibold">
+                        <Plus className="w-4 h-4 mr-1.5" /> New
+                    </Button>
                 </div>
             </div>
 
-            {/* Search and Filters */}
-            <Card className="bg-white">
-                <CardContent className="pt-6 space-y-4">
-                    <div className="flex gap-2 flex-col md:flex-row">
-                        <div className="flex-1 relative">
-                            <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-                            <Input
-                                placeholder="Search reminders..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="pl-10"
-                            />
-                        </div>
-                        <Select value={sortBy} onValueChange={setSortBy}>
-                            <SelectTrigger className="w-full md:w-48">
-                                <SelectValue placeholder="Sort by" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="due_date">Due Date</SelectItem>
-                                <SelectItem value="priority">Priority</SelectItem>
-                                <SelectItem value="created">Recently Added</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    {/* Status Tabs */}
-                    <div className="flex gap-2 flex-wrap">
-                        <Button
-                            variant={filterStatus === "all" ? "default" : "outline"}
-                            onClick={() => setFilterStatus("all")}
-                            className={filterStatus === "all" ? "bg-purple-600" : ""}
-                            size="sm"
-                        >
-                            All ({reminders.length})
-                        </Button>
-                        <Button
-                            variant={filterStatus === "active" ? "default" : "outline"}
-                            onClick={() => setFilterStatus("active")}
-                            className={filterStatus === "active" ? "bg-purple-600" : ""}
-                            size="sm"
-                        >
-                            Active ({reminders.filter(r => !r.completed).length})
-                        </Button>
-                        <Button
-                            variant={filterStatus === "completed" ? "default" : "outline"}
-                            onClick={() => setFilterStatus("completed")}
-                            className={filterStatus === "completed" ? "bg-purple-600" : ""}
-                            size="sm"
-                        >
-                            Completed ({reminders.filter(r => r.completed).length})
-                        </Button>
-                    </div>
-                </CardContent>
-            </Card>
-
-            {/* Due Reminders Alert */}
-            {dueReminders.length > 0 && (
-                <Card className="border-red-300 bg-red-50">
-                    <CardContent className="p-4">
-                        <div className="flex items-start justify-between gap-4">
-                            <div className="flex items-start gap-3 flex-1">
-                                <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
-                                <div>
-                                    <h3 className="font-semibold text-red-900 mb-2">You have {dueReminders.length} due reminder{dueReminders.length !== 1 ? "s" : ""}</h3>
-                                    <div className="space-y-1">
-                                        {dueReminders.slice(0, 3).map(reminder => (
-                                            <div key={reminder.id} className="text-sm text-red-800">
-                                                • <strong>{reminder.title}</strong>
-                                                {reminder.due_date && (
-                                                    <span className="ml-2 text-red-700">
-                                                        {isOverdue(reminder.due_date) ? "Overdue" : "Due soon"}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        ))}
-                                        {dueReminders.length > 3 && (
-                                            <div className="text-sm text-red-800">
-                                                +{dueReminders.length - 3} more
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                    setFilterStatus("active");
-                                    setSearchQuery("");
-                                }}
-                                className="text-red-700 border-red-300 hover:bg-red-100"
-                            >
-                                View All
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
-            )}
-
-            {/* Bulk Actions Bar */}
-            {selectedReminders.size > 0 && (
-                <Card className="border-purple-300 bg-purple-50">
-                    <CardContent className="p-4 flex items-center justify-between">
-                        <span className="text-sm font-medium text-gray-700">
-                            {selectedReminders.size} selected
-                        </span>
-                        <div className="flex gap-2">
-                            <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => bulkCompleteMutation.mutate()}
-                            >
-                                Mark as Complete
-                            </Button>
-                            <Button
-                                size="sm"
-                                variant="destructive"
-                                onClick={() => {
-                                    setShowDeleteDialog(true);
-                                    setItemToDelete("bulk");
-                                }}
-                            >
-                                Delete Selected
-                            </Button>
-                            <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => setSelectedReminders(new Set())}
-                            >
-                                Clear
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
-            )}
-
-            {/* Reminders List */}
-            <div className="space-y-6">
-                {filteredReminders.length === 0 ? (
-                    <Card className="text-center py-12">
-                        <CardContent>
-                            <Bell className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                            <p className="text-gray-500 text-lg">No reminders found</p>
-                            <p className="text-gray-400 text-sm mt-2">
-                                {filterStatus === "all" 
-                                    ? "Create your first reminder to get started"
-                                    : `No ${filterStatus} reminders`}
-                            </p>
-                        </CardContent>
-                    </Card>
-                ) : (
-                    (() => {
-                        const now = new Date();
-                        const today = new Date();
-                        today.setHours(0, 0, 0, 0);
-                        const tomorrow = new Date(today);
-                        tomorrow.setDate(tomorrow.getDate() + 1);
-                        const weekEnd = new Date(today);
-                        weekEnd.setDate(weekEnd.getDate() + 7);
-
-                        const groups = {
-                            snoozed: [],
-                            overdue: [],
-                            today: [],
-                            tomorrow: [],
-                            week: [],
-                            later: [],
-                            noDueDate: []
-                        };
-
-                        filteredReminders.forEach(reminder => {
-                            // Check if reminder is snoozed
-                            if (reminder.show_after && new Date(reminder.show_after) > now) {
-                                groups.snoozed.push(reminder);
-                                return;
-                            }
-
-                            if (!reminder.due_date) {
-                                groups.noDueDate.push(reminder);
-                            } else {
-                                const dueDate = new Date(reminder.due_date);
-                                dueDate.setHours(0, 0, 0, 0);
-
-                                if (dueDate < today) {
-                                    groups.overdue.push(reminder);
-                                } else if (dueDate.getTime() === today.getTime()) {
-                                    groups.today.push(reminder);
-                                } else if (dueDate.getTime() === tomorrow.getTime()) {
-                                    groups.tomorrow.push(reminder);
-                                } else if (dueDate < weekEnd) {
-                                    groups.week.push(reminder);
-                                } else {
-                                    groups.later.push(reminder);
-                                }
-                            }
-                        });
-
-                        const ReminderCard = ({ reminder }) => (
-                            <Card 
-                                key={reminder.id}
-                                className={`transition-all hover:shadow-lg ${
-                                    reminder.completed ? 'bg-gray-50 opacity-75' : 'bg-white'
-                                } ${isOverdue(reminder.due_date) && !reminder.completed ? 'border-red-300 border-2' : ''}`}
-                            >
-                                <CardContent className="p-4">
-                                    <div className="flex items-start gap-4">
-                                        <Checkbox
-                                            checked={selectedReminders.has(reminder.id)}
-                                            onCheckedChange={() => toggleReminderSelection(reminder.id)}
-                                            className="mt-1"
-                                            title="Select for bulk actions"
-                                        />
-                                        <Checkbox
-                                            checked={reminder.completed}
-                                            onCheckedChange={() => handleToggleComplete(reminder)}
-                                            className="mt-1"
-                                            title="Mark as complete"
-                                        />
-
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <h3 className={`font-semibold text-gray-900 ${
-                                                    reminder.completed ? 'line-through text-gray-500' : ''
-                                                }`}>
-                                                    {reminder.title}
-                                                </h3>
-                                                <Badge className={priorityColors[reminder.priority]}>
-                                                    {getPriorityIcon(reminder.priority)}
-                                                    <span className="ml-1">{reminder.priority}</span>
-                                                </Badge>
-                                                {isOverdue(reminder.due_date) && !reminder.completed && (
-                                                    <Badge variant="destructive">Overdue</Badge>
-                                                )}
-                                            </div>
-
-                                            {reminder.description && (
-                                                <p className={`text-sm mb-2 ${
-                                                    reminder.completed ? 'text-gray-400' : 'text-gray-600'
-                                                }`}>
-                                                    {reminder.description}
-                                                </p>
-                                            )}
-
-                                            <div className="flex items-center gap-4 text-sm text-gray-500">
-                                               {reminder.due_date && (
-                                                   <div className="flex items-center gap-1">
-                                                       <Calendar className="w-4 h-4" />
-                                                       {format(new Date(reminder.due_date), "MMM d, yyyy h:mm a")}
-                                                   </div>
-                                               )}
-                                               {reminder.assigned_to && (
-                                                   <div className="flex items-center gap-1">
-                                                       <span className="text-xs">Assigned to:</span>
-                                                       <span className="font-medium">{reminder.assigned_to}</span>
-                                                   </div>
-                                               )}
-                                               {reminder.recurrence_type && reminder.recurrence_type !== "none" && (
-                                                   <Badge variant="outline" className="text-xs">
-                                                       Recurring: {reminder.recurrence_type}
-                                                   </Badge>
-                                               )}
-                                            </div>
-                                        </div>
-
-                                        <div className="flex gap-2">
-                                             {reminder.show_after && new Date(reminder.show_after) > new Date() ? (
-                                                 <Button 
-                                                     variant="ghost" 
-                                                     size="sm"
-                                                     onClick={() => handleSnoozeReminder(reminder, null)}
-                                                 >
-                                                     Un-snooze
-                                                 </Button>
-                                             ) : (
-                                                 <DropdownMenu>
-                                                      <DropdownMenuTrigger asChild>
-                                                          <Button variant="ghost" size="sm">
-                                                              Snooze
-                                                          </Button>
-                                                      </DropdownMenuTrigger>
-                                                      <DropdownMenuContent align="end">
-                                                          <DropdownMenuItem onClick={() => handleSnoozeReminder(reminder, 1)}>
-                                                              1 hour
-                                                          </DropdownMenuItem>
-                                                          <DropdownMenuItem onClick={() => handleSnoozeReminder(reminder, 4)}>
-                                                              4 hours
-                                                          </DropdownMenuItem>
-                                                          <DropdownMenuItem onClick={() => handleSnoozeReminder(reminder, 8)}>
-                                                              8 hours
-                                                          </DropdownMenuItem>
-                                                          <DropdownMenuItem onClick={() => handleSnoozeReminder(reminder, 24)}>
-                                                              24 hours
-                                                          </DropdownMenuItem>
-                                                          <DropdownMenuItem onClick={() => handleSnoozeReminder(reminder, 48)}>
-                                                              2 days
-                                                          </DropdownMenuItem>
-                                                      </DropdownMenuContent>
-                                                 </DropdownMenu>
-                                             )}
-                                              <Button
-                                                  variant="ghost"
-                                                  size="sm"
-                                                  onClick={() => {
-                                                      setEditingReminder(reminder);
-                                                      setShowCreateDialog(true);
-                                                  }}
-                                              >
-                                                  Edit
-                                              </Button>
-                                              <Button
-                                                  variant="ghost"
-                                                  size="icon"
-                                                  className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                                                  onClick={() => {
-                                                      setItemToDelete(reminder.id);
-                                                      setShowDeleteDialog(true);
-                                                  }}
-                                              >
-                                                  <Trash2 className="w-4 h-4" />
-                                              </Button>
-                                          </div>
-                                     </div>
-                                </CardContent>
-                            </Card>
-                        );
-
-                        return (
-                            <>
-                                {groups.snoozed.length > 0 && (
-                                    <div>
-                                        <h2 className="text-lg font-semibold text-gray-400 mb-3">Snoozed</h2>
-                                        <div className="space-y-3 opacity-60">
-                                            {groups.snoozed.map(reminder => (
-                                                <ReminderCard key={reminder.id} reminder={reminder} />
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                                {groups.overdue.length > 0 && (
-                                    <div>
-                                        <h2 className="text-lg font-semibold text-red-600 mb-3">Overdue</h2>
-                                        <div className="space-y-3">
-                                            {groups.overdue.map(reminder => <ReminderCard key={reminder.id} reminder={reminder} />)}
-                                        </div>
-                                    </div>
-                                )}
-                                {groups.today.length > 0 && (
-                                    <div>
-                                        <h2 className="text-lg font-semibold text-blue-600 mb-3">Today</h2>
-                                        <div className="space-y-3">
-                                            {groups.today.map(reminder => <ReminderCard key={reminder.id} reminder={reminder} />)}
-                                        </div>
-                                    </div>
-                                )}
-                                {groups.tomorrow.length > 0 && (
-                                    <div>
-                                        <h2 className="text-lg font-semibold text-purple-600 mb-3">Tomorrow</h2>
-                                        <div className="space-y-3">
-                                            {groups.tomorrow.map(reminder => <ReminderCard key={reminder.id} reminder={reminder} />)}
-                                        </div>
-                                    </div>
-                                )}
-                                {groups.week.length > 0 && (
-                                    <div>
-                                        <h2 className="text-lg font-semibold text-green-600 mb-3">This Week</h2>
-                                        <div className="space-y-3">
-                                            {groups.week.map(reminder => <ReminderCard key={reminder.id} reminder={reminder} />)}
-                                        </div>
-                                    </div>
-                                )}
-                                {groups.later.length > 0 && (
-                                    <div>
-                                        <h2 className="text-lg font-semibold text-gray-600 mb-3">Later</h2>
-                                        <div className="space-y-3">
-                                            {groups.later.map(reminder => <ReminderCard key={reminder.id} reminder={reminder} />)}
-                                        </div>
-                                    </div>
-                                )}
-                                {groups.noDueDate.length > 0 && (
-                                    <div>
-                                        <h2 className="text-lg font-semibold text-gray-500 mb-3">No Due Date</h2>
-                                        <div className="space-y-3">
-                                            {groups.noDueDate.map(reminder => <ReminderCard key={reminder.id} reminder={reminder} />)}
-                                        </div>
-                                    </div>
-                                )}
-                            </>
-                        );
-                    })()
-                )}
+            {/* Search + Filter */}
+            <div className="flex gap-2 items-center">
+                <div className="flex-1 relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Input placeholder="Search..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="pl-9 h-9" />
+                </div>
+                <div className="flex bg-gray-100 rounded-lg p-0.5">
+                    {[
+                        { key: "active", label: "Active" },
+                        { key: "completed", label: "Done" },
+                        { key: "all", label: "All" },
+                    ].map(f => (
+                        <button key={f.key} onClick={() => setFilter(f.key)}
+                            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${filter === f.key ? 'bg-white shadow text-purple-700' : 'text-gray-500 hover:text-gray-700'}`}>
+                            {f.label}
+                        </button>
+                    ))}
+                </div>
             </div>
 
-            <ReminderEditDialog
-                open={showCreateDialog}
-                onOpenChange={setShowCreateDialog}
-                reminder={editingReminder}
-                users={teamMembers}
-                onSaved={() => {
-                    queryClient.invalidateQueries({ queryKey: ['reminders'] });
-                    setShowCreateDialog(false);
-                    setEditingReminder(null);
-                }}
-            />
+            {/* Bulk actions */}
+            {selectedIds.size > 0 && (
+                <div className="flex items-center gap-2 bg-purple-50 border border-purple-200 rounded-xl px-4 py-2">
+                    <span className="text-sm font-medium text-purple-700">{selectedIds.size} selected</span>
+                    <div className="flex-1" />
+                    <Button size="sm" variant="outline" onClick={() => bulkCompleteMut.mutate()} className="h-7 text-xs">✓ Complete</Button>
+                    <Button size="sm" variant="outline" onClick={() => setDeleteTarget("bulk")} className="h-7 text-xs text-red-600 border-red-200 hover:bg-red-50">Delete</Button>
+                    <Button size="sm" variant="ghost" onClick={() => setSelectedIds(new Set())} className="h-7 text-xs">Clear</Button>
+                </div>
+            )}
 
-            <NotificationPreferencesDialog
-                open={showNotificationPrefs}
-                onOpenChange={setShowNotificationPrefs}
-            />
+            {/* Reminders */}
+            {filtered.length === 0 ? (
+                <Card className="text-center py-12">
+                    <CardContent>
+                        <Bell className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                        <p className="text-gray-500">{filter === "all" ? "No reminders yet" : `No ${filter} reminders`}</p>
+                    </CardContent>
+                </Card>
+            ) : (
+                <>
+                    <Section label="Overdue" color="text-red-600" items={groups.overdue} icon={AlertCircle} />
+                    <Section label="Today" color="text-blue-600" items={groups.today} icon={Calendar} />
+                    <Section label="Tomorrow" color="text-purple-600" items={groups.tomorrow} icon={Clock} />
+                    <Section label="This Week" color="text-green-600" items={groups.thisWeek} icon={Calendar} />
+                    <Section label="Later" color="text-gray-600" items={groups.later} icon={Calendar} />
+                    <Section label="No Due Date" color="text-gray-400" items={groups.noDue} icon={Bell} />
+                    <Section label="Snoozed" color="text-amber-500" items={groups.snoozed} icon={EyeOff} />
+                    <Section label="Completed" color="text-green-500" items={groups.completed} icon={CheckCircle2} />
+                </>
+            )}
 
-            {/* Delete Dialog */}
-            <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+            <ReminderEditDialog open={showCreateDialog} onOpenChange={setShowCreateDialog} reminder={editingReminder} onSaved={() => { queryClient.invalidateQueries({ queryKey: ['reminders'] }); setShowCreateDialog(false); setEditingReminder(null); }} />
+
+            <AlertDialog open={!!deleteTarget} onOpenChange={(open) => { if (!open) setDeleteTarget(null); }}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Delete Reminder{itemToDelete === "bulk" ? "s" : ""}?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            {itemToDelete === "bulk"
-                                ? `Are you sure you want to delete ${selectedReminders.size} reminder${selectedReminders.size !== 1 ? "s" : ""}? This action cannot be undone.`
-                                : "Are you sure you want to delete this reminder? This action cannot be undone."}
-                        </AlertDialogDescription>
+                        <AlertDialogTitle>Delete {deleteTarget === "bulk" ? `${selectedIds.size} reminders` : "reminder"}?</AlertDialogTitle>
+                        <AlertDialogDescription>This cannot be undone.</AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                            className="bg-red-600 hover:bg-red-700"
-                            onClick={() => {
-                                if (itemToDelete === "bulk") {
-                                    bulkDeleteMutation.mutate();
-                                } else {
-                                    deleteReminderMutation.mutate(itemToDelete);
-                                }
-                            }}
-                        >
-                            Delete
-                        </AlertDialogAction>
+                        <AlertDialogAction className="bg-red-600 hover:bg-red-700" onClick={() => { deleteTarget === "bulk" ? bulkDeleteMut.mutate() : deleteMut.mutate(deleteTarget); }}>Delete</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

@@ -1,21 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { format, addWeeks, addMonths, addDays, differenceInDays } from "date-fns";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { CalendarDays, Clock, Calculator, Printer } from "lucide-react";
 
 export default function FollowUpDates() {
-  const [today, setToday] = React.useState(new Date());
-  const [selectedDate, setSelectedDate] = React.useState("");
+  const [today, setToday] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState("");
 
-  // Auto-refresh at local midnight so dates update every day without reload
   React.useEffect(() => {
     const now = new Date();
     const nextMidnight = new Date(now);
     nextMidnight.setHours(24, 0, 0, 0);
-    const msUntilMidnight = nextMidnight.getTime() - now.getTime();
-
-    const timer = setTimeout(() => setToday(new Date()), msUntilMidnight);
+    const timer = setTimeout(() => setToday(new Date()), nextMidnight.getTime() - now.getTime());
     return () => clearTimeout(timer);
   }, [today]);
 
@@ -32,102 +29,114 @@ export default function FollowUpDates() {
   ];
 
   const monthItems = [
-    { label: "2 1/2 months", date: addDays(addMonths(today, 2), 15) },
+    { label: "1 month", date: addMonths(today, 1) },
+    { label: "2 months", date: addMonths(today, 2) },
+    { label: "2½ months", date: addDays(addMonths(today, 2), 15) },
     { label: "3 months", date: addMonths(today, 3) },
-    { label: "3 1/2 months", date: addDays(addMonths(today, 3), 15) },
+    { label: "3½ months", date: addDays(addMonths(today, 3), 15) },
     { label: "5 months", date: addMonths(today, 5) },
-    { label: "5 1/2 months", date: addDays(addMonths(today, 5), 15) },
+    { label: "5½ months", date: addDays(addMonths(today, 5), 15) },
     { label: "6 months", date: addMonths(today, 6) },
   ];
 
-  const calculateTimeSince = () => {
+  const timeSince = (() => {
     if (!selectedDate) return null;
-    
-    const pastDate = new Date(selectedDate);
-    const totalDays = differenceInDays(today, pastDate);
-    
-    if (totalDays < 0) return { weeks: 0, days: 0, total: totalDays };
-    
-    const weeks = Math.floor(totalDays / 7);
-    const days = totalDays % 7;
-    
-    return { weeks, days, total: totalDays };
-  };
-
-  const timeSince = calculateTimeSince();
+    const total = differenceInDays(today, new Date(selectedDate));
+    if (total < 0) return { weeks: 0, days: 0, total, negative: true };
+    return { weeks: Math.floor(total / 7), days: total % 7, total, negative: false };
+  })();
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Follow‑up Dates</h1>
-        <p className="text-gray-600">Today: {format(today, "EEEE, MMM d, yyyy")}</p>
-        <p className="text-xs text-gray-500 mt-1">Auto‑updates every day at midnight (local time)</p>
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-violet-600 to-purple-600 rounded-2xl p-6 shadow-lg">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div>
+            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+              <CalendarDays className="w-6 h-6" /> Follow‑up Dates
+            </h1>
+            <p className="text-violet-200 text-sm mt-1">
+              Today: {format(today, "EEEE, MMM d, yyyy")}
+            </p>
+          </div>
+          <Button onClick={() => {
+            const rows = (label, items) => items.map(i => 
+              `<tr><td style="padding:6px 12px;font-weight:600;color:#7c3aed;width:100px;">${i.label}</td><td style="padding:6px 12px;">${format(i.date, "EEE, MMM d, yyyy")}</td></tr>`
+            ).join('');
+            const w = window.open('', '', 'width=600,height=700');
+            w.document.write(`<html><head><style>body{font-family:Arial,sans-serif;margin:30px;}table{border-collapse:collapse;width:100%;margin-bottom:20px;}tr{border-bottom:1px solid #eee;}h1{font-size:20px;margin:0 0 4px;}h2{font-size:14px;color:#7c3aed;margin:16px 0 6px;border-bottom:2px solid #7c3aed;padding-bottom:4px;}p{font-size:11px;color:#888;margin:0 0 16px;}</style></head><body>
+              <h1>Follow‑up Dates</h1>
+              <p>From: ${format(today, "EEEE, MMM d, yyyy")}</p>
+              <h2>By Weeks</h2><table>${rows('Weeks', weekItems)}</table>
+              <h2>By Months</h2><table>${rows('Months', monthItems)}</table>
+              <p style="margin-top:20px;border-top:1px solid #ccc;padding-top:8px;">Contemporary Health Center</p>
+            </body></html>`);
+            w.document.close();
+            setTimeout(() => w.print(), 250);
+          }} size="sm" className="bg-white/20 hover:bg-white/30 text-white border-0">
+            <Printer className="w-4 h-4 mr-1" /> Print
+          </Button>
+        </div>
       </div>
 
       {/* Time Since Calculator */}
-      <Card className="border-2 border-blue-200 bg-blue-50">
-        <CardHeader>
-          <CardTitle className="text-blue-900">Time Since Calculator</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label htmlFor="date-input">Enter a past date:</Label>
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div className="px-4 py-3 bg-blue-50 border-b border-blue-100 flex items-center gap-2">
+          <Calculator className="w-4 h-4 text-blue-600" />
+          <span className="font-semibold text-blue-900 text-sm">Time Since Calculator</span>
+        </div>
+        <div className="p-4">
+          <div className="flex items-center gap-3 flex-wrap">
+            <label className="text-sm text-gray-600 shrink-0">Enter a past date:</label>
             <Input
-              id="date-input"
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="bg-white"
+              className="w-auto"
             />
+            {timeSince && !timeSince.negative && (
+              <div className="flex items-center gap-2 bg-blue-50 rounded-lg px-4 py-2 border border-blue-200">
+                <Clock className="w-4 h-4 text-blue-600" />
+                <span className="font-bold text-blue-900">
+                  {timeSince.weeks}w {timeSince.days}d
+                </span>
+                <span className="text-blue-600 text-sm">({timeSince.total} days)</span>
+              </div>
+            )}
+            {timeSince?.negative && (
+              <span className="text-red-500 text-sm">Please select a past date</span>
+            )}
           </div>
-          
-          {timeSince && timeSince.total >= 0 && (
-            <div className="bg-white rounded-lg p-4 border-2 border-blue-300">
-              <div className="text-2xl font-bold text-blue-900 mb-2">
-                {timeSince.weeks} week{timeSince.weeks !== 1 ? 's' : ''} and {timeSince.days} day{timeSince.days !== 1 ? 's' : ''}
-              </div>
-              <div className="text-gray-600">
-                ({timeSince.total} total day{timeSince.total !== 1 ? 's' : ''})
-              </div>
-            </div>
-          )}
-          
-          {timeSince && timeSince.total < 0 && (
-            <div className="bg-red-50 rounded-lg p-4 border-2 border-red-300">
-              <div className="text-red-700 font-semibold">
-                Please select a date in the past
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Weeks Column */}
-        <div>
-          <h2 className="text-2xl font-bold text-purple-700 mb-4">Weeks</h2>
-          <div className="space-y-3">
-            {weekItems.map((item) => (
-              <div key={item.label} className="rounded-lg border bg-white p-4 shadow-sm">
-                <div className="text-lg font-semibold text-purple-600">{item.label}</div>
-                <div className="text-lg font-semibold text-gray-900 mt-1">
-                  {format(item.date, "EEE, MMM d, yyyy")}
-                </div>
+      {/* Date Tables */}
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Weeks */}
+        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+          <div className="px-4 py-3 bg-purple-50 border-b border-purple-100">
+            <span className="font-semibold text-purple-900 text-sm">By Weeks</span>
+          </div>
+          <div className="divide-y divide-gray-100">
+            {weekItems.map(item => (
+              <div key={item.label} className="flex items-center justify-between px-4 py-2.5 hover:bg-gray-50">
+                <span className="text-sm font-medium text-purple-700 w-24">{item.label}</span>
+                <span className="text-sm text-gray-900 font-medium">{format(item.date, "EEE, MMM d, yyyy")}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Months Column */}
-        <div>
-          <h2 className="text-2xl font-bold text-purple-700 mb-4">Months</h2>
-          <div className="space-y-3">
-            {monthItems.map((item) => (
-              <div key={item.label} className="rounded-lg border bg-white p-4 shadow-sm">
-                <div className="text-lg font-semibold text-purple-600">{item.label}</div>
-                <div className="text-lg font-semibold text-gray-900 mt-1">
-                  {format(item.date, "EEE, MMM d, yyyy")}
-                </div>
+        {/* Months */}
+        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+          <div className="px-4 py-3 bg-purple-50 border-b border-purple-100">
+            <span className="font-semibold text-purple-900 text-sm">By Months</span>
+          </div>
+          <div className="divide-y divide-gray-100">
+            {monthItems.map(item => (
+              <div key={item.label} className="flex items-center justify-between px-4 py-2.5 hover:bg-gray-50">
+                <span className="text-sm font-medium text-purple-700 w-24">{item.label}</span>
+                <span className="text-sm text-gray-900 font-medium">{format(item.date, "EEE, MMM d, yyyy")}</span>
               </div>
             ))}
           </div>

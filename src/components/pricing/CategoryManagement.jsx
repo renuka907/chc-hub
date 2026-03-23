@@ -1,3 +1,4 @@
+function safeParse(v,f=[]){if(v==null)return f;if(typeof v!=="string")return v;try{return JSON.parse(v)}catch{return f}}
 import React, { useState } from "react";
 import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -57,7 +58,7 @@ export default function CategoryManagement({ open, onOpenChange }) {
             // Handle new categories array format
             if (item.categories) {
                 try {
-                    const itemCats = JSON.parse(item.categories);
+                    const itemCats = safeParse(item.categories);
                     itemCats.forEach(cat => cats.add(cat));
                 } catch (e) {}
             }
@@ -76,7 +77,7 @@ export default function CategoryManagement({ open, onOpenChange }) {
             let cats = [];
             if (item.categories) {
                 try {
-                    cats = JSON.parse(item.categories);
+                    cats = safeParse(item.categories);
                 } catch (e) {}
             } else if (item.category) {
                 cats = [item.category];
@@ -117,7 +118,7 @@ export default function CategoryManagement({ open, onOpenChange }) {
             let cats = [];
             if (item.categories) {
                 try {
-                    cats = JSON.parse(item.categories);
+                    cats = safeParse(item.categories);
                 } catch (e) {}
             } else if (item.category) {
                 cats = [item.category];
@@ -129,7 +130,7 @@ export default function CategoryManagement({ open, onOpenChange }) {
             let cats = [];
             if (item.categories) {
                 try {
-                    cats = JSON.parse(item.categories);
+                    cats = safeParse(item.categories);
                 } catch (e) {}
             } else if (item.category) {
                 cats = [item.category];

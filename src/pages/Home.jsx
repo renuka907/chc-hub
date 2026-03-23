@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
+import Announcements from "@/components/Announcements";
 import { 
     BookOpen, 
     FileText, 
@@ -9,7 +10,9 @@ import {
     Stethoscope,
     Package,
     MessageSquare,
-    TestTube
+    TestTube,
+    Camera,
+    Sparkles
 } from "lucide-react";
 
 export default function Home() {
@@ -39,27 +42,30 @@ export default function Home() {
 
     return (
         <div className="space-y-8">
-            <div className="bg-gradient-to-r from-purple-200 via-blue-100 to-cyan-200 rounded-3xl p-8 md:p-12 shadow-lg">
+            <div className="bg-gradient-to-r from-purple-500 via-violet-500 to-pink-500 rounded-3xl p-8 md:p-12 shadow-lg">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
-                        <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-md">
+                        <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-md">
                             <Stethoscope className="w-8 h-8 text-white" />
                         </div>
                         <div>
-                            <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+                            <h1 className="text-4xl md:text-5xl font-bold text-white">
                                 CHC Hub
                             </h1>
-                            <p className="text-lg text-purple-700 mt-1">
+                            <p className="text-lg text-white/80 mt-1">
                                 Step-by-step care made simple
                             </p>
                         </div>
                     </div>
-                    <div className="hidden md:flex items-center space-x-2 text-sm text-gray-700">
+                    <div className="hidden md:flex items-center space-x-2 text-sm text-white/70">
                         <span>✨</span>
                         <span>Powered by AI</span>
                     </div>
                 </div>
             </div>
+
+            {/* Announcements */}
+            <Announcements />
 
             {/* Choose Section Header */}
             <div className="bg-white rounded-3xl p-6 shadow-md">
@@ -171,6 +177,29 @@ export default function Home() {
                                 </h3>
                                 <p className="text-xs text-gray-700">
                                     Browse FAQs or submit questions
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </Link>
+
+                <Link to={createPageUrl("SkinAnalysis")}>
+                    <div className="h-full bg-gradient-to-br from-pink-200 to-fuchsia-300 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer relative overflow-hidden">
+                        <div className="absolute top-2 right-2">
+                            <span className="bg-white/80 text-fuchsia-600 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm flex items-center gap-1">
+                                <Sparkles className="w-3 h-3" /> AI
+                            </span>
+                        </div>
+                        <div className="flex flex-col items-center text-center space-y-2">
+                            <div className="w-12 h-12 bg-white/60 rounded-xl flex items-center justify-center shadow-sm">
+                                <Camera className="w-6 h-6 text-gray-700" />
+                            </div>
+                            <div>
+                                <h3 className="text-base font-bold text-gray-900 mb-1">
+                                    Skin Analysis
+                                </h3>
+                                <p className="text-xs text-gray-700">
+                                    AI-powered skin assessment & recommendations
                                 </p>
                             </div>
                         </div>

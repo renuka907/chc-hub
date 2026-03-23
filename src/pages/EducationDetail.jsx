@@ -3,14 +3,32 @@ import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat, g
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import PrintableDocument from "../components/PrintableDocument";
 import EducationTopicForm from "../components/EducationTopicForm";
 import EducationPrintDialog from "../components/library/EducationPrintDialog";
 import EducationVersionHistory from "../components/education/EducationVersionHistory";
-import { Printer, ArrowLeft, Calendar, ExternalLink, Pencil, Star, History, Trash2 } from "lucide-react";
+import { Printer, ArrowLeft, ExternalLink, Pencil, Star, History, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
+
+const CHC_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png";
+
+const PRINT_STYLES = `
+@media print {
+    @page { margin: 0.5in; size: letter; }
+    nav, header, footer, .no-print { display: none !important; height: 0 !important; min-height: 0 !important; margin: 0 !important; padding: 0 !important; overflow: hidden !important; line-height: 0 !important; font-size: 0 !important; border: 0 !important; }
+    body, html, #root { margin: 0 !important; padding: 0 !important; }
+    main { padding: 0 !important; margin: 0 !important; max-width: 100% !important; }
+    body > div, #root > div { min-height: auto !important; padding: 0 !important; background: white !important; }
+    .max-w-4xl { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+    .max-w-7xl { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+    .doc-page { box-shadow: none !important; border: none !important; background: white !important; padding: 0 !important; margin: 0 !important; border-radius: 0 !important; }
+    .doc-page * { background-color: transparent !important; background-image: none !important; }
+    .doc-page h1, .doc-page h2, .doc-page h3, .doc-page h4, .doc-page h5, .doc-page h6 { page-break-after: avoid; break-after: avoid; }
+    .doc-page .print-section { page-break-inside: avoid; border: 1px solid #999 !important; padding: 10pt !important; margin: 10pt 0 !important; }
+    .doc-page .print-warning { page-break-inside: avoid; border: 2px solid #333 !important; padding: 10pt !important; margin: 10pt 0 !important; }
+    .doc-page .print-avoid { page-break-inside: avoid; }
+}
+`;
 
 export default function EducationDetail() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -40,7 +58,6 @@ export default function EducationDetail() {
     };
 
     const handleRestoreVersion = async (version) => {
-        // Create a new version based on the restored content
         const restoredData = {
             ...version,
             parent_id: topic.id,
@@ -48,11 +65,9 @@ export default function EducationDetail() {
             change_summary: `Restored from version ${version.version || 'previous'}`,
             is_favorite: topic.is_favorite
         };
-        
         delete restoredData.id;
         delete restoredData.created_date;
         delete restoredData.updated_date;
-        
         await entities.EducationTopic.create(restoredData);
         queryClient.invalidateQueries({ queryKey: ['educationTopics'] });
     };
@@ -63,10 +78,7 @@ export default function EducationDetail() {
     };
 
     const handleDelete = async () => {
-        if (!isAdmin) {
-            alert('Only administrators can delete education topics');
-            return;
-        }
+        if (!isAdmin) { alert('Only administrators can delete education topics'); return; }
         if (confirm(`Are you sure you want to delete "${topic.title}"? This action cannot be undone.`)) {
             await entities.EducationTopic.delete(topic.id);
             queryClient.invalidateQueries({ queryKey: ['educationTopics'] });
@@ -74,325 +86,152 @@ export default function EducationDetail() {
         }
     };
 
-    const categoryColors = {
-        "Gynecology": "bg-pink-100 text-pink-800",
-        "Hormone Replacement Therapy": "bg-purple-100 text-purple-800",
-        "Mens Health": "bg-blue-100 text-blue-800",
-        "Medication Education": "bg-green-100 text-green-800"
-    };
-
-    // Auto-trigger print when topic loads
     React.useEffect(() => {
-        if (topic && autoPrint) {
-            setTimeout(() => {
-                window.print();
-            }, 500);
-        }
+        if (topic && autoPrint) { setTimeout(() => window.print(), 500); }
     }, [topic, autoPrint]);
 
     if (!topic) {
-        return (
-            <div className="text-center py-12">
-                <p className="text-gray-500">Loading topic...</p>
-            </div>
-        );
+        return <div className="flex items-center justify-center py-20"><div className="animate-pulse text-gray-400 text-lg">Loading topic...</div></div>;
     }
 
     return (
-        <div className="space-y-6">
-            {/* Print Styles */}
-            <style>
-                {`
-                    @media print {
-                        @page {
-                            margin: 0.5in 0.5in 0.75in 0.5in;
-                            size: letter;
-                        }
-                        
-                        body {
-                            -webkit-print-color-adjust: exact;
-                            print-color-adjust: exact;
-                        }
-                        
-                        body * {
-                            visibility: hidden;
-                        }
-                        
-                        .print-container,
-                        .print-container * {
-                            visibility: visible;
-                        }
-                        
-                        .print-container {
-                            position: absolute;
-                            left: 0;
-                            top: 0;
-                            width: 100%;
-                            font-family: 'Times New Roman', serif;
-                            font-size: 11pt;
-                            line-height: 1.6;
-                            color: #000;
-                        }
-                        
-                        .print-logo {
-                            text-align: center;
-                            margin-bottom: 8pt;
-                        }
-                        
-                        .print-logo img {
-                            height: 50px;
-                            width: auto;
-                        }
-                        
-                        .print-contact {
-                            text-align: center;
-                            font-size: 9pt;
-                            margin-bottom: 12pt;
-                            padding-bottom: 8pt;
-                            border-bottom: 1px solid #ccc;
-                        }
-                        
-                        .print-title {
-                            font-size: 18pt;
-                            font-weight: bold;
-                            text-align: center;
-                            margin: 12pt 0;
-                            padding-bottom: 8pt;
-                            border-bottom: 2px solid #000;
-                            text-transform: uppercase;
-                        }
-                        
-                        .print-container h2 {
-                            font-size: 14pt;
-                            font-weight: bold;
-                            margin-top: 14pt;
-                            margin-bottom: 8pt;
-                        }
-                        
-                        .print-container h3 {
-                            font-size: 12pt;
-                            font-weight: bold;
-                            margin-top: 12pt;
-                            margin-bottom: 8pt;
-                        }
-                        
-                        .print-container p {
-                            margin-bottom: 8pt;
-                            text-align: justify;
-                        }
-                        
-                        .print-container ul,
-                        .print-container ol {
-                            margin-bottom: 8pt;
-                            padding-left: 24pt;
-                        }
-                        
-                        .print-container li {
-                            margin-bottom: 4pt;
-                        }
-                        
-                        .print-section {
-                            background: #f8f9fa;
-                            border: 1px solid #ddd;
-                            padding: 10pt;
-                            margin: 10pt 0;
-                            page-break-inside: avoid;
-                        }
-
-                        .print-container h2,
-                        .print-container h3 {
-                            margin-top: 18pt;
-                            margin-bottom: 12pt;
-                            page-break-after: avoid;
-                        }
-
-                        .print-container ul,
-                        .print-container ol {
-                            margin: 12pt 0;
-                            line-height: 2;
-                        }
-
-                        .print-container li {
-                            margin-bottom: 8pt;
-                            line-height: 1.9;
-                        }
-
-                        .print-container p {
-                            margin-bottom: 12pt;
-                        }
-
-                        .print-container strong {
-                            font-weight: 600;
-                        }
-                        
-                        .no-print {
-                            display: none !important;
-                        }
-                    }
-                `}
-            </style>
+        <div className="max-w-4xl mx-auto">
+            <style>{PRINT_STYLES}</style>
 
             {/* Action Bar */}
-            <div className="flex items-center justify-between no-print">
+            <div className="flex items-center justify-between mb-4 no-print">
                 <Link to={createPageUrl("Library")}>
-                    <Button variant="outline" size="sm">
-                        <ArrowLeft className="w-4 h-4 mr-2" />
-                        Back to Library
+                    <Button variant="outline" size="sm" className="gap-2">
+                        <ArrowLeft className="w-4 h-4" /> Back to Library
                     </Button>
                 </Link>
-                <div className="flex gap-2">
-                    <Button 
-                        variant="outline" 
-                        onClick={toggleFavorite}
-                        className={topic.is_favorite ? "border-yellow-500 text-yellow-600" : ""}
-                    >
-                        <Star className={`w-4 h-4 mr-2 ${topic.is_favorite ? 'fill-yellow-500' : ''}`} />
-                        {topic.is_favorite ? 'Unfavorite' : 'Favorite'}
+                <div className="flex gap-2 flex-wrap justify-end">
+                    <Button variant="outline" size="sm" onClick={toggleFavorite}
+                        className={topic.is_favorite ? "border-yellow-400 text-yellow-600 bg-yellow-50" : ""}>
+                        <Star className={`w-4 h-4 mr-1.5 ${topic.is_favorite ? 'fill-yellow-500' : ''}`} />
                     </Button>
-                    <Button variant="outline" onClick={() => setShowVersionHistory(true)}>
-                        <History className="w-4 h-4 mr-2" />
-                        Version History
+                    <Button variant="outline" size="sm" onClick={() => setShowVersionHistory(true)}>
+                        <History className="w-4 h-4 mr-1.5" /> Versions
                     </Button>
-                    <Button variant="outline" onClick={() => setShowEditForm(true)}>
-                        <Pencil className="w-4 h-4 mr-2" />
-                        Edit
+                    <Button variant="outline" size="sm" onClick={() => setShowEditForm(true)}>
+                        <Pencil className="w-4 h-4 mr-1.5" /> Edit
                     </Button>
                     {isAdmin && (
-                        <Button variant="destructive" onClick={handleDelete}>
-                            <Trash2 className="w-4 h-4 mr-2" />
-                            Delete
+                        <Button variant="destructive" size="sm" onClick={handleDelete}>
+                            <Trash2 className="w-4 h-4 mr-1.5" /> Delete
                         </Button>
                     )}
-                    <Button onClick={() => setShowPrintDialog(true)} className="bg-blue-600 hover:bg-blue-700">
-                        <Printer className="w-4 h-4 mr-2" />
-                        Print / PDF
+                    <Button size="sm" onClick={() => window.print()} className="bg-blue-600 hover:bg-blue-700 text-white">
+                        <Printer className="w-4 h-4 mr-1.5" /> Print
                     </Button>
                 </div>
             </div>
 
-            {/* Printable Content */}
-            <div className="print-container">
-                {topic.header && (
-                    <div className="text-center font-bold text-lg mb-4 pb-2 border-b-2 border-black no-print">
-                        {topic.header}
+            {/* Document Page */}
+            <div className="doc-page bg-white rounded-lg shadow-lg border border-gray-200 px-12 py-10" style={{ fontFamily: "'Times New Roman', Georgia, serif", fontSize: '12pt', lineHeight: '1.7', color: '#1a1a1a' }}>
+
+                {/* Logo */}
+                <div className="text-center mb-2">
+                    <img src={CHC_LOGO} alt="Contemporary Health Center" className="h-14 mx-auto" />
+                </div>
+
+                {/* Contact Info */}
+                <div className="text-center text-xs text-gray-600 mb-3 pb-3 border-b border-gray-300">
+                    <div className="font-semibold">6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
+                    <div>Phone: 239-561-9191 | Fax: 239-561-9188 | contemporaryhealthcenter.com</div>
+                </div>
+
+                {/* Title */}
+                <h1 className="text-center text-xl font-bold uppercase tracking-wide my-4 pb-3 border-b-2 border-gray-900">
+                    Patient Education: {topic.title}
+                </h1>
+
+                {/* Category & Version */}
+                <div className="flex items-center justify-center gap-3 mb-6 text-xs text-gray-500">
+                    {topic.category && <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded">{topic.category}</span>}
+                    {topic.version && <span>Version {topic.version}</span>}
+                    {topic.updated_date && <span>Updated {new Date(topic.updated_date).toLocaleDateString()}</span>}
+                </div>
+
+                {/* Summary */}
+                {topic.summary && (
+                    <div className="bg-emerald-50 border border-emerald-200 rounded px-5 py-4 mb-6 print-section">
+                        <h2 className="text-sm font-bold text-emerald-800 uppercase tracking-wider mb-1">Summary</h2>
+                        <p className="text-emerald-900" style={{ fontSize: '11pt' }}>{topic.summary}</p>
                     </div>
                 )}
-                
-                {/* Title */}
-                <div className="print-title">
-                    Patient Education: {topic.title}
-                </div>
 
-                {/* Print Header - Logo */}
-                <div className="print-logo">
-                    <img 
-                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png"
-                        alt="Contemporary Health Center"
-                    />
-                </div>
-                
-                {/* Content */}
-                <div className="space-y-6">
-                    {/* Summary */}
-                    {topic.summary && (
-                        <div className="print-section" style={{background: '#ecfdf5', borderColor: '#10b981'}}>
-                            <h2>Summary</h2>
-                            <p className="text-gray-800 font-medium">{topic.summary}</p>
-                        </div>
-                    )}
-
-                    {/* Image */}
-                    {topic.image_url && (
-                        <div className="print-section" style={{textAlign: 'center'}}>
-                            <img 
-                                src={topic.image_url} 
-                                alt={topic.title}
-                                style={{maxWidth: '100%', maxHeight: '400px', margin: '0 auto', objectFit: 'contain'}}
-                            />
-                        </div>
-                    )}
-
-                    {/* Main Content */}
-                    <div className="print-section">
-                        {topic.content?.includes('<') ? (
-                            <div 
-                                className="text-gray-900 prose prose-lg max-w-none"
-                                style={{
-                                    lineHeight: '1.9', 
-                                    fontSize: '1.05rem', 
-                                    letterSpacing: '0.01em'
-                                }}
-                                dangerouslySetInnerHTML={{ __html: topic.content }}
-                            />
-                        ) : (
-                            <div className="whitespace-pre-wrap text-gray-900 text-lg" style={{
-                                lineHeight: '1.9', 
-                                letterSpacing: '0.01em'
-                            }}>
-                                {topic.content}
-                            </div>
-                        )}
+                {/* Image */}
+                {topic.image_url && (
+                    <div className="text-center mb-6">
+                        <img src={topic.image_url} alt={topic.title} className="max-h-72 mx-auto rounded border border-gray-200" />
                     </div>
+                )}
 
-                    {/* Medical References */}
-                    {topic.medical_references && (
-                        <div className="print-section">
-                            <h2 style={{display: 'flex', alignItems: 'center'}}>
-                                <ExternalLink className="w-5 h-5 mr-2 no-print" />
-                                Medical References
-                            </h2>
-                            <p className="text-sm text-gray-700 whitespace-pre-wrap" style={{lineHeight: '1.8'}}>
-                                {topic.medical_references}
-                            </p>
-                        </div>
+                {/* Main Content */}
+                <div className="mb-6">
+                    {topic.content?.includes('<') ? (
+                        <div
+                            className="education-content"
+                            style={{ fontSize: '11pt', lineHeight: '1.8' }}
+                            dangerouslySetInnerHTML={{ __html: topic.content }}
+                        />
+                    ) : (
+                        <div className="whitespace-pre-wrap" style={{ fontSize: '11pt', lineHeight: '1.8' }}>{topic.content}</div>
                     )}
+                </div>
 
-                    {/* Disclaimer */}
-                    <div className="print-section" style={{background: '#f1f5f9', borderColor: '#475569', borderWidth: '2px'}}>
-                        <p style={{fontStyle: 'italic', fontSize: '10pt'}}>
-                            <strong>Disclaimer:</strong> This information is for educational purposes only and should not replace professional medical advice. Please consult with a healthcare provider for personalized medical guidance.
+                {/* Content Styling */}
+                <style>{`
+                    .education-content h2, .education-content h3 {
+                        font-size: 14pt; font-weight: bold; margin-top: 18pt; margin-bottom: 8pt;
+                        padding-bottom: 4pt; border-bottom: 1px solid #ddd;
+                    }
+                    .education-content h3 { font-size: 13pt; }
+                    .education-content ul, .education-content ol {
+                        margin: 8pt 0; padding-left: 24pt;
+                    }
+                    .education-content li { margin-bottom: 6pt; line-height: 1.8; }
+                    .education-content p { margin-bottom: 8pt; }
+                    .education-content strong { font-weight: 700; }
+                `}</style>
+
+                {/* Medical References */}
+                {topic.medical_references && (
+                    <div className="border border-gray-200 rounded px-5 py-4 mb-6 bg-gray-50 print-section">
+                        <h2 className="text-sm font-bold text-gray-700 uppercase tracking-wider mb-2 flex items-center gap-2">
+                            <ExternalLink className="w-3.5 h-3.5 no-print" /> Medical References
+                        </h2>
+                        <p className="text-sm text-gray-600 whitespace-pre-wrap" style={{ lineHeight: '1.7' }}>
+                            {topic.medical_references}
                         </p>
                     </div>
+                )}
 
-                    {/* Contact Information */}
-                    <div className="print-section" style={{background: '#f1f5f9', borderColor: '#475569', borderWidth: '2px'}}>
-                        <div className="text-sm leading-relaxed">
-                            <p style={{fontWeight: 'bold', fontSize: '14pt', marginBottom: '10pt', textTransform: 'uppercase'}}>
-                                Questions or Want to Learn More?
-                            </p>
-                            <p style={{marginBottom: '10pt'}}>
-                                Our medical team is here to help answer any questions about this topic or discuss treatment options that may be right for you.
-                            </p>
-                            <div style={{borderTop: '1px solid #cbd5e1', paddingTop: '8pt', marginTop: '8pt'}}>
-                                <p style={{fontWeight: '600'}}>📞 Phone: 239-561-9191 (call or text)</p>
-                                <p style={{fontWeight: '600', marginTop: '4pt'}}>📧 Email: office@contemporaryhealthcenter.com</p>
-                                <p style={{fontWeight: '600', marginTop: '4pt'}}>🌐 Web: contemporaryhealthcenter.com</p>
-                            </div>
-                        </div>
+                {/* Disclaimer */}
+                <div className="border-t border-gray-300 pt-4 mb-6 print-avoid">
+                    <p className="text-xs text-gray-500 italic leading-relaxed">
+                        <strong>Disclaimer:</strong> This information is for educational purposes only and should not replace professional medical advice. Please consult with a healthcare provider for personalized medical guidance.
+                    </p>
+                </div>
+
+                {/* Contact Section */}
+                <div className="bg-slate-50 border border-slate-200 rounded px-5 py-4 print-section">
+                    <h3 className="font-bold text-sm uppercase tracking-wider mb-2">Questions or Want to Learn More?</h3>
+                    <p className="text-sm text-slate-600 mb-3">Our medical team is here to help answer any questions about this topic or discuss treatment options.</p>
+                    <div className="border-t border-slate-200 pt-3 space-y-1 text-sm font-semibold text-slate-700">
+                        <p>📞 Phone: 239-561-9191 (call or text)</p>
+                        <p>📧 Email: office@contemporaryhealthcenter.com</p>
+                        <p>🌐 Web: contemporaryhealthcenter.com</p>
                     </div>
                 </div>
             </div>
 
             {topic && (
                 <>
-                    <EducationTopicForm
-                        open={showEditForm}
-                        onOpenChange={setShowEditForm}
-                        onSuccess={handleSuccess}
-                        editTopic={topic}
-                    />
-                    <EducationPrintDialog
-                        open={showPrintDialog}
-                        onOpenChange={setShowPrintDialog}
-                        topic={topic}
-                        onSuccess={handleSuccess}
-                    />
-                    <EducationVersionHistory
-                        open={showVersionHistory}
-                        onOpenChange={setShowVersionHistory}
-                        topicId={topic.id}
-                        onRestore={handleRestoreVersion}
-                    />
+                    <EducationTopicForm open={showEditForm} onOpenChange={setShowEditForm} onSuccess={handleSuccess} editTopic={topic} />
+                    <EducationPrintDialog open={showPrintDialog} onOpenChange={setShowPrintDialog} topic={topic} onSuccess={handleSuccess} />
+                    <EducationVersionHistory open={showVersionHistory} onOpenChange={setShowVersionHistory} topicId={topic.id} onRestore={handleRestoreVersion} />
                 </>
             )}
         </div>

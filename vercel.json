@@ -1,0 +1,10 @@
+{
+  "rewrites": [
+    { "source": "/api/quest-search", "destination": "/api/quest-search" },
+    { "source": "/api/quest-details", "destination": "/api/quest-details" },
+    { "source": "/api/chat", "destination": "/api/chat" },
+    { "source": "/api/send-quote", "destination": "/api/send-quote" },
+    { "source": "/api/setup-quotes-table", "destination": "/api/setup-quotes-table" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

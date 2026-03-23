@@ -150,10 +150,10 @@ export default function ProcedureDetail() {
                                     {procedure.category && (
                                         <Badge variant="secondary">{procedure.category}</Badge>
                                     )}
-                                    {procedure.estimated_time && (
+                                    {procedure.estimated_duration && (
                                         <Badge variant="outline" className="gap-1">
                                             <Clock className="w-3 h-3" />
-                                            {procedure.estimated_time}
+                                            {procedure.estimated_duration} min
                                         </Badge>
                                     )}
                                 </div>
@@ -162,63 +162,7 @@ export default function ProcedureDetail() {
                     </CardHeader>
                 </Card>
 
-                {procedure.pre_procedure_prep && (
-                    <Card className="mb-4">
-                        <CardHeader>
-                            <CardTitle className="text-lg">Pre-Procedure Prep (Staff Instructions)</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div 
-                                className="prose prose-sm max-w-none"
-                                dangerouslySetInnerHTML={{ __html: procedure.pre_procedure_prep }}
-                            />
-                        </CardContent>
-                    </Card>
-                )}
-
-                {procedure.patient_education && (
-                    <Card className="mb-4">
-                        <CardHeader>
-                            <CardTitle className="text-lg">Patient Education</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div 
-                                className="prose prose-sm max-w-none"
-                                dangerouslySetInnerHTML={{ __html: procedure.patient_education }}
-                            />
-                        </CardContent>
-                    </Card>
-                )}
-
-                {procedure.required_supplies && (
-                    <Card className="mb-4">
-                        <CardHeader>
-                            <CardTitle className="text-lg flex items-center gap-2">
-                                <Package className="w-5 h-5" />
-                                Required Supplies
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <pre className="whitespace-pre-wrap font-sans text-sm">{procedure.required_supplies}</pre>
-                        </CardContent>
-                    </Card>
-                )}
-
-                {procedure.required_tools && (
-                    <Card className="mb-4">
-                        <CardHeader>
-                            <CardTitle className="text-lg flex items-center gap-2">
-                                <Wrench className="w-5 h-5" />
-                                Required Tools & Equipment
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <pre className="whitespace-pre-wrap font-sans text-sm">{procedure.required_tools}</pre>
-                        </CardContent>
-                    </Card>
-                )}
-
-                {procedure.procedure_steps && (
+                {procedure.description && (
                     <Card className="mb-4">
                         <CardHeader>
                             <CardTitle className="text-lg">Procedure Steps</CardTitle>
@@ -226,33 +170,49 @@ export default function ProcedureDetail() {
                         <CardContent>
                             <div 
                                 className="prose prose-sm max-w-none"
-                                dangerouslySetInnerHTML={{ __html: procedure.procedure_steps }}
+                                dangerouslySetInnerHTML={{ __html: procedure.description }}
                             />
                         </CardContent>
                     </Card>
                 )}
 
-                {procedure.post_procedure_notes && (
+                {procedure.instructions && (
                     <Card className="mb-4">
                         <CardHeader>
-                            <CardTitle className="text-lg">Post-Procedure Notes</CardTitle>
+                            <CardTitle className="text-lg">Instructions & Notes</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div 
                                 className="prose prose-sm max-w-none"
-                                dangerouslySetInnerHTML={{ __html: procedure.post_procedure_notes }}
+                                dangerouslySetInnerHTML={{ __html: procedure.instructions }}
                             />
                         </CardContent>
                     </Card>
                 )}
 
-                {procedure.notes && (
+                {procedure.warnings && (
                     <Card className="mb-4">
                         <CardHeader>
-                            <CardTitle className="text-lg">Additional Notes</CardTitle>
+                            <CardTitle className="text-lg text-amber-700">⚠️ Warnings & Reminders</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-sm text-gray-700 whitespace-pre-wrap">{procedure.notes}</p>
+                            <div 
+                                className="prose prose-sm max-w-none"
+                                dangerouslySetInnerHTML={{ __html: procedure.warnings }}
+                            />
+                        </CardContent>
+                    </Card>
+                )}
+
+                {procedure.cpt_code && (
+                    <Card className="mb-4">
+                        <CardHeader>
+                            <CardTitle className="text-lg">Billing</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-sm text-gray-700"><strong>CPT Code:</strong> {procedure.cpt_code}</p>
+                            {procedure.icd10_codes && <p className="text-sm text-gray-700 mt-1"><strong>ICD-10:</strong> {procedure.icd10_codes}</p>}
+                            {procedure.average_cost && <p className="text-sm text-gray-700 mt-1"><strong>Average Cost:</strong> ${procedure.average_cost}</p>}
                         </CardContent>
                     </Card>
                 )}

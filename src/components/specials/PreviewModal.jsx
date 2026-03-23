@@ -5,8 +5,9 @@ import { X } from "lucide-react";
 export default function PreviewModal({ file, open, onOpenChange }) {
     if (!file) return null;
 
-    const isPdf = file.file_url.toLowerCase().endsWith(".pdf");
-    const isImage = file.file_url.toLowerCase().match(/\.(jpg|jpeg)$/i);
+    const url = file.file_url || file.image_url || "";
+    const isPdf = url.toLowerCase().endsWith(".pdf");
+    const isImage = url.toLowerCase().match(/\.(jpg|jpeg|png|gif|webp)$/i) || url.includes("tempImage");
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -15,16 +16,16 @@ export default function PreviewModal({ file, open, onOpenChange }) {
                     <DialogTitle>{file.title}</DialogTitle>
                 </DialogHeader>
                 <div className="w-full h-[70vh] bg-gray-100 rounded-lg overflow-auto">
-                    {isImage && (
+                    {(isImage || (!isPdf && url)) && (
                         <img
-                            src={file.file_url}
+                            src={url}
                             alt={file.title}
                             className="w-full h-full object-contain"
                         />
                     )}
                     {isPdf && (
                         <embed
-                            src={file.file_url}
+                            src={url}
                             type="application/pdf"
                             width="100%"
                             height="100%"

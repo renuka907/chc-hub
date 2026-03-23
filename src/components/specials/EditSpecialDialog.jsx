@@ -20,8 +20,8 @@ export default function EditSpecialDialog({ special, open, onOpenChange, onSave 
             
             setFormData({
                 title: special.title || "",
-                date_from: formatDateForInput(special.date_from),
-                date_to: formatDateForInput(special.date_to),
+                date_from: formatDateForInput(special.date_from || special.start_date),
+                date_to: formatDateForInput(special.date_to || special.end_date),
             });
         }
     }, [special, open]);
@@ -39,7 +39,11 @@ export default function EditSpecialDialog({ special, open, onOpenChange, onSave 
 
         setSaving(true);
         try {
-            await entities.Special.update(special.id, formData);
+            await entities.Special.update(special.id, {
+                ...formData,
+                start_date: formData.date_from,
+                end_date: formData.date_to,
+            });
             onSave();
             onOpenChange(false);
         } catch (error) {

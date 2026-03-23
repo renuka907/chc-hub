@@ -87,8 +87,11 @@ export default function SpecialsPage() {
             await entities.Special.create({
                 title: formData.title || file.name,
                 file_url,
+                image_url: file_url,
                 date_from: formData.date_from,
                 date_to: formData.date_to,
+                start_date: formData.date_from,
+                end_date: formData.date_to,
             });
             setSuccess("Special added successfully!");
             setFormData({ title: "", date_from: "", date_to: "" });
@@ -106,8 +109,8 @@ export default function SpecialsPage() {
     const filteredSpecials = specials.filter(
         (special) =>
             !special.is_archived &&
-            (special.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                special.file_url.toLowerCase().includes(searchTerm.toLowerCase()))
+            ((special.title || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (special.file_url || special.image_url || "").toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
     const archivedSpecials = specials.filter((special) => special.is_archived);
@@ -257,8 +260,11 @@ export default function SpecialsPage() {
                                                         {special.title}
                                                     </p>
                                                     <p className="text-sm text-gray-600 mt-1">
-                                                        {format(parseLocalDate(special.date_from), "MMM d, yyyy")} - {format(parseLocalDate(special.date_to), "MMM d, yyyy")}
+                                                        {format(parseLocalDate(special.date_from || special.start_date), "MMM d, yyyy")} - {format(parseLocalDate(special.date_to || special.end_date), "MMM d, yyyy")}
                                                     </p>
+                                                    {(special.image_url || special.file_url) && (
+                                                        <img src={special.image_url || special.file_url} alt={special.title} className="mt-2 rounded-lg max-h-48 object-cover" />
+                                                    )}
                                                 </div>
                                                 <div className="flex gap-2">
                                                     <button
@@ -324,7 +330,7 @@ export default function SpecialsPage() {
                                                             {special.title}
                                                         </p>
                                                         <p className="text-sm text-gray-600 mt-1">
-                                                            {format(parseLocalDate(special.date_from), "MMM d, yyyy")} - {format(parseLocalDate(special.date_to), "MMM d, yyyy")}
+                                                            {format(parseLocalDate(special.date_from || special.start_date), "MMM d, yyyy")} - {format(parseLocalDate(special.date_to || special.end_date), "MMM d, yyyy")}
                                                         </p>
                                                     </div>
                                                     {isAdmin && (

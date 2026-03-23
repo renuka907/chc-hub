@@ -25,7 +25,8 @@ import {
                         Calendar,
                         TrendingUp,
                         Upload,
-                        BarChart3
+                        BarChart3,
+                        Activity
                     } from "lucide-react";
 
 export default function Layout({ children, currentPageName }) {
@@ -46,9 +47,10 @@ export default function Layout({ children, currentPageName }) {
     const { user: currentUser, isAuthenticated, isLoadingAuth: isLoading, logout, navigateToLogin } = useAuth();
 
     const { data: reminderCount = 0 } = useQuery({
-        queryKey: ['reminders'],
-        queryFn: () => entities.Reminder.filter({ completed: false }),
-        select: (reminders) => {
+        queryKey: ['reminderCount', currentUser?.email],
+        queryFn: async () => {
+            const reminders = await entities.Reminder.filter({ completed: false });
+            const email = currentUser?.email;
             const now = new Date();
             const today = new Date();
             today.setHours(0, 0, 0, 0);
@@ -56,6 +58,12 @@ export default function Layout({ children, currentPageName }) {
             tomorrow.setDate(tomorrow.getDate() + 1);
 
             return reminders.filter(r => {
+                // Only count reminders belonging to this user
+                if (email) {
+                    const isOwner = r.created_by === email || r.assigned_to === email;
+                    const isUnassigned = !r.created_by && !r.assigned_to;
+                    if (!isOwner && !isUnassigned) return false;
+                }
                 if (r.show_after && new Date(r.show_after) > now) return false;
                 if (!r.due_date) return false;
                 const dueDate = new Date(r.due_date);
@@ -63,8 +71,9 @@ export default function Layout({ children, currentPageName }) {
                 return dueDate < tomorrow;
             }).length;
         },
-        refetchInterval: 30000,
-        staleTime: 5000,
+        enabled: !!currentUser,
+        refetchInterval: 10000,
+        staleTime: 0,
     });
 
     const menuGroups = [
@@ -106,7 +115,10 @@ export default function Layout({ children, currentPageName }) {
                 { name: "Lab Tests", path: "LabTestDirectory", icon: Stethoscope },
                 { name: "Pap Ordering Wizard", path: "PapOrderingWizard", icon: FileText },
                 { name: "Medication Calculator", path: "MedicationCalculator", icon: Stethoscope },
+                { name: "PREVENT Calculator", path: "RiskCalculator", icon: Activity },
+                { name: "Medication Reference", path: "MedicationReference", icon: Stethoscope },
                 { name: "Provider Directory", path: "ProviderReferral", icon: Users },
+                { name: "Skin Analysis", path: "SkinAnalysis", icon: Sparkles },
             ]
         },
         {

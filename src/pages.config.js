@@ -48,6 +48,7 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import ActivityDashboard from './pages/ActivityDashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import AdminProfile from './pages/AdminProfile';
 import AftercareDetail from './pages/AftercareDetail';
 import AftercareLibrary from './pages/AftercareLibrary';
@@ -55,6 +56,7 @@ import CheckoutQuote from './pages/CheckoutQuote';
 import ClinicDirectory from './pages/ClinicDirectory';
 import ConsentFormDetail from './pages/ConsentFormDetail';
 import DiscountManagement from './pages/DiscountManagement';
+import DocumentPrint from './pages/DocumentPrint';
 import EducationDetail from './pages/EducationDetail';
 import EducationLibrary from './pages/EducationLibrary';
 import EmployeeQuestions from './pages/EmployeeQuestions';
@@ -68,6 +70,7 @@ import InventoryUsageTracking from './pages/InventoryUsageTracking';
 import LabTestDirectory from './pages/LabTestDirectory';
 import Library from './pages/Library';
 import MedicationCalculator from './pages/MedicationCalculator';
+import MedicationReference from './pages/MedicationReference';
 import Messaging from './pages/Messaging';
 import PapOrderingWizard from './pages/PapOrderingWizard';
 import PricingManagement from './pages/PricingManagement';
@@ -77,6 +80,8 @@ import ProviderReferral from './pages/ProviderReferral';
 import QuoteDetail from './pages/QuoteDetail';
 import QuotesManagement from './pages/QuotesManagement';
 import Reminders from './pages/Reminders';
+import RiskCalculator from './pages/RiskCalculator';
+import SkinAnalysis from './pages/SkinAnalysis';
 import Specials from './pages/Specials';
 import StaffCheckIn from './pages/StaffCheckIn';
 import UserManagement from './pages/UserManagement';
@@ -87,6 +92,7 @@ import __Layout from './Layout.jsx';
 
 export const PAGES = {
     "ActivityDashboard": ActivityDashboard,
+    "AdminDashboard": AdminDashboard,
     "AdminProfile": AdminProfile,
     "AftercareDetail": AftercareDetail,
     "AftercareLibrary": AftercareLibrary,
@@ -94,6 +100,7 @@ export const PAGES = {
     "ClinicDirectory": ClinicDirectory,
     "ConsentFormDetail": ConsentFormDetail,
     "DiscountManagement": DiscountManagement,
+    "DocumentPrint": DocumentPrint,
     "EducationDetail": EducationDetail,
     "EducationLibrary": EducationLibrary,
     "EmployeeQuestions": EmployeeQuestions,
@@ -107,6 +114,7 @@ export const PAGES = {
     "LabTestDirectory": LabTestDirectory,
     "Library": Library,
     "MedicationCalculator": MedicationCalculator,
+    "MedicationReference": MedicationReference,
     "Messaging": Messaging,
     "PapOrderingWizard": PapOrderingWizard,
     "PricingManagement": PricingManagement,
@@ -116,6 +124,8 @@ export const PAGES = {
     "QuoteDetail": QuoteDetail,
     "QuotesManagement": QuotesManagement,
     "Reminders": Reminders,
+    "RiskCalculator": RiskCalculator,
+    "SkinAnalysis": SkinAnalysis,
     "Specials": Specials,
     "StaffCheckIn": StaffCheckIn,
     "UserManagement": UserManagement,

@@ -18,7 +18,7 @@ import DragDropFormBuilder from "./forms/DragDropFormBuilder";
 export default function ConsentFormForm({ open, onOpenChange, onSuccess, editForm = null }) {
     const [formData, setFormData] = useState({
         form_name: "",
-        form_type: "",
+        category: "",
         content: "",
         version: "",
         effective_date: new Date().toISOString().split('T')[0],
@@ -47,7 +47,7 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
         } else if (!open) {
             setFormData({
                 form_name: "",
-                form_type: "",
+                category: "",
                 content: "",
                 version: "",
                 effective_date: new Date().toISOString().split('T')[0],
@@ -58,14 +58,14 @@ export default function ConsentFormForm({ open, onOpenChange, onSuccess, editFor
     }, [editForm, open]);
 
     const handleGenerate = async () => {
-        if (!formData.form_name || !formData.form_type) {
+        if (!formData.form_name || !formData.category) {
             alert('Please enter a form name and select a form type first');
             return;
         }
 
         setIsGenerating(true);
         try {
-            let prompt = `Create a detailed, professional medical consent form for "${formData.form_name}" of type ${formData.form_type}.`;
+            let prompt = `Create a detailed, professional medical consent form for "${formData.form_name}" of type ${formData.category}.`;
             
             if (aiParams.procedure_type) {
                 prompt += `\n\nProcedure Type: ${aiParams.procedure_type}`;
@@ -140,17 +140,19 @@ Format the content in HTML with proper structure, bold headings, and professiona
     };
 
     const handleSave = async () => {
-        if (!formData.form_name || !formData.form_type || !formData.content) {
-            alert('Please fill in form name, type, and content');
+        if (!formData.form_name || !formData.content) {
+            alert('Please fill in form name and content');
             return;
         }
 
         setIsSaving(true);
         try {
             if (editForm) {
-                await entities.ConsentForm.update(editForm.id, formData);
+                const { id, created_at, updated_at, created_date, updated_date, parent_id, ...updateData } = formData;
+                await entities.ConsentForm.update(editForm.id, updateData);
             } else {
-                await entities.ConsentForm.create(formData);
+                const { id, created_at, updated_at, created_date, updated_date, ...createData } = formData;
+                await entities.ConsentForm.create(createData);
             }
             onSuccess();
             onOpenChange(false);
@@ -272,7 +274,7 @@ ${result.contraindications.length > 0 ? `Contraindications:\n${result.contraindi
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-w-6xl w-[95vw] max-h-[95vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle className="text-xl">
                         {editForm ? 'Edit Consent Form' : 'Create Consent Form'}
@@ -300,20 +302,23 @@ ${result.contraindications.length > 0 ? `Contraindications:\n${result.contraindi
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="form_type">Form Type *</Label>
+                                <Label htmlFor="category">Form Type *</Label>
                                 <Select
-                                    value={formData.form_type}
-                                    onValueChange={(value) => setFormData({...formData, form_type: value})}
+                                    value={formData.category}
+                                    onValueChange={(value) => setFormData({...formData, category: value})}
                                 >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Select type" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="Procedure">Procedure</SelectItem>
-                                        <SelectItem value="Treatment">Treatment</SelectItem>
+                                        <SelectItem value="Aesthetic">Aesthetic</SelectItem>
+                                        <SelectItem value="Consent">Consent</SelectItem>
                                         <SelectItem value="General">General</SelectItem>
                                         <SelectItem value="HIPAA">HIPAA</SelectItem>
-                                        <SelectItem value="Financial">Financial</SelectItem>
+                                        <SelectItem value="Privacy">Privacy</SelectItem>
+                                        <SelectItem value="Procedure">Procedure</SelectItem>
+                                        <SelectItem value="Treatment">Treatment</SelectItem>
+                                        <SelectItem value="Weight Loss">Weight Loss</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -403,7 +408,7 @@ ${result.contraindications.length > 0 ? `Contraindications:\n${result.contraindi
                             <Button
                                 type="button"
                                 onClick={handleGenerate}
-                                disabled={isGenerating || !formData.form_name || !formData.form_type}
+                                disabled={isGenerating || !formData.form_name}
                                 className="w-full bg-purple-600 hover:bg-purple-700"
                                 size="lg"
                             >
@@ -522,7 +527,7 @@ ${result.contraindications.length > 0 ? `Contraindications:\n${result.contraindi
                                     }}
                                     formats={['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'script', 'color', 'background', 'blockquote', 'code-block', 'list', 'bullet', 'check', 'indent', 'direction', 'align', 'link', 'image', 'video']}
                                     className="bg-white"
-                                    style={{ height: '400px', marginBottom: '50px' }}
+                                    style={{ height: '60vh', marginBottom: '50px' }}
                                 />
                             )}
                         </div>
@@ -625,7 +630,7 @@ ${result.contraindications.length > 0 ? `Contraindications:\n${result.contraindi
                     </Button>
                     <Button 
                         onClick={handleSave} 
-                        disabled={isSaving || !formData.form_name || !formData.form_type || !formData.content}
+                        disabled={isSaving || !formData.form_name || !formData.content}
                         className="bg-green-600 hover:bg-green-700 min-w-[120px]"
                     >
                         {isSaving ? (
@@ -647,7 +652,7 @@ ${result.contraindications.length > 0 ? `Contraindications:\n${result.contraindi
                         setFormData({
                             ...formData,
                             form_name: template.template_name,
-                            form_type: template.category || formData.form_type,
+                            category: template.category || formData.category,
                             content: template.content
                         });
                     }}

@@ -34,7 +34,16 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
 
     useEffect(() => {
         if (editInstruction) {
-            setFormData(editInstruction);
+            setFormData({
+                procedure_name: editInstruction.procedure_name || "",
+                category: editInstruction.category || "",
+                instructions: editInstruction.instructions || "",
+                duration: editInstruction.duration || "",
+                warning_signs: editInstruction.warnings || editInstruction.warning_signs || "",
+                follow_up: editInstruction.follow_up_schedule || editInstruction.follow_up || "",
+                image_url: editInstruction.image_url || "",
+                document_url: editInstruction.document_url || "",
+            });
         } else if (!open) {
             setFormData({
                 procedure_name: "",
@@ -125,10 +134,20 @@ export default function AftercareForm({ open, onOpenChange, onSuccess, editInstr
 
         setIsSaving(true);
         try {
+            // Map form fields to actual DB columns
+            // Table has: procedure_name, instructions, warnings, follow_up_schedule, image_url, document_url, is_favorite, tags, version, parent_id, effective_date
+            const saveData = {
+                procedure_name: formData.procedure_name,
+                instructions: formData.instructions,
+                warnings: formData.warning_signs || formData.warnings || null,
+                follow_up_schedule: formData.follow_up || formData.follow_up_schedule || null,
+                image_url: formData.image_url || null,
+                document_url: formData.document_url || null,
+            };
             if (editInstruction) {
-                await entities.AftercareInstruction.update(editInstruction.id, formData);
+                await entities.AftercareInstruction.update(editInstruction.id, saveData);
             } else {
-                await entities.AftercareInstruction.create(formData);
+                await entities.AftercareInstruction.create(saveData);
             }
             onSuccess();
             onOpenChange(false);

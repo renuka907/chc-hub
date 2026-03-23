@@ -11,6 +11,14 @@ import { supabase } from './supabaseClient';
  *   const filtered = await db.from('inventory_items').filter({ status: 'active' });
  */
 
+// Add base44-compatible date aliases (created_date/updated_date) from Supabase fields (created_at/updated_at)
+function addDateAliases(row) {
+  if (!row) return row;
+  if (row.created_at && !row.created_date) row.created_date = row.created_at;
+  if (row.updated_at && !row.updated_date) row.updated_date = row.updated_at;
+  return row;
+}
+
 function parseSort(sortStr) {
   if (!sortStr) return { column: 'created_at', ascending: false };
   if (sortStr.startsWith('-')) {
@@ -27,7 +35,7 @@ function createTableHelper(tableName) {
       if (limit) query = query.limit(limit);
       const { data, error } = await query;
       if (error) throw error;
-      return data || [];
+      return (data || []).map(addDateAliases);
     },
 
     async filter(filters, sort, limit) {
@@ -50,13 +58,13 @@ function createTableHelper(tableName) {
       if (limit) query = query.limit(limit);
       const { data, error } = await query;
       if (error) throw error;
-      return data || [];
+      return (data || []).map(addDateAliases);
     },
 
     async get(id) {
       const { data, error } = await supabase.from(tableName).select('*').eq('id', id).single();
       if (error) throw error;
-      return data;
+      return data ? addDateAliases(data) : data;
     },
 
     async create(record) {
@@ -114,6 +122,9 @@ const TABLE_MAP = {
   Conversation: 'conversations',
   ConversationMessage: 'conversation_messages',
   UserActivity: 'user_activity',
+  Announcement: 'announcements',
+  AnnouncementAck: 'announcement_acknowledgments',
+  PatientQuote: 'patient_quotes',
 };
 
 // Create a proxy-based db object for easy access
@@ -146,12 +157,24 @@ export async function uploadFile(file, bucket = 'uploads') {
 
 // Stub for InvokeLLM — TODO: implement with OpenAI/Anthropic Edge Function
 export async function invokeLLM(params) {
-  // TODO: Replace with Supabase Edge Function call to OpenAI/Anthropic
-  console.warn('invokeLLM is stubbed — AI features not yet connected', params);
-  return { 
-    response: 'AI features are being migrated. This feature will be available soon.',
-    error: 'AI not yet configured'
-  };
+  try {
+    const response = await fetch('/api/invoke-llm', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: params.prompt,
+        response_json_schema: params.response_json_schema,
+      }),
+    });
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error || 'AI generation failed');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('invokeLLM error:', error);
+    throw error;
+  }
 }
 
 // Stub for GenerateImage — TODO: implement with DALL-E Edge Function
@@ -168,24 +191,91 @@ export async function sendEmail(params) {
   return { success: false, error: 'Email sending not yet configured' };
 }
 
-// Stub for agent chat — TODO: implement with OpenAI + Supabase Realtime
+// Agent chat — Peach AI assistant via /api/chat endpoint
 export const agentChat = {
-  async createConversation(opts) {
-    // TODO: Implement with conversations table + OpenAI
-    console.warn('Agent chat is stubbed', opts);
-    return { id: null };
+  async createConversation(opts = {}) {
+    const { data: { user: authUser } } = await supabase.auth.getUser();
+    const { data, error } = await supabase
+      .from('chat_conversations')
+      .insert({
+        user_email: authUser?.email || 'anonymous',
+        agent_name: opts.agent_name || 'peach',
+        messages: [],
+      })
+      .select()
+      .single();
+    if (error) throw error;
+    return { id: data.id, messages: data.messages || [] };
   },
+
   async getConversation(id) {
-    console.warn('Agent chat is stubbed');
-    return null;
+    const { data, error } = await supabase
+      .from('chat_conversations')
+      .select('*')
+      .eq('id', id)
+      .single();
+    if (error) throw error;
+    return data;
   },
-  async addMessage(conv, msg) {
-    console.warn('Agent chat is stubbed');
-    return null;
+
+  async addMessage(conv, msg, locationFilter) {
+    // 1. Get current conversation
+    const current = await this.getConversation(conv.id);
+    const messages = current.messages || [];
+
+    // 2. Append user message
+    const userMsg = { role: msg.role, content: msg.content, created_date: new Date().toISOString() };
+    messages.push(userMsg);
+
+    // 3. Call /api/chat for AI response
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: msg.content,
+        conversationHistory: messages.slice(-10),
+        locationFilter: locationFilter || null,
+      }),
+    });
+
+    let assistantContent = 'Sorry, I encountered an error. Please try again.';
+    let sources = [];
+    if (response.ok) {
+      const data = await response.json();
+      assistantContent = data.reply;
+      sources = data.sources || [];
+    }
+
+    // 4. Append assistant reply
+    const assistantMsg = { role: 'assistant', content: assistantContent, created_date: new Date().toISOString(), sources };
+    messages.push(assistantMsg);
+
+    // 5. Update conversation in Supabase
+    const { error } = await supabase
+      .from('chat_conversations')
+      .update({ messages, updated_at: new Date().toISOString() })
+      .eq('id', conv.id);
+    if (error) throw error;
+
+    return { ...current, messages };
   },
+
   subscribeToConversation(id, callback) {
-    console.warn('Agent chat subscription is stubbed');
-    return () => {}; // unsubscribe noop
+    const channel = supabase
+      .channel(`chat_conv_${id}`)
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'chat_conversations',
+        filter: `id=eq.${id}`,
+      }, (payload) => {
+        callback(payload.new);
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }
 };
 

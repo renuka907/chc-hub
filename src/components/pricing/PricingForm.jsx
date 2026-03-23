@@ -1,3 +1,4 @@
+function safeParse(v,f=[]){if(v==null)return f;if(typeof v!=="string")return v;try{return JSON.parse(v)}catch{return f}}
 import React, { useState } from "react";
 import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
 import { useQuery } from "@tanstack/react-query";
@@ -38,18 +39,18 @@ export default function PricingForm({ open, onOpenChange, onSuccess, editItem = 
     React.useEffect(() => {
         if (editItem) {
             setFormData(editItem);
-            const parsedTiers = editItem.pricing_tiers ? JSON.parse(editItem.pricing_tiers) : [];
+            const parsedTiers = editItem.pricing_tiers ? safeParse(editItem.pricing_tiers) : [];
             const tiersWithUnits = parsedTiers.length > 0 
                 ? parsedTiers.map(t => ({ ...t, unit_type: t.unit_type || "sessions" }))
                 : [{ tier_name: "Single Session", price: 0, sessions: 1, unit_type: "sessions" }];
             setTiers(tiersWithUnits);
-            setSelectedLocationIds(editItem.clinic_location_ids ? JSON.parse(editItem.clinic_location_ids) : []);
+            setSelectedLocationIds(editItem.clinic_location_ids ? safeParse(editItem.clinic_location_ids) : []);
             
             // Handle both old and new category formats
             let cats = [];
             if (editItem.categories) {
                 try {
-                    cats = JSON.parse(editItem.categories);
+                    cats = safeParse(editItem.categories);
                 } catch (e) {}
             } else if (editItem.category) {
                 cats = [editItem.category];
@@ -75,25 +76,21 @@ export default function PricingForm({ open, onOpenChange, onSuccess, editItem = 
         }
     }, [editItem, open]);
 
+    // Categories are passed from parent or fetched once at mount
+    const { data: allItems = [] } = useQuery({
+        queryKey: ['pricingItems'],
+        queryFn: () => entities.PricingItem.filter({}),
+        staleTime: 60000, // cache for 1 min
+    });
+
     React.useEffect(() => {
-        entities.PricingItem.list('-created_at', 500).then(items => {
-            const cats = new Set();
-            items.forEach(item => {
-                // Handle new categories array format
-                if (item.categories) {
-                    try {
-                        const itemCats = JSON.parse(item.categories);
-                        itemCats.forEach(cat => cats.add(cat));
-                    } catch (e) {}
-                }
-                // Handle old category string format
-                if (item.category) {
-                    cats.add(item.category);
-                }
-            });
-            setExistingCategories(Array.from(cats).sort());
+        const cats = new Set();
+        allItems.forEach(item => {
+            if (item.categories) safeParse(item.categories).forEach(c => cats.add(c));
+            if (item.category) cats.add(item.category);
         });
-    }, []);
+        setExistingCategories(Array.from(cats).sort());
+    }, [allItems]);
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
@@ -149,21 +146,30 @@ export default function PricingForm({ open, onOpenChange, onSuccess, editItem = 
         setIsSaving(true);
         
         const dataToSave = {
-            ...formData,
-            categories: JSON.stringify(selectedCategories),
-            pricing_tiers: JSON.stringify(tiers),
-            clinic_location_ids: JSON.stringify(selectedLocationIds)
+            name: formData.name,
+            item_type: formData.item_type,
+            description: formData.description,
+            taxable: formData.taxable,
+            status: formData.status || 'active',
+            categories: selectedCategories,
+            pricing_tiers: tiers,
+            price: tiers.length > 0 ? tiers[0].price : null,
         };
 
-        if (editItem) {
-            await entities.PricingItem.update(editItem.id, dataToSave);
-        } else {
-            await entities.PricingItem.create(dataToSave);
+        try {
+            if (editItem) {
+                await entities.PricingItem.update(editItem.id, dataToSave);
+            } else {
+                await entities.PricingItem.create(dataToSave);
+            }
+            onSuccess();
+            onOpenChange(false);
+        } catch (err) {
+            console.error('Save error:', err);
+            alert('Error saving: ' + (err?.message || 'Unknown error'));
+        } finally {
+            setIsSaving(false);
         }
-
-        setIsSaving(false);
-        onSuccess();
-        onOpenChange(false);
     };
 
     return (
@@ -359,6 +365,8 @@ export default function PricingForm({ open, onOpenChange, onSuccess, editItem = 
                                                 <SelectItem value="infusions">Infusions</SelectItem>
                                                 <SelectItem value="syringes">Syringes</SelectItem>
                                                 <SelectItem value="vials">Vials</SelectItem>
+                                                <SelectItem value="bottles">Bottles</SelectItem>
+                                                <SelectItem value="items">Items</SelectItem>
                                                 <SelectItem value="treatments">Treatments</SelectItem>
                                             </SelectContent>
                                         </Select>

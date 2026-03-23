@@ -1,3 +1,4 @@
+function safeParse(v,f=[]){if(v==null)return f;if(typeof v!=="string")return v;try{return JSON.parse(v)}catch{return f}}
 import React, { useState } from "react";
 import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -27,11 +28,11 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
 
     React.useEffect(() => {
         if (quote && open) {
-            const items = JSON.parse(quote.items);
+            const items = safeParse(quote.items);
             setSelectedItems(items);
             setPatientName(quote.patient_name || "");
             setNotes(quote.notes || "");
-            setSelectedLocationId(quote.clinic_location_id || "");
+            setSelectedLocationId(quote.clinic_location_id || quote.location_id || "");
             setSelectedDiscountId(quote.discount_id || "");
         }
     }, [quote, open]);
@@ -146,15 +147,14 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
 
     const handleSave = () => {
         const quoteData = {
-            clinic_location_id: selectedLocationId,
-            patient_name: patientName || undefined,
-            items: JSON.stringify(selectedItems),
-            discount_id: selectedDiscountId || undefined,
+            location_id: selectedLocationId || null,
+            patient_name: patientName || null,
+            items: selectedItems,
+            discount_id: selectedDiscountId || null,
             discount_amount: calculateDiscountAmount(),
             subtotal: calculateSubtotal(),
-            tax_amount: calculateTax(),
             total: calculateTotal(),
-            notes: notes || undefined
+            notes: notes || null
         };
 
         updateQuoteMutation.mutate(quoteData);
@@ -198,7 +198,7 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
 
                                 <div className="space-y-2 max-h-96 overflow-y-auto">
                                     {filteredItems.slice(0, 20).map(item => {
-                                        const tiers = item.pricing_tiers ? JSON.parse(item.pricing_tiers) : [];
+                                        const tiers = item.pricing_tiers ? safeParse(item.pricing_tiers) : [];
                                         return (
                                             <Card key={item.id} className="hover:bg-slate-50 transition-colors">
                                                 <CardContent className="p-4">

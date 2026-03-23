@@ -153,7 +153,7 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                 <img 
                     src={logoUrl}
                     alt="Logo"
-                    className="h-16 mx-auto"
+                    className="h-16 mx-auto logo-img"
                     loading="eager"
                     decoding="sync"
                     onError={(e) => { e.currentTarget.style.display = 'none'; }}

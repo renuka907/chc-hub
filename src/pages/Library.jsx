@@ -13,6 +13,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import SearchBar from "../components/SearchBar";
+
+// Safe JSON parse — handles both JSON strings and already-parsed arrays/objects
+function safeParse(val, fallback = []) {
+    if (val == null) return fallback;
+    if (typeof val !== 'string') return val; // already parsed (Supabase returns native arrays)
+    try { return JSON.parse(val); } catch { return fallback; }
+}
 import AftercareForm from "../components/AftercareForm";
 import ConsentFormForm from "../components/ConsentFormForm";
 import EducationTopicForm from "../components/EducationTopicForm";
@@ -21,11 +28,30 @@ import TagManager from "../components/forms/TagManager";
 import DocumentUploadDialog from "../components/library/DocumentUploadDialog";
 import DocumentPrintDialog from "../components/library/DocumentPrintDialog";
 import DocumentEditDialog from "../components/library/DocumentEditDialog";
+import ProcedureBundles from "../components/library/ProcedureBundles";
 import { usePermissions } from "../components/permissions/usePermissions";
 import { FileText, Printer, Plus, Star, Filter, X, CalendarIcon, BookOpen, ExternalLink, Upload, Trash2, Pencil } from "lucide-react";
 import { format } from "date-fns";
 
-export default function Library() {
+class LibraryErrorBoundary extends React.Component {
+    constructor(props) { super(props); this.state = { hasError: false, error: null }; }
+    static getDerivedStateFromError(error) { return { hasError: true, error }; }
+    componentDidCatch(error, info) { console.error('Library page crash:', error, info); }
+    render() {
+        if (this.state.hasError) {
+            return (
+                <div className="p-8 text-center">
+                    <p className="text-red-600 font-bold text-lg">Something went wrong loading this page</p>
+                    <p className="text-gray-500 mt-2">{this.state.error?.message}</p>
+                    <button onClick={() => { this.setState({ hasError: false }); window.location.reload(); }} className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg">Reload</button>
+                </div>
+            );
+        }
+        return this.props.children;
+    }
+}
+
+function LibraryInner() {
     const [searchQuery, setSearchQuery] = useState("");
     const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
     const [categoryFilter, setCategoryFilter] = useState("all");
@@ -170,10 +196,10 @@ export default function Library() {
 
     const filteredForms = consentForms.filter(form => {
         const matchesSearch = form.form_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            form.form_type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            form.category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
             form.content?.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesFavorite = !showFavoritesOnly || form.is_favorite;
-        const matchesFormType = formTypeFilter === "all" || form.form_type === formTypeFilter;
+        const matchesFormType = formTypeFilter === "all" || form.category === formTypeFilter;
         
         const formDate = new Date(form.updated_date || form.created_date);
         const matchesDateFrom = !dateFrom || formDate >= dateFrom;
@@ -201,7 +227,7 @@ export default function Library() {
         documents.forEach(doc => {
             if (doc.tags) {
                 try {
-                    const docTags = JSON.parse(doc.tags);
+                    const docTags = safeParse(doc.tags);
                     if (Array.isArray(docTags)) {
                         docTags.forEach(tag => tagSet.add(tag));
                     }
@@ -226,7 +252,7 @@ export default function Library() {
         let matchesTags = true;
         if (selectedTags.length > 0) {
             try {
-                const docTags = doc.tags ? JSON.parse(doc.tags) : [];
+                const docTags = safeParse(doc.tags);
                 matchesTags = selectedTags.some(tag => docTags.includes(tag));
             } catch (e) {
                 matchesTags = false;
@@ -259,10 +285,14 @@ export default function Library() {
     };
 
     const formTypeColors = {
-        "Procedure": "bg-blue-100 text-blue-800",
-        "Treatment": "bg-purple-100 text-purple-800",
+        "Aesthetic": "bg-pink-100 text-pink-800",
+        "Consent": "bg-blue-100 text-blue-800",
         "General": "bg-gray-100 text-gray-800",
         "HIPAA": "bg-green-100 text-green-800",
+        "Privacy": "bg-teal-100 text-teal-800",
+        "Procedure": "bg-indigo-100 text-indigo-800",
+        "Treatment": "bg-purple-100 text-purple-800",
+        "Weight Loss": "bg-orange-100 text-orange-800",
         "Financial": "bg-amber-100 text-amber-800"
     };
 
@@ -285,7 +315,7 @@ export default function Library() {
                             onClick={() => {
                                 if (activeTab === "aftercare") setShowAftercareForm(true);
                                 else if (activeTab === "consent") setShowConsentForm(true);
-                                else if (activeTab === "clinic") setShowClinicForm(true);
+                                // clinic forms tab removed
                                 else if (activeTab === "education") setShowEducationForm(true);
                                 else if (activeTab === "documents") setShowDocumentUpload(true);
                             }}
@@ -294,8 +324,7 @@ export default function Library() {
                             {activeTab === "documents" ? <Upload className="w-4 h-4 mr-2" /> : <Plus className="w-4 h-4 mr-2" />}
                             {activeTab === "aftercare" ? "Create Aftercare" : 
                              activeTab === "consent" ? "Create Consent Form" : 
-                             activeTab === "clinic" ? "Create Clinic Form" : 
-                             activeTab === "documents" ? "Upload Document" : "Create Education Topic"}
+                             activeTab === "documents" ? "Upload Form" : "Create Education Topic"}
                         </Button>
                     )}
                 </div>
@@ -358,12 +387,15 @@ export default function Library() {
                                             <SelectValue placeholder="Filter by type" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="all">All Types</SelectItem>
-                                            <SelectItem value="Procedure">Procedure</SelectItem>
-                                            <SelectItem value="Treatment">Treatment</SelectItem>
+                                            <SelectItem value="all">All Categories</SelectItem>
+                                            <SelectItem value="Aesthetic">Aesthetic</SelectItem>
+                                            <SelectItem value="Consent">Consent</SelectItem>
                                             <SelectItem value="General">General</SelectItem>
                                             <SelectItem value="HIPAA">HIPAA</SelectItem>
-                                            <SelectItem value="Financial">Financial</SelectItem>
+                                            <SelectItem value="Privacy">Privacy</SelectItem>
+                                            <SelectItem value="Procedure">Procedure</SelectItem>
+                                            <SelectItem value="Treatment">Treatment</SelectItem>
+                                            <SelectItem value="Weight Loss">Weight Loss</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 )}
@@ -427,7 +459,7 @@ export default function Library() {
                                     <span className="text-sm text-gray-600">
                                         {activeTab === "aftercare" && `${filteredAftercare.length} results`}
                                         {activeTab === "consent" && `${filteredForms.length} results`}
-                                        {activeTab === "clinic" && `${filteredClinicForms.length} results`}
+                                        {false && "removed clinic forms"}
                                         {activeTab === "education" && `${filteredEducation.length} results`}
                                         {activeTab === "documents" && `${filteredDocuments.length} results`}
                                     </span>
@@ -454,11 +486,11 @@ export default function Library() {
                     <TabsTrigger value="consent" className="text-base">
                         Consent Forms
                     </TabsTrigger>
-                    <TabsTrigger value="clinic" className="text-base">
-                        Clinic Forms
+                    <TabsTrigger value="procedures" className="text-base">
+                        Procedures
                     </TabsTrigger>
                     <TabsTrigger value="documents" className="text-base">
-                        Documents
+                        Other Clinic Forms
                     </TabsTrigger>
                 </TabsList>
 
@@ -521,7 +553,7 @@ export default function Library() {
                                                         onClick={(e) => {
                                                             e.preventDefault();
                                                             e.stopPropagation();
-                                                            window.open(createPageUrl(`EducationDetail?id=${topic.id}&autoprint=true`), '_blank');
+                                                            window.location.href = createPageUrl(`EducationDetail?id=${topic.id}&autoprint=true`);
                                                         }}
                                                         className="flex-shrink-0 w-6 h-6 flex items-center justify-center hover:scale-110 transition-transform"
                                                     >
@@ -547,79 +579,64 @@ export default function Library() {
                             </CardContent>
                         </Card>
                     ) : (
-                        <div className="space-y-6">
-                            {["Gynecology", "Hormone Therapy", "Mens Health", "General"].map(category => {
-                                const categoryInstructions = filteredAftercare.filter(i => i.category === category);
-                                if (categoryInstructions.length === 0) return null;
-                                
-                                return (
-                                    <div key={category} className="bg-white rounded-2xl p-6 shadow-md">
-                                        <h3 className="text-xl font-bold mb-4 text-gray-900 flex items-center">
-                                            <span className={`px-3 py-1 rounded-lg text-sm mr-3 ${categoryColors[category]}`}>
-                                                {category}
-                                            </span>
-                                            <span className="text-gray-400 text-sm font-normal">({categoryInstructions.length})</span>
-                                        </h3>
-                                        <div className="space-y-2">
-                                            {categoryInstructions.map(instruction => (
-                                                <div key={instruction.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors group">
-                                                    <Checkbox
-                                                        checked={selectedItems.has(instruction.id)}
-                                                        onCheckedChange={() => toggleSelection(instruction.id)}
-                                                        onClick={(e) => e.stopPropagation()}
-                                                        className="flex-shrink-0"
-                                                    />
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.preventDefault();
-                                                            e.stopPropagation();
-                                                            toggleAftercareFavorite(instruction.id, instruction.is_favorite);
-                                                        }}
-                                                        className="flex-shrink-0 w-6 h-6 flex items-center justify-center hover:scale-110 transition-transform"
-                                                    >
-                                                        <Star className={`w-4 h-4 ${instruction.is_favorite ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`} />
-                                                    </button>
-                                                    <Link to={createPageUrl(`AftercareDetail?id=${instruction.id}`)} className="flex-1 flex items-center justify-between min-w-0">
-                                                        <div className="flex-1 min-w-0 mr-4">
-                                                            <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
-                                                                {instruction.procedure_name}
-                                                            </h4>
-                                                            {instruction.duration && (
-                                                                <p className="text-sm text-gray-600">
-                                                                    Recovery: {instruction.duration}
-                                                                </p>
-                                                            )}
-                                                            {instruction.tags && JSON.parse(instruction.tags).length > 0 && (
-                                                                <div className="flex gap-1 flex-wrap mt-1">
-                                                                    {JSON.parse(instruction.tags).slice(0, 3).map(tag => (
-                                                                        <Badge key={tag} variant="secondary" className="text-xs">
-                                                                            {tag}
-                                                                        </Badge>
-                                                                    ))}
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                        {instruction.version && (
-                                                            <Badge variant="outline" className="flex-shrink-0">v{instruction.version}</Badge>
-                                                        )}
-                                                    </Link>
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.preventDefault();
-                                                            e.stopPropagation();
-                                                            window.open(createPageUrl(`AftercareDetail?id=${instruction.id}`), '_blank');
-                                                            setTimeout(() => window.print(), 500);
-                                                        }}
-                                                        className="flex-shrink-0 w-6 h-6 flex items-center justify-center hover:scale-110 transition-transform"
-                                                    >
-                                                        <Printer className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
-                                                    </button>
-                                                </div>
-                                            ))}
-                                        </div>
+                        <div className="bg-white rounded-2xl p-6 shadow-md">
+                            <h3 className="text-xl font-bold mb-4 text-gray-900 flex items-center">
+                                <span className="px-3 py-1 rounded-lg text-sm mr-3 bg-purple-100 text-purple-800">
+                                    Aftercare Instructions
+                                </span>
+                                <span className="text-gray-400 text-sm font-normal">({filteredAftercare.length})</span>
+                            </h3>
+                            <div className="space-y-2">
+                                {filteredAftercare.sort((a, b) => (a.procedure_name || '').localeCompare(b.procedure_name || '')).map(instruction => (
+                                    <div key={instruction.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors group">
+                                        <Checkbox
+                                            checked={selectedItems.has(instruction.id)}
+                                            onCheckedChange={() => toggleSelection(instruction.id)}
+                                            onClick={(e) => e.stopPropagation()}
+                                            className="flex-shrink-0"
+                                        />
+                                        <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                toggleAftercareFavorite(instruction.id, instruction.is_favorite);
+                                            }}
+                                            className="flex-shrink-0 w-6 h-6 flex items-center justify-center hover:scale-110 transition-transform"
+                                        >
+                                            <Star className={`w-4 h-4 ${instruction.is_favorite ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`} />
+                                        </button>
+                                        <Link to={createPageUrl(`AftercareDetail?id=${instruction.id}`)} className="flex-1 flex items-center justify-between min-w-0">
+                                            <div className="flex-1 min-w-0 mr-4">
+                                                <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
+                                                    {instruction.procedure_name}
+                                                </h4>
+                                                {instruction.tags && safeParse(instruction.tags).length > 0 && (
+                                                    <div className="flex gap-1 flex-wrap mt-1">
+                                                        {safeParse(instruction.tags).slice(0, 3).map(tag => (
+                                                            <Badge key={tag} variant="secondary" className="text-xs">
+                                                                {tag}
+                                                            </Badge>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {instruction.version && (
+                                                <Badge variant="outline" className="flex-shrink-0">v{instruction.version}</Badge>
+                                            )}
+                                        </Link>
+                                        <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                window.location.href = createPageUrl(`AftercareDetail?id=${instruction.id}&autoprint=true`);
+                                            }}
+                                            className="flex-shrink-0 w-6 h-6 flex items-center justify-center hover:scale-110 transition-transform"
+                                        >
+                                            <Printer className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                                        </button>
                                     </div>
-                                );
-                            })}
+                                ))}
+                            </div>
                         </div>
                     )}
                 </TabsContent>
@@ -635,8 +652,8 @@ export default function Library() {
                         </Card>
                     ) : (
                         <div className="space-y-6">
-                            {["Procedure", "Treatment", "General", "HIPAA", "Financial"].map(formType => {
-                                const typeForms = filteredForms.filter(f => f.form_type === formType);
+                            {["Aesthetic", "Consent", "General", "HIPAA", "Privacy", "Procedure", "Treatment", "Weight Loss", "Financial"].map(formType => {
+                                const typeForms = filteredForms.filter(f => (f.category || "Consent") === formType);
                                 if (typeForms.length === 0) return null;
                                 
                                 return (
@@ -671,9 +688,9 @@ export default function Library() {
                                                             <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
                                                                 {form.form_name}
                                                             </h4>
-                                                            {form.tags && JSON.parse(form.tags).length > 0 && (
+                                                            {form.tags && safeParse(form.tags).length > 0 && (
                                                                 <div className="flex gap-1 flex-wrap mt-1">
-                                                                    {JSON.parse(form.tags).slice(0, 3).map(tag => (
+                                                                    {safeParse(form.tags).slice(0, 3).map(tag => (
                                                                         <Badge key={tag} variant="secondary" className="text-xs">
                                                                             {tag}
                                                                         </Badge>
@@ -689,8 +706,7 @@ export default function Library() {
                                                         onClick={(e) => {
                                                             e.preventDefault();
                                                             e.stopPropagation();
-                                                            window.open(createPageUrl(`ConsentFormDetail?id=${form.id}`), '_blank');
-                                                            setTimeout(() => window.print(), 500);
+                                                            window.location.href = createPageUrl(`ConsentFormDetail?id=${form.id}&autoprint=true`);
                                                         }}
                                                         className="flex-shrink-0 w-6 h-6 flex items-center justify-center hover:scale-110 transition-transform"
                                                     >
@@ -706,77 +722,9 @@ export default function Library() {
                     )}
                 </TabsContent>
 
-                {/* Clinic Forms Tab */}
-                <TabsContent value="clinic" className="space-y-4">
-                    {filteredClinicForms.length === 0 ? (
-                        <Card className="text-center py-12">
-                            <CardContent>
-                                <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                                <p className="text-gray-500">No clinic forms found</p>
-                            </CardContent>
-                        </Card>
-                    ) : (
-                        <div className="bg-white rounded-2xl p-6 shadow-md">
-                            <h3 className="text-xl font-bold mb-4 text-gray-900 flex items-center">
-                                <span className="px-3 py-1 rounded-lg text-sm mr-3 bg-orange-100 text-orange-800">
-                                    Clinic Forms
-                                </span>
-                                <span className="text-gray-400 text-sm font-normal">({filteredClinicForms.length})</span>
-                            </h3>
-                            <div className="space-y-2">
-                                {filteredClinicForms.map(instruction => (
-                                    <div key={instruction.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors group">
-                                        <Checkbox
-                                            checked={selectedItems.has(instruction.id)}
-                                            onCheckedChange={() => toggleSelection(instruction.id)}
-                                            onClick={(e) => e.stopPropagation()}
-                                            className="flex-shrink-0"
-                                        />
-                                        <button
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                toggleAftercareFavorite(instruction.id, instruction.is_favorite);
-                                            }}
-                                            className="flex-shrink-0 w-6 h-6 flex items-center justify-center hover:scale-110 transition-transform"
-                                        >
-                                            <Star className={`w-4 h-4 ${instruction.is_favorite ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`} />
-                                        </button>
-                                        <Link to={createPageUrl(`AftercareDetail?id=${instruction.id}`)} className="flex-1 flex items-center justify-between min-w-0">
-                                            <div className="flex-1 min-w-0 mr-4">
-                                                <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
-                                                    {instruction.procedure_name}
-                                                </h4>
-                                                {instruction.tags && JSON.parse(instruction.tags).length > 0 && (
-                                                    <div className="flex gap-1 flex-wrap mt-1">
-                                                        {JSON.parse(instruction.tags).slice(0, 3).map(tag => (
-                                                            <Badge key={tag} variant="secondary" className="text-xs">
-                                                                {tag}
-                                                            </Badge>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
-                                            {instruction.version && (
-                                                <Badge variant="outline" className="flex-shrink-0">v{instruction.version}</Badge>
-                                            )}
-                                        </Link>
-                                        <button
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                window.open(createPageUrl(`AftercareDetail?id=${instruction.id}`), '_blank');
-                                                setTimeout(() => window.print(), 500);
-                                            }}
-                                            className="flex-shrink-0 w-6 h-6 flex items-center justify-center hover:scale-110 transition-transform"
-                                        >
-                                            <Printer className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
+                {/* Procedures Tab */}
+                <TabsContent value="procedures" className="space-y-4">
+                    <ProcedureBundles />
                 </TabsContent>
 
                 {/* Documents Tab */}
@@ -821,7 +769,7 @@ export default function Library() {
                         <Card className="text-center py-12">
                             <CardContent>
                                 <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                                <p className="text-gray-500 text-lg">No documents found</p>
+                                <p className="text-gray-500 text-lg">No clinic forms found</p>
                                 <p className="text-gray-400 text-sm mt-2">Upload documents to get started</p>
                             </CardContent>
                         </Card>
@@ -840,7 +788,10 @@ export default function Library() {
                                             <span className="text-gray-400 text-sm font-normal">({categoryDocs.length})</span>
                                         </h3>
                                         <div className="space-y-2">
-                                            {categoryDocs.map(doc => (
+                                            {categoryDocs.map(doc => {
+                                                const fileUrls = doc.file_urls ? safeParse(doc.file_urls) : [doc.document_url];
+                                                const mainFileUrl = fileUrls[0];
+                                                return (
                                                 <div key={doc.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors group">
                                                     <button
                                                         onClick={(e) => {
@@ -861,14 +812,14 @@ export default function Library() {
                                                                 {doc.description}
                                                             </p>
                                                         )}
-                                                        {doc.file_urls && JSON.parse(doc.file_urls).length > 1 && (
+                                                        {doc.file_urls && safeParse(doc.file_urls).length > 1 && (
                                                             <p className="text-xs text-purple-600 mt-1">
-                                                                {JSON.parse(doc.file_urls).length} files
+                                                                {safeParse(doc.file_urls).length} files
                                                             </p>
                                                         )}
-                                                        {doc.tags && JSON.parse(doc.tags).length > 0 && (
+                                                        {doc.tags && safeParse(doc.tags).length > 0 && (
                                                             <div className="flex flex-wrap gap-1 mt-2">
-                                                                {JSON.parse(doc.tags).map((tag, idx) => (
+                                                                {safeParse(doc.tags).map((tag, idx) => (
                                                                     <span key={idx} className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded">
                                                                         {tag}
                                                                     </span>
@@ -876,7 +827,33 @@ export default function Library() {
                                                             </div>
                                                         )}
                                                     </div>
-                                                    <div className="flex gap-1">
+                                                    <div className="flex gap-1 items-center">
+                                                        {mainFileUrl && (
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    e.stopPropagation();
+                                                                    // Navigate to a print viewer page within the app
+                                                                    window.location.href = createPageUrl(`DocumentPrint?id=${doc.id}`);
+                                                                }}
+                                                                className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                                                            >
+                                                                <Printer className="w-3.5 h-3.5" />
+                                                                <span className="hidden sm:inline">Print</span>
+                                                            </button>
+                                                        )}
+                                                        {fileUrls.length > 1 && (
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    e.stopPropagation();
+                                                                    setPrintDocument(doc);
+                                                                }}
+                                                                className="flex items-center gap-1 px-2 py-1.5 bg-purple-100 text-purple-700 text-xs font-medium rounded-lg hover:bg-purple-200 transition-colors"
+                                                            >
+                                                                All Files
+                                                            </button>
+                                                        )}
                                                         <button
                                                             onClick={(e) => {
                                                                 e.preventDefault();
@@ -886,16 +863,6 @@ export default function Library() {
                                                             className="flex-shrink-0 w-8 h-8 flex items-center justify-center hover:scale-110 transition-transform"
                                                         >
                                                             <Pencil className="w-4 h-4 text-gray-400 group-hover:text-purple-600 transition-colors" />
-                                                        </button>
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                e.stopPropagation();
-                                                                setPrintDocument(doc);
-                                                            }}
-                                                            className="flex-shrink-0 w-8 h-8 flex items-center justify-center hover:scale-110 transition-transform"
-                                                        >
-                                                            <Printer className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
                                                         </button>
                                                         {can("aftercare", "delete") && (
                                                             <button
@@ -913,7 +880,8 @@ export default function Library() {
                                                         )}
                                                     </div>
                                                 </div>
-                                            ))}
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                 );
@@ -1006,5 +974,13 @@ export default function Library() {
                 </AlertDialogContent>
             </AlertDialog>
         </div>
+    );
+}
+
+export default function Library() {
+    return (
+        <LibraryErrorBoundary>
+            <LibraryInner />
+        </LibraryErrorBoundary>
     );
 }

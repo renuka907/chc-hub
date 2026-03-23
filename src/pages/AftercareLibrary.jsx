@@ -13,6 +13,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import SearchBar from "../components/SearchBar";
+
+function safeParse(val, fallback = []) {
+    if (val == null) return fallback;
+    if (typeof val !== "string") return val;
+    try { return JSON.parse(val); } catch { return fallback; }
+}
 import AftercareForm from "../components/AftercareForm";
 import ConsentFormForm from "../components/ConsentFormForm";
 import BulkActionsBar from "../components/BulkActionsBar";
@@ -383,9 +389,9 @@ export default function AftercareLibrary() {
                                                         Recovery: {instruction.duration}
                                                     </CardDescription>
                                                 )}
-                                                {instruction.tags && JSON.parse(instruction.tags).length > 0 && (
+                                                {instruction.tags && safeParse(instruction.tags).length > 0 && (
                                                     <div className="flex gap-1 flex-wrap mt-2">
-                                                        {JSON.parse(instruction.tags).slice(0, 3).map(tag => (
+                                                        {safeParse(instruction.tags).slice(0, 3).map(tag => (
                                                             <Badge key={tag} variant="secondary" className="text-xs">
                                                                 {tag}
                                                             </Badge>
@@ -449,9 +455,9 @@ export default function AftercareLibrary() {
                                                 <CardTitle className="group-hover:text-blue-600 transition-colors">
                                                     {form.form_name}
                                                 </CardTitle>
-                                                {form.tags && JSON.parse(form.tags).length > 0 && (
+                                                {form.tags && safeParse(form.tags).length > 0 && (
                                                     <div className="flex gap-1 flex-wrap mt-2">
-                                                        {JSON.parse(form.tags).slice(0, 3).map(tag => (
+                                                        {safeParse(form.tags).slice(0, 3).map(tag => (
                                                             <Badge key={tag} variant="secondary" className="text-xs">
                                                                 {tag}
                                                             </Badge>
@@ -515,9 +521,9 @@ export default function AftercareLibrary() {
                                                 <CardTitle className="group-hover:text-blue-600 transition-colors">
                                                     {instruction.procedure_name}
                                                 </CardTitle>
-                                                {instruction.tags && JSON.parse(instruction.tags).length > 0 && (
+                                                {instruction.tags && safeParse(instruction.tags).length > 0 && (
                                                     <div className="flex gap-1 flex-wrap mt-2">
-                                                        {JSON.parse(instruction.tags).slice(0, 3).map(tag => (
+                                                        {safeParse(instruction.tags).slice(0, 3).map(tag => (
                                                             <Badge key={tag} variant="secondary" className="text-xs">
                                                                 {tag}
                                                             </Badge>

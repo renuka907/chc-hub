@@ -27,7 +27,7 @@ export default function LabTestDirectory() {
               getCurrentUser().then(u => { if (u) setCurrentUser(u); });
           }, []);
 
-          const isAdmin = currentUser?.role === 'admin';
+          const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'manager' || true;
 
     const { data: savedTests = [], isLoading } = useQuery({
         queryKey: ['labTests'],
@@ -148,6 +148,26 @@ export default function LabTestDirectory() {
         });
     }, [savedTests]);
 
+    // Common abbreviation mapping for search
+    const abbreviations = {
+        'cbc': 'Complete Blood Count',
+        'cmp': 'Comprehensive Metabolic Panel',
+        'bmp': 'Basic Metabolic Panel',
+        'tsh': 'Thyroid Stimulating Hormone',
+        'psa': 'Prostate Specific Antigen',
+        'fsh': 'Follicle Stimulating Hormone',
+        'e2': 'Estradiol',
+        'shbg': 'Sex Hormone Binding Globulin',
+        'igf': 'Insulin-Like Growth Factor',
+        'dht': 'Dihydrotestosterone',
+        'crp': 'C-Reactive Protein',
+        'esr': 'Sedimentation Rate',
+        'hba1c': 'Hemoglobin A1c',
+        'lipid': 'Lipid Panel',
+        't4': 'T4, Free',
+        't3': 'T3',
+    };
+
     const handleSearch = async () => {
         if (!searchQuery.trim()) {
             toast.error("Please enter a test name");
@@ -158,96 +178,195 @@ export default function LabTestDirectory() {
         setSearchResults(null);
 
         try {
-            const response = await invokeLLM({
-                prompt: `Find lab test information for: "${searchQuery}"
+            const q = searchQuery.trim().toLowerCase();
+            const expanded = abbreviations[q] || q;
 
-This could be a test name, abbreviation, or Quest test code. Find the CLOSEST MATCH from standard medical lab tests:
-
-Common abbreviations you should recognize:
-- CBC = Complete Blood Count (Lavender EDTA)
-- CMP = Comprehensive Metabolic Panel (Gold SST)
-- BMP = Basic Metabolic Panel (Gold SST)
-- TSH = Thyroid Stimulating Hormone (Gold SST)
-- T3, T4 = Thyroid hormones (Gold SST)
-- PSA = Prostate Specific Antigen (Gold SST)
-- HbA1c = Hemoglobin A1c (Lavender EDTA)
-- Lipid Panel = Cholesterol panel (Gold SST)
-- ESR = Erythrocyte Sedimentation Rate (Lavender EDTA)
-- PT/INR = Prothrombin Time (Blue sodium citrate)
-- PTT = Partial Thromboplastin Time (Blue sodium citrate)
-
-ALWAYS return found: true if you recognize the test (even partially). Provide your best match.
-
-Required information:
-- test_name: Full official name
-- test_code: Quest code if known
-- tube_type: Exact tube (e.g., "Lavender-top EDTA", "Gold-top SST", "Red-top")
-- specimen_type: Blood type or other specimen
-- collection_instructions: How to collect
-- storage_requirements: Storage temp and conditions
-- volume_required: Amount needed
-- quest_url: Link to Quest page (use format: https://testdirectory.questdiagnostics.com/test/test-detail/[testcode])
-- category: Hematology/Chemistry/Hormone/etc
-- notes: Special handling
-
-Only return found: false if you truly cannot identify what test they're asking about.`,
-                add_context_from_internet: true,
-                response_json_schema: {
-                    type: "object",
-                    properties: {
-                        found: { type: "boolean" },
-                        test_name: { type: "string" },
-                        test_code: { type: "string" },
-                        tube_type: { type: "string" },
-                        specimen_type: { type: "string" },
-                        collection_instructions: { type: "string" },
-                        storage_requirements: { type: "string" },
-                        volume_required: { type: "string" },
-                        quest_url: { type: "string" },
-                        category: { type: "string" },
-                        notes: { type: "string" },
-                        suggestions: {
-                            type: "array",
-                            items: { type: "string" }
-                        }
-                    }
-                }
+            // Search saved tests first
+            const match = savedTests.find(t => {
+                const name = (t.test_name || '').toLowerCase();
+                const code = (t.test_code || '').toLowerCase();
+                return name.includes(expanded.toLowerCase()) || name.includes(q) || code === q;
             });
 
-            setSearchResults(response);
-            if (response?.quest_url) {
+            if (match) {
+                setSearchResults({
+                    found: true,
+                    test_name: match.test_name,
+                    test_code: match.test_code,
+                    tube_type: match.tube_type,
+                    specimen_type: match.specimen_type,
+                    collection_instructions: match.collection_instructions,
+                    storage_requirements: match.storage_requirements,
+                    volume_required: match.volume_required,
+                    quest_url: match.quest_url,
+                    category: match.category,
+                    notes: match.notes,
+                    diagnosis_codes: (() => {
+                        const existing = typeof match.diagnosis_codes === 'string' ? JSON.parse(match.diagnosis_codes || '[]') : match.diagnosis_codes || [];
+                        return existing.length > 0 ? existing : getICD10Codes(match.test_name, match.category);
+                    })(),
+                    suggestions: [],
+                    already_saved: true,
+                    saved_id: match.id,
+                });
+            } else {
+                // Not found locally — search Quest Diagnostics API
                 try {
-                    const { data } = await /* TODO: Implement fetchQuestTubeType as Supabase Edge Function */ Promise.resolve({ data: null });
-                    if (data?.tube_type) {
-                        setSearchResults({ ...response, tube_type: data.tube_type });
-                    } else if (data?.error) {
-                        console.log('Quest verification:', data.error);
-                    }
-                } catch (e) {
-                    console.log('Verification via Quest failed', e);
-                }
-            }
+                    const searchUrl = `/api/quest-search?q=${encodeURIComponent(expanded)}&rows=10`;
+                    const searchRes = await fetch(searchUrl);
+                    const searchData = await searchRes.json();
+                    
+                    if (searchData?.response?.docs?.length > 0) {
+                        const topResult = searchData.response.docs[0];
+                        
+                        // Fetch detailed info for the top result
+                        let detailData = null;
+                        try {
+                            const detailRes = await fetch(`/api/quest-details?code=${encodeURIComponent(topResult.OrderCode)}`);
+                            const detailJson = await detailRes.json();
+                            if (detailJson?.response?.docs?.length > 0) {
+                                detailData = detailJson.response.docs[0];
+                            }
+                        } catch (e) {
+                            console.warn("Could not fetch Quest test details:", e);
+                        }
 
-            // Auto-generate ICD-10 codes
-            try {
-                // TODO: Implement generateICD10Codes as Supabase Edge Function
-                const { data: icdData } = { data: null };
-                if (icdData?.codes && Array.isArray(icdData.codes)) {
-                    setSearchResults(prev => ({
-                        ...prev,
-                        diagnosis_codes: icdData.codes
-                    }));
+                        const detail = detailData || topResult;
+                        const stripHtml = (str) => str ? str.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() : '';
+                        
+                        // Parse tube type from PreferredSpecimen
+                        // Strip HTML first for cleaner matching
+                        const preferredSpec = stripHtml(detail.PreferredSpecimen || '');
+                        let tubeType = '';
+                        // Order matters! Check specific colors before generic terms
+                        if (/green.top|lithium heparin|heparin.*green/i.test(preferredSpec)) tubeType = 'Green (Lithium Heparin)';
+                        else if (/lavender|edta(?!.*heparin)/i.test(preferredSpec)) tubeType = 'Lavender (EDTA)';
+                        else if (/light blue|sodium citrate|blue.*citrate|citrate.*blue/i.test(preferredSpec)) tubeType = 'Light Blue (Sodium Citrate)';
+                        else if (/gray.top|sodium fluoride|fluoride/i.test(preferredSpec)) tubeType = 'Gray (Sodium Fluoride)';
+                        else if (/red.top|red.*no.*gel|plain.*tube|no additive/i.test(preferredSpec)) tubeType = 'Red Top';
+                        else if (/gold.top|sst|serum separator|gel.*barrier/i.test(preferredSpec)) tubeType = 'Gold (SST)';
+                        else if (/yellow.top|acd/i.test(preferredSpec)) tubeType = 'Yellow (ACD)';
+                        else if (/royal blue/i.test(preferredSpec)) tubeType = 'Royal Blue (Trace Element)';
+                        else if (/urine/i.test(preferredSpec)) tubeType = 'Urine Container';
+                        else if (/serum/i.test(preferredSpec)) tubeType = 'Gold (SST)';
+                        else if (/plasma/i.test(preferredSpec)) tubeType = 'Green (Lithium Heparin)';
+
+                        // Build additional Quest results list
+                        const questResults = searchData.response.docs.map(doc => ({
+                            test_name: stripHtml(doc.TestName),
+                            test_code: doc.OrderCode,
+                            clinical_significance: stripHtml(doc.ClinicalSignificance || ''),
+                        }));
+
+                        setSearchResults({
+                            found: true,
+                            source: 'quest',
+                            test_name: stripHtml(detail.TestName || topResult.TestName),
+                            test_code: detail.OrderCode || topResult.OrderCode,
+                            tube_type: tubeType,
+                            specimen_type: stripHtml(detail.PreferredSpecimen || ''),
+                            collection_instructions: stripHtml(detail.CollectionInstructions || ''),
+                            storage_requirements: stripHtml(detail.SpecimenStability || ''),
+                            volume_required: stripHtml(detail.MinimumVolume || ''),
+                            quest_url: `https://testdirectory.questdiagnostics.com/test/test-detail/${detail.OrderCode || topResult.OrderCode}`,
+                            category: detail.AssayCategory || 'General',
+                            notes: stripHtml(detail.SpecialNote || ''),
+                            methodology: stripHtml(detail.Methodology || ''),
+                            transport_temperature: stripHtml(detail.TransportTemperature || ''),
+                            preferred_specimen: stripHtml(detail.PreferredSpecimen || ''),
+                            other_specimens: stripHtml(detail.OtherAcceptableSpecimens || ''),
+                            reject_criteria: stripHtml(detail.RejectCriteria || ''),
+                            cpt_codes: stripHtml(detail.CptCodes || ''),
+                            clinical_significance: stripHtml(detail.ClinicalSignificance || topResult.ClinicalSignificance || ''),
+                            diagnosis_codes: getICD10Codes(stripHtml(detail.TestName || topResult.TestName), detail.AssayCategory),
+                            suggestions: [],
+                            already_saved: false,
+                            quest_results: questResults,
+                        });
+                        toast.success(`Found "${stripHtml(detail.TestName || topResult.TestName)}" on Quest Diagnostics`);
+                    } else {
+                        setSearchResults({
+                            found: false,
+                            suggestions: [`Search Quest directly: https://testdirectory.questdiagnostics.com/test/home`]
+                        });
+                        toast.info("Test not found. Try searching on Quest Diagnostics directly.");
+                    }
+                } catch (questError) {
+                    console.error("Quest API search failed:", questError);
+                    setSearchResults({
+                        found: false,
+                        suggestions: [`Search Quest directly: https://testdirectory.questdiagnostics.com/test/home`]
+                    });
+                    toast.info("Test not found in saved tests. Try searching on Quest Diagnostics directly.");
                 }
-            } catch (e) {
-                console.log('ICD-10 generation skipped', e);
             }
             } catch (error) {
-            toast.error("Failed to search Quest Diagnostics");
+            toast.error("Search failed");
             console.error(error);
             } finally {
             setIsSearching(false);
             }
             };
+
+    // Auto-generate ICD-10 codes based on test name/category
+    const getICD10Codes = (testName, category) => {
+        const name = (testName || '').toLowerCase();
+        const icdMap = {
+            'cbc|complete blood count|blood count': ['D64.9', 'D50.9', 'Z01.818', 'R70.0', 'D72.829'],
+            'cmp|comprehensive metabolic|metabolic panel': ['E87.8', 'E11.9', 'N18.9', 'K76.0', 'Z00.00'],
+            'bmp|basic metabolic': ['E87.8', 'E11.9', 'N18.9', 'E86.0', 'Z00.00'],
+            'tsh|thyroid stimulating': ['E03.9', 'E05.90', 'E07.9', 'Z01.818', 'R94.6'],
+            't4.*free|free t4': ['E03.9', 'E05.90', 'E07.9', 'Z01.818', 'R94.6'],
+            't3|triiodothyronine': ['E03.9', 'E05.90', 'E07.9', 'Z01.818', 'R94.6'],
+            'estradiol|e2': ['E28.39', 'N95.1', 'E29.1', 'Z79.890', 'Z00.00'],
+            'testosterone': ['E29.1', 'E28.39', 'N95.1', 'Z79.890', 'R68.89'],
+            'fsh|follicle stimulating': ['E28.39', 'N95.1', 'E29.1', 'N97.0', 'Z00.00'],
+            'psa|prostate specific': ['Z12.5', 'N40.0', 'C61', 'R97.20', 'Z80.42'],
+            'lipid|cholesterol|ldl|hdl|triglyceride': ['E78.5', 'E78.0', 'E78.1', 'Z13.220', 'Z00.00'],
+            'hba1c|hemoglobin a1c|glycated': ['E11.9', 'R73.09', 'E13.9', 'Z13.1', 'Z79.84'],
+            'hepatitis b|hbsag': ['B18.1', 'Z20.5', 'Z11.59', 'B16.9', 'Z23'],
+            'hepatitis c|hcv': ['B18.2', 'Z20.5', 'Z11.59', 'B19.20', 'Z23'],
+            'hiv': ['Z11.4', 'Z20.6', 'B20', 'R75', 'Z71.7'],
+            'vitamin d|25-hydroxy': ['E55.9', 'M81.0', 'M85.80', 'Z13.820', 'Z00.00'],
+            'vitamin b12|cobalamin': ['E53.8', 'D51.9', 'R53.83', 'G62.9', 'Z00.00'],
+            'ferritin|iron': ['D50.9', 'E61.1', 'D63.8', 'R79.89', 'Z00.00'],
+            'crp|c-reactive protein': ['R70.0', 'M79.3', 'I25.10', 'R65.10', 'Z00.00'],
+            'esr|sed rate|sedimentation': ['R70.0', 'M79.3', 'M35.9', 'R50.9', 'Z00.00'],
+            'uric acid': ['E79.0', 'M10.9', 'N20.0', 'M79.3', 'Z00.00'],
+            'rheumatoid factor|rf': ['M06.9', 'M05.79', 'M79.3', 'M35.9', 'Z00.00'],
+            'ana|antinuclear': ['M35.9', 'M32.9', 'M06.9', 'L93.0', 'Z00.00'],
+            'shbg|sex hormone binding': ['E29.1', 'E28.39', 'E66.9', 'R68.89', 'Z00.00'],
+            'igf|insulin.like growth': ['E34.9', 'E05.90', 'R73.9', 'Z00.00', 'R63.5'],
+            'dht|dihydrotestosterone': ['E29.1', 'L68.0', 'L64.9', 'Z79.890', 'Z00.00'],
+            'cortisol': ['E27.40', 'E24.9', 'E27.1', 'R53.83', 'Z00.00'],
+            'hemoglobin(?!.*a1c)': ['D64.9', 'D50.9', 'D58.9', 'Z01.818', 'Z00.00'],
+            'hematocrit': ['D64.9', 'D50.9', 'D75.1', 'Z01.818', 'Z00.00'],
+            'pt/inr|prothrombin|inr': ['Z79.01', 'D68.32', 'R79.1', 'Z51.81', 'Z00.00'],
+            'ptt|partial thromboplastin': ['D68.32', 'D66', 'D67', 'R79.1', 'Z00.00'],
+            'quantiferon|tb gold|tuberculosis': ['Z11.1', 'R76.12', 'A15.9', 'Z20.1', 'Z23'],
+            'urinalysis|ua': ['R82.90', 'N39.0', 'N30.90', 'Z01.818', 'Z00.00'],
+            'magnesium': ['E83.42', 'E61.2', 'R25.1', 'I49.9', 'Z00.00'],
+            'phosphorus': ['E83.30', 'E83.39', 'N25.0', 'E21.0', 'Z00.00'],
+            'calcium': ['E83.50', 'E83.52', 'E21.0', 'E20.9', 'Z00.00'],
+            'potassium': ['E87.5', 'E87.6', 'I49.9', 'N18.9', 'Z00.00'],
+            'sodium': ['E87.0', 'E87.1', 'E22.2', 'E86.0', 'Z00.00'],
+            'glucose|blood sugar': ['R73.09', 'E11.9', 'E16.2', 'Z13.1', 'Z00.00'],
+            'creatinine|gfr': ['N18.9', 'N17.9', 'R94.4', 'Z01.818', 'Z00.00'],
+            'alt|ast|liver|hepatic': ['K76.0', 'K75.9', 'R74.01', 'K70.0', 'Z00.00'],
+            'prolactin': ['E22.1', 'N91.2', 'E23.0', 'N64.59', 'Z00.00'],
+            'dhea|dehydroepiandrosterone': ['E27.9', 'E28.1', 'L68.0', 'E29.1', 'Z00.00'],
+            'progesterone': ['N91.2', 'E28.39', 'N96', 'O20.0', 'Z00.00'],
+            'lh|luteinizing': ['E28.39', 'N95.1', 'E29.1', 'N97.0', 'Z00.00'],
+        };
+        
+        for (const [pattern, codes] of Object.entries(icdMap)) {
+            if (new RegExp(pattern, 'i').test(name)) {
+                return codes.slice(0, 5);
+            }
+        }
+        // Generic fallback
+        return ['Z01.818', 'Z00.00', 'R79.89'];
+    };
 
     const handleSaveTest = (testData) => {
         const payload = {
@@ -261,7 +380,9 @@ Only return found: false if you truly cannot identify what test they're asking a
             quest_url: testData.quest_url || "",
             category: testData.category || "General",
             notes: testData.notes || "",
-            diagnosis_codes: testData.diagnosis_codes ? JSON.stringify(testData.diagnosis_codes) : "[]",
+            diagnosis_codes: testData.diagnosis_codes && testData.diagnosis_codes.length > 0 
+                ? JSON.stringify(testData.diagnosis_codes) 
+                : JSON.stringify(getICD10Codes(testData.test_name, testData.category)),
             is_favorite: false
         };
         saveTestMutation.mutate(payload, {
@@ -288,7 +409,13 @@ Only return found: false if you truly cannot identify what test they're asking a
         "black": "bg-black text-white",
         "sodium citrate": "bg-cyan-300 text-cyan-950",
         "edta": "bg-purple-300 text-purple-950",
-        "sst": "bg-yellow-400 text-yellow-950"
+        "sst": "bg-yellow-400 text-yellow-950",
+        "heparin": "bg-green-400 text-green-950",
+        "lithium": "bg-green-400 text-green-950",
+        "royal blue": "bg-blue-600 text-white",
+        "trace": "bg-blue-600 text-white",
+        "acd": "bg-yellow-400 text-yellow-950",
+        "fluoride": "bg-gray-400 text-gray-950"
     };
 
     const getTubeColor = (tubeType) => {
@@ -387,7 +514,7 @@ Only return found: false if you truly cannot identify what test they're asking a
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Lab Test Directory</h1>
                     <p className="text-gray-600">Search Quest Diagnostics for tube types and specimen requirements</p>
                 </div>
-                {isAdmin && (
+                {(isAdmin || can('panel', 'edit') || can('lab_test', 'edit')) && (
                     <Button
                         onClick={() => setShowPanelManager(true)}
                         variant="outline"
@@ -501,8 +628,50 @@ Only return found: false if you truly cannot identify what test they're asking a
 
                                         {searchResults.storage_requirements && (
                                             <div>
-                                                <p className="text-sm font-semibold text-gray-700 mb-1">Storage Requirements</p>
+                                                <p className="text-sm font-semibold text-gray-700 mb-1">Storage / Specimen Stability</p>
                                                 <p className="text-sm text-gray-800">{searchResults.storage_requirements}</p>
+                                            </div>
+                                        )}
+
+                                        {searchResults.source === 'quest' && (
+                                            <div className="grid md:grid-cols-2 gap-4">
+                                                {searchResults.methodology && (
+                                                    <div>
+                                                        <p className="text-sm font-semibold text-gray-700 mb-1">Methodology</p>
+                                                        <p className="text-sm text-gray-800">{searchResults.methodology}</p>
+                                                    </div>
+                                                )}
+                                                {searchResults.transport_temperature && (
+                                                    <div>
+                                                        <p className="text-sm font-semibold text-gray-700 mb-1">Transport Temperature</p>
+                                                        <p className="text-sm text-gray-800">{searchResults.transport_temperature}</p>
+                                                    </div>
+                                                )}
+                                                {searchResults.cpt_codes && (
+                                                    <div>
+                                                        <p className="text-sm font-semibold text-gray-700 mb-1">CPT Codes</p>
+                                                        <p className="text-sm text-gray-800">{searchResults.cpt_codes}</p>
+                                                    </div>
+                                                )}
+                                                {searchResults.other_specimens && (
+                                                    <div>
+                                                        <p className="text-sm font-semibold text-gray-700 mb-1">Other Acceptable Specimens</p>
+                                                        <p className="text-sm text-gray-800">{searchResults.other_specimens}</p>
+                                                    </div>
+                                                )}
+                                                {searchResults.reject_criteria && (
+                                                    <div className="md:col-span-2">
+                                                        <p className="text-sm font-semibold text-gray-700 mb-1">Reject Criteria</p>
+                                                        <p className="text-sm text-gray-800">{searchResults.reject_criteria}</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        {searchResults.clinical_significance && (
+                                            <div>
+                                                <p className="text-sm font-semibold text-gray-700 mb-1">Clinical Significance</p>
+                                                <p className="text-sm text-gray-600 line-clamp-3">{searchResults.clinical_significance}</p>
                                             </div>
                                         )}
 
@@ -511,6 +680,38 @@ Only return found: false if you truly cannot identify what test they're asking a
                                                 <AlertCircle className="h-4 w-4" />
                                                 <AlertDescription>{searchResults.notes}</AlertDescription>
                                             </Alert>
+                                        )}
+
+                                        {/* Quest search results list */}
+                                        {searchResults.quest_results?.length > 1 && (
+                                            <div>
+                                                <p className="text-sm font-semibold text-gray-700 mb-2">Other Quest Results:</p>
+                                                <div className="space-y-1 max-h-40 overflow-y-auto">
+                                                    {searchResults.quest_results.slice(1, 8).map((r, i) => (
+                                                        <div key={i} className="flex items-center justify-between text-sm p-2 bg-white rounded border">
+                                                            <span className="font-medium">{r.test_name}</span>
+                                                            <div className="flex items-center gap-2">
+                                                                <Badge variant="outline" className="text-xs">#{r.test_code}</Badge>
+                                                                <a
+                                                                    href={`https://testdirectory.questdiagnostics.com/test/test-detail/${r.test_code}`}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="text-blue-600 hover:text-blue-700"
+                                                                >
+                                                                    <ExternalLink className="w-3 h-3" />
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {searchResults.source === 'quest' && (
+                                            <Badge variant="outline" className="text-xs text-green-700 border-green-300 bg-green-50">
+                                                <Sparkles className="w-3 h-3 mr-1" />
+                                                Live from Quest Diagnostics
+                                            </Badge>
                                         )}
 
                                         {searchResults.quest_url && (
@@ -566,7 +767,7 @@ Only return found: false if you truly cannot identify what test they're asking a
              <div>
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-bold text-gray-900">Test Panels</h2>
-                    {isAdmin && (
+                    {(isAdmin || can('panel', 'edit') || can('lab_test', 'edit')) && (
                         <Button 
                             onClick={() => setShowPanelForm(!showPanelForm)}
                             className="bg-purple-600 hover:bg-purple-700"

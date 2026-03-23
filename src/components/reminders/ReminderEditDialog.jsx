@@ -94,9 +94,23 @@ export default function ReminderEditDialog({ open, onOpenChange, reminder, users
         }
       }
       if (reminder) {
-        await entities.Reminder.update(reminder.id, payload);
+        const resp = await fetch('/api/reminders', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: reminder.id, ...payload }),
+        });
+        if (!resp.ok) throw new Error('Failed to update reminder');
       } else {
-        await entities.Reminder.create(payload);
+        // Get current user and set created_by
+        const { getCurrentUser } = await import("@/api/supabaseHelpers");
+        const user = await getCurrentUser();
+        if (user?.email) payload.created_by = user.email;
+        const resp = await fetch('/api/reminders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!resp.ok) throw new Error('Failed to create reminder');
       }
       onOpenChange(false);
       onSaved?.();
