@@ -348,6 +348,8 @@ export default function StaffCheckInPage() {
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
+                                    <SelectItem value="Check In">Check In</SelectItem>
+                                    <SelectItem value="Check Out">Check Out</SelectItem>
                                     <SelectItem value="Front Desk">Front Desk</SelectItem>
                                     <SelectItem value="Back Office">Back Office</SelectItem>
                                     <SelectItem value="Lab">Lab</SelectItem>
