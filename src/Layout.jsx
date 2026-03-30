@@ -18,6 +18,7 @@ import {
                         Tag,
                         MessageSquare,
                         Layers,
+                        GraduationCap,
                         LogOut,
                         ChevronDown,
                         Sparkles,
@@ -119,6 +120,9 @@ export default function Layout({ children, currentPageName }) {
                 { name: "Medication Reference", path: "MedicationReference", icon: Stethoscope },
                 { name: "Provider Directory", path: "ProviderReferral", icon: Users },
                 { name: "Skin Analysis", path: "SkinAnalysis", icon: Sparkles },
+                { name: "Provider Education", path: "ProviderEducation", icon: GraduationCap },
+                { name: "MA Education", path: "MAEducation", icon: Stethoscope },
+                { name: "Front Office Education", path: "FrontOfficeEducation", icon: Building2 },
             ]
         },
         {
@@ -266,7 +270,7 @@ export default function Layout({ children, currentPageName }) {
                                                 setOpenDropdown(null);
                                             }, 1000);
                                         }}
-                                        className="absolute top-full right-0 mt-1 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 max-h-96 overflow-y-auto"
+                                        className="absolute top-full right-0 mt-1 w-72 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 max-h-[80vh] overflow-y-auto"
                                     >
                                         <Link
                                             to={createPageUrl("UserProfile")}

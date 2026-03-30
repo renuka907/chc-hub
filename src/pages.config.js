@@ -62,6 +62,7 @@ import EducationLibrary from './pages/EducationLibrary';
 import EmployeeQuestions from './pages/EmployeeQuestions';
 import FAQ from './pages/FAQ';
 import FollowUpDates from './pages/FollowUpDates';
+import FrontOfficeEducation from './pages/FrontOfficeEducation';
 import FormTemplates from './pages/FormTemplates';
 import Home from './pages/Home';
 import InventoryManagement from './pages/InventoryManagement';
@@ -69,6 +70,7 @@ import InventoryReports from './pages/InventoryReports';
 import InventoryUsageTracking from './pages/InventoryUsageTracking';
 import LabTestDirectory from './pages/LabTestDirectory';
 import Library from './pages/Library';
+import MAEducation from './pages/MAEducation';
 import MedicationCalculator from './pages/MedicationCalculator';
 import MedicationReference from './pages/MedicationReference';
 import Messaging from './pages/Messaging';
@@ -76,6 +78,7 @@ import PapOrderingWizard from './pages/PapOrderingWizard';
 import PricingManagement from './pages/PricingManagement';
 import ProcedureDetail from './pages/ProcedureDetail';
 import ProceduresManagement from './pages/ProceduresManagement';
+import ProviderEducation from './pages/ProviderEducation';
 import ProviderReferral from './pages/ProviderReferral';
 import QuoteDetail from './pages/QuoteDetail';
 import QuotesManagement from './pages/QuotesManagement';
@@ -106,6 +109,7 @@ export const PAGES = {
     "EmployeeQuestions": EmployeeQuestions,
     "FAQ": FAQ,
     "FollowUpDates": FollowUpDates,
+    "FrontOfficeEducation": FrontOfficeEducation,
     "FormTemplates": FormTemplates,
     "Home": Home,
     "InventoryManagement": InventoryManagement,
@@ -113,6 +117,7 @@ export const PAGES = {
     "InventoryUsageTracking": InventoryUsageTracking,
     "LabTestDirectory": LabTestDirectory,
     "Library": Library,
+    "MAEducation": MAEducation,
     "MedicationCalculator": MedicationCalculator,
     "MedicationReference": MedicationReference,
     "Messaging": Messaging,
@@ -120,6 +125,7 @@ export const PAGES = {
     "PricingManagement": PricingManagement,
     "ProcedureDetail": ProcedureDetail,
     "ProceduresManagement": ProceduresManagement,
+    "ProviderEducation": ProviderEducation,
     "ProviderReferral": ProviderReferral,
     "QuoteDetail": QuoteDetail,
     "QuotesManagement": QuotesManagement,
