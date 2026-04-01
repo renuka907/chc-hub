@@ -161,32 +161,32 @@ export default function Layout({ children, currentPageName }) {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-100 via-blue-50 to-cyan-100">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+            <div className="min-h-screen flex items-center justify-center" style={{background: 'linear-gradient(135deg, #E8F0FA, #F5F8FC, #FCF0F4)'}}>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6B9FCC]"></div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-cyan-100">
+        <div className="min-h-screen" style={{background: 'linear-gradient(135deg, #E8F0FA, #F5F8FC, #FCF0F4)'}}>
             <style>
                 {`
                     :root {
-                        --primary: #8b5cf6;
-                        --primary-light: #ede9fe;
-                        --primary-dark: #6d28d9;
-                        --accent: #06b6d4;
+                        --primary: #6B9FCC;
+                        --primary-light: #E8F0FA;
+                        --primary-dark: #3A6B8C;
+                        --accent: #E8A0B5;
                     }
                 `}
             </style>
             
             {/* Header */}
-            <header className="bg-white/80 backdrop-blur-md border-b border-purple-200/50 sticky top-0 z-50 shadow-sm">
+            <header className="bg-white/80 backdrop-blur-md border-b border-[#B8D4E8]/50 sticky top-0 z-50 shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-20">
                         {/* Logo */}
                         <Link to={createPageUrl("Home")} className="flex items-center space-x-3">
-                            <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-md">
+                            <div className="w-14 h-14 bg-gradient-to-br from-[#6B9FCC] to-[#3A6B8C] rounded-2xl flex items-center justify-center shadow-md">
                                 <Stethoscope className="w-7 h-7 text-white" />
                             </div>
                             <div>
@@ -203,28 +203,28 @@ export default function Layout({ children, currentPageName }) {
                             )}
                             <Link 
                                 to={createPageUrl("Home")} 
-                                className="flex items-center gap-2 bg-white border-2 border-purple-300 text-purple-700 px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
+                                className="flex items-center gap-2 bg-white border-2 border-[#B8D4E8] text-[#3A6B8C] px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
                             >
                                 <Home className="w-4 h-4" />
                                 <span>Home</span>
                             </Link>
                             <Link 
                                 to={createPageUrl("CheckoutQuote")} 
-                                className="flex items-center gap-2 bg-gradient-to-r from-teal-500 to-emerald-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
+                                className="flex items-center gap-2 bg-gradient-to-r from-[#6B9FCC] to-[#5889B5] text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
                             >
                                 <FileText className="w-4 h-4" />
                                 <span>Generate Quote</span>
                             </Link>
                             <Link 
                                 to={createPageUrl("Messaging")} 
-                                className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
+                                className="flex items-center gap-2 bg-gradient-to-r from-[#E8A0B5] to-[#D48BA3] text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium"
                             >
                                 <Sparkles className="w-4 h-4" />
                                 <span>Chat with Peach</span>
                             </Link>
                             <Link 
                                 to={createPageUrl("Reminders")} 
-                                className="flex items-center gap-2 bg-white border-2 border-purple-300 text-purple-700 px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium relative"
+                                className="flex items-center gap-2 bg-white border-2 border-[#B8D4E8] text-[#3A6B8C] px-4 py-2 rounded-lg hover:shadow-lg transition-all font-medium relative"
                             >
                                 <Bell className="w-4 h-4" />
                                 <span>Reminders</span>
@@ -278,7 +278,7 @@ export default function Layout({ children, currentPageName }) {
                                             onClick={() => setOpenDropdown(null)}
                                             className={`flex items-center space-x-3 px-4 py-2 text-sm transition-colors ${
                                                 currentPageName === "UserProfile"
-                                                    ? "bg-purple-50 text-purple-900 font-medium"
+                                                    ? "bg-[#E8F0FA] text-[#3A6B8C] font-medium"
                                                     : "text-gray-700 hover:bg-gray-50"
                                             }`}
                                         >
@@ -296,7 +296,7 @@ export default function Layout({ children, currentPageName }) {
                                                                                         onClick={() => setOpenDropdown(null)}
                                                                                         className={`flex items-center space-x-3 px-4 py-2 text-sm transition-colors ${
                                                                                             isActive
-                                                                                                ? "bg-purple-50 text-purple-900 font-medium"
+                                                                                                ? "bg-[#E8F0FA] text-[#3A6B8C] font-medium"
                                                                                                 : "text-gray-700 hover:bg-gray-50"
                                                                                         }`}
                                                                                     >
@@ -321,7 +321,7 @@ export default function Layout({ children, currentPageName }) {
                                                                 onClick={() => setOpenDropdown(null)}
                                                                 className={`flex items-center space-x-3 px-6 py-2 text-sm transition-colors ${
                                                                     isActive
-                                                                        ? "bg-purple-50 text-purple-900 font-medium"
+                                                                        ? "bg-[#E8F0FA] text-[#3A6B8C] font-medium"
                                                                         : "text-gray-700 hover:bg-gray-50"
                                                                 }`}
                                                             >
@@ -368,8 +368,8 @@ export default function Layout({ children, currentPageName }) {
                                 onClick={() => setMobileMenuOpen(false)}
                                 className={`flex items-center space-x-3 px-4 py-3 text-sm font-medium ${
                                     currentPageName === "AdminProfile"
-                                        ? "bg-purple-50 text-purple-900 border-l-4 border-purple-600"
-                                        : "text-gray-600 hover:bg-purple-50"
+                                        ? "bg-[#E8F0FA] text-[#3A6B8C] border-l-4 border-[#6B9FCC]"
+                                        : "text-gray-600 hover:bg-[#E8F0FA]"
                                 }`}
                             >
                                 <span>Profile</span>
@@ -385,8 +385,8 @@ export default function Layout({ children, currentPageName }) {
                                             onClick={() => setMobileMenuOpen(false)}
                                             className={`flex items-center space-x-3 px-4 py-3 text-sm font-medium ${
                                                 isActive
-                                                    ? "bg-purple-50 text-purple-900 border-l-4 border-purple-600"
-                                                    : "text-gray-600 hover:bg-purple-50"
+                                                    ? "bg-[#E8F0FA] text-[#3A6B8C] border-l-4 border-[#6B9FCC]"
+                                                    : "text-gray-600 hover:bg-[#E8F0FA]"
                                             }`}
                                         >
                                             <Icon className="w-5 h-5" />
@@ -411,8 +411,8 @@ export default function Layout({ children, currentPageName }) {
                                                     onClick={() => setMobileMenuOpen(false)}
                                                     className={`flex items-center space-x-3 px-8 py-3 text-sm font-medium ${
                                                         isActive
-                                                            ? "bg-purple-50 text-purple-900 border-l-4 border-purple-600"
-                                                            : "text-gray-600 hover:bg-purple-50"
+                                                            ? "bg-[#E8F0FA] text-[#3A6B8C] border-l-4 border-[#6B9FCC]"
+                                                            : "text-gray-600 hover:bg-[#E8F0FA]"
                                                     }`}
                                                 >
                                                     <ItemIcon className="w-4 h-4" />
@@ -425,7 +425,7 @@ export default function Layout({ children, currentPageName }) {
                             })}
                             <button
                                 onClick={() => logout()}
-                                className="flex items-center space-x-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-purple-50 w-full mt-2"
+                                className="flex items-center space-x-3 px-4 py-3 text-sm font-medium text-gray-600 hover:bg-[#E8F0FA] w-full mt-2"
                             >
                                 <LogOut className="w-5 h-5" />
                                 <span>Sign Out</span>
@@ -441,7 +441,7 @@ export default function Layout({ children, currentPageName }) {
             </main>
 
             {/* Footer */}
-            <footer className="bg-white/80 backdrop-blur-md border-t border-purple-200/50 mt-20">
+            <footer className="bg-white/80 backdrop-blur-md border-t border-[#B8D4E8]/50 mt-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     <div className="text-center text-sm text-gray-600">
                         <div className="flex items-center justify-center space-x-2 mb-2">
