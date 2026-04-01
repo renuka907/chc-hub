@@ -7,9 +7,25 @@ import { Badge } from '@/components/ui/badge';
 import { Scale, RotateCcw, LineChart, Printer } from 'lucide-react';
 
 const PATIENT_FIELDS = [
+  { key: 'patientName', label: 'Patient Name', type: 'text', placeholder: 'e.g. Jane Smith' },
   { key: 'heightFt', label: 'Height (ft)', type: 'number', step: '1', placeholder: 'e.g. 5' },
   { key: 'heightIn', label: 'Height (in)', type: 'number', step: '1', placeholder: 'e.g. 5' },
   { key: 'age', label: 'Age', type: 'number', step: '1', placeholder: 'e.g. 45' },
+];
+
+const ENCOURAGEMENT_MESSAGES = [
+  "Every step forward counts — you're doing amazing!",
+  "Progress isn't always a straight line. Keep showing up!",
+  "Your commitment to tracking your health is already a win!",
+  "Small changes lead to big transformations. Keep going!",
+  "You're investing in yourself — that's the best investment there is!",
+  "Remember: the scale doesn't measure your worth or your effort!",
+  "Consistency beats perfection. You're on the right track!",
+  "Your body is changing — trust the process!",
+  "Health is a journey, not a destination. You're doing great!",
+  "Be proud of yourself for showing up today!",
+  "You showed up, and that takes courage. Keep it going!",
+  "You're stronger than you think — the data proves it!",
 ];
 
 const INPUT_FIELDS = [
@@ -26,10 +42,25 @@ const INPUT_FIELDS = [
 const METRICS = [
   {
     key: 'weight', label: 'Weight', unit: 'lbs', precision: 1, direction: 'down',
-    explain: (v, change, status) => {
+    explain: (v, change, status, v2, age, r1, r2) => {
       if (!change) return 'No change in weight.';
       const lbs = Math.abs(change).toFixed(1);
       if (status === 'good') return `Lost ${lbs} lbs — great progress toward a healthier weight!`;
+      // Analyze what was gained
+      if (r1 && r2) {
+        const fatGain = (parseFloat(r2.fatMass) || 0) - (parseFloat(r1.fatMass) || 0);
+        const ffmGain = (parseFloat(r2.fatFreeMass) || 0) - (parseFloat(r1.fatFreeMass) || 0);
+        const waterGain = (parseFloat(r2.totalBodyWater) || 0) - (parseFloat(r1.totalBodyWater) || 0);
+        if (ffmGain > fatGain && ffmGain > 0) {
+          return `Gained ${lbs} lbs — but most of this is lean mass (muscle/bone/water), which is actually great!`;
+        }
+        if (waterGain > fatGain && waterGain > 0) {
+          return `Gained ${lbs} lbs — this appears to be mostly water weight, which fluctuates naturally.`;
+        }
+        if (fatGain > 0) {
+          return `Gained ${lbs} lbs — this appears to be mostly fat. See tips below.`;
+        }
+      }
       return `Gained ${lbs} lbs — check if this is lean mass gain or fat gain.`;
     }
   },
@@ -62,7 +93,7 @@ const METRICS = [
       if (!change) return 'No change in fat mass.';
       const lbs = Math.abs(change).toFixed(1);
       if (status === 'good') return `Lost ${lbs} lbs of pure fat — this is the best kind of weight loss!`;
-      return `Gained ${lbs} lbs of fat — this is the type of weight to focus on reducing.`;
+      return `Gained ${lbs} lbs of fat — this is the type of weight to focus on reducing. Tips: Focus on protein intake (aim for 0.8-1g per lb of body weight), increase daily movement to 8,000+ steps, prioritize sleep (7-9 hrs), and stay hydrated with 64+ oz of water daily.`;
     }
   },
   {
@@ -154,12 +185,14 @@ export default function TanitaCalculator() {
         if (metric.direction === 'down') status = change < 0 ? 'good' : 'bad';
       }
 
-      const explanation = metric.explain(v1, change, status, v2, age);
+      const explanation = metric.explain(v1, change, status, v2, age, reading1, reading2);
 
       return { ...metric, v1, v2, change, pctChange, status, explanation };
     });
 
-    setComparison({ daysBetween, metrics, age, height });
+    const encouragement = ENCOURAGEMENT_MESSAGES[Math.floor(Math.random() * ENCOURAGEMENT_MESSAGES.length)];
+
+    setComparison({ daysBetween, metrics, age, height, encouragement });
   }
 
   function clearAll() {
@@ -202,9 +235,19 @@ export default function TanitaCalculator() {
       </style></head><body>
       <div class="print-header">
         <h1>Tanita Body Composition Analysis</h1>
+        ${patient.patientName ? `<p style="font-size:18px;font-weight:700;color:#1e293b;margin:6px 0 2px;">${patient.patientName}</p>` : ''}
         <p>CHC Hub &bull; Printed ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
       </div>
+      <div class="patient-info">
+        ${patient.patientName ? `<span>Patient: ${patient.patientName}</span>` : ''}
+        ${(patient.heightFt || patient.heightIn) ? `<span>Height: ${patient.heightFt || 0}'${patient.heightIn || 0}" (${getHeightInches()} in)</span>` : ''}
+        ${patient.age ? `<span>Age: ${patient.age}</span>` : ''}
+        <span>Reading 1: ${formatDateDisplay(reading1.date)}</span>
+        <span>Reading 2: ${formatDateDisplay(reading2.date)}</span>
+        ${comparison?.daysBetween != null ? `<span>Days Between: ${comparison.daysBetween}</span>` : ''}
+      </div>
       ${printContent}
+      ${comparison?.encouragement ? `<div style="margin:14px 0;padding:10px 16px;background:#f0fdfa;border:1px solid #99f6e4;border-radius:8px;text-align:center;"><p style="color:#0f766e;font-weight:600;font-size:14px;font-style:italic;">💪 ${comparison.encouragement}</p></div>` : ''}
       <div class="footer">This report is for clinical reference only. &copy; CHC Hub ${new Date().getFullYear()}</div>
     </body></html>`);
     win.document.close();
@@ -410,6 +453,13 @@ export default function TanitaCalculator() {
                   </tbody>
                 </table>
               </div>
+
+              {/* Encouragement message */}
+              {comparison.encouragement && (
+                <div className="mt-6 p-4 bg-teal-50 border border-teal-200 rounded-lg text-center">
+                  <p className="text-teal-800 font-medium text-sm italic">💪 {comparison.encouragement}</p>
+                </div>
+              )}
 
               {/* Mobile explanations (shown below table on small screens) */}
               <div className="sm:hidden mt-4 space-y-3">
