@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scheduling &amp; Appointment Management Guide | Contemporary Health Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple-deep: #1a0a2e;
+  --purple-mid: #2d1b4e;
+  --purple-light: #6c3fa0;
+  --pink: #e91e8c;
+  --orange: #ff6b35;
+  --gradient-main: linear-gradient(135deg, #6c3fa0, #e91e8c, #ff6b35);
+  --text-primary: #f0e6ff;
+  --text-secondary: #c4b0db;
+  --card-bg: rgba(45, 27, 78, 0.6);
+  --border-glow: rgba(108, 63, 160, 0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--purple-deep);
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-size: 17px;
+}
+
+.container {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* Header */
+.guide-header {
+  text-align: center;
+  margin-bottom: 48px;
+  padding: 48px 32px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.guide-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--gradient-main);
+}
+
+.guide-header .category {
+  display: inline-block;
+  padding: 4px 16px;
+  background: rgba(108, 63, 160, 0.3);
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 16px;
+}
+
+.guide-header h1 {
+  font-size: 32px;
+  font-weight: 800;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+}
+
+.guide-header .subtitle {
+  color: var(--text-secondary);
+  font-size: 16px;
+}
+
+/* TOC */
+.toc {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 48px;
+}
+
+.toc h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.toc ol {
+  list-style: none;
+  counter-reset: toc-counter;
+  padding: 0;
+}
+
+.toc ol li {
+  counter-increment: toc-counter;
+  margin-bottom: 8px;
+}
+
+.toc ol li a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.toc ol li a:hover {
+  background: rgba(108, 63, 160, 0.15);
+  color: var(--text-primary);
+}
+
+.toc ol li a::before {
+  content: counter(toc-counter, decimal-leading-zero);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--purple-light);
+  min-width: 28px;
+}
+
+/* Sections */
+.section {
+  margin-bottom: 56px;
+}
+
+.section h2 {
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border-glow);
+  color: var(--text-primary);
+}
+
+.section h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 28px 0 16px;
+  color: var(--text-primary);
+}
+
+.section h4 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 20px 0 12px;
+  color: var(--text-secondary);
+}
+
+p { margin-bottom: 16px; }
+
+ul, ol {
+  margin-bottom: 16px;
+  padding-left: 24px;
+}
+
+li { margin-bottom: 8px; }
+
+/* Special Blocks */
+.clinical-pearl {
+  border-left: 4px solid var(--pink);
+  background: rgba(233, 30, 140, 0.1);
+  padding: 20px 24px;
+  border-radius: 0 12px 12px 0;
+  margin: 24px 0;
+}
+
+.clinical-pearl strong:first-child {
+  display: block;
+  color: var(--pink);
+  margin-bottom: 8px;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.key-takeaway {
+  border-left: 4px solid var(--purple-light);
+  background: rgba(108, 63, 160, 0.15);
+  padding: 20px 24px;
+  border-radius: 0 12px 12px 0;
+  margin: 24px 0;
+}
+
+.key-takeaway strong:first-child {
+  display: block;
+  color: var(--purple-light);
+  margin-bottom: 8px;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.warning {
+  border-left: 4px solid var(--orange);
+  background: rgba(255, 107, 53, 0.1);
+  padding: 20px 24px;
+  border-radius: 0 12px 12px 0;
+  margin: 24px 0;
+}
+
+.warning strong:first-child {
+  display: block;
+  color: var(--orange);
+  margin-bottom: 8px;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Cards */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 28px;
+  margin: 24px 0;
+}
+
+.card h4 {
+  margin-top: 0;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+thead th {
+  background: var(--gradient-main);
+  color: #fff;
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+tbody tr:nth-child(odd) {
+  background: rgba(45, 27, 78, 0.4);
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(26, 10, 46, 0.6);
+}
+
+tbody td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-glow);
+  font-size: 15px;
+}
+
+/* Script boxes */
+.script-box {
+  background: rgba(26, 10, 46, 0.8);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 24px 0;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+.script-box .label {
+  font-style: normal;
+  font-weight: 700;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 12px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Quick Reference */
+.quick-ref {
+  background: linear-gradient(135deg, rgba(108, 63, 160, 0.2), rgba(233, 30, 140, 0.1));
+  border: 2px solid var(--purple-light);
+  border-radius: 12px;
+  padding: 32px;
+  margin: 32px 0;
+}
+
+.quick-ref h3 {
+  margin-top: 0;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="guide-header">
+  <div class="category">Scheduling</div>
+  <h1>Scheduling &amp; Appointment Management Guide</h1>
+  <p class="subtitle">Contemporary Health Center &mdash; Front Office Education Series</p>
+</div>
+
+<nav class="toc">
+  <h2>Table of Contents</h2>
+  <ol>
+    <li><a href="#appt-types">Appointment Types &amp; Durations</a></li>
+    <li><a href="#scheduling-rules">Scheduling Rules &amp; Guidelines</a></li>
+    <li><a href="#double-booking">Double-Booking Guidelines</a></li>
+    <li><a href="#no-show">No-Show &amp; Cancellation Policy</a></li>
+    <li><a href="#waitlist">Waitlist Management</a></li>
+    <li><a href="#scripts">Scheduling Scripts for Common Calls</a></li>
+    <li><a href="#provider-prefs">Provider Schedule Preferences &amp; Templates</a></li>
+    <li><a href="#quick-ref">Quick Reference: Appointment Type Cheat Sheet</a></li>
+  </ol>
+</nav>
+
+<!-- SECTION 1 -->
+<div class="section" id="appt-types">
+  <h2>1. Appointment Types &amp; Durations</h2>
+
+  <p>Understanding the different appointment types at Contemporary Health Center is essential for scheduling correctly, managing provider time, and ensuring patients receive the care they need. Each visit type has specific requirements, durations, and preparation needs that directly impact the patient experience and clinical workflow.</p>
+
+  <h3>New Patient Consult &mdash; 60 Minutes</h3>
+  <p>The new patient consultation is the foundation of the patient-provider relationship at CHC. This is a comprehensive visit where the provider conducts a thorough health history review, discusses the patient's goals for treatment, performs a physical examination as needed, and reviews any lab work the patient has brought or that was completed prior to the visit.</p>
+
+  <p><strong>What the visit involves:</strong></p>
+  <ul>
+    <li>Completion of new patient paperwork (if not already done online or mailed in)</li>
+    <li>Comprehensive health history review including current medications, supplements, surgical history, family history, and social history</li>
+    <li>Discussion of symptoms and treatment goals (fatigue, weight gain, mood changes, libido, hot flashes, brain fog, sleep disturbances)</li>
+    <li>Physical examination as appropriate for the chief complaint</li>
+    <li>Review of any existing lab work the patient brings</li>
+    <li>Discussion of treatment options (pellet therapy, injections, creams, oral medications, peptides, GLP-1 medications)</li>
+    <li>Lab order placement if labs have not been completed within the past 30 days</li>
+    <li>Treatment plan development and setting expectations for follow-up</li>
+  </ul>
+
+  <p><strong>What to tell the patient to bring:</strong></p>
+  <ul>
+    <li>Photo ID (driver's license or passport)</li>
+    <li>Insurance card (front and back) if using insurance</li>
+    <li>Complete list of current medications and supplements with dosages</li>
+    <li>Any recent lab work (within the past 6 months, especially hormone panels)</li>
+    <li>Medical records from previous providers if relevant (especially prior HRT records)</li>
+    <li>List of questions or concerns they want to discuss</li>
+    <li>Payment method (credit card, HSA/FSA card, or cash/check for self-pay patients)</li>
+  </ul>
+
+  <div class="clinical-pearl">
+    <strong>Clinical Pearl</strong>
+    Many new patients calling about hormone therapy have never had a hormone panel drawn. Let them know that if they do not have recent labs, the provider will order them at the first visit, and they will need to return for a follow-up visit to review results and start treatment. Setting this expectation upfront prevents frustration about not starting treatment on day one.
+  </div>
+
+  <h3>Follow-Up HRT Visit &mdash; 30 Minutes</h3>
+  <p>Follow-up visits for patients currently on hormone replacement therapy are scheduled to assess treatment response, review updated lab work, adjust dosages as needed, and address any new concerns. These visits are critical for ongoing optimization and safety monitoring.</p>
+
+  <p><strong>What the visit involves:</strong></p>
+  <ul>
+    <li>Review of symptoms since last visit (energy, mood, sleep, libido, weight, hot flashes)</li>
+    <li>Review of updated lab results (hormone levels, CBC, metabolic panel, liver function)</li>
+    <li>Dosage adjustments based on labs and symptom response</li>
+    <li>Side effect assessment and management</li>
+    <li>Discussion of any new health concerns</li>
+    <li>Refills or new prescriptions as needed</li>
+    <li>Scheduling next follow-up and/or lab draw</li>
+  </ul>
+
+  <div class="key-takeaway">
+    <strong>Key Takeaway</strong>
+    Follow-up HRT visits should always have lab results available before the appointment. When scheduling, verify that the patient has a lab order and remind them to complete labs at least 5-7 business days before their follow-up so results are available for the provider to review.
+  </div>
+
+  <h3>Pellet Insertion Procedure &mdash; 30-45 Minutes</h3>
+  <p>Pellet insertion is an in-office procedure where bioidentical hormone pellets are inserted subcutaneously, typically in the upper buttock/hip area. This procedure requires a procedure room and specific preparation.</p>
+
+  <p><strong>What the visit involves:</strong></p>
+  <ul>
+    <li>Review of recent lab work to confirm pellet dosing</li>
+    <li>Consent form review and signature (if not already signed at previous visit)</li>
+    <li>Procedure preparation: cleaning the insertion site, local anesthetic injection</li>
+    <li>Small incision (approximately 3-5mm) and pellet insertion using a trocar</li>
+    <li>Wound closure with adhesive strips and pressure bandage</li>
+    <li>Post-procedure instructions review</li>
+    <li>Scheduling of follow-up labs (4-6 weeks post-insertion)</li>
+  </ul>
+
+  <p><strong>Requirements:</strong></p>
+  <ul>
+    <li>Procedure room must be available (not a standard exam room)</li>
+    <li>Labs must be current (drawn within 7-14 days prior for returning pellet patients)</li>
+    <li>Patient must have signed the pellet insertion consent form</li>
+    <li>Patient should not be on blood thinners (aspirin, warfarin, Eliquis, etc.) or must have provider clearance</li>
+    <li>Patient needs a driver if they feel uncomfortable driving afterward (not strictly required but recommended for first-time patients)</li>
+    <li>Patient should wear loose, comfortable clothing</li>
+  </ul>
+
+  <div class="warning">
+    <strong>Warning</strong>
+    Never schedule a pellet insertion on a Friday. If complications arise (excessive bleeding, infection, pellet extrusion), the patient needs to be able to reach the office the next business day. Pellet insertions should be scheduled Monday through Thursday only.
+  </div>
+
+  <h3>GLP-1 Follow-Up / Weigh-In &mdash; 15-20 Minutes</h3>
+  <p>Patients on GLP-1 receptor agonist medications (semaglutide, tirzepatide) for weight management require regular follow-up visits to monitor progress, adjust dosing, assess for side effects, and provide ongoing support and motivation.</p>
+
+  <p><strong>What the visit involves:</strong></p>
+  <ul>
+    <li>Weight and vital signs measurement</li>
+    <li>Discussion of medication adherence and injection technique</li>
+    <li>Review of side effects (nausea, constipation, appetite changes)</li>
+    <li>Dietary and lifestyle discussion</li>
+    <li>Dosage titration as appropriate based on tolerance and weight loss progress</li>
+    <li>Medication refill or new prescription</li>
+    <li>Brief motivational support and goal-setting</li>
+  </ul>
+
+  <div class="clinical-pearl">
+    <strong>Clinical Pearl</strong>
+    GLP-1 weigh-ins should be scheduled at the same time of day whenever possible. Weight fluctuates significantly throughout the day due to food and fluid intake. Morning appointments tend to give the most consistent and accurate readings. If a patient normally comes in at 9 AM, try to keep all their weigh-ins around that time.
+  </div>
+
+  <h3>Lab Draw Only &mdash; 15 Minutes</h3>
+  <p>Lab-only visits are for patients who need blood work completed without seeing the provider. This is common for patients due for follow-up labs between office visits, pre-appointment lab draws, or routine monitoring labs.</p>
+
+  <p><strong>What the visit involves:</strong></p>
+  <ul>
+    <li>Verification that a current lab order exists in the system</li>
+    <li>Venipuncture (blood draw)</li>
+    <li>Labeling specimens and preparing for courier pickup or transport to the lab</li>
+    <li>Scheduling follow-up appointment to review results if not already scheduled</li>
+  </ul>
+
+  <div class="key-takeaway">
+    <strong>Key Takeaway</strong>
+    Lab draws should be scheduled in the morning whenever possible. Many hormone panels, metabolic panels, and lipid panels require fasting (8-12 hours with nothing but water). When scheduling, always ask the patient if the provider indicated fasting is required, and remind them to fast if so. Lab draw appointments before 10:30 AM are ideal.
+  </div>
+
+  <h3>Men's Health Consult &mdash; 45 Minutes</h3>
+  <p>The men's health consultation is a comprehensive visit focused on testosterone optimization, sexual health, overall vitality, and wellness for male patients. These visits require additional time because many male patients are new to discussing health concerns openly and need a thorough discussion of treatment options.</p>
+
+  <p><strong>What the visit involves:</strong></p>
+  <ul>
+    <li>Comprehensive symptom assessment (fatigue, low libido, erectile dysfunction, brain fog, muscle loss, mood changes, poor sleep)</li>
+    <li>Health history review with focus on cardiovascular risk factors, prostate health, and metabolic health</li>
+    <li>Review of lab work (total and free testosterone, estradiol, PSA, CBC, metabolic panel, thyroid)</li>
+    <li>Discussion of treatment options (testosterone cypionate injections, pellet therapy, HCG, clomiphene, anastrozole)</li>
+    <li>Education about realistic expectations and timeline for results</li>
+    <li>Discussion of lifestyle factors (exercise, diet, sleep, stress management)</li>
+  </ul>
+
+  <h3>Annual Wellness / Preventive Visit &mdash; 45-60 Minutes</h3>
+  <p>The annual wellness visit is a comprehensive preventive care appointment. This visit covers overall health screening, age-appropriate preventive measures, and serves as an opportunity to reassess the patient's complete health picture.</p>
+
+  <p><strong>What the visit involves:</strong></p>
+  <ul>
+    <li>Complete physical examination</li>
+    <li>Review of all current medications and supplements</li>
+    <li>Age-appropriate screening discussions (mammogram, colonoscopy, bone density, etc.)</li>
+    <li>Vaccination review and updates</li>
+    <li>Health risk assessment</li>
+    <li>Lab orders for comprehensive wellness panel</li>
+    <li>Coordination with specialists if needed</li>
+    <li>Updates to health maintenance schedule</li>
+  </ul>
+
+  <h3>Pap Smear / GYN Visit &mdash; 30 Minutes</h3>
+  <p>GYN visits include routine Pap smears, cervical cancer screening, pelvic examinations, and discussion of gynecological concerns. These visits are an important part of the comprehensive women's health services at CHC.</p>
+
+  <p><strong>What the visit involves:</strong></p>
+  <ul>
+    <li>Review of menstrual history and any gynecological symptoms</li>
+    <li>Breast examination</li>
+    <li>Pelvic examination and Pap smear collection</li>
+    <li>HPV co-testing as indicated by age and history</li>
+    <li>Discussion of contraceptive needs if applicable</li>
+    <li>Discussion of any vaginal symptoms (dryness, discharge, discomfort) that may be related to hormonal changes</li>
+    <li>Referrals for mammography or other imaging as needed</li>
+  </ul>
+
+  <div class="clinical-pearl">
+    <strong>Clinical Pearl</strong>
+    When scheduling a Pap smear, advise the patient to avoid scheduling during their menstrual period if possible. Menstrual blood can interfere with the accuracy of Pap smear results. Ideally, schedule the appointment at least 5 days after the end of the patient's period. Also remind them to avoid vaginal intercourse, douching, and vaginal medications for 48 hours before the appointment.
+  </div>
+
+  <h3>Peptide Therapy Consult &mdash; 30 Minutes</h3>
+  <p>Peptide therapy consultations are for patients interested in or currently using therapeutic peptides such as BPC-157, CJC-1295/Ipamorelin, PT-141, or other peptide protocols. These visits discuss treatment goals, dosing, administration, and monitoring.</p>
+
+  <p><strong>What the visit involves:</strong></p>
+  <ul>
+    <li>Discussion of patient's goals for peptide therapy (recovery, anti-aging, sexual health, growth hormone optimization, gut healing)</li>
+    <li>Review of current medications to check for interactions</li>
+    <li>Explanation of the specific peptide protocol being recommended</li>
+    <li>Injection training for self-administered peptides</li>
+    <li>Discussion of expected timeline for results</li>
+    <li>Lab monitoring requirements</li>
+    <li>Follow-up scheduling</li>
+  </ul>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section" id="scheduling-rules">
+  <h2>2. Scheduling Rules &amp; Guidelines</h2>
+
+  <p>These scheduling rules have been developed based on clinical best practices, provider preferences, and patient safety considerations. Following these rules consistently ensures smooth daily operations and optimal patient care.</p>
+
+  <h3>Pellet Insertion Scheduling Rules</h3>
+  <ul>
+    <li><strong>Monday through Thursday only.</strong> Never schedule pellet insertions on Fridays. If a patient experiences a complication such as bleeding, infection, or pellet extrusion over the weekend, the office is closed and they cannot be seen promptly.</li>
+    <li><strong>Procedure room required.</strong> Always verify that the procedure room is available before confirming a pellet insertion appointment. Standard exam rooms are not equipped for this procedure.</li>
+    <li><strong>Labs must be current.</strong> Before scheduling a pellet insertion for a returning patient, verify that they have completed their pre-insertion labs within the past 14 days. If labs are not on file, schedule the lab draw first and the pellet insertion at least 7 days later to allow results to be available.</li>
+    <li><strong>First pellet insertion of the day should be no earlier than 9:00 AM</strong> to allow adequate setup time for the medical assistant to prepare the procedure room.</li>
+    <li><strong>Allow at least 15 minutes between pellet insertion appointments</strong> for room turnover and cleaning.</li>
+    <li><strong>Maximum 4 pellet insertions per provider per day</strong> to prevent procedure fatigue and maintain quality.</li>
+  </ul>
+
+  <h3>New Patient Scheduling Rules</h3>
+  <ul>
+    <li><strong>Schedule with extra buffer time.</strong> Block 15 additional minutes after each new patient consult in the schedule. New patients frequently run over their allotted time due to extensive health history discussions, questions about treatment options, and paperwork completion.</li>
+    <li><strong>Send the new patient packet at least 48 hours before the appointment.</strong> This allows the patient to complete paperwork at home and reduces check-in time on the day of the visit.</li>
+    <li><strong>New patients should not be the last appointment of the day.</strong> If the visit runs long, it can push the entire office past closing time. Schedule new patients at least 90 minutes before the end of the workday.</li>
+    <li><strong>Confirm the appointment 48 hours and 24 hours before the visit.</strong> New patients have the highest no-show rate. Two confirmation contacts significantly reduce this.</li>
+  </ul>
+
+  <div class="warning">
+    <strong>Warning</strong>
+    If a new patient has not completed their paperwork before arrival, check-in will take significantly longer. When confirming the appointment, always ask: "Have you had a chance to complete the new patient forms we sent? If not, please arrive 20 minutes early to fill them out before your visit."
+  </div>
+
+  <h3>Lab Draw Scheduling Rules</h3>
+  <ul>
+    <li><strong>Morning appointments preferred.</strong> Schedule all fasting lab draws before 10:30 AM. Many of our routine panels require fasting, including comprehensive metabolic panels, lipid panels, and insulin levels.</li>
+    <li><strong>Verify fasting requirements when scheduling.</strong> Not all lab orders require fasting. Check the lab order in the chart, or if you are unsure, confirm with the clinical team before telling the patient to fast.</li>
+    <li><strong>Cluster lab draws together.</strong> Whenever possible, schedule lab-only appointments in blocks to minimize disruption to the clinical flow. Lab draws between 7:30 AM and 10:00 AM work well for this.</li>
+    <li><strong>Post-pellet insertion follow-up labs</strong> should be scheduled 4-6 weeks after the pellet insertion date. This is the optimal time to check hormone levels to assess pellet absorption and effectiveness.</li>
+  </ul>
+
+  <h3>GLP-1 Patient Scheduling Rules</h3>
+  <ul>
+    <li><strong>Same time of day for weigh-ins.</strong> Whenever possible, schedule GLP-1 follow-up weigh-ins at the same time of day for each patient. Body weight naturally fluctuates throughout the day, and consistency in measurement timing gives a more accurate picture of weight loss trends.</li>
+    <li><strong>Schedule follow-ups at regular intervals.</strong> Most GLP-1 patients are seen every 4 weeks during the titration phase and every 4-8 weeks once on a maintenance dose. When scheduling, look at the patient's history to determine the appropriate interval.</li>
+    <li><strong>Pair GLP-1 visits with lab draws when due.</strong> Many GLP-1 patients also need periodic metabolic labs (A1C, metabolic panel, liver function). If labs are due, offer to schedule the lab draw at the same visit to reduce trips to the office.</li>
+  </ul>
+
+  <h3>Follow-Up After Pellet Insertion</h3>
+  <ul>
+    <li><strong>Schedule follow-up labs 4-6 weeks post-insertion.</strong> This is the standard window for assessing pellet absorption. Scheduling too early may show artificially high levels; scheduling too late may miss the peak absorption window.</li>
+    <li><strong>At the time of pellet insertion, schedule the follow-up appointment before the patient leaves.</strong> If the patient waits to call and schedule later, they often forget or schedule outside the optimal window.</li>
+    <li><strong>The follow-up can be a lab-only visit or a combined lab draw plus provider visit,</strong> depending on how the patient is feeling. If the patient reports doing well, a lab-only visit may suffice with a telehealth follow-up to discuss results. If the patient has concerns, schedule a full follow-up visit.</li>
+  </ul>
+
+  <div class="clinical-pearl">
+    <strong>Clinical Pearl</strong>
+    Women typically need pellet reinsertion every 3-4 months, and men every 4-6 months. When scheduling the follow-up labs at 4-6 weeks post-insertion, also go ahead and tentatively schedule the next reinsertion date (3-4 months out for women, 4-6 months for men). This makes it easier for the patient and ensures they get on the schedule before it fills up. The date can always be adjusted based on lab results.
+  </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section" id="double-booking">
+  <h2>3. Double-Booking Guidelines</h2>
+
+  <p>Double-booking means scheduling two patients at the same time with the same provider. While this should be avoided whenever possible, there are certain situations where it is acceptable and situations where it is never appropriate.</p>
+
+  <h3>When Double-Booking Is Acceptable</h3>
+  <ul>
+    <li><strong>Lab draw + office visit:</strong> A 15-minute lab draw can overlap with the beginning of a 30-60 minute office visit because the lab draw does not require the provider. The MA or phlebotomist handles the lab draw while the provider sees the other patient.</li>
+    <li><strong>GLP-1 weigh-in + longer appointment:</strong> A quick 15-minute GLP-1 weigh-in can sometimes overlap with a longer appointment. The MA can take weight and vitals while the provider finishes with another patient, then the provider pops in briefly for the GLP-1 check.</li>
+    <li><strong>Established patient quick follow-up + new patient:</strong> Occasionally, if an established patient needs a very brief follow-up (prescription refill, quick question), they can overlap with the early portion of a new patient appointment (while the new patient is completing paperwork).</li>
+  </ul>
+
+  <h3>When Double-Booking Is NEVER Acceptable</h3>
+  <ul>
+    <li><strong>Two new patient consults at the same time.</strong> Both require extensive provider time and cannot be shortened.</li>
+    <li><strong>Pellet insertion + any other appointment.</strong> The provider is performing a procedure and cannot be interrupted or divided between patients.</li>
+    <li><strong>Two procedure appointments at the same time.</strong> Only one procedure can happen at a time per provider.</li>
+    <li><strong>Two appointments that both require significant provider counseling</strong> (men's health consult + new patient, annual wellness + peptide consult, etc.).</li>
+    <li><strong>Any appointment where the patient has a history of complex medical issues or lengthy questions.</strong> Check the patient's chart notes; some patients consistently need extra time and should never be double-booked.</li>
+  </ul>
+
+  <div class="warning">
+    <strong>Warning</strong>
+    When in doubt, do not double-book. Running behind schedule creates a cascade effect that affects every patient for the rest of the day. A provider who is 20 minutes behind by 10 AM will likely be 45 minutes behind by 2 PM. Patients who wait excessively have a poor experience, and the front desk bears the brunt of their frustration.
+  </div>
+
+  <h3>Double-Booking Decision Process</h3>
+  <ol>
+    <li>Check the existing appointment type at the requested time. Is it a procedure or new patient? If yes, do not double-book.</li>
+    <li>Check the appointment being requested. Is it a quick visit (lab draw, weigh-in, brief follow-up)? If not, do not double-book.</li>
+    <li>Look at the surrounding schedule. Is the provider already behind, or are there other double-bookings nearby? If the schedule is already tight, do not add more double-bookings.</li>
+    <li>When in doubt, ask the office manager or provider before double-booking.</li>
+  </ol>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section" id="no-show">
+  <h2>4. No-Show &amp; Cancellation Policy</h2>
+
+  <p>No-shows and late cancellations are disruptive to the practice. They waste provider time, prevent other patients from being seen, and reduce revenue. A clear and consistently enforced policy is essential.</p>
+
+  <h3>Policy Overview</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Situation</th>
+        <th>Policy</th>
+        <th>Fee</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Cancellation more than 24 hours in advance</td>
+        <td>No penalty, offer to reschedule</td>
+        <td>None</td>
+      </tr>
+      <tr>
+        <td>Cancellation less than 24 hours in advance</td>
+        <td>Late cancellation fee may apply</td>
+        <td>$50</td>
+      </tr>
+      <tr>
+        <td>No-show (no call, no appearance)</td>
+        <td>No-show fee charged</td>
+        <td>$75</td>
+      </tr>
+      <tr>
+        <td>No-show for pellet insertion</td>
+        <td>No-show fee (pellets were ordered specifically)</td>
+        <td>$100</td>
+      </tr>
+      <tr>
+        <td>Late arrival (more than 15 minutes)</td>
+        <td>May need to be rescheduled depending on provider availability</td>
+        <td>None (unless rescheduled as no-show)</td>
+      </tr>
+      <tr>
+        <td>Third no-show in 12 months</td>
+        <td>Patient may be dismissed from practice</td>
+        <td>Per occurrence</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>How to Communicate the Policy</h3>
+
+  <p><strong>At scheduling (every appointment):</strong></p>
+  <div class="script-box">
+    <span class="label">Phone Script</span>
+    "I have you scheduled for [date and time] with [provider]. Please note that we do require 24 hours' notice for cancellations. If you need to cancel or reschedule, please call us as soon as possible so we can offer that time to another patient. Late cancellations within 24 hours or no-shows may result in a fee. We will send you a confirmation text/email with all the details."
+  </div>
+
+  <p><strong>After a no-show or late cancellation:</strong></p>
+  <div class="script-box">
+    <span class="label">Phone Script</span>
+    "Hi [patient name], this is [your name] from Contemporary Health Center. We noticed you were unable to make it to your appointment on [date]. We hope everything is okay. Per our office policy, a [no-show/late cancellation] fee of [$amount] has been added to your account. We would love to get you rescheduled. Would you like to find a new time?"
+  </div>
+
+  <div class="key-takeaway">
+    <strong>Key Takeaway</strong>
+    Always communicate the cancellation policy with empathy. Life happens, and patients have legitimate reasons for missing appointments. The goal is not to punish patients but to encourage them to give adequate notice so the time slot can be used by someone else. If a patient has a genuine emergency and has otherwise been reliable, bring it to the office manager's attention to consider waiving the fee.
+  </div>
+
+  <h3>Documenting No-Shows and Cancellations</h3>
+  <ul>
+    <li>Mark the appointment in the scheduling system as "No-Show" or "Late Cancel" (do not simply delete it).</li>
+    <li>Add a note with the date, time, and any communication with the patient (voicemail left, text sent, etc.).</li>
+    <li>If a fee is assessed, document it in the patient's financial account and notify the billing team.</li>
+    <li>Track patterns. If a patient has 2 no-shows, flag their chart for the office manager to review before the third occurrence, which may trigger dismissal.</li>
+  </ul>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section" id="waitlist">
+  <h2>5. Waitlist Management</h2>
+
+  <p>A well-managed waitlist turns cancellations into filled appointments. When patients cancel, the first call should be to the waitlist to fill the opening. This recovers lost revenue and serves patients who need to be seen sooner.</p>
+
+  <h3>How to Maintain the Waitlist</h3>
+  <ul>
+    <li><strong>When to add a patient to the waitlist:</strong> Any time a patient wants an appointment sooner than the next available opening, or when a patient says "let me know if anything opens up."</li>
+    <li><strong>What information to collect:</strong>
+      <ul>
+        <li>Patient name and date of birth</li>
+        <li>Phone number and best time to reach them</li>
+        <li>Appointment type needed</li>
+        <li>Preferred days/times</li>
+        <li>How much notice they need (some patients can come in same-day; others need at least 24 hours)</li>
+        <li>Provider preference (if any)</li>
+      </ul>
+    </li>
+    <li><strong>How to organize:</strong> Maintain the waitlist in the scheduling system's built-in waitlist feature (preferred) or in a shared spreadsheet that all front desk staff can access. Sort by date added so the longest-waiting patients are contacted first.</li>
+  </ul>
+
+  <h3>Working the Waitlist When an Opening Occurs</h3>
+  <ol>
+    <li>Identify the appointment type and time slot that opened up.</li>
+    <li>Filter the waitlist to patients who need that appointment type and are available at that time.</li>
+    <li>Call patients in order of wait time (first come, first served). Leave a voicemail if they do not answer, but do not hold the slot for them &mdash; move to the next name.</li>
+    <li>If you leave a voicemail, give the patient 30 minutes to call back before offering the slot to the next person on the list.</li>
+    <li>Once the slot is filled, update the waitlist to remove that patient.</li>
+    <li>If the slot cannot be filled from the waitlist, consider whether it should be offered as an add-on for existing patients who may need to be seen sooner.</li>
+  </ol>
+
+  <div class="clinical-pearl">
+    <strong>Clinical Pearl</strong>
+    Pellet insertion cancellations are especially important to fill quickly. When pellets have already been ordered for a specific patient and they cancel, the pellets cannot always be redirected to another patient (dosing is individualized). However, the procedure room time can be used for another pellet patient who may already have pellets on hand. Prioritize filling pellet cancellations with other pellet patients who are due for reinsertion.
+  </div>
+</div>
+
+<!-- SECTION 6 -->
+<div class="section" id="scripts">
+  <h2>6. Scheduling Scripts for Common Calls</h2>
+
+  <p>The following scripts are guides, not rigid word-for-word requirements. Adapt them to your natural communication style while ensuring you collect all necessary information and set accurate expectations.</p>
+
+  <h3>New Patient Wanting Hormone Replacement Therapy</h3>
+
+  <p>This is one of the most common calls you will receive. The caller is typically a person who has been experiencing symptoms of hormone imbalance and has either been referred by a friend, found the clinic online, or been told by another provider that they should explore HRT.</p>
+
+  <div class="script-box">
+    <span class="label">Incoming Call Script</span>
+    "Thank you for calling Contemporary Health Center, this is [your name]. How can I help you today?"<br><br>
+    [Patient expresses interest in hormone therapy]<br><br>
+    "Absolutely, we would be happy to help you with that. Let me get a few pieces of information so we can schedule your new patient consultation.<br><br>
+    First, may I get your full name, date of birth, and a good phone number?<br><br>
+    [Collect info]<br><br>
+    Have you ever been on hormone replacement therapy before, or would this be your first time?<br><br>
+    [If returning HRT patient:] Do you have any recent lab work, within the last 6 months, that includes hormone levels? If so, please bring a copy to your appointment.<br><br>
+    [If new to HRT:] No problem at all. The provider will do a comprehensive evaluation at your first visit and order any labs that are needed.<br><br>
+    Do you have health insurance you would like us to bill, or would you prefer to be seen as a self-pay patient?<br><br>
+    [If insurance:] May I get your insurance information? We will verify your benefits before your appointment and let you know if there are any out-of-pocket costs.<br><br>
+    [If self-pay:] Our new patient consultation fee is [amount]. We accept credit cards, HSA/FSA cards, cash, and checks.<br><br>
+    Your new patient consultation will be approximately 60 minutes. The provider will review your health history, discuss your symptoms and goals, and develop a personalized treatment plan. If you have not had recent lab work, the provider will order labs at this visit, and you will come back for a follow-up to review results and start treatment.<br><br>
+    I have openings on [offer 2-3 dates/times]. Which works best for you?<br><br>
+    [Schedule appointment]<br><br>
+    We will send you our new patient paperwork by email. Please complete it before your appointment to save time during check-in. Also, please bring a photo ID, your insurance card if applicable, a list of all medications and supplements you take, and any recent lab work you have.<br><br>
+    Do you have any questions for me?"
+  </div>
+
+  <div class="key-takeaway">
+    <strong>Key Takeaway</strong>
+    Questions to ask (and document) during the call: (1) Has the patient been on HRT before? (2) Do they have recent labs? (3) What are their primary symptoms? (4) Insurance or self-pay? (5) Were they referred by someone? This information helps the provider prepare for the visit and is valuable for marketing tracking.
+  </div>
+
+  <h3>Patient Needing Pellet Reinsertion</h3>
+
+  <p>Existing pellet patients will call when they begin to feel their symptoms returning, which typically signals that their pellets are wearing off and reinsertion is needed.</p>
+
+  <div class="script-box">
+    <span class="label">Incoming Call Script</span>
+    "Thank you for calling Contemporary Health Center, this is [your name]. How can I help you?"<br><br>
+    [Patient says they need their pellets redone]<br><br>
+    "Of course! Let me pull up your chart. May I have your name and date of birth?<br><br>
+    [Pull up chart]<br><br>
+    I can see your last pellet insertion was on [date]. That was approximately [X] months ago.<br><br>
+    [Check for recent labs]<br><br>
+    [If labs are current (within 14 days):] Your labs look current, so we can go ahead and schedule the insertion. I have openings on [offer Monday-Thursday options only]. Which day works best?<br><br>
+    [If labs are needed:] Before we can schedule the insertion, we will need updated lab work. The provider needs current levels to determine the right dosing for your next round of pellets. Let's first schedule a lab draw, and then I will schedule your pellet insertion about 7-10 days later so the results are available. We have lab draw openings on [offer morning times]. What works for you?<br><br>
+    Just a reminder for the insertion appointment: please wear loose, comfortable clothing, avoid blood thinners for [timeframe per provider instructions], and plan for about 30-45 minutes for the visit. You can resume normal light activity afterward, but please avoid vigorous exercise, swimming, and bathing for [per provider instructions].<br><br>
+    Do you have any questions?"
+  </div>
+
+  <h3>Urgent Appointment Requests</h3>
+
+  <p>Patients sometimes call with concerns they feel need immediate attention. While CHC is not an urgent care or emergency facility, there are situations that warrant fitting a patient in as soon as possible.</p>
+
+  <div class="card">
+    <h4>Triage Urgent Requests</h4>
+    <p><strong>Needs same-day or next-day scheduling:</strong></p>
+    <ul>
+      <li>Pellet insertion site concerns: excessive bleeding, signs of infection (redness, warmth, swelling, drainage), pellet extrusion</li>
+      <li>Severe side effects from any medication started at CHC (severe nausea/vomiting from GLP-1, allergic reaction, chest pain)</li>
+      <li>Significant mood changes or mental health concerns that the patient attributes to HRT</li>
+      <li>Injection site reactions or infections</li>
+    </ul>
+    <p><strong>Can be scheduled within the week:</strong></p>
+    <ul>
+      <li>New or worsening symptoms the patient wants to discuss (hot flashes returning, fatigue, weight gain)</li>
+      <li>Medication refill needed soon (running out in the next week)</li>
+      <li>Questions about lab results that have been posted to the patient portal</li>
+    </ul>
+    <p><strong>Should call 911 or go to the ER:</strong></p>
+    <ul>
+      <li>Chest pain, difficulty breathing, severe allergic reaction (throat swelling, difficulty breathing)</li>
+      <li>Signs of stroke (facial drooping, arm weakness, speech difficulty)</li>
+      <li>Severe uncontrolled bleeding from any site</li>
+      <li>Suicidal ideation or homicidal ideation</li>
+    </ul>
+  </div>
+
+  <div class="script-box">
+    <span class="label">Triage Script</span>
+    "I understand you are concerned, and I want to make sure we take care of you. Can you tell me a little more about what is going on?<br><br>
+    [Listen to the patient's description]<br><br>
+    [If ER-level concern:] Based on what you are describing, I want to make sure you get the fastest possible care. Please call 911 or go to your nearest emergency room right away. This is something that needs immediate medical attention that is beyond what we can provide in the office.<br><br>
+    [If same-day/next-day level:] I am going to check with the provider/clinical team to see how quickly we can get you in. Can I place you on a brief hold?<br><br>
+    [Check with MA or provider, then return]<br><br>
+    We can see you [today at X time / tomorrow at X time]. Does that work for you?<br><br>
+    [If within-the-week level:] Let's get you scheduled. I have openings on [dates]. In the meantime, if your symptoms worsen or you develop [specific warning signs relevant to their concern], please call us back right away or go to the ER."
+  </div>
+
+  <div class="warning">
+    <strong>Warning</strong>
+    You are not a clinician and should never provide medical advice over the phone. If you are unsure how to triage a patient's concern, always err on the side of caution: put the patient on a brief hold and consult with a medical assistant or the provider. Never tell a patient that their concern is "not a big deal" or "can wait." Let the clinical team make that determination.
+  </div>
+</div>
+
+<!-- SECTION 7 -->
+<div class="section" id="provider-prefs">
+  <h2>7. Provider Schedule Preferences &amp; Templates</h2>
+
+  <p>Each provider at CHC may have specific preferences for how their schedule is built. Understanding and respecting these preferences is key to keeping the day running smoothly and preventing provider burnout.</p>
+
+  <h3>Common Provider Scheduling Preferences</h3>
+
+  <div class="card">
+    <h4>Morning Block Structure</h4>
+    <ul>
+      <li><strong>7:30 AM - 8:30 AM:</strong> Lab draws and quick follow-ups. These are fast-paced appointments that help the provider start the day with momentum.</li>
+      <li><strong>8:30 AM - 10:00 AM:</strong> New patient consults and longer appointments. Patients and providers are freshest in the morning, making this ideal for comprehensive visits.</li>
+      <li><strong>10:00 AM - 12:00 PM:</strong> Follow-ups, GLP-1 visits, and pellet insertions.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h4>Afternoon Block Structure</h4>
+    <ul>
+      <li><strong>12:00 PM - 1:00 PM:</strong> Lunch break and chart review. Do not schedule patients during this time unless the provider specifically approves it.</li>
+      <li><strong>1:00 PM - 3:00 PM:</strong> Follow-ups, pellet insertions, consults.</li>
+      <li><strong>3:00 PM - 4:30 PM:</strong> Shorter appointments (GLP-1 follow-ups, lab reviews, quick visits). Wind down the day with less complex visits.</li>
+      <li><strong>4:30 PM - 5:00 PM:</strong> Admin time (chart completion, callbacks, refill approvals). Do not schedule patients in this block.</li>
+    </ul>
+  </div>
+
+  <h3>Schedule Template Best Practices</h3>
+  <ul>
+    <li><strong>Build in buffer time.</strong> Do not schedule back-to-back appointments with zero gaps. Allow at least 5-10 minutes between appointments for the provider to finish notes, use the restroom, and mentally transition to the next patient.</li>
+    <li><strong>Mix appointment types.</strong> Alternate between longer and shorter appointments when possible. A 60-minute new patient consult followed by a 15-minute GLP-1 weigh-in gives the provider a mental break from heavy decision-making.</li>
+    <li><strong>Cluster procedures.</strong> If a provider is doing pellet insertions, try to schedule them in a block rather than scattered throughout the day. This is more efficient for room setup and cleanup.</li>
+    <li><strong>Protect the provider's admin time.</strong> Providers need time to complete notes, review labs, return patient calls, and handle prior authorizations. This time is sacred and should not be taken away to squeeze in another patient unless it is a genuine urgent matter approved by the provider.</li>
+    <li><strong>End-of-day boundary.</strong> The last new patient should be scheduled no later than 90 minutes before close. The last follow-up should be no later than 45 minutes before close.</li>
+  </ul>
+
+  <div class="clinical-pearl">
+    <strong>Clinical Pearl</strong>
+    Pay attention to the types of appointments that tend to run long and plan accordingly. New patient consults for men's health often run over because many male patients are opening up about sensitive health issues for the first time. Annual wellness visits with elderly patients also tend to go long. Build in extra buffer after these appointment types when possible.
+  </div>
+</div>
+
+<!-- SECTION 8: QUICK REFERENCE -->
+<div class="section" id="quick-ref">
+  <h2>8. Quick Reference: Appointment Type Cheat Sheet</h2>
+
+  <div class="quick-ref">
+    <h3>Appointment Types at a Glance</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Appointment Type</th>
+          <th>Duration</th>
+          <th>Room</th>
+          <th>Key Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>New Patient Consult</td>
+          <td>60 min</td>
+          <td>Exam</td>
+          <td>Add 15 min buffer; not last appt of day; send paperwork in advance</td>
+        </tr>
+        <tr>
+          <td>Follow-Up HRT</td>
+          <td>30 min</td>
+          <td>Exam</td>
+          <td>Verify labs are on file before appointment</td>
+        </tr>
+        <tr>
+          <td>Pellet Insertion</td>
+          <td>30-45 min</td>
+          <td>Procedure</td>
+          <td>Mon-Thu ONLY; labs must be current; max 4/day; 15 min turnover</td>
+        </tr>
+        <tr>
+          <td>GLP-1 Follow-Up</td>
+          <td>15-20 min</td>
+          <td>Exam</td>
+          <td>Same time of day for consistency; pair with labs when due</td>
+        </tr>
+        <tr>
+          <td>Lab Draw Only</td>
+          <td>15 min</td>
+          <td>Lab/Exam</td>
+          <td>Morning preferred; verify fasting; confirm lab order exists</td>
+        </tr>
+        <tr>
+          <td>Men's Health Consult</td>
+          <td>45 min</td>
+          <td>Exam</td>
+          <td>Often runs long; add buffer time</td>
+        </tr>
+        <tr>
+          <td>Annual Wellness</td>
+          <td>45-60 min</td>
+          <td>Exam</td>
+          <td>Comprehensive visit; not last appt of day</td>
+        </tr>
+        <tr>
+          <td>Pap Smear / GYN</td>
+          <td>30 min</td>
+          <td>Exam</td>
+          <td>Avoid scheduling during menstrual period; 48hr prep instructions</td>
+        </tr>
+        <tr>
+          <td>Peptide Consult</td>
+          <td>30 min</td>
+          <td>Exam</td>
+          <td>May include injection training; allow extra time for first visit</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="quick-ref">
+    <h3>Scheduling Rules Quick Reference</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Rule</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>No pellet insertions on Fridays</td>
+          <td>Complications over weekend when office is closed</td>
+        </tr>
+        <tr>
+          <td>New patients need extra buffer</td>
+          <td>Add 15 min after; not last appt of day; double-confirm</td>
+        </tr>
+        <tr>
+          <td>Lab draws in the morning</td>
+          <td>Before 10:30 AM for fasting; verify fasting requirements</td>
+        </tr>
+        <tr>
+          <td>GLP-1 same time of day</td>
+          <td>Consistent weigh-in times for accurate tracking</td>
+        </tr>
+        <tr>
+          <td>Post-pellet labs: 4-6 weeks out</td>
+          <td>Schedule before patient leaves insertion appointment</td>
+        </tr>
+        <tr>
+          <td>No double-booking procedures</td>
+          <td>Pellet insertions cannot overlap with any other appointment</td>
+        </tr>
+        <tr>
+          <td>Protect provider admin time</td>
+          <td>Do not schedule over lunch or end-of-day admin blocks</td>
+        </tr>
+        <tr>
+          <td>24-hour cancellation notice required</td>
+          <td>Communicate at every scheduling interaction</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="quick-ref">
+    <h3>Confirmation Checklist (Every Appointment)</h3>
+    <ul>
+      <li>Confirm date, time, provider, and appointment type</li>
+      <li>Remind patient of any preparation (fasting, paperwork, items to bring)</li>
+      <li>State the cancellation policy</li>
+      <li>Provide the office phone number in case they need to reschedule</li>
+      <li>For new patients: verify they received the new patient packet</li>
+      <li>For pellet insertions: remind about clothing, blood thinners, and post-procedure activity restrictions</li>
+      <li>For lab draws: confirm fasting status and that a lab order is on file</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

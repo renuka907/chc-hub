@@ -44,6 +44,10 @@ export const DEFAULT_PERMISSIONS = {
     labTests: { view: true, create: false, edit: false, delete: false },
     reminders: { view: true, create: true, edit: true, delete: false },
     messages: { view: true, create: true, edit: true, delete: false },
+    education_library: { view: true, create: false, edit: false, delete: false },
+    provider_education: { view: true, edit: false },
+    ma_education: { view: true, edit: false },
+    front_office_education: { view: true, edit: false },
   },
 };
 

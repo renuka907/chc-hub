@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Provider Education: Anorgasmia (Inability to Achieve Orgasm)</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple-deep: #1a0a2e;
+  --purple-mid: #2d1b4e;
+  --purple-light: #6c3fa0;
+  --pink: #e91e8c;
+  --orange: #ff6b35;
+  --gradient-main: linear-gradient(135deg, #6c3fa0, #e91e8c, #ff6b35);
+  --text-primary: #f0e6ff;
+  --text-secondary: #c4b0db;
+  --card-bg: rgba(45, 27, 78, 0.6);
+  --border-glow: rgba(108, 63, 160, 0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--purple-deep);
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-size: 17px;
+}
+
+.container {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+h2 {
+  color: #ffffff;
+  font-size: 1.7rem;
+  font-weight: 800;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-glow);
+}
+
+h3 {
+  color: var(--text-primary);
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-top: 1.8rem;
+  margin-bottom: 0.8rem;
+}
+
+h4 {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-top: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+p { margin-bottom: 1rem; }
+
+a { color: var(--pink); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+strong { color: #ffffff; }
+
+ul, ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+li { margin-bottom: 0.4rem; }
+
+/* Cards */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* TOC */
+.toc {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.toc h2 {
+  margin-top: 0;
+  font-size: 1.4rem;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 1rem;
+}
+
+.toc ol {
+  padding-left: 1.2rem;
+}
+
+.toc li {
+  margin-bottom: 0.3rem;
+}
+
+.toc a {
+  color: var(--text-secondary);
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.toc a:hover {
+  color: var(--pink);
+}
+
+/* Clinical Pearl */
+.clinical-pearl {
+  background: rgba(233, 30, 140, 0.1);
+  border-left: 4px solid var(--pink);
+  border-radius: 0 12px 12px 0;
+  padding: 1.2rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.clinical-pearl .label {
+  font-weight: 800;
+  color: var(--pink);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+
+/* Key Takeaway */
+.key-takeaway {
+  background: rgba(108, 63, 160, 0.15);
+  border-left: 4px solid var(--purple-light);
+  border-radius: 0 12px 12px 0;
+  padding: 1.2rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.key-takeaway .label {
+  font-weight: 800;
+  color: var(--purple-light);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+
+/* Warning */
+.warning {
+  background: rgba(255, 107, 53, 0.1);
+  border-left: 4px solid var(--orange);
+  border-radius: 0 12px 12px 0;
+  padding: 1.2rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.warning .label {
+  font-weight: 800;
+  color: var(--orange);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+thead th {
+  background: linear-gradient(135deg, #6c3fa0, #e91e8c);
+  color: #ffffff;
+  padding: 0.8rem 1rem;
+  text-align: left;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+tbody td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--border-glow);
+  font-size: 0.95rem;
+}
+
+tbody tr:nth-child(odd) {
+  background: rgba(45, 27, 78, 0.3);
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(26, 10, 46, 0.4);
+}
+
+/* Comparison Grid */
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin: 1.5rem 0;
+}
+
+.comparison-grid .card {
+  margin-bottom: 0;
+}
+
+.comparison-grid .card h4 {
+  margin-top: 0;
+}
+
+@media (max-width: 600px) {
+  .comparison-grid { grid-template-columns: 1fr; }
+}
+
+/* Flowchart / Diagram */
+.diagram {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+}
+
+.diagram-title {
+  text-align: center;
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: #ffffff;
+  margin-bottom: 1.2rem;
+}
+
+/* Sexual Response Cycle */
+.cycle-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.cycle-stage {
+  padding: 0.8rem 1.3rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-align: center;
+  color: #fff;
+  min-width: 100px;
+}
+
+.cycle-arrow {
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  padding: 0 0.3rem;
+  font-weight: 800;
+}
+
+.stage-desire { background: linear-gradient(135deg, #6c3fa0, #8b5fbf); }
+.stage-arousal { background: linear-gradient(135deg, #8b3fa0, #c04fa0); }
+.stage-plateau { background: linear-gradient(135deg, #c04fa0, #e91e8c); }
+.stage-orgasm { background: linear-gradient(135deg, #e91e8c, #ff6b35); }
+.stage-resolution { background: linear-gradient(135deg, #ff6b35, #ff9a5c); }
+
+/* Neurotransmitter Balance */
+.nt-balance {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 2rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.nt-side {
+  flex: 1;
+  min-width: 200px;
+  max-width: 300px;
+  border-radius: 12px;
+  padding: 1.2rem;
+  text-align: center;
+}
+
+.nt-facilitate {
+  background: rgba(108, 63, 160, 0.25);
+  border: 2px solid var(--purple-light);
+}
+
+.nt-inhibit {
+  background: rgba(233, 30, 140, 0.15);
+  border: 2px solid var(--pink);
+}
+
+.nt-side h4 {
+  margin-top: 0;
+  font-size: 1rem;
+}
+
+.nt-side ul {
+  list-style: none;
+  padding-left: 0;
+  text-align: left;
+}
+
+.nt-side li {
+  padding: 0.3rem 0;
+  font-size: 0.95rem;
+}
+
+.nt-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.balance-bar {
+  width: 6px;
+  height: 60px;
+  background: var(--gradient-main);
+  border-radius: 3px;
+  margin: 0.5rem 0;
+}
+
+/* Treatment Flowchart */
+.flow-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.flow-box {
+  padding: 0.9rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 700;
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+  font-size: 0.95rem;
+}
+
+.flow-box-primary {
+  background: linear-gradient(135deg, #6c3fa0, #e91e8c);
+  color: #fff;
+}
+
+.flow-box-secondary {
+  background: var(--card-bg);
+  border: 2px solid var(--purple-light);
+  color: var(--text-primary);
+}
+
+.flow-box-tertiary {
+  background: var(--card-bg);
+  border: 2px solid var(--pink);
+  color: var(--text-primary);
+}
+
+.flow-box-warn {
+  background: var(--card-bg);
+  border: 2px solid var(--orange);
+  color: var(--text-primary);
+}
+
+.flow-arrow-down {
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  line-height: 1;
+  padding: 0.2rem 0;
+}
+
+.flow-branch {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 600px;
+}
+
+.flow-branch .flow-box {
+  flex: 1;
+  min-width: 140px;
+  font-size: 0.88rem;
+  padding: 0.7rem 0.8rem;
+}
+
+/* Script boxes */
+.script-box {
+  background: rgba(45, 27, 78, 0.5);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 1.3rem 1.5rem;
+  margin: 1.2rem 0;
+  font-style: italic;
+  color: var(--text-secondary);
+  line-height: 1.9;
+}
+
+.script-box .script-label {
+  font-style: normal;
+  font-weight: 800;
+  color: var(--pink);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+/* Quick Reference */
+.quick-ref {
+  background: linear-gradient(135deg, rgba(108, 63, 160, 0.2), rgba(233, 30, 140, 0.1));
+  border: 2px solid var(--purple-light);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.quick-ref h3 {
+  margin-top: 0;
+}
+
+/* Two-column layout for etiology */
+.etiology-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+@media (max-width: 600px) {
+  .etiology-grid { grid-template-columns: 1fr; }
+  .cycle-flow { flex-direction: column; }
+  .cycle-arrow { transform: rotate(90deg); }
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-right: 0.3rem;
+}
+
+.tag-psych { background: rgba(108, 63, 160, 0.3); color: #c4a0ff; }
+.tag-med { background: rgba(233, 30, 140, 0.2); color: #f590c5; }
+.tag-horm { background: rgba(255, 107, 53, 0.2); color: #ffb088; }
+.tag-rx { background: rgba(45, 180, 180, 0.2); color: #7dd8d8; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Anorgasmia: Inability to Achieve Orgasm</h1>
+<p class="subtitle">Comprehensive Provider Education Guide &mdash; Assessment and Management in Male and Female Patients</p>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+<h2>Table of Contents</h2>
+<ol>
+  <li><a href="#introduction">Introduction &amp; Definition</a></li>
+  <li><a href="#physiology">Physiology of Orgasm</a></li>
+  <li><a href="#classification">Classification &amp; Types</a></li>
+  <li><a href="#etiology-female">Etiology &mdash; Female</a></li>
+  <li><a href="#etiology-male">Etiology &mdash; Male</a></li>
+  <li><a href="#ssri">SSRI-Induced Anorgasmia &mdash; Deep Dive</a></li>
+  <li><a href="#evaluation">Clinical Evaluation</a></li>
+  <li><a href="#treatment-female">Treatment &mdash; Female Anorgasmia</a></li>
+  <li><a href="#treatment-male">Treatment &mdash; Male Anorgasmia</a></li>
+  <li><a href="#special">Special Considerations</a></li>
+  <li><a href="#referral">When to Refer</a></li>
+  <li><a href="#scripts">Patient Communication Scripts</a></li>
+  <li><a href="#quick-ref">Quick Reference Card</a></li>
+</ol>
+</div>
+
+<!-- ===================== SECTION 1 ===================== -->
+<h2 id="introduction">1. Introduction &amp; Definition</h2>
+
+<p>Anorgasmia is defined as the <strong>persistent or recurrent difficulty, delay in, or absence of attaining orgasm</strong> after sufficient sexual stimulation and arousal. It is a distinct sexual dysfunction that affects both men and women, though it is more commonly reported in female patients. Despite its prevalence, anorgasmia remains significantly underdiagnosed because patients rarely volunteer this complaint and providers often fail to ask.</p>
+
+<h3>DSM-5 Diagnostic Criteria</h3>
+
+<div class="comparison-grid">
+<div class="card">
+<h4>Female Orgasmic Disorder (302.73)</h4>
+<ul>
+<li>Marked delay in, marked infrequency of, or absence of orgasm</li>
+<li>Markedly reduced intensity of orgasmic sensations</li>
+<li>Present for approximately 6 months</li>
+<li>Causes clinically significant distress</li>
+<li>Not better explained by another mental disorder, substance/medication, or medical condition</li>
+</ul>
+<p><strong>Specifiers:</strong> Lifelong vs. acquired; generalized vs. situational; mild/moderate/severe</p>
+</div>
+<div class="card">
+<h4>Delayed Ejaculation (302.74)</h4>
+<ul>
+<li>Marked delay in, marked infrequency of, or absence of ejaculation</li>
+<li>Present on approximately 75-100% of occasions of sexual activity</li>
+<li>Duration of at least 6 months</li>
+<li>Causes clinically significant distress</li>
+<li>Not better explained by another condition, substance, or relationship distress</li>
+</ul>
+<p><strong>Specifiers:</strong> Lifelong vs. acquired; generalized vs. situational; mild/moderate/severe</p>
+</div>
+</div>
+
+<h3>Distinguishing from Other Sexual Dysfunctions</h3>
+
+<table>
+<thead>
+<tr><th>Condition</th><th>Key Distinction from Anorgasmia</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>HSDD (Low Libido)</strong></td><td>Absent or reduced desire/interest in sexual activity. Patients with anorgasmia may have normal desire but cannot reach climax.</td></tr>
+<tr><td><strong>Female Sexual Arousal Disorder</strong></td><td>Inability to attain or maintain adequate lubrication/swelling. Arousal is impaired rather than orgasm specifically.</td></tr>
+<tr><td><strong>Erectile Dysfunction</strong></td><td>Inability to achieve/maintain erection. Men with ED may still orgasm; men with anorgasmia can maintain erection but cannot climax.</td></tr>
+<tr><td><strong>Dyspareunia / Vaginismus</strong></td><td>Pain during intercourse. May coexist with anorgasmia but is a separate entity centered on genital pain rather than orgasmic failure.</td></tr>
+</tbody>
+</table>
+
+<h3>Prevalence</h3>
+
+<div class="card">
+<ul>
+<li><strong>Female:</strong> Approximately 10-15% of women have <em>never</em> experienced orgasm (primary anorgasmia). Up to 25% of women report persistent difficulty reaching orgasm. Situational anorgasmia (e.g., can orgasm alone but not with a partner) is significantly more common.</li>
+<li><strong>Male:</strong> Estimated at approximately 8% overall, though likely underreported due to stigma. Delayed ejaculation is the least common male sexual dysfunction but can be profoundly distressing.</li>
+<li><strong>Medication-induced:</strong> SSRI/SNRI-associated orgasmic dysfunction occurs in 30-70% of patients, making it the most common iatrogenic cause.</li>
+</ul>
+</div>
+
+<div class="clinical-pearl">
+<div class="label">Clinical Pearl</div>
+<p>Patients almost never volunteer information about orgasmic difficulties. Providers must proactively screen for sexual dysfunction using open-ended, normalizing language. Incorporating a brief sexual function screen into annual visits (e.g., &ldquo;Many of my patients experience changes in sexual function. Is this something you&rsquo;d like to discuss?&rdquo;) dramatically increases detection rates.</p>
+</div>
+
+<!-- ===================== SECTION 2 ===================== -->
+<h2 id="physiology">2. Physiology of Orgasm</h2>
+
+<h3>The Sexual Response Cycle</h3>
+
+<div class="diagram">
+<div class="diagram-title">Human Sexual Response Cycle (Masters &amp; Johnson, modified by Kaplan)</div>
+<div class="cycle-flow">
+  <div class="cycle-stage stage-desire">Desire</div>
+  <div class="cycle-arrow">&rarr;</div>
+  <div class="cycle-stage stage-arousal">Arousal</div>
+  <div class="cycle-arrow">&rarr;</div>
+  <div class="cycle-stage stage-plateau">Plateau</div>
+  <div class="cycle-arrow">&rarr;</div>
+  <div class="cycle-stage stage-orgasm">Orgasm</div>
+  <div class="cycle-arrow">&rarr;</div>
+  <div class="cycle-stage stage-resolution">Resolution</div>
+</div>
+<div style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-secondary); text-align: center;">
+<p style="margin-bottom: 0.3rem;"><strong style="color: var(--text-primary);">Desire:</strong> Cognitive drive, testosterone-mediated &nbsp;|&nbsp; <strong style="color: var(--text-primary);">Arousal:</strong> Vasocongestion, parasympathetic (genital engorgement)</p>
+<p style="margin-bottom: 0.3rem;"><strong style="color: var(--text-primary);">Plateau:</strong> Peak arousal, maximal engorgement &nbsp;|&nbsp; <strong style="color: var(--text-primary);">Orgasm:</strong> Rhythmic contractions, sympathetic/somatic reflex</p>
+<p><strong style="color: var(--text-primary);">Resolution:</strong> Return to baseline, oxytocin release, refractory period (males)</p>
+</div>
+</div>
+
+<h3>Neuroanatomy of Orgasm</h3>
+
+<div class="card">
+<h4>Peripheral Pathway</h4>
+<ul>
+<li><strong>Pudendal nerve (S2-S4):</strong> Primary somatic nerve carrying sensory input from the genitalia to the spinal cord. Carries afferent signals from clitoris/penis and efferent motor signals to pelvic floor muscles.</li>
+<li><strong>Dorsal nerve of the clitoris/penis:</strong> Terminal sensory branch of the pudendal nerve; dense concentration of mechanoreceptors and free nerve endings.</li>
+<li><strong>Pelvic splanchnic nerves (S2-S4):</strong> Parasympathetic innervation for arousal (vasocongestion).</li>
+<li><strong>Hypogastric nerve (T10-L2):</strong> Sympathetic innervation critical for the emission phase in males.</li>
+</ul>
+
+<h4>Spinal Cord Reflex Arc</h4>
+<ul>
+<li><strong>Sacral segments S2-S4:</strong> Integration center for the orgasmic reflex arc. Afferent sensory signals reach the sacral cord, triggering rhythmic motor output to the bulbocavernosus and ischiocavernosus muscles.</li>
+<li>Spinal cord injuries above S2 may preserve reflex orgasm; injuries at S2-S4 typically abolish it.</li>
+</ul>
+
+<h4>Brain Centers</h4>
+<ul>
+<li><strong>Medial preoptic area (MPOA):</strong> Hypothalamic integration center for sexual behavior; receives dopaminergic input.</li>
+<li><strong>Paraventricular nucleus (PVN):</strong> Releases oxytocin during orgasm; projects to sacral spinal cord to facilitate motor output.</li>
+<li><strong>Nucleus accumbens:</strong> Reward/pleasure center; dopaminergic activation during orgasm.</li>
+<li><strong>Prefrontal cortex:</strong> May exert inhibitory control; deactivation during orgasm correlates with subjective experience of &ldquo;letting go.&rdquo;</li>
+</ul>
+</div>
+
+<h3>Neurotransmitter Balance in Orgasmic Function</h3>
+
+<div class="diagram">
+<div class="diagram-title">Neurotransmitter Roles in Orgasm: Facilitation vs. Inhibition</div>
+<div class="nt-balance">
+  <div class="nt-side nt-facilitate">
+    <h4 style="color: #c4a0ff;">Facilitate Orgasm</h4>
+    <ul>
+      <li><strong>Dopamine</strong> &mdash; activates D2 receptors in MPOA; drives reward and motor output</li>
+      <li><strong>Norepinephrine</strong> &mdash; sympathetic activation; triggers emission/expulsion</li>
+      <li><strong>Oxytocin</strong> &mdash; released from PVN; enhances contractions and subjective pleasure</li>
+      <li><strong>Nitric Oxide (NO)</strong> &mdash; vasodilation, genital engorgement, sensory amplification</li>
+    </ul>
+  </div>
+  <div class="nt-center">
+    <span>BALANCE</span>
+    <div class="balance-bar"></div>
+    <span style="font-size: 0.8rem;">disruption &rarr; anorgasmia</span>
+  </div>
+  <div class="nt-side nt-inhibit">
+    <h4 style="color: #f590c5;">Inhibit Orgasm</h4>
+    <ul>
+      <li><strong>Serotonin (5-HT)</strong> &mdash; 5-HT2A/2C receptor activation inhibits dopamine release and NO pathways</li>
+      <li><strong>Prolactin</strong> &mdash; post-orgasm satiety signal; chronically elevated levels suppress sexual function</li>
+      <li><strong>Endogenous opioids</strong> &mdash; high tonic levels suppress arousal/orgasm pathways</li>
+      <li><strong>GABA</strong> &mdash; inhibitory tone in cortical circuits; excessive sedation impairs orgasm</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<h3>Sex-Specific Orgasmic Physiology</h3>
+
+<div class="comparison-grid">
+<div class="card">
+<h4>Female Orgasm</h4>
+<ul>
+<li><strong>Primarily clitoral:</strong> The clitoris (including the internal crura and bulbs) contains approximately 8,000+ nerve endings and is the primary orgasmic trigger</li>
+<li>Only approximately 25% of women consistently orgasm from vaginal penetration alone</li>
+<li><strong>Vaginal (internal) orgasm:</strong> Likely involves indirect stimulation of internal clitoral structures and/or the anterior vaginal wall (&ldquo;G-spot&rdquo; area, Skene&rsquo;s glands)</li>
+<li>No refractory period in most women &mdash; capacity for multiple orgasms</li>
+<li>Rhythmic contractions of pelvic floor muscles at 0.8-second intervals</li>
+<li>Involves both sympathetic and somatic pathways</li>
+</ul>
+</div>
+<div class="card">
+<h4>Male Orgasm</h4>
+<ul>
+<li><strong>Emission phase:</strong> Sympathetic (T10-L2 via hypogastric nerve) &mdash; seminal fluid deposited into posterior urethra, bladder neck closes</li>
+<li><strong>Expulsion phase:</strong> Somatic (S2-S4 via pudendal nerve) &mdash; rhythmic contractions of bulbospongiosus and ischiocavernosus muscles</li>
+<li>These two phases <strong>can be dissociated:</strong> orgasm without ejaculation (anejaculation) or ejaculation without orgasm (orgasmic anhedonia)</li>
+<li>Refractory period present; increases with age</li>
+<li>Penile glans is primary sensory trigger via dorsal nerve of penis</li>
+</ul>
+</div>
+</div>
+
+<div class="key-takeaway">
+<div class="label">Key Takeaway</div>
+<p>Understanding that female orgasm is predominantly clitoral (not vaginal) is essential for patient education. Many women and their partners have misconceptions about &ldquo;normal&rdquo; orgasm that lead to unnecessary distress. Similarly, understanding the two-phase nature of male orgasm helps differentiate anorgasmia from ejaculatory disorders.</p>
+</div>
+
+<!-- ===================== SECTION 3 ===================== -->
+<h2 id="classification">3. Classification &amp; Types</h2>
+
+<div class="comparison-grid">
+<div class="card" style="border-top: 3px solid var(--pink);">
+<h4 style="color: var(--pink);">Female Anorgasmia</h4>
+<table>
+<thead><tr><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><strong>Primary (Lifelong)</strong></td><td>Has never experienced orgasm by any means despite adequate stimulation and desire. Approximately 10-15% of women.</td></tr>
+<tr><td><strong>Secondary (Acquired)</strong></td><td>Previously able to orgasm but has lost the ability. Often related to medications, medical conditions, hormonal changes, or psychosocial stressors.</td></tr>
+<tr><td><strong>Situational</strong></td><td>Can orgasm in certain contexts (e.g., masturbation, oral sex) but not others (e.g., partnered intercourse). Very common. Does not necessarily indicate pathology.</td></tr>
+<tr><td><strong>Generalized</strong></td><td>Cannot orgasm under any circumstances. Less common. More likely to have organic or significant psychological etiology.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="card" style="border-top: 3px solid var(--purple-light);">
+<h4 style="color: var(--purple-light);">Male Anorgasmia / Delayed Ejaculation</h4>
+<table>
+<thead><tr><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><strong>Primary (Lifelong)</strong></td><td>Has never achieved orgasm/ejaculation during partnered sex. May occur during masturbation. Rare; often psychogenic.</td></tr>
+<tr><td><strong>Secondary (Acquired)</strong></td><td>Previously able to orgasm normally; new onset of difficulty. Investigate medications (SSRIs), medical conditions, hormonal changes.</td></tr>
+<tr><td><strong>Situational</strong></td><td>Can ejaculate in some situations but not others (e.g., can with masturbation but not coitus). Common pattern in porn-induced desensitization.</td></tr>
+<tr><td><strong>Generalized</strong></td><td>Cannot ejaculate in any context. More likely neurogenic or medication-induced.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<h3>Important Differential: Male Ejaculatory Disorders</h3>
+
+<table>
+<thead>
+<tr><th>Condition</th><th>Orgasm Present?</th><th>Ejaculate Expelled?</th><th>Key Feature</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Delayed Ejaculation / Male Anorgasmia</strong></td><td>No/markedly delayed</td><td>No/delayed</td><td>Prolonged stimulation required; distressing</td></tr>
+<tr><td><strong>Retrograde Ejaculation</strong></td><td>Yes (often diminished)</td><td>No (into bladder)</td><td>Post-orgasm urine is cloudy/semen-positive; bladder neck incompetence</td></tr>
+<tr><td><strong>Anejaculation</strong></td><td>Varies</td><td>No emission at all</td><td>No seminal fluid produced; spinal cord injury, sympathetic disruption</td></tr>
+<tr><td><strong>Erectile Dysfunction</strong></td><td>May be preserved</td><td>Variable</td><td>Cannot achieve/maintain erection; orgasm may still occur with flaccid penis</td></tr>
+<tr><td><strong>Orgasmic Anhedonia</strong></td><td>Subjectively absent</td><td>Yes (normal ejaculation)</td><td>Ejaculation occurs but no pleasurable sensation; rare; often psychogenic or neurologic</td></tr>
+</tbody>
+</table>
+
+<div class="clinical-pearl">
+<div class="label">Clinical Pearl</div>
+<p>Always ask male patients specifically: &ldquo;Can you reach climax?&rdquo; separately from &ldquo;Do you ejaculate?&rdquo; These are physiologically distinct events. A man who ejaculates normally but reports no pleasure has orgasmic anhedonia, not anorgasmia. A man who has orgasmic sensation but no ejaculate may have retrograde ejaculation &mdash; check a post-orgasm urinalysis.</p>
+</div>
+
+<!-- ===================== SECTION 4 ===================== -->
+<h2 id="etiology-female">4. Etiology &mdash; Female</h2>
+
+<h3><span class="tag tag-psych">Psychological</span> Factors</h3>
+<ul>
+<li><strong>Sexual trauma / abuse history:</strong> One of the strongest predictors of anorgasmia. May cause dissociation during sexual activity, hypervigilance, inability to &ldquo;let go.&rdquo; Always screen sensitively.</li>
+<li><strong>Anxiety and depression:</strong> Both the conditions themselves and their treatments impair orgasm. Performance anxiety (&ldquo;spectatoring&rdquo;) is particularly disruptive &mdash; cognitive distraction prevents adequate arousal buildup.</li>
+<li><strong>Body image issues:</strong> Self-consciousness during sexual activity diverts attention from physical sensation.</li>
+<li><strong>Religious or cultural shame:</strong> Deeply internalized messages that sexual pleasure is wrong, dirty, or sinful can create powerful orgasmic inhibition even in the absence of other pathology.</li>
+<li><strong>Relationship conflict:</strong> Resentment, poor communication, lack of emotional intimacy, trust issues all contribute.</li>
+<li><strong>Performance pressure:</strong> Pressure from self or partner to orgasm creates a self-defeating cycle &mdash; anxiety about orgasm prevents orgasm.</li>
+<li><strong>Inadequate stimulation or technique:</strong> Lack of clitoral stimulation, insufficient foreplay, partner-focused (penetration-centric) sexual activity.</li>
+</ul>
+
+<h3><span class="tag tag-med">Medical</span> Conditions</h3>
+<ul>
+<li><strong>Diabetes mellitus:</strong> Peripheral neuropathy affecting pudendal nerve and pelvic autonomic nerves; also causes microvascular disease impairing genital blood flow.</li>
+<li><strong>Multiple sclerosis:</strong> Demyelination of sacral spinal cord and cerebral pathways involved in orgasm; up to 40% of women with MS report orgasmic dysfunction.</li>
+<li><strong>Spinal cord injury:</strong> Depending on level and completeness; sacral injuries (S2-S4) most directly impair orgasm.</li>
+<li><strong>Pelvic surgery:</strong> Hysterectomy (particularly total with bilateral salpingo-oophorectomy), pelvic exenteration, colorectal surgery &mdash; may damage pelvic nerves.</li>
+<li><strong>Pelvic floor dysfunction:</strong>
+  <ul>
+    <li><em>Hypertonic:</em> Overactive pelvic floor muscles cause pain and inhibit orgasmic contractions</li>
+    <li><em>Hypotonic:</em> Weak muscles produce less satisfying or absent orgasmic contractions</li>
+  </ul>
+</li>
+<li><strong>Vulvovaginal atrophy:</strong> Decreased tissue integrity and reduced sensitivity from estrogen loss.</li>
+</ul>
+
+<h3><span class="tag tag-horm">Hormonal</span> Factors</h3>
+<ul>
+<li><strong>Menopause / Estrogen decline:</strong> Decreased genital blood flow, reduced clitoral and vaginal sensitivity, vulvovaginal atrophy, thinning of mucosal tissue.</li>
+<li><strong>Low testosterone:</strong> Testosterone is critical for sexual desire and genital sensitivity in women. Declines with age, bilateral oophorectomy, adrenal insufficiency.</li>
+<li><strong>Hyperprolactinemia:</strong> Elevated prolactin (prolactinoma, medications) suppresses GnRH, leading to hypogonadism and direct inhibition of sexual function.</li>
+<li><strong>Hypothyroidism:</strong> Associated with decreased sexual desire and orgasmic dysfunction; mechanism involves altered neurotransmitter metabolism.</li>
+<li><strong>Oral contraceptives:</strong> Increase SHBG by 2-4x, binding free testosterone and reducing bioavailable androgen. Effect may persist after discontinuation (&ldquo;post-pill SHBG&rdquo;).</li>
+</ul>
+
+<h3><span class="tag tag-rx">Medication-Induced</span></h3>
+<ul>
+<li><strong>SSRIs/SNRIs:</strong> The number one cause of acquired anorgasmia. Serotonergic inhibition of dopamine and NO pathways. See Section 6 for deep dive.</li>
+<li><strong>Antipsychotics:</strong> Dopamine blockade (especially typical antipsychotics and risperidone) plus prolactin elevation.</li>
+<li><strong>Opioids:</strong> Suppress GnRH &rarr; hypogonadism; also direct CNS depression of orgasmic centers.</li>
+<li><strong>Anticonvulsants:</strong> Gabapentin, pregabalin, carbamazepine &mdash; reduce neural excitability; also induce hepatic enzyme metabolism of sex hormones.</li>
+<li><strong>Antihistamines:</strong> Anticholinergic effects reduce arousal and genital secretions.</li>
+<li><strong>Oral contraceptives:</strong> See hormonal factors above (SHBG elevation).</li>
+</ul>
+
+<h3>Anatomical Factors</h3>
+<ul>
+<li><strong>Clitoral phimosis:</strong> Adhesions of the clitoral hood preventing adequate exposure and stimulation of the glans clitoris. May be congenital or secondary to lichen sclerosus.</li>
+<li><strong>Female genital mutilation (FGM):</strong> Partial or complete removal of clitoral tissue; direct destruction of primary orgasmic trigger. Affects over 200 million women worldwide.</li>
+<li><strong>Prior vulvar surgery:</strong> Vulvectomy, labiaplasty complications, episiotomy scarring &mdash; may damage nerve pathways.</li>
+</ul>
+
+<div class="warning">
+<div class="label">Important</div>
+<p>When evaluating acquired anorgasmia in women, always perform a thorough medication reconciliation. The temporal relationship between starting a new medication and onset of orgasmic difficulty is the strongest diagnostic clue for medication-induced anorgasmia. Ask specifically about SSRIs, SNRIs, antipsychotics, and any recent changes.</p>
+</div>
+
+<!-- ===================== SECTION 5 ===================== -->
+<h2 id="etiology-male">5. Etiology &mdash; Male</h2>
+
+<h3><span class="tag tag-psych">Psychological</span> Factors</h3>
+<ul>
+<li><strong>Performance anxiety:</strong> Fear of not satisfying a partner, history of sexual failure, excessive self-monitoring during sex.</li>
+<li><strong>Porn-induced desensitization:</strong> Increasingly recognized. Chronic exposure to high-intensity visual stimuli can raise the threshold for orgasmic response. Patients may require progressively more extreme or specific stimulation. Typically presents as situational (can orgasm to porn/masturbation but not with partner).</li>
+<li><strong>Relationship issues:</strong> Ambivalence toward partner, unconscious anger, sexual orientation conflict, intimacy avoidance.</li>
+<li><strong>Trauma history:</strong> Sexual abuse, assault, or deeply negative early sexual experiences.</li>
+<li><strong>&ldquo;Idiosyncratic masturbatory style&rdquo;:</strong> Masturbation with very specific pressure, speed, or technique that cannot be replicated during partnered sex.</li>
+</ul>
+
+<h3><span class="tag tag-med">Medical</span> Conditions</h3>
+<ul>
+<li><strong>Diabetes mellitus:</strong> The most common organic cause. Autonomic neuropathy affecting sympathetic emission pathways (T10-L2) and somatic ejaculatory pathways (S2-S4). Prevalence of ejaculatory dysfunction in diabetic men: 30-35%.</li>
+<li><strong>Multiple sclerosis:</strong> Spinal cord plaques disrupt the ejaculatory reflex arc.</li>
+<li><strong>Spinal cord injury:</strong> Level-dependent. Above T10: may lose psychogenic ejaculation but retain reflex ejaculation. Sacral injuries (S2-S4): lose reflex ejaculation.</li>
+<li><strong>Post-prostatectomy:</strong> Radical prostatectomy removes the prostate and seminal vesicles; anejaculation is expected. Nerve-sparing techniques may preserve orgasmic sensation but ejaculation is absent.</li>
+<li><strong>Penile neuropathy:</strong> Compression neuropathy from prolonged cycling (&ldquo;cyclist&rsquo;s syndrome&rdquo;); dorsal nerve of penis compression against the saddle.</li>
+<li><strong>Pelvic surgery/radiation:</strong> Colorectal, bladder, or retroperitoneal surgery; pelvic radiation damages autonomic plexus.</li>
+</ul>
+
+<h3><span class="tag tag-horm">Hormonal</span> Factors</h3>
+<ul>
+<li><strong>Low testosterone / Hypogonadism:</strong> Reduces desire, arousal, and ejaculatory threshold. Total testosterone &lt;300 ng/dL warrants further evaluation.</li>
+<li><strong>Hyperprolactinemia:</strong> Directly inhibits GnRH &rarr; hypogonadism. Also has direct inhibitory effect on orgasmic pathways. Check prolactin in any male with unexplained acquired anorgasmia.</li>
+<li><strong>Hypothyroidism:</strong> Subclinical or overt; associated with delayed ejaculation.</li>
+</ul>
+
+<h3><span class="tag tag-rx">Medication-Induced</span></h3>
+
+<table>
+<thead>
+<tr><th>Medication Class</th><th>Mechanism</th><th>Effect</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>SSRIs / SNRIs</strong></td><td>Serotonergic inhibition of dopamine/NO</td><td>Delayed ejaculation is the hallmark sexual side effect; often the most distressing</td></tr>
+<tr><td><strong>Alpha-blockers</strong></td><td>Relax bladder neck smooth muscle</td><td>Retrograde ejaculation (not true anorgasmia); common with tamsulosin</td></tr>
+<tr><td><strong>Opioids</strong></td><td>GnRH suppression + direct CNS depression</td><td>Hypogonadism and impaired orgasm; dose-dependent</td></tr>
+<tr><td><strong>Antipsychotics</strong></td><td>D2 blockade + prolactin elevation</td><td>Ejaculatory dysfunction, anorgasmia; worst with risperidone, haloperidol</td></tr>
+<tr><td><strong>5-alpha reductase inhibitors</strong></td><td>DHT reduction</td><td>Decreased ejaculatory volume, delayed orgasm (finasteride, dutasteride)</td></tr>
+<tr><td><strong>Thiazide diuretics</strong></td><td>Unclear; possibly reduced pelvic blood flow</td><td>Ejaculatory dysfunction reported</td></tr>
+</tbody>
+</table>
+
+<h3>Age-Related Changes</h3>
+<ul>
+<li><strong>Decreased penile sensitivity:</strong> Progressive loss of nerve endings and receptor density with aging; requires more intense/prolonged stimulation.</li>
+<li><strong>Longer refractory periods:</strong> Increase from minutes (age 20s) to hours-days (age 60s+).</li>
+<li><strong>Reduced ejaculatory force and volume:</strong> Decline in pelvic floor muscle strength and seminal vesicle function.</li>
+<li><strong>Declining testosterone:</strong> Gradual decline (~1-2% per year after age 30) contributes to reduced orgasmic intensity.</li>
+</ul>
+
+<div class="clinical-pearl">
+<div class="label">Clinical Pearl</div>
+<p>In younger men (&lt;40) with acquired situational anorgasmia and normal hormones/labs, always ask about pornography use patterns and masturbation habits. Porn-induced delayed ejaculation is increasingly common and responds well to behavioral modification (gradual abstinence from pornography and retraining of masturbatory technique) without any pharmacologic intervention.</p>
+</div>
+
+<!-- ===================== SECTION 6 ===================== -->
+<h2 id="ssri">6. SSRI-Induced Anorgasmia &mdash; Deep Dive</h2>
+
+<p>SSRI-induced sexual dysfunction is one of the most common reasons patients discontinue their antidepressants. It deserves special attention because it is frequently encountered, often underreported, and has multiple evidence-based management strategies.</p>
+
+<h3>Mechanism</h3>
+
+<div class="card">
+<p><strong>Serotonin&rsquo;s inhibitory role:</strong> SSRIs increase synaptic serotonin, which activates <strong>5-HT2A and 5-HT2C receptors</strong> throughout the CNS. This produces a cascade of inhibitory effects on orgasmic function:</p>
+<ul>
+<li><strong>Inhibition of dopamine release</strong> in the mesolimbic pathway (nucleus accumbens, VTA) &mdash; reduces pleasure/reward signaling</li>
+<li><strong>Inhibition of nitric oxide (NO) synthase</strong> &mdash; reduces genital vasocongestion and sensitivity</li>
+<li><strong>Direct inhibition of spinal ejaculatory reflex</strong> via 5-HT2C receptors in the sacral cord</li>
+<li><strong>Suppression of norepinephrine</strong> &mdash; reduces sympathetic activation needed for emission/expulsion</li>
+<li><strong>Peripheral sensory blunting</strong> &mdash; serotonin may directly reduce peripheral nerve sensitivity in genital tissue</li>
+</ul>
+</div>
+
+<h3>Incidence and Reporting</h3>
+
+<div class="card">
+<ul>
+<li><strong>When directly asked:</strong> 30-70% of SSRI users report orgasmic difficulty</li>
+<li><strong>Spontaneous reporting:</strong> Only 15-25% of affected patients volunteer this information</li>
+<li><strong>This 2-3x discrepancy</strong> means that providers who do not proactively ask are missing the majority of affected patients</li>
+<li>Onset: Typically within 1-3 weeks of starting or dose increase; some patients notice immediately</li>
+<li>Does not correlate well with antidepressant efficacy &mdash; patients can have full remission of depression but persistent orgasmic difficulty</li>
+</ul>
+</div>
+
+<h3>Comparative Risk by Agent</h3>
+
+<table>
+<thead>
+<tr><th>Risk Level</th><th>Agents</th><th>Approximate Incidence</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Highest</strong></td><td>Paroxetine (Paxil)</td><td>65-75%</td></tr>
+<tr><td><strong>High</strong></td><td>Sertraline (Zoloft), Citalopram (Celexa)</td><td>55-70%</td></tr>
+<tr><td><strong>Moderate-High</strong></td><td>Fluoxetine (Prozac), Escitalopram (Lexapro)</td><td>40-60%</td></tr>
+<tr><td><strong>Moderate</strong></td><td>Venlafaxine (Effexor), Duloxetine (Cymbalta) &mdash; SNRIs</td><td>35-55%</td></tr>
+<tr><td><strong>Low</strong></td><td>Vilazodone (Viibryd), Vortioxetine (Trintellix)</td><td>15-25%</td></tr>
+<tr><td><strong>Minimal</strong></td><td>Bupropion (Wellbutrin), Mirtazapine (Remeron)</td><td>5-10%</td></tr>
+</tbody>
+</table>
+
+<h3>Management Strategies</h3>
+
+<table>
+<thead>
+<tr><th>Strategy</th><th>Details</th><th>Considerations</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Watchful waiting</strong></td><td>Some patients experience partial spontaneous improvement over 3-6 months</td><td>Only ~15-20% see meaningful improvement; most do not. Reassess at 4-8 weeks.</td></tr>
+<tr><td><strong>Dose reduction</strong></td><td>Reduce to minimum effective dose</td><td>May help if orgasmic dysfunction is dose-dependent; risk of depression relapse.</td></tr>
+<tr><td><strong>Drug holiday</strong></td><td>Skip dose Friday and Saturday; resume Sunday (weekend holiday)</td><td>Only viable with short half-life agents (sertraline, paroxetine). NOT with fluoxetine (36-day half-life of active metabolite). Risk of discontinuation symptoms and breakthrough depression.</td></tr>
+<tr><td><strong>Switch antidepressant</strong></td><td>Switch to bupropion (first choice) or mirtazapine</td><td>Bupropion is pro-dopaminergic, actively improves sexual function. Mirtazapine has different receptor profile. Cross-taper carefully.</td></tr>
+<tr><td><strong>Augment: Bupropion</strong></td><td>Add bupropion SR 150mg daily, may increase to 150mg BID (300mg/day)</td><td>Best-studied augmentation strategy. NNT ~4-5. Pro-dopaminergic mechanism counteracts serotonergic inhibition.</td></tr>
+<tr><td><strong>Augment: Buspirone</strong></td><td>Add buspirone 15-60mg daily (divided BID-TID)</td><td>5-HT1A partial agonist; may reduce postsynaptic 5-HT2A effects. Takes 2-4 weeks. Modest evidence.</td></tr>
+<tr><td><strong>Augment: Cyproheptadine</strong></td><td>Cyproheptadine 4-12mg PRN, taken 1-2 hours before sexual activity</td><td>5-HT2 antagonist + antihistamine. Can be effective but causes sedation. May counteract antidepressant effect with chronic use.</td></tr>
+<tr><td><strong>Sildenafil (PDE5 inhibitor)</strong></td><td>Sildenafil 50-100mg PRN; tadalafil 10-20mg PRN</td><td>Emerging evidence for SSRI-induced female sexual dysfunction. Better established in males. Enhances genital blood flow and NO signaling.</td></tr>
+</tbody>
+</table>
+
+<div class="warning">
+<div class="label">Important</div>
+<p><strong>Post-SSRI Sexual Dysfunction (PSSD):</strong> An emerging and controversial entity in which sexual dysfunction (including anorgasmia) persists for months to years after SSRI discontinuation. Mechanism unclear but may involve epigenetic changes, receptor downregulation, or neuroplastic changes. Currently not well characterized but should be acknowledged to patients who report persistent symptoms after discontinuation. The EMA has added PSSD warnings to SSRI labeling.</p>
+</div>
+
+<div class="clinical-pearl">
+<div class="label">Clinical Pearl</div>
+<p>When starting a patient on an SSRI, proactively counsel about sexual side effects at the outset: &ldquo;This medication can sometimes affect sexual function, including the ability to reach orgasm. If you notice any changes, please let me know &mdash; we have several strategies to address this.&rdquo; This normalizes reporting, improves adherence, and gives patients permission to raise the issue later.</p>
+</div>
+
+<!-- ===================== SECTION 7 ===================== -->
+<h2 id="evaluation">7. Clinical Evaluation</h2>
+
+<h3>History Taking</h3>
+
+<p>The sexual history is the most important diagnostic tool for anorgasmia. Most patients will not volunteer this information, so the provider must create a safe, normalizing environment to facilitate disclosure.</p>
+
+<h4>Opening the Conversation</h4>
+<div class="card">
+<p><strong>Normalizing lead-in:</strong> &ldquo;I ask all my patients about sexual health because it&rsquo;s an important part of overall well-being. Many people experience changes in sexual function at some point. Is this something you&rsquo;ve noticed?&rdquo;</p>
+
+<p><strong>Medication-specific:</strong> &ldquo;Some medications, including [name of medication], can affect sexual function, including the ability to reach orgasm. Have you experienced any changes since starting this?&rdquo;</p>
+
+<p><strong>Menopausal patients:</strong> &ldquo;Many women going through the menopausal transition notice changes in their sexual function. This is very common and treatable. Would you like to discuss this?&rdquo;</p>
+</div>
+
+<h4>Key Assessment Questions</h4>
+<ul>
+<li><strong>Lifelong vs. Acquired:</strong> &ldquo;Have you ever been able to reach orgasm? When did the difficulty start?&rdquo;</li>
+<li><strong>Situational vs. Generalized:</strong> &ldquo;Can you reach orgasm in some situations but not others? (With a partner vs. alone? With one type of stimulation vs. another?)&rdquo;</li>
+<li><strong>Timeline:</strong> &ldquo;When did you first notice this? Was it gradual or sudden? Did anything change around that time (new medication, health issue, relationship change)?&rdquo;</li>
+<li><strong>Medication relationship:</strong> &ldquo;Did this start or worsen after beginning any new medications?&rdquo;</li>
+<li><strong>Arousal vs. Orgasm:</strong> &ldquo;Do you become physically aroused (lubrication/erection)? Is the problem specifically with reaching climax?&rdquo;</li>
+<li><strong>Trauma screen:</strong> &ldquo;Some people have had negative sexual experiences in the past that can affect their current sexual function. Is this something that may apply to you?&rdquo; (Ask with sensitivity; do not press if patient declines.)</li>
+<li><strong>Distress:</strong> &ldquo;How much does this bother you?&rdquo; (Essential for diagnosis &mdash; DSM-5 requires clinically significant distress.)</li>
+</ul>
+
+<h3>Physical Examination</h3>
+
+<div class="comparison-grid">
+<div class="card">
+<h4>Female Examination</h4>
+<ul>
+<li><strong>External inspection:</strong> Vulvar atrophy, pallor, dryness, lichen sclerosus, clitoral hood adhesions (phimosis), labial fusion, scarring</li>
+<li><strong>Clitoral assessment:</strong> Retract hood gently to assess glans visibility; note any adhesions, buried clitoris</li>
+<li><strong>Pelvic floor tone:</strong> Digital vaginal exam &mdash; assess resting tone (hypertonic vs. hypotonic), ability to contract/relax, tenderness, trigger points</li>
+<li><strong>Sensation testing:</strong> Light touch and pinprick to labia, perineum, perianal area (S2-S4 dermatomes)</li>
+<li><strong>Signs of atrophy:</strong> Thinning of vaginal mucosa, decreased rugae, petechiae, friability, loss of labial fullness</li>
+<li><strong>Vaginal pH:</strong> Elevated pH (&gt;5.0) supports diagnosis of genitourinary syndrome of menopause (GSM)</li>
+</ul>
+</div>
+<div class="card">
+<h4>Male Examination</h4>
+<ul>
+<li><strong>Genital exam:</strong> Penile anatomy, urethral meatus position, foreskin retractability (if uncircumcised), testicular size and consistency</li>
+<li><strong>Penile sensation:</strong> Light touch to glans and shaft; compare bilaterally. Biothesiometry if available (vibration threshold testing)</li>
+<li><strong>Bulbocavernosus reflex (BCR):</strong> Squeeze glans &rarr; observe anal sphincter contraction. Tests S2-S4 reflex arc integrity. Absent BCR suggests sacral neuropathy.</li>
+<li><strong>Cremasteric reflex:</strong> Stroke inner thigh &rarr; ipsilateral testicular elevation. Tests L1-L2 integrity.</li>
+<li><strong>DRE:</strong> If indicated &mdash; prostate size, consistency, tenderness. Relevant post-prostatectomy or if retrograde ejaculation suspected.</li>
+<li><strong>Signs of hypogonadism:</strong> Decreased body hair, gynecomastia, small testes, reduced muscle mass</li>
+</ul>
+</div>
+</div>
+
+<h3>Laboratory Workup</h3>
+
+<table>
+<thead>
+<tr><th>Test</th><th>Female</th><th>Male</th><th>Rationale</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Total testosterone</strong></td><td>Yes</td><td>Yes</td><td>Low T contributes to orgasmic dysfunction in both sexes</td></tr>
+<tr><td><strong>Free testosterone</strong></td><td>Yes</td><td>Yes</td><td>Bioavailable fraction; more clinically relevant than total</td></tr>
+<tr><td><strong>SHBG</strong></td><td>Yes</td><td>Yes</td><td>Elevated SHBG (OCPs, aging, liver disease) reduces free T</td></tr>
+<tr><td><strong>Estradiol</strong></td><td>Yes</td><td>No (unless indicated)</td><td>Vulvovaginal atrophy assessment; menopausal status</td></tr>
+<tr><td><strong>TSH</strong></td><td>Yes</td><td>Yes</td><td>Hypothyroidism and hyperthyroidism both affect orgasm</td></tr>
+<tr><td><strong>Prolactin</strong></td><td>Yes</td><td>Yes</td><td>Hyperprolactinemia directly inhibits orgasm; rule out prolactinoma</td></tr>
+<tr><td><strong>DHEA-S</strong></td><td>Yes</td><td>Optional</td><td>Adrenal androgen precursor; low levels in adrenal insufficiency</td></tr>
+<tr><td><strong>LH / FSH</strong></td><td>Optional</td><td>Yes</td><td>Distinguish primary vs. secondary hypogonadism in males</td></tr>
+<tr><td><strong>HbA1c</strong></td><td>Yes</td><td>Yes</td><td>Screen for diabetes; most common organic cause of neuropathic anorgasmia</td></tr>
+<tr><td><strong>PSA</strong></td><td>N/A</td><td>If indicated</td><td>Baseline before testosterone therapy in males &gt;40</td></tr>
+</tbody>
+</table>
+
+<h3>Validated Questionnaires</h3>
+
+<div class="comparison-grid">
+<div class="card">
+<h4>Female Sexual Function Index (FSFI)</h4>
+<p>19-item self-report questionnaire assessing 6 domains over the prior 4 weeks:</p>
+<ol>
+<li><strong>Desire</strong> (2 items)</li>
+<li><strong>Arousal</strong> (4 items)</li>
+<li><strong>Lubrication</strong> (4 items)</li>
+<li><strong>Orgasm</strong> (3 items)</li>
+<li><strong>Satisfaction</strong> (3 items)</li>
+<li><strong>Pain</strong> (3 items)</li>
+</ol>
+<p>Total score range: 2.0-36.0. Cutoff score &le;26.55 suggests sexual dysfunction. The orgasm domain specifically (items 11-13) asks about frequency, difficulty, and satisfaction with orgasm.</p>
+</div>
+<div class="card">
+<h4>Arizona Sexual Experiences Scale (ASEX)</h4>
+<p>5-item brief screening tool assessing:</p>
+<ol>
+<li>Sex drive strength</li>
+<li>Ease of arousal</li>
+<li>Ability to achieve erection (M) / lubrication (F)</li>
+<li>Ease of reaching orgasm</li>
+<li>Satisfaction with orgasm</li>
+</ol>
+<p>Each item scored 1-6 (1 = hyperfunction, 6 = hypofunction). Total score &ge;19, any single item &ge;5, or any three items &ge;4 indicates sexual dysfunction. Quick, well-validated, useful for monitoring treatment response.</p>
+</div>
+</div>
+
+<div class="key-takeaway">
+<div class="label">Key Takeaway</div>
+<p>A structured evaluation approach &mdash; history (using normalizing language), focused physical exam, targeted lab workup, and validated questionnaire &mdash; allows systematic identification of the etiology and guides treatment selection. The most common mistake is failing to ask in the first place.</p>
+</div>
+
+<!-- ===================== SECTION 8 ===================== -->
+<h2 id="treatment-female">8. Treatment &mdash; Female Anorgasmia</h2>
+
+<h3>Treatment Algorithm</h3>
+
+<div class="diagram">
+<div class="diagram-title">Female Anorgasmia Treatment Algorithm</div>
+<div class="flow-vertical">
+  <div class="flow-box flow-box-primary">Identify &amp; classify: Primary vs. Acquired, Situational vs. Generalized</div>
+  <div class="flow-arrow-down">&darr;</div>
+  <div class="flow-box flow-box-secondary">Address reversible causes: Medication review, hormone evaluation, pelvic exam</div>
+  <div class="flow-arrow-down">&darr;</div>
+  <div class="flow-branch">
+    <div class="flow-box flow-box-secondary">Medication-induced? &rarr; See SSRI section: switch, augment, or dose-adjust</div>
+    <div class="flow-box flow-box-secondary">Hormonal? &rarr; Replace deficiency (estrogen, testosterone, thyroid)</div>
+  </div>
+  <div class="flow-arrow-down">&darr;</div>
+  <div class="flow-box flow-box-primary">First-line: Non-pharmacological therapies</div>
+  <div class="flow-arrow-down">&darr;</div>
+  <div class="flow-branch">
+    <div class="flow-box flow-box-tertiary">Directed masturbation / self-exploration</div>
+    <div class="flow-box flow-box-tertiary">Sex therapy / CBT</div>
+    <div class="flow-box flow-box-tertiary">Pelvic floor PT</div>
+  </div>
+  <div class="flow-arrow-down">&darr;</div>
+  <div class="flow-box flow-box-secondary">If inadequate response: Add pharmacological therapy</div>
+  <div class="flow-arrow-down">&darr;</div>
+  <div class="flow-branch">
+    <div class="flow-box flow-box-tertiary">Bupropion</div>
+    <div class="flow-box flow-box-tertiary">Testosterone (off-label)</div>
+    <div class="flow-box flow-box-tertiary">Topical agents</div>
+  </div>
+  <div class="flow-arrow-down">&darr;</div>
+  <div class="flow-box flow-box-warn">Refractory: Refer to sexual medicine specialist</div>
+</div>
+</div>
+
+<h3>Non-Pharmacological Interventions (First-Line)</h3>
+
+<h4>Directed Masturbation / Self-Exploration</h4>
+<div class="card">
+<p><strong>The most evidence-based treatment for primary anorgasmia,</strong> with success rates up to 90% for achieving first orgasm. Developed by LoPiccolo and Lobitz (1972), refined over decades.</p>
+<p><strong>Stepwise approach:</strong></p>
+<ol>
+<li>Visual and tactile self-examination of genitalia (using a mirror)</li>
+<li>Genital self-exploration focused on identifying pleasurable areas</li>
+<li>Concentrated manual stimulation of identified areas (clitoris, labia)</li>
+<li>If needed, addition of vibrator for enhanced stimulation</li>
+<li>Gradual integration of partner into the experience</li>
+</ol>
+<p>This is often prescribed as &ldquo;homework&rdquo; in conjunction with sex therapy. Providing explicit permission and normalizing self-stimulation is therapeutic in itself for many patients.</p>
+</div>
+
+<h4>Sensate Focus Therapy</h4>
+<div class="card">
+<p>Developed by Masters &amp; Johnson. A structured couples exercise that removes performance pressure by prohibiting intercourse/orgasm initially.</p>
+<ol>
+<li><strong>Phase 1:</strong> Non-genital touching only &mdash; focus on sensory experience, not arousal</li>
+<li><strong>Phase 2:</strong> Include genital touching &mdash; still no orgasm as goal</li>
+<li><strong>Phase 3:</strong> Gradual progression to orgasm-permitting activity</li>
+</ol>
+<p>Reduces spectatoring and performance anxiety. Most effective when guided by a trained sex therapist.</p>
+</div>
+
+<h4>Additional Non-Pharmacological Approaches</h4>
+<ul>
+<li><strong>Cognitive Behavioral Therapy (CBT):</strong> Addresses negative cognitions about sex, body image, guilt, and performance anxiety. Evidence supports efficacy particularly when combined with directed masturbation.</li>
+<li><strong>Pelvic Floor Physical Therapy:</strong> For hypertonic pelvic floor &mdash; manual trigger point release, biofeedback, dilator therapy, stretching. For hypotonic pelvic floor &mdash; Kegel exercises, electrical stimulation, biofeedback to strengthen contractions.</li>
+<li><strong>Anatomical education:</strong> Many women lack basic knowledge of their own genital anatomy, particularly the clitoris. Educating patients that the clitoris (not the vagina) is the primary orgasmic organ and that most women require direct clitoral stimulation can be transformative.</li>
+<li><strong>Vibrator therapy:</strong> FDA-cleared Eros Clitoral Therapy Device (prescription device) applies suction to the clitoris, enhancing blood flow and engorgement. Commercial vibrators also effective and more accessible; normalize recommendation.</li>
+</ul>
+
+<div class="clinical-pearl">
+<div class="label">Clinical Pearl</div>
+<p>For primary anorgasmia in women, directed masturbation should be considered the first-line treatment before any pharmacological intervention. It has the best evidence base (90% success rate), no side effects, empowers the patient with self-knowledge, and is effective regardless of the presence of a partner. Normalize the recommendation: &ldquo;Self-exploration is the most effective way to learn what your body responds to. Many women find their first orgasm this way.&rdquo;</p>
+</div>
+
+<h3>Pharmacological Interventions</h3>
+
+<table>
+<thead>
+<tr><th>Agent</th><th>Dose</th><th>Mechanism</th><th>Evidence / Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Bupropion (Wellbutrin)</strong></td><td>150-300mg daily (SR or XL)</td><td>Dopamine/norepinephrine reuptake inhibitor</td><td>Helpful for SSRI-induced and general hypoactive desire/orgasm. Can be used as augmentation or monotherapy antidepressant. NNT ~4-5 for SSRI-induced sexual dysfunction.</td></tr>
+<tr><td><strong>Testosterone (off-label)</strong></td><td>Transdermal 300mcg/day; or compounded cream 0.5-1% to inner thigh or labia</td><td>Enhances desire, genital sensitivity, orgasmic threshold</td><td>Best evidence in postmenopausal women. Endocrine Society recommends trial of 3-6 months with monitoring. Monitor: lipids, liver, hematocrit, voice changes, acne, hirsutism.</td></tr>
+<tr><td><strong>Flibanserin (Addyi)</strong></td><td>100mg QHS</td><td>5-HT1A agonist / 5-HT2A antagonist; increases dopamine/NE in prefrontal cortex</td><td>FDA-approved for premenopausal HSDD. Modest efficacy (0.5-1 additional satisfying sexual events/month). Contraindicated with alcohol. May help orgasm indirectly through improved desire.</td></tr>
+<tr><td><strong>Bremelanotide (Vyleesi)</strong></td><td>1.75mg SQ PRN (45 min before activity)</td><td>Melanocortin-4 receptor agonist; activates central desire/arousal pathways</td><td>FDA-approved for premenopausal HSDD. Self-injected. Common side effects: nausea (40%), flushing, headache. May enhance arousal and facilitate orgasm.</td></tr>
+<tr><td><strong>Sildenafil (off-label)</strong></td><td>50-100mg PRN</td><td>PDE5 inhibitor; enhances genital blood flow via NO/cGMP pathway</td><td>Emerging evidence for SSRI-induced female sexual dysfunction. Enhances clitoral engorgement and sensitivity. Not FDA-approved for women. Mixed study results.</td></tr>
+<tr><td><strong>Topical testosterone cream</strong></td><td>Compounded 0.5-2% to clitoris/vulva</td><td>Local androgen receptor activation; enhances sensitivity</td><td>Limited but promising evidence. Applied directly to clitoris 30-60 min before activity. Low systemic absorption.</td></tr>
+<tr><td><strong>Oxytocin (intranasal)</strong></td><td>24 IU intranasally</td><td>Enhances pelvic contractions and subjective pleasure</td><td>Investigational. Small studies show enhanced orgasm intensity. Not FDA-approved for this indication.</td></tr>
+</tbody>
+</table>
+
+<h3>Hormonal Therapies</h3>
+
+<table>
+<thead>
+<tr><th>Agent</th><th>Indication</th><th>Dose</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Local estrogen</strong></td><td>Vulvovaginal atrophy / GSM</td><td>Estradiol cream 0.5g 2x/week; vaginal ring (Estring); vaginal tablet (Vagifem/Yuvafem) 10mcg 2x/week</td><td>Restores vaginal tissue, improves sensitivity, reduces dryness/discomfort. Minimal systemic absorption. Safe in most breast cancer survivors (discuss with oncology).</td></tr>
+<tr><td><strong>Systemic estrogen + progesterone</strong></td><td>Menopausal symptoms including sexual dysfunction</td><td>Per standard HRT dosing</td><td>Improves overall menopausal symptoms; indirect benefit on orgasm through improved arousal and comfort.</td></tr>
+<tr><td><strong>Prasterone (Intrarosa)</strong></td><td>Vulvovaginal atrophy</td><td>6.5mg intravaginal insert nightly</td><td>Intravaginal DHEA; converts locally to estrogen and testosterone. FDA-approved for dyspareunia due to VVA. May improve orgasmic function via local androgen effects.</td></tr>
+<tr><td><strong>Testosterone</strong></td><td>See pharmacological section above</td><td>See above</td><td>Consider in postmenopausal women with low desire/orgasm after estrogen optimization.</td></tr>
+</tbody>
+</table>
+
+<div class="warning">
+<div class="label">Important</div>
+<p>Testosterone therapy for women is off-label in the United States. No FDA-approved testosterone formulations exist for women. Compounded preparations vary in quality. The Global Consensus Position Statement on Testosterone Therapy for Women (2019) supports a trial of testosterone for postmenopausal women with HSDD after excluding other causes, using doses that approximate premenopausal physiologic levels. Monitor for androgenic side effects (acne, hirsutism, clitoromegaly, voice deepening) and check levels at 3-6 weeks.</p>
+</div>
+
+<!-- ===================== SECTION 9 ===================== -->
+<h2 id="treatment-male">9. Treatment &mdash; Male Anorgasmia</h2>
+
+<h3>Non-Pharmacological Interventions</h3>
+
+<h4>Sex Therapy / CBT</h4>
+<div class="card">
+<ul>
+<li>First-line for psychogenic anorgasmia (primary or acquired)</li>
+<li>Address performance anxiety, spectatoring, relationship dynamics</li>
+<li>Sensate focus exercises adapted for male patients</li>
+<li>Cognitive restructuring of negative beliefs about sexual performance</li>
+</ul>
+</div>
+
+<h4>Technique Modification</h4>
+<div class="card">
+<ul>
+<li><strong>Vary stimulation patterns:</strong> Different manual techniques, oral stimulation, use of vibrator</li>
+<li><strong>Penile vibrostimulation:</strong> High-amplitude vibration (especially medical-grade devices at 2.5mm amplitude, 100Hz) can trigger ejaculatory reflex even in neurogenic cases. Evidence base primarily from spinal cord injury literature.</li>
+<li><strong>Reduce &ldquo;death grip&rdquo; pattern:</strong> If patient uses very tight grip during masturbation, gradual loosening and retraining with lighter touch</li>
+</ul>
+</div>
+
+<h4>Address Porn-Induced Desensitization</h4>
+<div class="card">
+<p>When history suggests porn-induced delayed ejaculation:</p>
+<ul>
+<li>Gradual reduction or abstinence from pornography</li>
+<li>Masturbation retraining: reduce frequency, use lighter touch, eliminate &ldquo;death grip&rdquo;</li>
+<li>Progressive exposure: masturbate with progressively less visual stimulation; shift to fantasy or partner-focused imagery</li>
+<li>Timeline: Typically 4-12 weeks of behavioral modification before significant improvement</li>
+<li>Discuss without judgment; frame as a neuroplasticity/habituation issue, not a moral one</li>
+</ul>
+</div>
+
+<h4>Pelvic Floor Physical Therapy</h4>
+<ul>
+<li>Assess for hypertonic pelvic floor (paradoxical contraction during attempted ejaculation)</li>
+<li>Biofeedback training for coordinated relaxation and contraction</li>
+<li>Underutilized in male sexual dysfunction; growing evidence base</li>
+</ul>
+
+<h3>Pharmacological Interventions</h3>
+
+<table>
+<thead>
+<tr><th>Agent</th><th>Dose</th><th>Mechanism</th><th>Evidence / Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Cabergoline</strong></td><td>0.25-0.5mg 1-2x/week</td><td>Dopamine D2 agonist; lowers prolactin</td><td>Off-label. Particularly effective when prolactin is elevated. Also enhances orgasm in normoprolactinemic men (off-label, limited evidence). Monitor: impulse control, cardiac valves with chronic use.</td></tr>
+<tr><td><strong>Bupropion</strong></td><td>150-300mg daily (SR or XL)</td><td>Dopamine/NE reuptake inhibitor</td><td>Pro-dopaminergic; counteracts serotonergic inhibition. Most useful as augmentation for SSRI-induced delayed ejaculation.</td></tr>
+<tr><td><strong>Amantadine</strong></td><td>100-400mg daily</td><td>Dopaminergic (indirect); NMDA antagonist</td><td>Used specifically for SSRI-induced sexual dysfunction. Limited controlled trials but multiple case series. Can be used PRN (100-200mg 2-3 hours before activity) or daily.</td></tr>
+<tr><td><strong>Cyproheptadine</strong></td><td>4-12mg PRN (1-2 hours before sexual activity)</td><td>5-HT2 antagonist + antihistamine</td><td>Specifically for SSRI-induced anorgasmia. Counteracts serotonergic inhibition directly. Sedation is main side effect. May partially counteract antidepressant effect with chronic use; PRN preferred.</td></tr>
+<tr><td><strong>Buspirone</strong></td><td>15-60mg daily (divided BID-TID)</td><td>5-HT1A partial agonist</td><td>Modulates serotonin effect at autoreceptors; may restore dopaminergic balance. Takes 2-4 weeks for effect. Modest evidence as augmentation.</td></tr>
+<tr><td><strong>Oxytocin (intranasal)</strong></td><td>24-32 IU intranasally, 30-60 min before activity</td><td>Facilitates ejaculatory reflex; enhances subjective orgasm</td><td>Emerging evidence. Small studies suggest enhanced orgasm intensity and ejaculation. Not FDA-approved. Investigational.</td></tr>
+<tr><td><strong>Penile vibratory stimulation</strong></td><td>Medical-grade device: 2.5mm amplitude, 100Hz</td><td>Triggers ejaculatory reflex via dorsal penile nerve</td><td>Best evidence in spinal cord injury. Can be effective in other neurogenic causes. FertiCare and Viberect devices specifically designed for this purpose.</td></tr>
+</tbody>
+</table>
+
+<h3>Management of Retrograde Ejaculation</h3>
+
+<div class="card">
+<p>When the problem is retrograde ejaculation (orgasm present but no antegrade ejaculate) rather than true anorgasmia:</p>
+
+<table>
+<thead>
+<tr><th>Agent</th><th>Dose</th><th>Mechanism</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Pseudoephedrine</strong></td><td>60mg PO, 1 hour before sexual activity</td><td>Alpha-adrenergic agonist; promotes bladder neck closure during emission</td></tr>
+<tr><td><strong>Imipramine</strong></td><td>25-50mg daily</td><td>Tricyclic antidepressant with strong alpha-adrenergic and anticholinergic properties; tightens bladder neck</td></tr>
+<tr><td><strong>Midodrine</strong></td><td>5-10mg PO, 1 hour before activity</td><td>Alpha-1 adrenergic agonist; peripheral vasoconstriction and bladder neck closure</td></tr>
+</tbody>
+</table>
+<p><strong>Confirm retrograde ejaculation:</strong> Post-orgasm urinalysis showing sperm/fructose in urine. Important to distinguish from anejaculation (no fluid at all &mdash; different pathophysiology and management).</p>
+</div>
+
+<div class="clinical-pearl">
+<div class="label">Clinical Pearl</div>
+<p>For male patients with SSRI-induced delayed ejaculation, the combined approach of bupropion augmentation (150mg SR daily, titrating to 300mg) plus PRN cyproheptadine (4-8mg taken 1-2 hours before sexual activity) can be highly effective. The bupropion provides tonic pro-dopaminergic support while cyproheptadine offers acute 5-HT2 antagonism timed to sexual activity.</p>
+</div>
+
+<!-- ===================== SECTION 10 ===================== -->
+<h2 id="special">10. Special Considerations</h2>
+
+<h3>Menopause Transition</h3>
+<div class="card">
+<ul>
+<li>Both <strong>estrogen and testosterone decline</strong> contribute to orgasmic difficulty during menopause</li>
+<li>Estrogen loss: vulvovaginal atrophy, decreased genital blood flow, thinning of mucosal tissue, reduced clitoral sensitivity</li>
+<li>Testosterone decline: gradual; ovaries continue producing some testosterone postmenopausally, but overall levels decrease approximately 50% between ages 20 and 45</li>
+<li>Management: Local estrogen for atrophy (first-line); consider systemic HRT for moderate-severe symptoms; trial of testosterone therapy if desire/orgasm remain impaired after estrogen optimization</li>
+<li>Do not dismiss sexual concerns as &ldquo;just menopause&rdquo; &mdash; these symptoms are treatable</li>
+</ul>
+</div>
+
+<h3>Post-Hysterectomy</h3>
+<div class="card">
+<ul>
+<li><strong>Controversial topic:</strong> Outcomes vary widely between patients</li>
+<li>Some women report decreased orgasm intensity; others report no change or improvement (especially if hysterectomy resolved pain/bleeding)</li>
+<li><strong>Cervical orgasm</strong> is lost with total hysterectomy (supracervical spares the cervix)</li>
+<li><strong>Bilateral salpingo-oophorectomy (BSO):</strong> Induces surgical menopause &mdash; abrupt loss of both estrogen and testosterone; significant impact on sexual function. Consider HRT including testosterone.</li>
+<li>Nerve-sparing surgical techniques may preserve sexual function better, but data are limited</li>
+<li>Counsel patients pre-operatively about potential effects on orgasm; discuss supracervical vs. total hysterectomy and ovarian preservation when appropriate</li>
+</ul>
+</div>
+
+<h3>Pregnancy and Postpartum</h3>
+<div class="card">
+<ul>
+<li>Orgasmic difficulty is common during pregnancy (altered body image, physical discomfort, hormonal changes) and especially postpartum</li>
+<li><strong>Postpartum factors:</strong> Fatigue, hormonal shifts, perineal trauma/episiotomy healing, breastfeeding effects, body image changes, relationship stress, postpartum depression</li>
+<li><strong>Breastfeeding:</strong> Prolactin elevation suppresses estrogen &rarr; vaginal dryness, decreased genital sensitivity, reduced desire</li>
+<li>Usually resolves gradually over 3-12 months postpartum</li>
+<li>Reassure patients; recommend lubricant; evaluate for postpartum depression if persistent</li>
+</ul>
+</div>
+
+<h3>Cancer Survivors</h3>
+<div class="card">
+<ul>
+<li><strong>Chemotherapy:</strong> Premature ovarian failure, neuropathy, fatigue, body image distress</li>
+<li><strong>Pelvic radiation:</strong> Vaginal fibrosis, stenosis, dryness; penile vascular damage; autonomic nerve damage</li>
+<li><strong>Surgical effects:</strong> Radical hysterectomy, radical prostatectomy, abdominoperineal resection &mdash; direct nerve damage</li>
+<li><strong>Hormonal therapy:</strong> Aromatase inhibitors (severe estrogen depletion); androgen deprivation therapy (complete testosterone suppression in prostate cancer)</li>
+<li>Sexual rehabilitation should be integrated into oncology survivorship care</li>
+<li>Refer to sexual medicine specialists with oncology expertise when available</li>
+</ul>
+</div>
+
+<h3>Pelvic Floor Dysfunction</h3>
+<div class="card">
+<ul>
+<li><strong>Hypertonic pelvic floor:</strong> Overactive muscles create pain (dyspareunia), which inhibits orgasm; also impairs the coordinated rhythmic contractions necessary for orgasm. Common in patients with vulvodynia, chronic pelvic pain, endometriosis, history of trauma.</li>
+<li><strong>Hypotonic pelvic floor:</strong> Weak muscles produce diminished or absent orgasmic contractions. Common postpartum, post-menopausal, or after pelvic surgery.</li>
+<li><strong>Pelvic floor PT is significantly underutilized</strong> for sexual dysfunction. Many patients (and providers) are unaware that specialized pelvic floor therapists can assess and treat these conditions.</li>
+<li>Treatment: Biofeedback, manual therapy, electrical stimulation, home exercise programs, dilator therapy (hypertonic), Kegel training (hypotonic)</li>
+</ul>
+</div>
+
+<h3>Aging</h3>
+<div class="card">
+<ul>
+<li>Gradual changes in both sexes are normal and should be normalized while still evaluating for treatable causes</li>
+<li><strong>Women:</strong> Decreased blood flow, reduced sensitivity, longer time to arousal, less intense orgasms &mdash; but capacity for orgasm is generally preserved with adequate stimulation</li>
+<li><strong>Men:</strong> Decreased penile sensitivity, longer refractory periods, reduced ejaculatory force, need for more direct stimulation</li>
+<li>Age alone is not a diagnosis &mdash; always evaluate for reversible contributing factors (medications, hormonal changes, medical conditions)</li>
+<li>Reassure patients that sexual activity and orgasm can remain satisfying throughout the lifespan with appropriate adaptations</li>
+</ul>
+</div>
+
+<h3>LGBTQ+ Considerations</h3>
+<div class="card">
+<ul>
+<li><strong>Inclusive history-taking:</strong> Use gender-neutral language (&ldquo;partner(s)&rdquo; rather than &ldquo;husband/wife&rdquo;); ask about sexual practices without assumptions about anatomy or orientation</li>
+<li><strong>Do not assume anatomy = gender:</strong> Transgender patients may have natal or surgically constructed genitalia; assess based on current anatomy, hormone status, and surgical history</li>
+<li><strong>Transgender patients on hormone therapy:</strong>
+  <ul>
+    <li>Transfeminine patients on estrogen/anti-androgens: decreased erectile function, changes in orgasmic sensation, reduced ejaculate</li>
+    <li>Transmasculine patients on testosterone: clitoral growth, increased sensitivity, potential changes in orgasmic quality</li>
+  </ul>
+</li>
+<li><strong>Post-surgical considerations:</strong> Neovaginal and neophallic orgasmic capacity depends on nerve preservation during construction; counsel about realistic expectations</li>
+<li><strong>Different orgasmic patterns:</strong> Orgasm may occur through different types of stimulation (anal, nipple, mental) that differ from heteronormative assumptions; ask open-ended questions about what type of stimulation the patient has used</li>
+</ul>
+</div>
+
+<div class="key-takeaway">
+<div class="label">Key Takeaway</div>
+<p>Special populations require nuanced evaluation and management. Avoid assumptions based on age, gender identity, sexual orientation, or medical/surgical history. Orgasmic dysfunction in these populations is common, often multifactorial, and frequently undertreated. A proactive, inclusive, and evidence-based approach improves outcomes.</p>
+</div>
+
+<!-- ===================== SECTION 11 ===================== -->
+<h2 id="referral">11. When to Refer</h2>
+
+<table>
+<thead>
+<tr><th>Refer to</th><th>Indications</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Sex Therapist / Psychologist (AASECT-certified)</strong></td><td>
+<ul>
+<li>Primary (lifelong) anorgasmia</li>
+<li>History of sexual trauma or abuse</li>
+<li>Significant relationship or intimacy issues contributing to dysfunction</li>
+<li>Suspected psychogenic component not responding to primary care interventions</li>
+<li>Need for directed masturbation program guidance or sensate focus therapy</li>
+<li>Body image or religious/cultural shame as primary contributing factors</li>
+</ul>
+</td></tr>
+<tr><td><strong>Urology</strong></td><td>
+<ul>
+<li>Male anorgasmia unresponsive to first-line behavioral/pharmacological management</li>
+<li>Suspected retrograde ejaculation (for evaluation: post-orgasm UA, urodynamics)</li>
+<li>Neurogenic causes (SCI, post-prostatectomy, pelvic surgery)</li>
+<li>Penile vibratory stimulation evaluation</li>
+<li>Anejaculation evaluation, especially for fertility purposes</li>
+</ul>
+</td></tr>
+<tr><td><strong>Gynecology / Sexual Medicine</strong></td><td>
+<ul>
+<li>Vulvar pathology: clitoral phimosis, lichen sclerosus, vulvar dermatoses</li>
+<li>Complex hormonal management (refractory to standard approaches)</li>
+<li>Post-surgical orgasmic dysfunction (post-hysterectomy, pelvic reconstruction)</li>
+<li>Suspected FGM-related dysfunction</li>
+<li>Need for specialized genital examination or procedures</li>
+</ul>
+</td></tr>
+<tr><td><strong>Pelvic Floor Physical Therapy</strong></td><td>
+<ul>
+<li>Suspected hypertonic pelvic floor (pain with penetration, inability to relax muscles, trigger points)</li>
+<li>Suspected hypotonic pelvic floor (diminished orgasmic contractions, urinary incontinence, pelvic organ prolapse)</li>
+<li>Postpartum orgasmic dysfunction</li>
+<li>Chronic pelvic pain contributing to sexual dysfunction</li>
+</ul>
+</td></tr>
+<tr><td><strong>Endocrinology</strong></td><td>
+<ul>
+<li>Prolactinoma or significantly elevated prolactin</li>
+<li>Complex hypogonadism (secondary, pituitary pathology)</li>
+<li>Adrenal insufficiency</li>
+<li>Refractory hypothyroidism or thyroid disease management</li>
+</ul>
+</td></tr>
+<tr><td><strong>Psychiatry</strong></td><td>
+<ul>
+<li>Complex medication management (multiple psychotropics, treatment-resistant depression requiring continued high-dose SSRI)</li>
+<li>Severe depression or anxiety complicating sexual dysfunction</li>
+<li>PTSD with sexual dysfunction requiring specialized trauma-focused pharmacotherapy</li>
+</ul>
+</td></tr>
+</tbody>
+</table>
+
+<div class="clinical-pearl">
+<div class="label">Clinical Pearl</div>
+<p>When referring for sex therapy, specifically seek an AASECT-certified (American Association of Sexuality Educators, Counselors, and Therapists) provider. General therapists, even those specializing in couples work, may not have training in specific sexual dysfunction treatment modalities like directed masturbation or sensate focus. AASECT maintains a provider directory at <strong>aasect.org</strong>.</p>
+</div>
+
+<!-- ===================== SECTION 12 ===================== -->
+<h2 id="scripts">12. Patient Communication Scripts</h2>
+
+<h3>Script 1: Opening the Conversation (Routine Sexual Health Screening)</h3>
+
+<div class="script-box">
+<div class="script-label">Provider Script</div>
+<p>&ldquo;I like to check in with all of my patients about sexual health, because it&rsquo;s an important part of overall well-being that often doesn&rsquo;t get addressed in medical visits. Many people experience changes in their sexual function at various points in life &mdash; things like changes in desire, arousal, or the ability to reach orgasm. These are very common and are often very treatable.</p>
+<p>Is sexual function something that you have any concerns about? Even if it seems minor, I&rsquo;d be happy to discuss it. There&rsquo;s nothing that would surprise me or that I haven&rsquo;t heard before.&rdquo;</p>
+</div>
+
+<div class="key-takeaway">
+<div class="label">Key Takeaway</div>
+<p>This script works because it: (1) normalizes the question by framing it as routine, (2) lists specific domains so patients know what &ldquo;counts,&rdquo; (3) validates that concerns are common and treatable, and (4) gives explicit permission to share. Asking &ldquo;Any problems with sex?&rdquo; is far less effective than this structured approach.</p>
+</div>
+
+<h3>Script 2: Discussing Female Anorgasmia</h3>
+
+<div class="script-box">
+<div class="script-label">Provider Script</div>
+<p>&ldquo;Thank you for sharing that with me. Difficulty reaching orgasm is actually one of the most common sexual concerns among women &mdash; it affects up to 1 in 4 women to some degree. It does not mean anything is &lsquo;wrong&rsquo; with you.</p>
+<p>There are many things that can contribute to this &mdash; it could be related to how your body responds to different types of stimulation, medications you&rsquo;re taking, hormonal changes, stress, or other factors. The good news is that this is very treatable.</p>
+<p>One thing that&rsquo;s important to know is that the majority of women &mdash; about 75% &mdash; do not reach orgasm from intercourse alone. Most women need direct clitoral stimulation. This is normal anatomy, not a dysfunction. Many women find that exploring what feels good on their own first can be very helpful.</p>
+<p>I&rsquo;d like to understand a bit more about your experience so we can figure out the best approach. Can you tell me a bit more about when this started and what you&rsquo;ve noticed?&rdquo;</p>
+</div>
+
+<h3>Script 3: Discussing SSRI-Induced Anorgasmia</h3>
+
+<div class="script-box">
+<div class="script-label">Provider Script</div>
+<p>&ldquo;I&rsquo;m glad you brought this up. What you&rsquo;re describing &mdash; difficulty reaching orgasm since starting [medication name] &mdash; is actually a very well-known side effect of this type of medication. It happens to somewhere between 30-70% of people who take SSRIs. You are definitely not alone in this.</p>
+<p>The medication works by increasing serotonin in the brain, which helps with mood and anxiety, but serotonin also has an inhibitory effect on the pathways involved in orgasm. It&rsquo;s essentially doing exactly what it&rsquo;s designed to do, but that effect extends to sexual function.</p>
+<p>The important thing is that we have several options to address this without compromising your mental health treatment. We could:</p>
+<p>&bull; Adjust the dose of your current medication to the minimum effective level<br>
+&bull; Add another medication that can counteract the sexual side effects<br>
+&bull; Consider switching to a different antidepressant that has less impact on sexual function<br>
+&bull; Explore timing strategies</p>
+<p>I want you to know that your sexual well-being matters, and we can work together to find a balance. What sounds like a reasonable approach to you?&rdquo;</p>
+</div>
+
+<div class="clinical-pearl">
+<div class="label">Clinical Pearl</div>
+<p>In all three scripts, notice the deliberate pattern: normalize first, educate second, offer solutions third, and empower the patient to participate in decision-making. Avoid clinical jargon when possible. The phrase &ldquo;many people experience this&rdquo; is far more powerful than statistics alone because it directly combats the patient&rsquo;s feeling of being uniquely broken.</p>
+</div>
+
+<!-- ===================== SECTION 13 ===================== -->
+<h2 id="quick-ref">13. Quick Reference Card</h2>
+
+<div class="quick-ref">
+<h3>Differential Diagnosis Checklist</h3>
+<div class="etiology-grid">
+<div>
+<h4><span class="tag tag-psych">Psychological</span></h4>
+<ul>
+<li>Sexual trauma / abuse</li>
+<li>Anxiety / depression</li>
+<li>Body image disturbance</li>
+<li>Religious / cultural inhibition</li>
+<li>Relationship conflict</li>
+<li>Performance pressure</li>
+<li>Porn-induced desensitization (M)</li>
+<li>Idiosyncratic masturbatory style (M)</li>
+</ul>
+</div>
+<div>
+<h4><span class="tag tag-med">Medical</span></h4>
+<ul>
+<li>Diabetes mellitus (neuropathy)</li>
+<li>Multiple sclerosis</li>
+<li>Spinal cord injury</li>
+<li>Pelvic floor dysfunction</li>
+<li>Post-surgical (hysterectomy, prostatectomy)</li>
+<li>Vulvovaginal atrophy (F)</li>
+<li>Clitoral phimosis (F)</li>
+<li>Penile neuropathy / cyclist syndrome (M)</li>
+</ul>
+</div>
+<div>
+<h4><span class="tag tag-horm">Hormonal</span></h4>
+<ul>
+<li>Menopause / low estrogen (F)</li>
+<li>Low testosterone (M + F)</li>
+<li>Hyperprolactinemia</li>
+<li>Hypothyroidism</li>
+<li>Elevated SHBG (OCPs)</li>
+<li>Hypogonadism (M)</li>
+<li>Adrenal insufficiency</li>
+</ul>
+</div>
+<div>
+<h4><span class="tag tag-rx">Medication</span></h4>
+<ul>
+<li>SSRIs / SNRIs</li>
+<li>Antipsychotics</li>
+<li>Opioids</li>
+<li>Anticonvulsants</li>
+<li>Alpha-blockers (M)</li>
+<li>Oral contraceptives (F)</li>
+<li>Antihistamines</li>
+<li>5-ARI (finasteride) (M)</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div class="quick-ref">
+<h3>First-Line Treatments by Category</h3>
+<table>
+<thead>
+<tr><th>Category</th><th>Female</th><th>Male</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Primary / Lifelong</strong></td><td>Directed masturbation + sex therapy (90% success)</td><td>Sex therapy / CBT + technique modification</td></tr>
+<tr><td><strong>Acquired &mdash; Psychogenic</strong></td><td>CBT + sensate focus therapy</td><td>CBT + address contributing factors (porn, anxiety)</td></tr>
+<tr><td><strong>Medication-Induced</strong></td><td>Switch/augment (bupropion) + dose reduction</td><td>Switch/augment (bupropion + cyproheptadine PRN)</td></tr>
+<tr><td><strong>Hormonal</strong></td><td>Local estrogen (atrophy); testosterone (low T)</td><td>Testosterone replacement; cabergoline (high PRL)</td></tr>
+<tr><td><strong>Neurogenic</strong></td><td>Vibrator therapy; pelvic floor PT</td><td>Penile vibrostimulation; refer urology</td></tr>
+<tr><td><strong>Pelvic Floor</strong></td><td>Pelvic floor PT (hypertonic or hypotonic)</td><td>Pelvic floor PT + biofeedback</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="quick-ref">
+<h3>Medication Quick Reference</h3>
+<table>
+<thead>
+<tr><th>Agent</th><th>Dose</th><th>Use For</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Bupropion</strong></td><td>150-300mg/day</td><td>SSRI-induced (augment or switch); general orgasmic dysfunction (M + F)</td></tr>
+<tr><td><strong>Cyproheptadine</strong></td><td>4-12mg PRN</td><td>SSRI-induced anorgasmia (acute, before activity)</td></tr>
+<tr><td><strong>Buspirone</strong></td><td>15-60mg/day</td><td>SSRI-induced (augmentation; takes 2-4 weeks)</td></tr>
+<tr><td><strong>Amantadine</strong></td><td>100-400mg/day or PRN</td><td>SSRI-induced (dopaminergic; M > F evidence)</td></tr>
+<tr><td><strong>Cabergoline</strong></td><td>0.25-0.5mg 1-2x/wk</td><td>Hyperprolactinemia-related; male anorgasmia (off-label)</td></tr>
+<tr><td><strong>Testosterone (F)</strong></td><td>300mcg/day transdermal</td><td>Postmenopausal with low desire/orgasm (off-label)</td></tr>
+<tr><td><strong>Local estrogen (F)</strong></td><td>Varies by formulation</td><td>Vulvovaginal atrophy / GSM</td></tr>
+<tr><td><strong>Prasterone (F)</strong></td><td>6.5mg intravaginal QHS</td><td>VVA-related dyspareunia and sexual dysfunction</td></tr>
+<tr><td><strong>Sildenafil</strong></td><td>50-100mg PRN</td><td>SSRI-induced (emerging F evidence); ED-related (M)</td></tr>
+<tr><td><strong>Pseudoephedrine</strong></td><td>60mg PRN</td><td>Retrograde ejaculation (M)</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="quick-ref">
+<h3>Red Flags for Referral</h3>
+<table>
+<thead>
+<tr><th>Finding</th><th>Referral</th></tr>
+</thead>
+<tbody>
+<tr><td>Primary anorgasmia unresponsive to directed masturbation (6+ months)</td><td>Sex therapist (AASECT-certified)</td></tr>
+<tr><td>Trauma history with sexual avoidance / dissociation</td><td>Trauma-informed sex therapist or psychologist</td></tr>
+<tr><td>Markedly elevated prolactin (&gt;100 ng/mL) or visual field changes</td><td>Endocrinology + MRI pituitary</td></tr>
+<tr><td>Suspected neurogenic cause (SCI, MS, post-surgical)</td><td>Urology (M) / Sexual medicine (F)</td></tr>
+<tr><td>Clitoral phimosis, vulvar pathology, suspected FGM</td><td>Gynecology / vulvar specialist</td></tr>
+<tr><td>Retrograde ejaculation (fertility desired)</td><td>Urology / reproductive endocrinology</td></tr>
+<tr><td>Hypertonic pelvic floor with pain</td><td>Pelvic floor physical therapy</td></tr>
+<tr><td>Complex psychiatric medication regimen with sexual dysfunction</td><td>Psychiatry</td></tr>
+<tr><td>Cancer survivor with treatment-related sexual dysfunction</td><td>Sexual medicine / oncology rehabilitation</td></tr>
+</tbody>
+</table>
+</div>
+
+</div>
+</body>
+</html>

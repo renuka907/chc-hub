@@ -87,6 +87,7 @@ import RiskCalculator from './pages/RiskCalculator';
 import SkinAnalysis from './pages/SkinAnalysis';
 import Specials from './pages/Specials';
 import StaffCheckIn from './pages/StaffCheckIn';
+import TanitaCalculator from './pages/TanitaCalculator';
 import UserManagement from './pages/UserManagement';
 import UserProfile from './pages/UserProfile';
 import ViewSharedForm from './pages/ViewSharedForm';
@@ -134,6 +135,7 @@ export const PAGES = {
     "SkinAnalysis": SkinAnalysis,
     "Specials": Specials,
     "StaffCheckIn": StaffCheckIn,
+    "TanitaCalculator": TanitaCalculator,
     "UserManagement": UserManagement,
     "UserProfile": UserProfile,
     "ViewSharedForm": ViewSharedForm,

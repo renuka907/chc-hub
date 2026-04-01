@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HIPAA & Compliance Essentials for Front Office</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple-deep: #1a0a2e;
+  --purple-mid: #2d1b4e;
+  --purple-light: #6c3fa0;
+  --pink: #e91e8c;
+  --orange: #ff6b35;
+  --gradient-main: linear-gradient(135deg, #6c3fa0, #e91e8c, #ff6b35);
+  --text-primary: #f0e6ff;
+  --text-secondary: #c4b0db;
+  --card-bg: rgba(45, 27, 78, 0.6);
+  --border-glow: rgba(108, 63, 160, 0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--purple-deep);
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-size: 17px;
+}
+
+.container {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 36px;
+  font-weight: 600;
+}
+
+h2 {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-top: 48px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border-glow);
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--pink);
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+
+h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--purple-light);
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+
+p { margin-bottom: 14px; }
+
+ul, ol {
+  margin-bottom: 14px;
+  padding-left: 24px;
+}
+
+li { margin-bottom: 6px; }
+
+strong { color: #fff; }
+
+/* TOC */
+.toc {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 36px;
+}
+
+.toc-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--pink);
+  margin-bottom: 12px;
+}
+
+.toc ol {
+  list-style: none;
+  padding-left: 0;
+  counter-reset: toc-counter;
+}
+
+.toc ol li {
+  counter-increment: toc-counter;
+  margin-bottom: 6px;
+}
+
+.toc ol li::before {
+  content: counter(toc-counter) ".";
+  color: var(--orange);
+  font-weight: 700;
+  margin-right: 8px;
+}
+
+.toc a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.toc a:hover {
+  color: var(--pink);
+}
+
+/* Callout boxes */
+.callout {
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin: 20px 0;
+  border-left: 4px solid;
+}
+
+.callout-pink {
+  background: rgba(233, 30, 140, 0.1);
+  border-color: var(--pink);
+}
+
+.callout-pink .callout-label { color: var(--pink); }
+
+.callout-purple {
+  background: rgba(108, 63, 160, 0.15);
+  border-color: var(--purple-light);
+}
+
+.callout-purple .callout-label { color: var(--purple-light); }
+
+.callout-orange {
+  background: rgba(255, 107, 53, 0.12);
+  border-color: var(--orange);
+}
+
+.callout-orange .callout-label { color: var(--orange); }
+
+.callout-label {
+  font-weight: 800;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 0.95rem;
+}
+
+thead th {
+  background: var(--gradient-main);
+  color: #fff;
+  font-weight: 700;
+  padding: 12px 16px;
+  text-align: left;
+}
+
+thead th:first-child { border-radius: 8px 0 0 0; }
+thead th:last-child { border-radius: 0 8px 0 0; }
+
+tbody td {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border-glow);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+
+tbody tr:hover { background: rgba(108, 63, 160, 0.1); }
+
+/* Scenario cards */
+.scenario-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin: 16px 0;
+}
+
+.scenario-card .scenario-header {
+  font-weight: 700;
+  color: var(--orange);
+  margin-bottom: 8px;
+  font-size: 1.02rem;
+}
+
+.scenario-card .scenario-response {
+  color: var(--text-primary);
+  padding-left: 16px;
+  border-left: 3px solid var(--purple-light);
+  margin-top: 10px;
+}
+
+/* Flowchart */
+.flowchart {
+  margin: 28px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.flow-box {
+  padding: 14px 24px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  max-width: 420px;
+  width: 100%;
+}
+
+.flow-start {
+  background: var(--gradient-main);
+  color: #fff;
+  border-radius: 30px;
+}
+
+.flow-question {
+  background: rgba(108, 63, 160, 0.25);
+  border: 2px solid var(--purple-light);
+  color: var(--text-primary);
+}
+
+.flow-stop {
+  background: rgba(255, 107, 53, 0.2);
+  border: 2px solid var(--orange);
+  color: var(--orange);
+  border-radius: 30px;
+}
+
+.flow-go {
+  background: rgba(46, 204, 113, 0.15);
+  border: 2px solid #2ecc71;
+  color: #2ecc71;
+  border-radius: 30px;
+}
+
+.flow-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 4px 0;
+}
+
+.flow-arrow::before {
+  content: "";
+  width: 2px;
+  height: 16px;
+  background: var(--text-secondary);
+}
+
+.flow-arrow::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid var(--text-secondary);
+}
+
+.flow-branch {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  max-width: 500px;
+  justify-content: center;
+}
+
+.flow-branch-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.flow-branch-label {
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+
+.flow-branch-label.yes { color: #2ecc71; }
+.flow-branch-label.no { color: var(--orange); }
+
+/* Violation example */
+.violation-example {
+  background: rgba(255, 107, 53, 0.08);
+  border: 1px solid rgba(255, 107, 53, 0.3);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 12px 0;
+  font-size: 0.95rem;
+}
+
+.violation-example .violation-title {
+  color: var(--orange);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+/* Checklist */
+.checklist {
+  list-style: none;
+  padding-left: 0;
+}
+
+.checklist li {
+  padding-left: 28px;
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.checklist li::before {
+  content: "\2610";
+  position: absolute;
+  left: 0;
+  color: var(--purple-light);
+  font-size: 1.1rem;
+}
+
+/* Quote */
+.quote-block {
+  border-left: 4px solid var(--pink);
+  padding: 12px 20px;
+  margin: 18px 0;
+  font-style: italic;
+  color: var(--text-secondary);
+  background: rgba(233, 30, 140, 0.06);
+  border-radius: 0 8px 8px 0;
+}
+
+/* Steps */
+.step-grid {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 8px 14px;
+  margin: 16px 0;
+  align-items: start;
+}
+
+.step-num {
+  width: 36px;
+  height: 36px;
+  background: var(--gradient-main);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: #fff;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.step-content { padding-top: 6px; }
+
+/* Print styles */
+@media print {
+  body { background: #fff; color: #1a1a1a; font-size: 11pt; }
+  .container { max-width: 100%; padding: 0; }
+  .callout { border-left-width: 3px; }
+  h1 { -webkit-text-fill-color: #6c3fa0; color: #6c3fa0; }
+  thead th { background: #6c3fa0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .toc { break-after: page; }
+}
+
+@media (max-width: 600px) {
+  .container { padding: 20px 16px; }
+  h1 { font-size: 1.7rem; }
+  h2 { font-size: 1.3rem; }
+  .flow-branch { flex-direction: column; align-items: center; gap: 12px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>HIPAA & Compliance Essentials for Front Office</h1>
+<p class="subtitle">Protecting Patient Privacy Every Day at the Front Desk</p>
+
+<div class="toc">
+  <div class="toc-title">Table of Contents</div>
+  <ol>
+    <li><a href="#what-is-hipaa">What Is HIPAA and Why It Matters</a></li>
+    <li><a href="#phi-defined">Understanding Protected Health Information (PHI)</a></li>
+    <li><a href="#front-desk-scenarios">Front Desk HIPAA Scenarios</a></li>
+    <li><a href="#minimum-necessary">The Minimum Necessary Standard</a></li>
+    <li><a href="#social-media">Social Media and Patient Privacy</a></li>
+    <li><a href="#common-violations">Common Front Desk Violations</a></li>
+    <li><a href="#breach-reporting">Breach Reporting: What to Do If PHI Is Compromised</a></li>
+    <li><a href="#release-of-information">Release of Information (ROI) Process</a></li>
+    <li><a href="#special-protections">Special Protections for Sensitive Information</a></li>
+    <li><a href="#osha-basics">OSHA Basics for the Front Office</a></li>
+    <li><a href="#annual-training">Annual Compliance Training Requirements</a></li>
+    <li><a href="#flowchart">Quick Reference: "Can I Share This?" Flowchart</a></li>
+  </ol>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="what-is-hipaa">1. What Is HIPAA and Why It Matters</h2>
+
+<p>The <strong>Health Insurance Portability and Accountability Act (HIPAA)</strong> is a federal law enacted in 1996 that establishes national standards for protecting sensitive patient health information. For front office staff, HIPAA isn't just a policy manual collecting dust in the back room &mdash; it is the legal framework that governs virtually everything you do with patient information, from answering the phone to filing paperwork.</p>
+
+<p>HIPAA has two major rules relevant to the front office:</p>
+
+<ul>
+  <li><strong>The Privacy Rule</strong> &mdash; Sets standards for who can access and share patient health information, and under what circumstances.</li>
+  <li><strong>The Security Rule</strong> &mdash; Requires safeguards (administrative, physical, and technical) to protect electronic PHI (ePHI).</li>
+</ul>
+
+<h3>Real Consequences of HIPAA Violations</h3>
+
+<p>HIPAA violations are not theoretical risks. They carry real, career-ending, and sometimes life-altering consequences. The Office for Civil Rights (OCR) actively investigates complaints, and enforcement has increased significantly in recent years.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Violation Tier</th>
+      <th>Description</th>
+      <th>Penalty Per Violation</th>
+      <th>Annual Maximum</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Tier 1</td>
+      <td>Did not know (and could not have known)</td>
+      <td>$100 &ndash; $50,000</td>
+      <td>$25,000</td>
+    </tr>
+    <tr>
+      <td>Tier 2</td>
+      <td>Reasonable cause (not willful neglect)</td>
+      <td>$1,000 &ndash; $50,000</td>
+      <td>$100,000</td>
+    </tr>
+    <tr>
+      <td>Tier 3</td>
+      <td>Willful neglect, corrected within 30 days</td>
+      <td>$10,000 &ndash; $50,000</td>
+      <td>$250,000</td>
+    </tr>
+    <tr>
+      <td>Tier 4</td>
+      <td>Willful neglect, not corrected</td>
+      <td>$50,000+</td>
+      <td>$1.5 million</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout callout-orange">
+  <div class="callout-label">Warning</div>
+  <strong>Individual employees can face personal consequences:</strong>
+  <ul>
+    <li><strong>Immediate termination</strong> &mdash; Most healthcare organizations have zero-tolerance policies</li>
+    <li><strong>Criminal charges</strong> &mdash; Knowingly obtaining or disclosing PHI can result in up to 1 year in prison; if done for personal gain or malicious intent, up to <strong>10 years in prison</strong></li>
+    <li><strong>Personal fines</strong> &mdash; Up to $250,000 for individuals</li>
+    <li><strong>Professional license revocation</strong> &mdash; For credentialed staff</li>
+    <li><strong>Permanent career damage</strong> &mdash; A HIPAA violation on your record makes future healthcare employment extremely difficult</li>
+  </ul>
+</div>
+
+<div class="callout callout-pink">
+  <div class="callout-label">Clinical Pearl</div>
+  You don't have to intend harm to cause a violation. A casual conversation in an elevator, a computer screen left visible, or an innocent social media post can all trigger an investigation. <strong>Intent does not determine whether a violation occurred</strong> &mdash; it only affects the severity of the penalty.
+</div>
+
+<!-- ============================================================ -->
+<h2 id="phi-defined">2. Understanding Protected Health Information (PHI)</h2>
+
+<p>Protected Health Information (PHI) is any individually identifiable health information that is created, received, maintained, or transmitted by a covered entity (like your practice). PHI exists in <strong>all forms</strong>: written, electronic, and verbal.</p>
+
+<h3>The PHI Formula</h3>
+
+<div class="callout callout-purple">
+  <div class="callout-label">Key Takeaway</div>
+  <strong>Identifying Information + Health/Healthcare Information = PHI</strong><br>
+  If you can link a person's identity to anything about their health, their conditions, their treatment, or their payment for healthcare, you are dealing with PHI.
+</div>
+
+<h3>The 18 HIPAA Identifiers</h3>
+
+<p>HIPAA defines 18 specific identifiers that, when combined with health information, create PHI:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Identifier</th>
+      <th>#</th>
+      <th>Identifier</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td>Name</td><td>10</td><td>Account numbers</td></tr>
+    <tr><td>2</td><td>Address (smaller than state)</td><td>11</td><td>Certificate/license numbers</td></tr>
+    <tr><td>3</td><td>Dates (except year) related to an individual</td><td>12</td><td>Vehicle identifiers/serial numbers</td></tr>
+    <tr><td>4</td><td>Phone numbers</td><td>13</td><td>Device identifiers/serial numbers</td></tr>
+    <tr><td>5</td><td>Fax numbers</td><td>14</td><td>Web URLs</td></tr>
+    <tr><td>6</td><td>Email addresses</td><td>15</td><td>IP addresses</td></tr>
+    <tr><td>7</td><td>Social Security numbers</td><td>16</td><td>Biometric identifiers</td></tr>
+    <tr><td>8</td><td>Medical record numbers</td><td>17</td><td>Full-face photographs</td></tr>
+    <tr><td>9</td><td>Health plan beneficiary numbers</td><td>18</td><td>Any other unique identifying number</td></tr>
+  </tbody>
+</table>
+
+<h3>What Many Front Office Staff Miss</h3>
+
+<div class="callout callout-orange">
+  <div class="callout-label">Warning</div>
+  <strong>Confirming that someone is a patient IS disclosing PHI.</strong> The simple fact that a person receives care at your practice is health information tied to their identity. Even saying "Yes, they're a patient here" to an unauthorized person is a HIPAA violation.
+</div>
+
+<p>Other commonly overlooked forms of PHI disclosure at the front desk:</p>
+<ul>
+  <li><strong>Appointment schedules</strong> visible on a screen or printed list</li>
+  <li><strong>Sign-in sheets</strong> that show reason for visit or provider name</li>
+  <li><strong>Calling out full names</strong> with appointment details in a crowded waiting room</li>
+  <li><strong>Conversations between staff</strong> about patients within earshot of other patients</li>
+  <li><strong>Sticky notes or papers</strong> with patient names and information left on desks</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="front-desk-scenarios">3. Front Desk HIPAA Scenarios</h2>
+
+<p>The front desk is the most common point of PHI exposure in any healthcare practice. These scenarios represent situations you will encounter &mdash; some of them daily. Knowing the correct response before they happen is essential.</p>
+
+<h3>Scenario A: Spouse Calls for Test Results</h3>
+
+<div class="scenario-card">
+  <div class="scenario-header">Situation: "Hi, I'm calling about my husband John Smith. Can you tell me his lab results? He asked me to call."</div>
+  <div class="scenario-response">
+    <strong>Correct response:</strong> "I understand, and I appreciate you calling on his behalf. However, I'm unable to release any medical information over the phone without proper authorization. If John would like us to share his results with you, he can sign an authorization form, or he can call us directly to give verbal consent while on the line. We can also have the provider's office reach out to him directly."
+  </div>
+</div>
+
+<div class="callout callout-pink">
+  <div class="callout-label">Clinical Pearl</div>
+  Being married does not automatically grant access to a spouse's medical information. The only exceptions are when: (1) the patient has signed a written authorization naming the spouse, (2) the patient is present and verbally consents, or (3) the spouse holds a legal healthcare power of attorney and the patient is incapacitated.
+</div>
+
+<h3>Scenario B: Employer Verifying an Appointment</h3>
+
+<div class="scenario-card">
+  <div class="scenario-header">Situation: "This is HR at Acme Corp. We need to verify that Jane Doe had a doctor's appointment today as she claims."</div>
+  <div class="scenario-response">
+    <strong>Correct response:</strong> "I'm sorry, but we are unable to confirm or deny whether any individual is or has been a patient at our practice. If the employee needs documentation, they can request it directly from our office, and we can provide them with a general note verifying a medical appointment."
+  </div>
+</div>
+
+<h3>Scenario C: "Is [Name] a Patient There?"</h3>
+
+<div class="scenario-card">
+  <div class="scenario-header">Situation: A caller or walk-in asks, "Is Maria Garcia a patient at your office?"</div>
+  <div class="scenario-response">
+    <strong>Correct response:</strong> "I'm sorry, but I cannot confirm or deny whether anyone is a patient at this practice. Is there something else I can help you with?"
+  </div>
+</div>
+
+<div class="callout callout-orange">
+  <div class="callout-label">Warning</div>
+  <strong>NEVER confirm that anyone is a patient.</strong> This applies to law enforcement (without a valid warrant or subpoena), family members, friends, attorneys, insurance adjusters, media, and anyone else. The only exception is when you have verified the caller's identity AND confirmed proper authorization exists. When in doubt, take a message and let the compliance officer or office manager handle it.
+</div>
+
+<h3>Scenario D: Faxing Medical Records</h3>
+
+<div class="scenario-card">
+  <div class="scenario-header">Situation: Another office calls and asks you to fax over a patient's records.</div>
+  <div class="scenario-response">
+    <strong>Before faxing, verify ALL of the following:</strong>
+    <ul>
+      <li>A valid, signed Release of Information (ROI) authorization is on file</li>
+      <li>The authorization specifically names the receiving party</li>
+      <li>The authorization has not expired</li>
+      <li>You have confirmed the correct fax number (call to verify if uncertain)</li>
+      <li>A cover sheet with confidentiality notice is included</li>
+      <li>You are sending only the minimum necessary information</li>
+    </ul>
+  </div>
+</div>
+
+<div class="callout callout-purple">
+  <div class="callout-label">Key Takeaway</div>
+  Always use a fax cover sheet with a confidentiality disclaimer. Double-check the fax number <strong>every time</strong>. Misdirected faxes are one of the most common causes of PHI breaches reported to the OCR.
+</div>
+
+<h3>Scenario E: Overheard Conversations</h3>
+
+<div class="scenario-card">
+  <div class="scenario-header">Situation: You are on the phone discussing a patient's appointment details, and the waiting room is full of other patients.</div>
+  <div class="scenario-response">
+    <strong>Best practices:</strong>
+    <ul>
+      <li>Lower your voice when discussing any patient information</li>
+      <li>Use privacy screens or partitions at the front desk</li>
+      <li>Move sensitive conversations to a private area when possible</li>
+      <li>Never use speakerphone for patient calls in open areas</li>
+      <li>Ask the patient to step closer to the window rather than calling out details</li>
+      <li>Use first name only when calling patients from the waiting room</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Scenario F: Visible Computer Screens</h3>
+
+<div class="scenario-card">
+  <div class="scenario-header">Situation: Patients checking in at the front desk can see your computer screen showing another patient's information.</div>
+  <div class="scenario-response">
+    <strong>Required safeguards:</strong>
+    <ul>
+      <li>Install <strong>privacy screen filters</strong> on all monitors visible from patient areas</li>
+      <li>Position monitors so screens face away from the waiting room</li>
+      <li>Use the <strong>Windows + L</strong> (PC) or <strong>Control + Command + Q</strong> (Mac) shortcut to lock your screen every time you step away &mdash; even for 30 seconds</li>
+      <li>Set automatic screen lock to activate after 2 minutes of inactivity</li>
+      <li>Close patient records when you are not actively working in them</li>
+      <li>Never leave the EHR open to a patient chart when assisting another patient</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Scenario G: Disposing of Paperwork</h3>
+
+<div class="scenario-card">
+  <div class="scenario-header">Situation: You have printed patient schedules, encounter forms, and insurance copies that are no longer needed.</div>
+  <div class="scenario-response">
+    <strong>The only acceptable method: SHRED.</strong>
+    <ul>
+      <li>All paper containing any PHI must go into a designated <strong>shredding bin</strong>, never a regular trash can or recycling bin</li>
+      <li>This includes sticky notes, printed schedules, photocopies of insurance cards, scratch paper with patient names, and printed emails</li>
+      <li>Shredding bins should be locked and emptied by a certified shredding service</li>
+      <li>If no shredding bin is immediately available, store documents in a locked drawer until they can be properly shredded</li>
+    </ul>
+  </div>
+</div>
+
+<div class="callout callout-orange">
+  <div class="callout-label">Warning</div>
+  <strong>Never throw any paper with patient information in a regular trash can.</strong> Dumpster diving for medical records is a real tactic used by identity thieves. Practices have been fined six-figure amounts for PHI found in unsecured dumpsters.
+</div>
+
+<!-- ============================================================ -->
+<h2 id="minimum-necessary">4. The Minimum Necessary Standard</h2>
+
+<p>The Minimum Necessary Standard is one of the most important &mdash; and most frequently violated &mdash; principles in HIPAA. It requires that when PHI is used, disclosed, or requested, you limit the information to the <strong>minimum amount necessary</strong> to accomplish the intended purpose.</p>
+
+<h3>What This Means for Front Office</h3>
+
+<ul>
+  <li><strong>Scheduling calls:</strong> You need the patient's name, date of birth, and reason for visit. You do NOT need to discuss their diagnosis or treatment history.</li>
+  <li><strong>Insurance verification:</strong> Share only the information required for the verification &mdash; not the patient's full medical history.</li>
+  <li><strong>Transferring calls:</strong> Tell the clinical team "Patient on line 2 for the nurse regarding a prescription refill." Do NOT announce the patient's full name, diagnosis, or other details over an intercom.</li>
+  <li><strong>Record requests:</strong> Send only the specific records authorized in the ROI &mdash; not the entire chart.</li>
+</ul>
+
+<div class="callout callout-purple">
+  <div class="callout-label">Key Takeaway</div>
+  Before sharing ANY patient information, ask yourself: <strong>"Does this person need ALL of this information to do their job?"</strong> If the answer is no, share less. When in doubt, share the minimum and let the recipient request more if needed.
+</div>
+
+<h3>Exceptions to Minimum Necessary</h3>
+
+<p>The minimum necessary standard does NOT apply to:</p>
+<ul>
+  <li>Disclosures to the patient themselves (or their authorized representative)</li>
+  <li>Disclosures required by law (court orders, subpoenas)</li>
+  <li>Disclosures to the treating provider for treatment purposes</li>
+  <li>Disclosures to HHS for compliance investigations</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="social-media">5. Social Media and Patient Privacy</h2>
+
+<p>Social media is one of the fastest-growing sources of HIPAA violations in healthcare. What feels like an innocent post can end a career.</p>
+
+<div class="callout callout-orange">
+  <div class="callout-label">Warning</div>
+  <strong>NEVER post anything about patients on social media.</strong> This includes:
+  <ul>
+    <li>Posts that mention a patient by name</li>
+    <li>Posts that describe a patient situation <strong>even without using their name</strong> &mdash; if anyone could identify them from the details, it is a violation</li>
+    <li>Photos taken inside the office that show patient information, even accidentally (whiteboards, schedules, computer screens in the background)</li>
+    <li>Commenting about a "crazy day" with details that could identify a patient encounter</li>
+    <li>Texting patient information through personal phones or messaging apps</li>
+    <li>Posting in private groups or "close friends" stories &mdash; privacy settings do not equal HIPAA compliance</li>
+  </ul>
+</div>
+
+<div class="violation-example">
+  <div class="violation-title">Real-World Case: Social Media Post</div>
+  A medical assistant posted a vague comment on Facebook: "Can't believe someone came in today with [unusual condition]. Some people are just wild." No name was used. However, because the practice was small and the condition was rare, community members identified the patient. The employee was terminated and the practice was investigated.
+</div>
+
+<div class="callout callout-pink">
+  <div class="callout-label">Clinical Pearl</div>
+  The safest policy: <strong>act as if everything that happens at work is covered by HIPAA.</strong> Do not discuss patients, patient situations, or anything you see or hear at work on any social media platform, in any private message, or in any personal communication. If you wouldn't say it in front of the OCR, don't type it.
+</div>
+
+<h3>Safe Social Media Practices for Healthcare Workers</h3>
+<ul>
+  <li>Never take photos or videos in clinical or patient-facing areas</li>
+  <li>Do not accept friend/follow requests from current patients</li>
+  <li>Never look up patients on social media</li>
+  <li>Do not discuss workplace events that involve patient encounters, even anonymously</li>
+  <li>Report any social media HIPAA concerns you observe from coworkers to your compliance officer</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="common-violations">6. Common Front Desk Violations</h2>
+
+<p>Understanding the most frequent violations helps you avoid them. These are real patterns that result in investigations, fines, and terminations every year.</p>
+
+<div class="violation-example">
+  <div class="violation-title">Violation 1: The Unlocked Workstation</div>
+  A front desk employee steps away to help a patient at the window, leaving the EHR open on the screen. Another patient's family member walking by sees the screen displaying a different patient's medication list. <strong>This is a reportable breach.</strong>
+</div>
+
+<div class="violation-example">
+  <div class="violation-title">Violation 2: The Helpful Coworker</div>
+  A friend of a staff member calls asking if their neighbor has an appointment today because they want to carpool. The staff member checks the schedule and confirms the appointment time. <strong>This is unauthorized disclosure of PHI.</strong>
+</div>
+
+<div class="violation-example">
+  <div class="violation-title">Violation 3: The Misdirected Fax</div>
+  A front desk employee transposes two digits in a fax number and sends 47 pages of medical records to a random business. The business contacts the practice after receiving the records. <strong>This is a breach requiring notification.</strong>
+</div>
+
+<div class="violation-example">
+  <div class="violation-title">Violation 4: The Waiting Room Announcement</div>
+  A staff member calls out: "Maria Rodriguez, Dr. Patel is ready for your diabetes follow-up." Every person in the waiting room now knows Maria's provider and reason for visit. <strong>This discloses PHI to unauthorized individuals.</strong>
+</div>
+
+<div class="violation-example">
+  <div class="violation-title">Violation 5: The Trash Can Slip</div>
+  A printed daily schedule with patient names, appointment times, and provider assignments is thrown in the regular trash instead of the shredding bin. A custodian finds it and reports it to management. <strong>Improper disposal of PHI.</strong>
+</div>
+
+<div class="violation-example">
+  <div class="violation-title">Violation 6: Personal Device Texting</div>
+  A medical assistant texts a photo of a patient's lab results to the physician using their personal cell phone. The phone is later lost. <strong>This creates unsecured ePHI on an unencrypted personal device and constitutes a potential breach.</strong>
+</div>
+
+<div class="callout callout-purple">
+  <div class="callout-label">Key Takeaway</div>
+  Most HIPAA violations at the front desk are not malicious &mdash; they are careless. Building good habits (locking screens, lowering voices, shredding everything, verifying authorizations) prevents the vast majority of violations. <strong>Make compliance automatic, not something you have to think about.</strong>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="breach-reporting">7. Breach Reporting: What to Do If PHI Is Compromised</h2>
+
+<p>A <strong>breach</strong> is any unauthorized acquisition, access, use, or disclosure of PHI that compromises the security or privacy of the information. If you discover or suspect a breach, you have a legal and professional obligation to act immediately.</p>
+
+<h3>Immediate Steps When You Discover a Potential Breach</h3>
+
+<div class="step-grid">
+  <div class="step-num">1</div>
+  <div class="step-content"><strong>Stop the exposure.</strong> If a screen is visible, minimize it. If a fax went to the wrong number, call immediately to request destruction. If papers are in the trash, retrieve them.</div>
+
+  <div class="step-num">2</div>
+  <div class="step-content"><strong>Do NOT try to cover it up.</strong> Concealing a breach is itself a violation that can result in criminal charges. The cover-up is always worse than the original incident.</div>
+
+  <div class="step-num">3</div>
+  <div class="step-content"><strong>Notify your supervisor and/or compliance officer immediately.</strong> Do not wait until end of day. Do not wait to see if anyone noticed. Report it now.</div>
+
+  <div class="step-num">4</div>
+  <div class="step-content"><strong>Document what happened.</strong> Write down the date, time, what information was exposed, who was involved, how you discovered it, and what actions you took. Be factual and complete.</div>
+
+  <div class="step-num">5</div>
+  <div class="step-content"><strong>Do not discuss the breach with coworkers or outside parties.</strong> The investigation will be handled by the compliance officer and/or legal counsel.</div>
+</div>
+
+<h3>Practice Obligations After a Breach</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Breach Size</th>
+      <th>Notification Requirement</th>
+      <th>Timeline</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Fewer than 500 individuals</td>
+      <td>Notify affected individuals in writing; log with HHS annually</td>
+      <td>Within 60 days of discovery</td>
+    </tr>
+    <tr>
+      <td>500 or more individuals</td>
+      <td>Notify individuals, HHS, and prominent local media</td>
+      <td>Within 60 days of discovery</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout callout-pink">
+  <div class="callout-label">Clinical Pearl</div>
+  There are three exceptions where an unauthorized disclosure is NOT considered a breach: (1) unintentional access by an authorized employee acting in good faith, (2) inadvertent disclosure between authorized persons at the same entity, (3) the recipient could not reasonably retain the information. However, <strong>always report the incident</strong> and let the compliance officer make the determination. It is never your job to decide whether something "counts" as a breach.
+</div>
+
+<!-- ============================================================ -->
+<h2 id="release-of-information">8. Release of Information (ROI) Process</h2>
+
+<p>Releasing patient records is one of the most regulated front office tasks. A valid authorization must be in place before any PHI leaves the practice, with very limited exceptions.</p>
+
+<h3>Elements of a Valid HIPAA Authorization</h3>
+
+<p>A valid authorization must contain <strong>all</strong> of the following elements. If any element is missing, the authorization is <strong>invalid</strong> and records cannot be released:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Required Element</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Description of PHI</td>
+      <td>Specific description of the information to be disclosed (e.g., "lab results from January 2026" &mdash; not just "medical records")</td>
+    </tr>
+    <tr>
+      <td>Who may disclose</td>
+      <td>Name of the person or entity authorized to make the disclosure (your practice)</td>
+    </tr>
+    <tr>
+      <td>Who may receive</td>
+      <td>Name of the person or entity receiving the information</td>
+    </tr>
+    <tr>
+      <td>Purpose</td>
+      <td>Purpose of the disclosure (e.g., "continuation of care," "legal proceedings," "personal request")</td>
+    </tr>
+    <tr>
+      <td>Expiration</td>
+      <td>Expiration date or event (an authorization without an expiration is invalid)</td>
+    </tr>
+    <tr>
+      <td>Signature and date</td>
+      <td>Patient's signature (or authorized representative) and date signed</td>
+    </tr>
+    <tr>
+      <td>Right to revoke</td>
+      <td>Statement informing the patient they may revoke the authorization in writing</td>
+    </tr>
+    <tr>
+      <td>Conditioning statement</td>
+      <td>Statement that treatment/payment will not be conditioned on signing (with limited exceptions)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>When Authorization Is NOT Required</h3>
+
+<p>HIPAA permits disclosure without patient authorization in specific situations:</p>
+
+<ul>
+  <li><strong>Treatment, Payment, and Healthcare Operations (TPO)</strong> &mdash; Sharing records with another treating provider, billing insurance, quality improvement</li>
+  <li><strong>Required by law</strong> &mdash; Court orders, subpoenas (with proper documentation), mandatory public health reporting</li>
+  <li><strong>To the patient</strong> &mdash; Patients have a right to access their own records</li>
+  <li><strong>Abuse/neglect reporting</strong> &mdash; Mandatory reporting to authorities as required by state law</li>
+  <li><strong>Health oversight activities</strong> &mdash; Audits, investigations by government health agencies</li>
+  <li><strong>Serious threat to health or safety</strong> &mdash; Imminent danger situations (duty to warn)</li>
+</ul>
+
+<div class="callout callout-purple">
+  <div class="callout-label">Key Takeaway</div>
+  When in doubt about whether an authorization is valid or whether an exception applies, <strong>do not release the records.</strong> Consult your office manager, compliance officer, or the practice's legal counsel. It is always safer to delay a release and verify than to release records improperly.
+</div>
+
+<h3>Front Office ROI Workflow</h3>
+
+<div class="step-grid">
+  <div class="step-num">1</div>
+  <div class="step-content"><strong>Receive the authorization.</strong> Verify it is the practice's standard form or contains all required elements.</div>
+
+  <div class="step-num">2</div>
+  <div class="step-content"><strong>Verify patient identity.</strong> Confirm the patient's identity using two identifiers (name + DOB, name + last four SSN).</div>
+
+  <div class="step-num">3</div>
+  <div class="step-content"><strong>Check authorization validity.</strong> Confirm all required elements are present, the form is signed and dated, and it has not expired.</div>
+
+  <div class="step-num">4</div>
+  <div class="step-content"><strong>Pull only the requested records.</strong> Apply the minimum necessary standard. Do not include records outside the scope of the authorization.</div>
+
+  <div class="step-num">5</div>
+  <div class="step-content"><strong>Send via secure method.</strong> Use encrypted fax (verify number), secure email, secure portal, or certified mail. Never use personal email or unsecured channels.</div>
+
+  <div class="step-num">6</div>
+  <div class="step-content"><strong>Document the disclosure.</strong> Log the date, what was sent, to whom, the method of delivery, and who processed it. Retain the signed authorization in the patient's chart.</div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="special-protections">9. Special Protections for Sensitive Information</h2>
+
+<p>Certain categories of health information receive <strong>additional legal protections</strong> beyond standard HIPAA requirements. These restrictions are stricter, and violations carry heavier penalties. Front office staff must be aware of these categories because improper disclosure &mdash; even accidental &mdash; can have devastating consequences for patients.</p>
+
+<h3>Substance Abuse Records (42 CFR Part 2)</h3>
+
+<p>Federal regulation <strong>42 CFR Part 2</strong> provides heightened protections for records related to substance use disorder (SUD) treatment from federally assisted programs.</p>
+
+<ul>
+  <li>These records <strong>cannot be disclosed without specific written patient consent</strong> that meets 42 CFR Part 2 requirements (which are stricter than HIPAA authorization)</li>
+  <li>A standard HIPAA authorization is <strong>not sufficient</strong> for substance abuse records</li>
+  <li>You cannot even confirm that a patient attends or has attended a substance abuse treatment program</li>
+  <li>These records cannot be used in criminal proceedings against the patient</li>
+  <li>Redisclosure is prohibited &mdash; if you receive these records, you cannot share them further without new consent</li>
+</ul>
+
+<div class="callout callout-orange">
+  <div class="callout-label">Warning</div>
+  If your practice provides any substance abuse treatment or receives substance abuse records from another facility, standard release of information procedures are <strong>not enough.</strong> Specific 42 CFR Part 2 compliant consent must be obtained. When in doubt, consult the compliance officer before releasing any records that may contain substance abuse treatment information.
+</div>
+
+<h3>Mental Health Records</h3>
+
+<ul>
+  <li><strong>Psychotherapy notes</strong> (the therapist's private session notes) require a separate, specific authorization for release &mdash; they are NOT included in a general medical records authorization</li>
+  <li>Many states have additional protections for mental health treatment records beyond federal HIPAA requirements</li>
+  <li>Be aware that your state may require specific consent forms for mental health record disclosure</li>
+  <li>Never include psychotherapy notes in a general records release unless the authorization specifically and separately authorizes their disclosure</li>
+</ul>
+
+<h3>HIV/STI Information</h3>
+
+<ul>
+  <li>Most states have specific laws providing <strong>enhanced confidentiality protections</strong> for HIV/AIDS status and sexually transmitted infection diagnoses</li>
+  <li>In many jurisdictions, HIV status cannot be disclosed without specific written consent separate from a general HIPAA authorization</li>
+  <li>STI testing results may have separate disclosure requirements under state law</li>
+  <li>Verbal disclosure of HIV/STI status (e.g., mentioning it to a family member or employer) can result in both civil and criminal liability</li>
+</ul>
+
+<h3>Minor Patient Records</h3>
+
+<ul>
+  <li>State laws vary significantly regarding parental access to minor patient records</li>
+  <li>In many states, minors can consent to certain treatments <strong>without parental knowledge</strong>, including: reproductive health, STI testing and treatment, mental health services, and substance abuse treatment</li>
+  <li>When a minor consents to their own treatment, the minor (not the parent) controls access to those records</li>
+  <li>Always verify your state's specific laws regarding minor consent and parental access</li>
+  <li>When uncertain, consult the compliance officer before releasing any minor's records to a parent</li>
+</ul>
+
+<div class="callout callout-pink">
+  <div class="callout-label">Clinical Pearl</div>
+  A good rule of thumb: if the information involves substance abuse, mental health, HIV/STI, or minors, <strong>stop and check before releasing anything.</strong> Standard HIPAA authorizations are often insufficient for these categories. These areas are where front office staff are most likely to make well-intentioned but legally consequential errors.
+</div>
+
+<!-- ============================================================ -->
+<h2 id="osha-basics">10. OSHA Basics for the Front Office</h2>
+
+<p>While HIPAA governs patient privacy, the <strong>Occupational Safety and Health Administration (OSHA)</strong> governs your safety as a worker. Front office staff in healthcare settings are subject to specific OSHA requirements, even though you may not provide direct patient care.</p>
+
+<h3>Bloodborne Pathogen Awareness</h3>
+
+<p>OSHA's Bloodborne Pathogens Standard (29 CFR 1910.1030) applies to anyone who could reasonably be exposed to blood or other potentially infectious materials (OPIM) in the workplace &mdash; and that includes front office staff.</p>
+
+<h4>How front office staff may encounter bloodborne pathogens:</h4>
+<ul>
+  <li>A patient bleeding in the waiting room or at the check-in window</li>
+  <li>Handling specimens being dropped off by patients (urine, blood draws from outside labs)</li>
+  <li>Contact with contaminated surfaces (door handles, pens, clipboards)</li>
+  <li>Needle-stick injuries from improperly disposed sharps in unexpected locations</li>
+</ul>
+
+<h4>What you should know:</h4>
+<ul>
+  <li><strong>Universal precautions:</strong> Treat all blood and body fluids as potentially infectious</li>
+  <li><strong>PPE availability:</strong> Gloves must be available at the front desk at all times. You have the right to use them.</li>
+  <li>Never pick up anything sharp with your bare hands</li>
+  <li>If a patient is bleeding, provide gloves and gauze &mdash; do not touch blood without gloves</li>
+  <li>Know the location of your practice's spill kit and how to use it</li>
+  <li><strong>Hepatitis B vaccine:</strong> Your employer must offer you the Hepatitis B vaccine at no cost</li>
+  <li><strong>Post-exposure protocol:</strong> If you are exposed to blood or OPIM, report it immediately and follow your practice's exposure control plan</li>
+</ul>
+
+<h3>Emergency Exits and Evacuation</h3>
+
+<ul>
+  <li>Know the location of <strong>all exits</strong> from your immediate work area</li>
+  <li>Know your practice's <strong>evacuation route</strong> and designated meeting point</li>
+  <li>Know the location of fire extinguishers and how to use them (PASS: Pull, Aim, Squeeze, Sweep)</li>
+  <li>Never block emergency exits with boxes, chairs, or equipment</li>
+  <li>Participate in fire drills and emergency evacuation drills</li>
+  <li>Know who is responsible for assisting patients with mobility limitations during evacuation</li>
+</ul>
+
+<h3>General Workplace Safety</h3>
+
+<ul>
+  <li><strong>Ergonomics:</strong> Your workstation should be set up to prevent repetitive strain injuries. Request an ergonomic assessment if you experience pain from your work setup.</li>
+  <li><strong>Workplace violence:</strong> Healthcare workers face a higher risk of workplace violence. Know your practice's policies for handling aggressive patients, and never hesitate to call for help.</li>
+  <li><strong>Reporting hazards:</strong> Report unsafe conditions (wet floors, broken equipment, exposed wiring, non-functioning exit signs) to your supervisor. You have the right to a safe workplace.</li>
+  <li><strong>Right to refuse unsafe work:</strong> Under OSHA, you have the right to refuse work that poses an imminent danger to your life or health.</li>
+</ul>
+
+<div class="callout callout-purple">
+  <div class="callout-label">Key Takeaway</div>
+  OSHA protections are <strong>your rights as an employee.</strong> Your employer is legally required to provide training, safety equipment, and a hazard-free workplace. If you feel your safety concerns are not being addressed, you can file a confidential complaint with OSHA without fear of retaliation.
+</div>
+
+<!-- ============================================================ -->
+<h2 id="annual-training">11. Annual Compliance Training Requirements</h2>
+
+<p>Federal and state regulations require healthcare organizations to provide ongoing compliance training to all workforce members, including front office staff. This is not optional &mdash; it is a legal requirement.</p>
+
+<h3>Required Annual Training Topics</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Training Topic</th>
+      <th>Requirement Source</th>
+      <th>Who Must Complete</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>HIPAA Privacy and Security</td>
+      <td>HIPAA (45 CFR 164.530)</td>
+      <td>All workforce members</td>
+    </tr>
+    <tr>
+      <td>Bloodborne Pathogens</td>
+      <td>OSHA (29 CFR 1910.1030)</td>
+      <td>All staff with potential exposure</td>
+    </tr>
+    <tr>
+      <td>Fire Safety and Emergency Procedures</td>
+      <td>OSHA / State fire codes</td>
+      <td>All employees</td>
+    </tr>
+    <tr>
+      <td>Fraud, Waste, and Abuse</td>
+      <td>OIG / CMS requirements</td>
+      <td>All staff involved in billing or patient interaction</td>
+    </tr>
+    <tr>
+      <td>Cultural Competency</td>
+      <td>Various state requirements</td>
+      <td>Varies by state</td>
+    </tr>
+    <tr>
+      <td>Workplace Harassment Prevention</td>
+      <td>EEOC / State laws</td>
+      <td>All employees</td>
+    </tr>
+    <tr>
+      <td>Infection Control</td>
+      <td>OSHA / State requirements</td>
+      <td>All clinical and front-facing staff</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Your Responsibilities</h3>
+
+<ul>
+  <li><strong>Complete all assigned training by the deadline.</strong> Late completions or missed training can result in disciplinary action and may jeopardize the practice's compliance standing.</li>
+  <li><strong>Sign all required attestations.</strong> Your signature confirms that you received, understood, and will comply with the training content.</li>
+  <li><strong>Ask questions.</strong> If anything in the training is unclear, ask your supervisor or compliance officer. "I didn't understand the policy" is not a valid defense for a violation.</li>
+  <li><strong>Apply what you learn.</strong> Training is not a checkbox exercise. The scenarios and procedures covered in compliance training are the same ones that will come up in your daily work.</li>
+</ul>
+
+<div class="callout callout-pink">
+  <div class="callout-label">Clinical Pearl</div>
+  Keep a personal record of all compliance training you complete, including dates and certificates. This protects you if there is ever a dispute about whether you were trained. Many employers provide certificates of completion &mdash; save them digitally and in print.
+</div>
+
+<h3>New Employee Training</h3>
+
+<p>New front office staff must receive HIPAA training <strong>within a reasonable time after hire</strong> (most practices require completion within 30 days). You should not have unsupervised access to PHI until you have completed initial HIPAA training. Additionally, retraining is required whenever:</p>
+
+<ul>
+  <li>Policies or procedures change materially</li>
+  <li>New regulations take effect</li>
+  <li>A breach or compliance incident occurs that identifies a training gap</li>
+  <li>An employee changes roles with different PHI access requirements</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="flowchart">12. Quick Reference: "Can I Share This?" Decision Flowchart</h2>
+
+<p>Use this flowchart whenever you are unsure whether you can share patient information. When in doubt, follow the path to "STOP" and consult your supervisor.</p>
+
+<div class="flowchart">
+  <div class="flow-box flow-start">Someone is requesting patient information</div>
+  <div class="flow-arrow"></div>
+
+  <div class="flow-box flow-question">Is the patient requesting their OWN information?</div>
+  <div class="flow-branch">
+    <div class="flow-branch-item">
+      <div class="flow-branch-label yes">YES</div>
+      <div class="flow-arrow"></div>
+      <div class="flow-box flow-question" style="font-size:0.9rem;">Have you verified their identity with two identifiers?</div>
+      <div class="flow-branch">
+        <div class="flow-branch-item">
+          <div class="flow-branch-label yes">YES</div>
+          <div class="flow-arrow"></div>
+          <div class="flow-box flow-go">Provide the requested information</div>
+        </div>
+        <div class="flow-branch-item">
+          <div class="flow-branch-label no">NO</div>
+          <div class="flow-arrow"></div>
+          <div class="flow-box flow-stop">STOP &mdash; Verify identity first</div>
+        </div>
+      </div>
+    </div>
+    <div class="flow-branch-item">
+      <div class="flow-branch-label no">NO</div>
+      <div class="flow-arrow"></div>
+      <div class="flow-box flow-question">Is it for Treatment, Payment, or Operations (TPO)?</div>
+      <div class="flow-branch">
+        <div class="flow-branch-item">
+          <div class="flow-branch-label yes">YES</div>
+          <div class="flow-arrow"></div>
+          <div class="flow-box flow-question" style="font-size:0.9rem;">Are you sharing only the minimum necessary?</div>
+          <div class="flow-branch">
+            <div class="flow-branch-item">
+              <div class="flow-branch-label yes">YES</div>
+              <div class="flow-arrow"></div>
+              <div class="flow-box flow-go">Proceed &mdash; document the disclosure</div>
+            </div>
+            <div class="flow-branch-item">
+              <div class="flow-branch-label no">NO</div>
+              <div class="flow-arrow"></div>
+              <div class="flow-box flow-stop">STOP &mdash; Limit information shared</div>
+            </div>
+          </div>
+        </div>
+        <div class="flow-branch-item">
+          <div class="flow-branch-label no">NO</div>
+          <div class="flow-arrow"></div>
+          <div class="flow-box flow-question">Is there a valid, signed authorization on file?</div>
+          <div class="flow-branch">
+            <div class="flow-branch-item">
+              <div class="flow-branch-label yes">YES</div>
+              <div class="flow-arrow"></div>
+              <div class="flow-box flow-question" style="font-size:0.9rem;">Does it contain all 8 required elements and is it current?</div>
+              <div class="flow-branch">
+                <div class="flow-branch-item">
+                  <div class="flow-branch-label yes">YES</div>
+                  <div class="flow-arrow"></div>
+                  <div class="flow-box flow-go">Release per authorization scope only</div>
+                </div>
+                <div class="flow-branch-item">
+                  <div class="flow-branch-label no">NO</div>
+                  <div class="flow-arrow"></div>
+                  <div class="flow-box flow-stop">STOP &mdash; Authorization is invalid</div>
+                </div>
+              </div>
+            </div>
+            <div class="flow-branch-item">
+              <div class="flow-branch-label no">NO</div>
+              <div class="flow-arrow"></div>
+              <div class="flow-box flow-question">Is it required by law? (Court order, subpoena, mandatory report)</div>
+              <div class="flow-branch">
+                <div class="flow-branch-item">
+                  <div class="flow-branch-label yes">YES</div>
+                  <div class="flow-arrow"></div>
+                  <div class="flow-box flow-yes" style="font-size:0.9rem;">Consult compliance officer &mdash; release per legal requirement</div>
+                </div>
+                <div class="flow-branch-item">
+                  <div class="flow-branch-label no">NO</div>
+                  <div class="flow-arrow"></div>
+                  <div class="flow-box flow-stop">DO NOT RELEASE &mdash; Consult supervisor</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="callout callout-orange">
+  <div class="callout-label">Warning</div>
+  <strong>Special categories require additional steps.</strong> If the request involves substance abuse records, psychotherapy notes, HIV/STI status, or minor patient records, standard authorizations may not be sufficient. Always check with the compliance officer before releasing information in these categories, even if a signed authorization exists.
+</div>
+
+<h3>Quick-Reference Cheat Sheet</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Who Is Asking?</th>
+      <th>Can I Share?</th>
+      <th>What to Do</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>The patient themselves</td>
+      <td>Yes (after identity verification)</td>
+      <td>Verify with 2 identifiers, then provide</td>
+    </tr>
+    <tr>
+      <td>Another treating provider</td>
+      <td>Yes (TPO exception)</td>
+      <td>Verify provider identity, send minimum necessary</td>
+    </tr>
+    <tr>
+      <td>Patient's spouse/family</td>
+      <td>Only with authorization</td>
+      <td>Check for signed authorization or patient verbal consent while present</td>
+    </tr>
+    <tr>
+      <td>Patient's employer</td>
+      <td>No (unless authorized)</td>
+      <td>Direct the employee to request their own records</td>
+    </tr>
+    <tr>
+      <td>Law enforcement</td>
+      <td>Only with warrant/subpoena</td>
+      <td>Do not release on verbal request; contact compliance officer</td>
+    </tr>
+    <tr>
+      <td>Insurance company</td>
+      <td>Yes (TPO for payment)</td>
+      <td>Verify identity, share minimum necessary for the claim</td>
+    </tr>
+    <tr>
+      <td>Attorney</td>
+      <td>Only with authorization or subpoena</td>
+      <td>Verify documentation, contact compliance officer</td>
+    </tr>
+    <tr>
+      <td>Media</td>
+      <td>Never</td>
+      <td>Direct all media inquiries to practice administrator</td>
+    </tr>
+    <tr>
+      <td>Random caller</td>
+      <td>Never</td>
+      <td>Do not confirm or deny patient status; offer to take a message</td>
+    </tr>
+    <tr>
+      <td>Other staff (non-treating)</td>
+      <td>Only if job-related need</td>
+      <td>Apply minimum necessary &mdash; curiosity is not a valid reason</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout callout-purple">
+  <div class="callout-label">Key Takeaway</div>
+  <strong>The default answer is always "No" until you can verify "Yes."</strong> It is always appropriate to say: "Let me check on that and get back to you." Taking time to verify is never wrong. Releasing information without verification can never be taken back.
+</div>
+
+<div class="quote-block">
+  "Privacy is not something that I'm merely entitled to, it's an absolute prerequisite." &mdash; The foundation of every patient's trust in your practice begins at the front desk. You are the first line of defense.
+</div>
+
+</div>
+</body>
+</html>

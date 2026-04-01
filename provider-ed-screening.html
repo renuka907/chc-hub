@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preventive Screening & Vaccine Guide by Age — CHC</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-deep: #1a0a2e;
+    --purple-mid: #2d1b4e;
+    --purple-light: #6c3fa0;
+    --pink: #e91e8c;
+    --orange: #ff6b35;
+    --gradient-main: linear-gradient(135deg, #6c3fa0, #e91e8c, #ff6b35);
+    --text-primary: #f0e6ff;
+    --text-secondary: #c4b0db;
+    --card-bg: rgba(45, 27, 78, 0.6);
+    --border-glow: rgba(108, 63, 160, 0.3);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--purple-deep);
+    color: var(--text-primary);
+    line-height: 1.8;
+    font-size: 17px;
+  }
+
+  .content {
+    max-width: 950px;
+    margin: 0 auto;
+    padding: 40px 30px;
+  }
+
+  h2.section-title {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: #fff;
+    border-bottom: 3px solid var(--purple-light);
+    padding-bottom: 8px;
+    margin: 30px 0 16px 0;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 20px 0 10px 0;
+  }
+
+  h4 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--purple-light);
+    margin: 14px 0 6px 0;
+  }
+
+  p { margin-bottom: 10px; }
+
+  .age-header {
+    background: var(--gradient-main);
+    color: #fff;
+    padding: 14px 24px;
+    border-radius: 12px;
+    margin: 30px 0 16px 0;
+    font-size: 1.7rem;
+    font-weight: 800;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.92rem;
+  }
+  th {
+    background: var(--gradient-main);
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.88rem;
+  }
+  th.vax {
+    background: linear-gradient(135deg, #6c3fa0, #9c27b0);
+  }
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(108, 63, 160, 0.2);
+    vertical-align: top;
+    color: var(--text-primary);
+  }
+  tr:nth-child(even) {
+    background: rgba(45, 27, 78, 0.4);
+  }
+  tr:nth-child(odd) {
+    background: rgba(26, 10, 46, 0.6);
+  }
+  tr:hover {
+    background: rgba(108, 63, 160, 0.2);
+  }
+
+  ul { margin: 6px 0 10px 20px; }
+  li { margin-bottom: 4px; }
+
+  /* Boxes */
+  .clinical-pearl {
+    background: rgba(233, 30, 140, 0.1);
+    border-left: 4px solid var(--pink);
+    padding: 14px 18px;
+    border-radius: 0 10px 10px 0;
+    margin: 12px 0;
+  }
+  .clinical-pearl h4 { margin-top: 0; color: var(--pink); }
+
+  .key-takeaway {
+    background: rgba(108, 63, 160, 0.15);
+    border-left: 4px solid var(--purple-light);
+    padding: 14px 18px;
+    border-radius: 0 10px 10px 0;
+    margin: 12px 0;
+  }
+  .key-takeaway h4 { margin-top: 0; color: var(--purple-light); }
+
+  .warning-box {
+    background: rgba(255, 107, 53, 0.1);
+    border-left: 4px solid var(--orange);
+    padding: 14px 18px;
+    border-radius: 0 10px 10px 0;
+    margin: 12px 0;
+  }
+  .warning-box h4 { margin-top: 0; color: var(--orange); }
+
+  .info-green {
+    background: rgba(76, 175, 80, 0.1);
+    border-left: 4px solid #4caf50;
+    padding: 14px 18px;
+    border-radius: 0 10px 10px 0;
+    margin: 12px 0;
+  }
+  .info-green h4 { margin-top: 0; color: #81c784; }
+
+  .info-red {
+    background: rgba(233, 30, 60, 0.1);
+    border-left: 4px solid #e53935;
+    padding: 14px 18px;
+    border-radius: 0 10px 10px 0;
+    margin: 12px 0;
+  }
+  .info-red h4 { margin-top: 0; color: #ef5350; }
+
+  /* Badges */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+  }
+  .badge-a { background: #2e7d32; }
+  .badge-b { background: #1565c0; }
+  .badge-risk { background: #e65100; }
+  .badge-vax { background: #7b1fa2; }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin: 12px 0;
+    font-size: 0.88rem;
+  }
+
+  .freq { color: #81d4fa; font-weight: 600; }
+  .highlight { background: rgba(255, 241, 118, 0.2); padding: 1px 5px; border-radius: 3px; }
+
+  strong { color: #fff; }
+
+  a { color: var(--pink); }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 12px 0;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-glow);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .card h4 { margin-top: 0; }
+
+  @media (max-width: 700px) {
+    .two-col { grid-template-columns: 1fr; }
+    .content { padding: 20px 16px; }
+    table { font-size: 0.82rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="content">
+
+<!-- HOW TO USE -->
+<h2 class="section-title">How to Use This Guide</h2>
+<p>This guide organizes all recommended preventive screenings and vaccinations by age group for your patient population. Use it during annual well-woman visits and primary care encounters to ensure nothing is missed.</p>
+
+<div class="legend">
+  <span><span class="badge badge-a">USPSTF A</span> = High certainty of substantial benefit</span>
+  <span><span class="badge badge-b">USPSTF B</span> = High certainty of moderate benefit</span>
+  <span><span class="badge badge-risk">RISK-BASED</span> = Based on risk factors</span>
+  <span><span class="badge badge-vax">VACCINE</span> = CDC/ACIP recommended</span>
+</div>
+
+<div class="key-takeaway">
+  <h4>Key Sources</h4>
+  <ul>
+    <li><strong>USPSTF</strong> — US Preventive Services Task Force (A & B recommendations)</li>
+    <li><strong>CDC/ACIP</strong> — Advisory Committee on Immunization Practices (vaccine schedule Oct 2025)</li>
+    <li><strong>ACOG</strong> — American College of Obstetricians and Gynecologists</li>
+    <li><strong>ACS</strong> — American Cancer Society</li>
+  </ul>
+</div>
+
+<!-- ==================== AGES 18-20 ==================== -->
+<div class="age-header">Ages 18–20</div>
+
+<h3>Screenings</h3>
+<table>
+  <tr><th>Screening</th><th>Recommendation</th><th>Frequency</th><th>Grade</th></tr>
+  <tr><td><strong>Blood Pressure</strong></td><td>Screen all adults 18 and older</td><td class="freq">Every visit / annually</td><td><span class="badge badge-a">A</span></td></tr>
+  <tr><td><strong>Depression</strong></td><td>Screen all adults including pregnant/postpartum</td><td class="freq">Annually (PHQ-9)</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Anxiety</strong></td><td>Screen adults 64 and under, including pregnant/postpartum</td><td class="freq">Annually (GAD-7)</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>HIV</strong></td><td>Screen ages 15-65; all pregnant persons</td><td class="freq">At least once; repeat if at risk</td><td><span class="badge badge-a">A</span></td></tr>
+  <tr><td><strong>Chlamydia</strong></td><td>Screen all sexually active women 24 and under</td><td class="freq">Annually</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Gonorrhea</strong></td><td>Screen all sexually active women 24 and under</td><td class="freq">Annually</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Hepatitis C</strong></td><td>Screen adults 18-79</td><td class="freq">Once</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Hepatitis B</strong></td><td>Screen if at increased risk</td><td class="freq">Risk-based</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>IPV Screening</strong></td><td>Screen women of reproductive age</td><td class="freq">Annually</td><td><span class="badge badge-b">B</span></td></tr>
+</table>
+
+<div class="warning-box">
+  <h4>Note: No Pap smear before age 21</h4>
+  <p>Cervical cancer screening does NOT begin until age 21 regardless of sexual activity (USPSTF Grade A).</p>
+</div>
+
+<h3>Vaccines</h3>
+<table>
+  <tr><th class="vax">Vaccine</th><th class="vax">Recommendation</th><th class="vax">Doses</th></tr>
+  <tr><td><strong>HPV (Gardasil 9)</strong></td><td>If not completed in adolescence — catch-up through age 26</td><td>2 or 3 doses (2 if started before 15; 3 if started at 15 or older)</td></tr>
+  <tr><td><strong>Influenza</strong></td><td>Annual flu vaccine</td><td>1 dose annually</td></tr>
+  <tr><td><strong>COVID-19</strong></td><td>2025-2026 updated vaccine</td><td>1+ doses</td></tr>
+  <tr><td><strong>Tdap/Td</strong></td><td>1 dose Tdap if not yet received; then Td/Tdap booster every 10 years</td><td>Booster every 10 years</td></tr>
+  <tr><td><strong>MMR</strong></td><td>If born 1957 or later and no evidence of immunity</td><td>1 or 2 doses</td></tr>
+  <tr><td><strong>Varicella</strong></td><td>If born 1980 or later and no evidence of immunity</td><td>2 doses</td></tr>
+  <tr><td><strong>Hepatitis B</strong></td><td>If not previously vaccinated</td><td>2-4 doses (depending on vaccine)</td></tr>
+  <tr><td><strong>Hepatitis A</strong></td><td>Risk-based or if desired</td><td>2-3 doses</td></tr>
+  <tr><td><strong>Meningococcal ACWY</strong></td><td>If not received in adolescence; risk-based</td><td>1-2 doses</td></tr>
+  <tr><td><strong>Meningococcal B</strong></td><td>Shared clinical decision-making ages 16-23 (preferred 16-18)</td><td>2-3 doses</td></tr>
+</table>
+
+<!-- ==================== AGES 21-29 ==================== -->
+<div class="age-header">Ages 21–29</div>
+
+<h3>Screenings</h3>
+<table>
+  <tr><th>Screening</th><th>Recommendation</th><th>Frequency</th><th>Grade</th></tr>
+  <tr><td><strong>Cervical Cancer (Pap)</strong></td><td>Cytology (Pap smear) alone — <strong>starts at age 21</strong></td><td class="freq">Every 3 years</td><td><span class="badge badge-a">A</span></td></tr>
+  <tr><td><strong>Blood Pressure</strong></td><td>Screen all adults</td><td class="freq">Every visit / annually</td><td><span class="badge badge-a">A</span></td></tr>
+  <tr><td><strong>Depression & Anxiety</strong></td><td>Screen all adults; pregnant/postpartum</td><td class="freq">Annually</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>HIV</strong></td><td>Screen ages 15-65</td><td class="freq">At least once; if at risk, repeat</td><td><span class="badge badge-a">A</span></td></tr>
+  <tr><td><strong>Chlamydia</strong></td><td>All sexually active women 24 and under</td><td class="freq">Annually (24 and under); risk-based 25+</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Gonorrhea</strong></td><td>All sexually active women 24 and under</td><td class="freq">Annually (24 and under); risk-based 25+</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Hepatitis C</strong></td><td>Screen adults 18-79</td><td class="freq">Once</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>IPV Screening</strong></td><td>Women of reproductive age</td><td class="freq">Annually</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Folic Acid</strong></td><td>All persons who could become pregnant: 400-800 mcg/day</td><td class="freq">Daily supplement</td><td><span class="badge badge-a">A</span></td></tr>
+</table>
+
+<h3>Vaccines</h3>
+<table>
+  <tr><th class="vax">Vaccine</th><th class="vax">Recommendation</th><th class="vax">Doses</th></tr>
+  <tr><td><strong>HPV</strong></td><td>Catch-up through age 26 if not completed</td><td>2-3 doses</td></tr>
+  <tr><td><strong>Influenza</strong></td><td>Annual</td><td>1 dose/year</td></tr>
+  <tr><td><strong>COVID-19</strong></td><td>Updated vaccine</td><td>1+ doses</td></tr>
+  <tr><td><strong>Tdap</strong></td><td>Booster every 10 years; 1 dose each pregnancy (27-36 wks)</td><td>Per schedule</td></tr>
+  <tr><td><strong>RSV</strong></td><td><strong>Seasonal during pregnancy</strong> (32-36 wks gestation, Sep-Jan)</td><td>1 dose per pregnancy</td></tr>
+  <tr><td><strong>Hepatitis B</strong></td><td>Complete series if not done</td><td>2-4 doses</td></tr>
+</table>
+
+<div class="clinical-pearl">
+  <h4>Pregnancy-Specific</h4>
+  <ul>
+    <li><strong>Tdap</strong> — 1 dose every pregnancy at 27-36 weeks gestation</li>
+    <li><strong>RSV vaccine</strong> — Seasonal (Sep-Jan), 32-36 weeks gestation, OR give baby nirsevimab after birth</li>
+    <li><strong>Flu vaccine</strong> — safe and recommended at any trimester</li>
+    <li><strong>GBS screen</strong> — 36-37 weeks (ACOG)</li>
+    <li><strong>Gestational diabetes</strong> — screen at 24-28 weeks (USPSTF B)</li>
+    <li><strong>Rh(D) typing</strong> — first prenatal visit</li>
+    <li><strong>Hep B</strong> — screen at first prenatal visit (USPSTF A)</li>
+    <li><strong>Bacteriuria</strong> — urine culture screen (USPSTF B)</li>
+    <li><strong>Preeclampsia</strong> — BP monitoring throughout; low-dose aspirin 81mg if high risk after 12 wks (USPSTF B)</li>
+  </ul>
+</div>
+
+<!-- ==================== AGES 30-39 ==================== -->
+<div class="age-header">Ages 30–39</div>
+
+<h3>Screenings</h3>
+<table>
+  <tr><th>Screening</th><th>Recommendation</th><th>Frequency</th><th>Grade</th></tr>
+  <tr><td><strong>Cervical Cancer</strong></td><td>Pap alone every 3 years, <strong>OR</strong> hrHPV alone every 5 years, <strong>OR</strong> co-test (Pap+HPV) every 5 years</td><td class="freq">Every 3 or 5 years</td><td><span class="badge badge-a">A</span></td></tr>
+  <tr><td><strong>Blood Pressure</strong></td><td>All adults</td><td class="freq">Every visit / annually</td><td><span class="badge badge-a">A</span></td></tr>
+  <tr><td><strong>Depression & Anxiety</strong></td><td>All adults</td><td class="freq">Annually</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>HIV</strong></td><td>Ages 15-65</td><td class="freq">Once; repeat if at risk</td><td><span class="badge badge-a">A</span></td></tr>
+  <tr><td><strong>STI Screening</strong></td><td>Chlamydia/gonorrhea if increased risk (25 and older)</td><td class="freq">Risk-based</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Hepatitis C</strong></td><td>Screen 18-79</td><td class="freq">Once</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Prediabetes/Type 2 DM</strong></td><td>Screen ages 35-70 with BMI 25 or above</td><td class="freq">Every 3 years</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>BRCA Risk Assessment</strong></td><td>Women with family hx of breast/ovarian/tubal/peritoneal cancer</td><td class="freq">Once + genetic counseling if positive</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Breast Cancer Risk-Reducing Meds</strong></td><td>Offer tamoxifen/raloxifene if 35 or older and increased risk</td><td class="freq">Risk-based</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>IPV Screening</strong></td><td>Women of reproductive age</td><td class="freq">Annually</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Folic Acid</strong></td><td>If could become pregnant: 400-800 mcg/day</td><td class="freq">Daily</td><td><span class="badge badge-a">A</span></td></tr>
+</table>
+
+<h3>Vaccines</h3>
+<table>
+  <tr><th class="vax">Vaccine</th><th class="vax">Recommendation</th><th class="vax">Doses</th></tr>
+  <tr><td><strong>Influenza</strong></td><td>Annual</td><td>1 dose/year</td></tr>
+  <tr><td><strong>COVID-19</strong></td><td>Updated vaccine</td><td>1+ doses</td></tr>
+  <tr><td><strong>Tdap/Td</strong></td><td>Booster every 10 years; each pregnancy</td><td>Per schedule</td></tr>
+  <tr><td><strong>HPV</strong></td><td>Shared decision-making ages 27-45 if not previously vaccinated</td><td>3 doses</td></tr>
+  <tr><td><strong>Hepatitis B</strong></td><td>Complete series if not done</td><td>2-4 doses</td></tr>
+</table>
+
+<!-- ==================== AGES 40-49 ==================== -->
+<div class="age-header">Ages 40–49</div>
+
+<h3>Screenings</h3>
+<table>
+  <tr><th>Screening</th><th>Recommendation</th><th>Frequency</th><th>Grade</th></tr>
+  <tr><td><strong>Breast Cancer (Mammogram)</strong></td><td><strong>Biennial mammography — STARTS AT 40</strong> (updated 2024)</td><td class="freq">Every 2 years</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Cervical Cancer</strong></td><td>Pap every 3 years, hrHPV every 5 years, or co-test every 5 years (ages 30-65)</td><td class="freq">Every 3 or 5 years</td><td><span class="badge badge-a">A</span></td></tr>
+  <tr><td><strong>Colorectal Cancer</strong></td><td><strong>Begin at 45</strong> — Colonoscopy, FIT, Cologuard, etc.</td><td class="freq">Per method (colonoscopy every 10 years; FIT annually; Cologuard every 3 years)</td><td><span class="badge badge-b">B</span> (45-49)</td></tr>
+  <tr><td><strong>Blood Pressure</strong></td><td>All adults</td><td class="freq">Every visit</td><td><span class="badge badge-a">A</span></td></tr>
+  <tr><td><strong>Prediabetes/Type 2 DM</strong></td><td>Ages 35-70 with BMI 25 or above</td><td class="freq">Every 3 years</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Depression & Anxiety</strong></td><td>All adults</td><td class="freq">Annually</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Statin Use (CVD Prevention)</strong></td><td>Ages 40-75 with 1 or more CVD risk factors + 10-year risk 10% or above</td><td class="freq">Calculate 10-yr ASCVD risk</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>HIV</strong></td><td>Ages 15-65</td><td class="freq">Once; repeat if at risk</td><td><span class="badge badge-a">A</span></td></tr>
+  <tr><td><strong>Hepatitis C</strong></td><td>Ages 18-79</td><td class="freq">Once</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Lung Cancer</strong></td><td>Ages 50-80 with 20+ pack-year hx + current/quit less than 15 years</td><td class="freq">Annual LDCT (starts 50)</td><td><span class="badge badge-b">B</span></td></tr>
+</table>
+
+<h3>Vaccines</h3>
+<table>
+  <tr><th class="vax">Vaccine</th><th class="vax">Recommendation</th><th class="vax">Doses</th></tr>
+  <tr><td><strong>Influenza</strong></td><td>Annual</td><td>1 dose/year</td></tr>
+  <tr><td><strong>COVID-19</strong></td><td>Updated vaccine</td><td>1+ doses</td></tr>
+  <tr><td><strong>Tdap/Td</strong></td><td>Booster every 10 years</td><td>Per schedule</td></tr>
+  <tr><td><strong>HPV</strong></td><td>Shared decision-making through age 45</td><td>3 doses</td></tr>
+  <tr><td><strong>Hepatitis B</strong></td><td>Complete series if not done</td><td>2-4 doses</td></tr>
+</table>
+
+<div class="key-takeaway">
+  <h4>2024 USPSTF Update: Mammography now starts at 40</h4>
+  <p>The USPSTF updated their breast cancer screening recommendation in April 2024: <strong>biennial screening mammography for ALL women aged 40-74</strong>. Previously, screening before 50 was an individual decision. This is now a Grade B recommendation for ages 40-74.</p>
+</div>
+
+<!-- ==================== AGES 50-64 ==================== -->
+<div class="age-header">Ages 50–64</div>
+
+<h3>Screenings</h3>
+<table>
+  <tr><th>Screening</th><th>Recommendation</th><th>Frequency</th><th>Grade</th></tr>
+  <tr><td><strong>Breast Cancer</strong></td><td>Biennial mammography</td><td class="freq">Every 2 years</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Cervical Cancer</strong></td><td>Pap every 3 years, hrHPV every 5 years, or co-test every 5 years (through age 65)</td><td class="freq">Every 3 or 5 years</td><td><span class="badge badge-a">A</span></td></tr>
+  <tr><td><strong>Colorectal Cancer</strong></td><td>All adults 50-75</td><td class="freq">Per method</td><td><span class="badge badge-a">A</span></td></tr>
+  <tr><td><strong>Lung Cancer</strong></td><td>Ages 50-80 with 20+ pack-year hx</td><td class="freq">Annual LDCT</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Blood Pressure</strong></td><td>All adults</td><td class="freq">Every visit</td><td><span class="badge badge-a">A</span></td></tr>
+  <tr><td><strong>Prediabetes/Type 2 DM</strong></td><td>Ages 35-70 with BMI 25 or above</td><td class="freq">Every 3 years</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Lipid Panel</strong></td><td>CVD risk assessment</td><td class="freq">Per risk calculation</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Statin Use</strong></td><td>40-75 with CVD risk factors + 10-year risk 10% or above</td><td class="freq">Calculate ASCVD risk</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Depression & Anxiety</strong></td><td>All adults (anxiety screen 64 and under)</td><td class="freq">Annually</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>HIV</strong></td><td>Ages 15-65</td><td class="freq">Once</td><td><span class="badge badge-a">A</span></td></tr>
+  <tr><td><strong>Hepatitis C</strong></td><td>Ages 18-79</td><td class="freq">Once</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Osteoporosis</strong></td><td>Postmenopausal women under 65 with risk factors (use FRAX)</td><td class="freq">Risk-based DEXA</td><td><span class="badge badge-b">B</span></td></tr>
+</table>
+
+<h3>Vaccines</h3>
+<table>
+  <tr><th class="vax">Vaccine</th><th class="vax">Recommendation</th><th class="vax">Doses</th></tr>
+  <tr><td><strong>Influenza</strong></td><td>Annual</td><td>1 dose/year</td></tr>
+  <tr><td><strong>COVID-19</strong></td><td>Updated vaccine</td><td>1+ doses</td></tr>
+  <tr><td><strong>Tdap/Td</strong></td><td>Booster every 10 years</td><td>Per schedule</td></tr>
+  <tr><td><strong>Shingles (Shingrix)</strong></td><td><strong>Start at age 50</strong> — all immunocompetent adults</td><td>2 doses (2-6 months apart)</td></tr>
+  <tr><td><strong>Pneumococcal</strong></td><td>Risk-based (immunocompromised, chronic conditions)</td><td>See notes</td></tr>
+  <tr><td><strong>RSV</strong></td><td>Shared decision-making ages 60-74</td><td>1 dose</td></tr>
+</table>
+
+<div class="info-green">
+  <h4>Age 50 Milestones</h4>
+  <ul>
+    <li><strong>Shingrix (Shingles vaccine)</strong> — 2 doses starting at 50</li>
+    <li><strong>Lung cancer screening</strong> — annual LDCT if 20+ pack-year smoking history</li>
+    <li><strong>Colorectal cancer screening</strong> — now USPSTF Grade A (was B for 45-49)</li>
+  </ul>
+</div>
+
+<!-- ==================== AGES 65+ ==================== -->
+<div class="age-header">Ages 65+</div>
+
+<h3>Screenings</h3>
+<table>
+  <tr><th>Screening</th><th>Recommendation</th><th>Frequency</th><th>Grade</th></tr>
+  <tr><td><strong>Breast Cancer</strong></td><td>Biennial mammography through age 74</td><td class="freq">Every 2 years (40-74)</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Cervical Cancer</strong></td><td><strong>STOP at 65</strong> if adequate prior screening and not high risk</td><td class="freq">Discontinue</td><td><span class="badge badge-a">A</span></td></tr>
+  <tr><td><strong>Colorectal Cancer</strong></td><td>Continue through age 75; 76-85 = individualized</td><td class="freq">Per method</td><td><span class="badge badge-a">A</span> (50-75)</td></tr>
+  <tr><td><strong>Lung Cancer</strong></td><td>50-80 with 20+ pack-year hx</td><td class="freq">Annual LDCT</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Osteoporosis (DEXA)</strong></td><td><strong>All women 65 and older</strong></td><td class="freq">Baseline DEXA; repeat per risk</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Blood Pressure</strong></td><td>All adults</td><td class="freq">Every visit</td><td><span class="badge badge-a">A</span></td></tr>
+  <tr><td><strong>Prediabetes/Type 2 DM</strong></td><td>35-70 with BMI 25 or above</td><td class="freq">Every 3 years</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Depression</strong></td><td>All adults including older adults</td><td class="freq">Annually</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>AAA (Men only)</strong></td><td>Men 65-75 who have ever smoked: 1-time ultrasound</td><td class="freq">Once</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Falls Prevention</strong></td><td>Exercise interventions for adults 65 and older at increased fall risk</td><td class="freq">Ongoing</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Hepatitis C</strong></td><td>Ages 18-79</td><td class="freq">Once if not done</td><td><span class="badge badge-b">B</span></td></tr>
+</table>
+
+<h3>Vaccines</h3>
+<table>
+  <tr><th class="vax">Vaccine</th><th class="vax">Recommendation</th><th class="vax">Doses</th></tr>
+  <tr><td><strong>Influenza (high-dose)</strong></td><td>Annual — <strong>HD-IIV3, RIV3, or aIIV3 preferred</strong> for 65+</td><td>1 dose/year</td></tr>
+  <tr><td><strong>COVID-19</strong></td><td>Updated vaccine — <strong>2+ doses recommended</strong> for 65+</td><td>2+ doses</td></tr>
+  <tr><td><strong>Pneumococcal (PCV20 or PCV15+PPSV23)</strong></td><td><strong>All adults 65+</strong> who haven't received PCV20</td><td>1 dose PCV20 (or PCV15 then PPSV23)</td></tr>
+  <tr><td><strong>Shingles (Shingrix)</strong></td><td>If not yet received</td><td>2 doses</td></tr>
+  <tr><td><strong>Tdap/Td</strong></td><td>Booster every 10 years</td><td>Per schedule</td></tr>
+  <tr><td><strong>RSV</strong></td><td>75+ years: recommended; 60-74: shared decision</td><td>1 dose</td></tr>
+</table>
+
+<div class="info-red">
+  <h4>When to STOP Screening</h4>
+  <ul>
+    <li><strong>Cervical cancer (Pap/HPV)</strong> — Stop at 65 if adequate prior screening (3 consecutive normal Paps or 2 negative co-tests in last 10 years)</li>
+    <li><strong>Breast cancer (Mammogram)</strong> — Current USPSTF recommendation goes through age 74; beyond 74 = insufficient evidence</li>
+    <li><strong>Colorectal cancer</strong> — Routine through 75; ages 76-85 individualized; stop at 85</li>
+    <li><strong>Lung cancer</strong> — Stop at 80 or if quit smoking more than 15 years ago</li>
+  </ul>
+</div>
+
+<!-- ==================== QUICK REFERENCE ==================== -->
+<h2 class="section-title">Quick Reference — When Does Each Screening Start?</h2>
+
+<table>
+  <tr><th>Screening</th><th>Start Age</th><th>Stop Age</th><th>Frequency</th></tr>
+  <tr><td>Blood Pressure</td><td><strong>18</strong></td><td>Lifetime</td><td>Every visit</td></tr>
+  <tr><td>Depression (PHQ-9)</td><td><strong>12</strong> (adolescents)</td><td>Lifetime</td><td>Annually</td></tr>
+  <tr><td>Anxiety (GAD-7)</td><td><strong>8</strong> (children)</td><td>64</td><td>Annually</td></tr>
+  <tr><td>Chlamydia/Gonorrhea</td><td><strong>Sexually active</strong></td><td>24 (routine); 25+ risk-based</td><td>Annually (24 and under)</td></tr>
+  <tr><td>HIV</td><td><strong>15</strong></td><td>65+</td><td>At least once</td></tr>
+  <tr><td>Hepatitis C</td><td><strong>18</strong></td><td>79</td><td>Once</td></tr>
+  <tr><td>Cervical Cancer (Pap)</td><td><strong>21</strong></td><td><strong>65</strong></td><td>Every 3 years (Pap) or every 5 years (HPV/co-test)</td></tr>
+  <tr><td>Prediabetes/Type 2 DM</td><td><strong>35</strong> (if BMI 25+)</td><td>70</td><td>Every 3 years</td></tr>
+  <tr><td>Breast Cancer (Mammogram)</td><td><strong>40</strong></td><td>74</td><td>Every 2 years</td></tr>
+  <tr><td>Colorectal Cancer</td><td><strong>45</strong></td><td>75 (76-85 individualized)</td><td>Per method</td></tr>
+  <tr><td>Lung Cancer (LDCT)</td><td><strong>50</strong> (if 20+ pack-yr)</td><td>80</td><td>Annually</td></tr>
+  <tr><td>Osteoporosis (DEXA)</td><td><strong>65</strong> (or earlier if risk factors)</td><td>Ongoing</td><td>Baseline + per risk</td></tr>
+  <tr><td>Statin for CVD Prevention</td><td><strong>40</strong> (with risk factors)</td><td>75</td><td>10-yr ASCVD risk calc</td></tr>
+</table>
+
+<h2 class="section-title" style="margin-top: 30px;">Vaccine Quick Reference</h2>
+<table>
+  <tr><th>Vaccine</th><th>Age Range</th><th>Doses</th><th>Key Notes</th></tr>
+  <tr><td>HPV (Gardasil 9)</td><td>9-26 (catch-up); 27-45 (shared decision)</td><td>2-3</td><td>Best before sexual debut</td></tr>
+  <tr><td>Influenza</td><td>6 months and older — lifetime</td><td>1/year</td><td>High-dose for 65+</td></tr>
+  <tr><td>COVID-19</td><td>All adults</td><td>1-2+</td><td>2+ doses for 65+</td></tr>
+  <tr><td>Tdap/Td</td><td>All adults</td><td>Every 10 years</td><td>Tdap each pregnancy (27-36 wks)</td></tr>
+  <tr><td>MMR</td><td>Born 1957 or later, no immunity</td><td>1-2</td><td>Check titer if uncertain</td></tr>
+  <tr><td>Varicella</td><td>Born 1980 or later, no immunity</td><td>2</td><td>Check titer if uncertain</td></tr>
+  <tr><td>Shingrix (Shingles)</td><td><strong>50+</strong></td><td>2</td><td>2-6 months apart; even if prior Zostavax</td></tr>
+  <tr><td>Pneumococcal (PCV20)</td><td><strong>65+</strong> (or younger if risk)</td><td>1</td><td>PCV20 preferred; or PCV15 then PPSV23</td></tr>
+  <tr><td>Hepatitis B</td><td>All adults 19-59; 60+ risk-based</td><td>2-4</td><td>Heplisav-B = 2 doses</td></tr>
+  <tr><td>Hepatitis A</td><td>Risk-based</td><td>2-3</td><td>Travel, liver disease, etc.</td></tr>
+  <tr><td>RSV</td><td>Pregnancy (32-36 wks); 60+ (shared); 75+</td><td>1</td><td>Seasonal Sep-Jan for pregnancy</td></tr>
+  <tr><td>Meningococcal ACWY</td><td>Risk-based adults</td><td>1-2</td><td>Required for military, college dorms</td></tr>
+</table>
+
+<!-- MALE PATIENTS -->
+<h2 class="section-title">Male Patients — Additional Screenings</h2>
+<p>If CHC sees male patients for primary care, these additional screenings apply:</p>
+
+<table>
+  <tr><th>Screening</th><th>Recommendation</th><th>Age</th><th>Grade</th></tr>
+  <tr><td><strong>AAA (Abdominal Aortic Aneurysm)</strong></td><td>1-time ultrasound for men who have EVER smoked</td><td>65-75</td><td><span class="badge badge-b">B</span></td></tr>
+  <tr><td><strong>Prostate Cancer (PSA)</strong></td><td>Shared decision-making — discuss risks/benefits of PSA testing</td><td>55-69</td><td>USPSTF C (individual decision)</td></tr>
+</table>
+
+<div class="warning-box">
+  <h4>PSA Screening Note</h4>
+  <p>The USPSTF gives PSA screening a <strong>Grade C</strong> (individualized decision) for men 55-69. It's NOT routinely recommended but should be offered after shared decision-making discussion. <strong>Grade D (against)</strong> for men 70 and older. ACS recommends discussion starting at 50 (or 40-45 for high-risk: African American, family history).</p>
+</div>
+
+<h2 class="section-title" style="margin-top: 30px;">Prenatal Screening Summary</h2>
+<table>
+  <tr><th>Timing</th><th>Screenings</th></tr>
+  <tr><td><strong>First Prenatal Visit</strong></td><td>CBC, blood type/Rh, antibody screen, Hep B surface antigen, HIV, RPR/VDRL (syphilis), rubella titer, varicella titer, urine culture (bacteriuria), Pap if due, chlamydia/gonorrhea</td></tr>
+  <tr><td><strong>15-20 weeks</strong></td><td>Quad screen or cell-free DNA (if not done earlier); anatomy ultrasound (18-22 wks)</td></tr>
+  <tr><td><strong>24-28 weeks</strong></td><td>Gestational diabetes screen (1-hour glucose challenge); Rh antibody if Rh-negative; RhoGAM if needed</td></tr>
+  <tr><td><strong>27-36 weeks</strong></td><td>Tdap vaccine</td></tr>
+  <tr><td><strong>32-36 weeks</strong></td><td>RSV vaccine (seasonal, Sep-Jan)</td></tr>
+  <tr><td><strong>36-37 weeks</strong></td><td>GBS culture (vaginal/rectal swab)</td></tr>
+  <tr><td><strong>Each visit</strong></td><td>Blood pressure (preeclampsia screening), weight, fundal height, fetal heart tones</td></tr>
+</table>
+
+<div class="key-takeaway" style="margin-top: 30px;">
+  <h4>Sources</h4>
+  <p>USPSTF A&B Recommendations (2025) | CDC/ACIP Immunization Schedule (Oct 2025) | ACOG | ACS<br>
+  Always verify current guidelines at <a href="https://www.uspreventiveservicestaskforce.org">uspreventiveservicestaskforce.org</a> and <a href="https://www.cdc.gov/vaccines/hcp/imz-schedules/">cdc.gov/vaccines</a></p>
+</div>
+
+</div><!-- end .content -->
+
+</body>
+</html>

@@ -14,6 +14,12 @@ const PAGES_BY_CATEGORY = {
         { id: 'labTests', name: 'Lab Tests', actions: ['view', 'create', 'edit', 'delete'] },
         { id: 'medicationCalculator', name: 'Medication Calculator', actions: ['view', 'use'] },
     ],
+    'Education': [
+        { id: 'education_library', name: 'Education Library', actions: ['view', 'create', 'edit', 'delete'] },
+        { id: 'provider_education', name: 'Provider Education', actions: ['view', 'edit'] },
+        { id: 'ma_education', name: 'MA Education', actions: ['view', 'edit'] },
+        { id: 'front_office_education', name: 'Front Office Education', actions: ['view', 'edit'] },
+    ],
     'Documents & Forms': [
         { id: 'library', name: 'Resource Library', actions: ['view', 'create', 'edit', 'delete'] },
         { id: 'formTemplates', name: 'Form Templates', actions: ['view', 'create', 'edit', 'delete'] },

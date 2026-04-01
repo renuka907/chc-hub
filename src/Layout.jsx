@@ -120,6 +120,7 @@ export default function Layout({ children, currentPageName }) {
                 { name: "Medication Reference", path: "MedicationReference", icon: Stethoscope },
                 { name: "Provider Directory", path: "ProviderReferral", icon: Users },
                 { name: "Skin Analysis", path: "SkinAnalysis", icon: Sparkles },
+                { name: "Tanita Calculator", path: "TanitaCalculator", icon: Activity },
                 { name: "Provider Education", path: "ProviderEducation", icon: GraduationCap },
                 { name: "MA Education", path: "MAEducation", icon: Stethoscope },
                 { name: "Front Office Education", path: "FrontOfficeEducation", icon: Building2 },

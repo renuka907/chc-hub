@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patient Check-In &amp; Check-Out Procedures | Front Office Education</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple-deep: #1a0a2e;
+  --purple-mid: #2d1b4e;
+  --purple-light: #6c3fa0;
+  --pink: #e91e8c;
+  --orange: #ff6b35;
+  --gradient-main: linear-gradient(135deg, #6c3fa0, #e91e8c, #ff6b35);
+  --text-primary: #f0e6ff;
+  --text-secondary: #c4b0db;
+  --card-bg: rgba(45, 27, 78, 0.6);
+  --border-glow: rgba(108, 63, 160, 0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--purple-deep);
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-size: 17px;
+}
+
+.container {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  font-weight: 600;
+}
+
+h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-top: 48px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border-glow);
+}
+
+h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #d4a5ff;
+  margin-top: 28px;
+  margin-bottom: 12px;
+}
+
+h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--pink);
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+
+p { margin-bottom: 14px; }
+
+a { color: var(--pink); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Table of Contents */
+.toc {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 36px;
+}
+
+.toc-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--pink);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.toc ol {
+  padding-left: 20px;
+}
+
+.toc li {
+  margin-bottom: 6px;
+}
+
+.toc a {
+  color: var(--text-secondary);
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.toc a:hover {
+  color: var(--pink);
+}
+
+/* Callout boxes */
+.callout {
+  border-left: 4px solid;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 20px 0;
+  background: var(--card-bg);
+}
+
+.callout-pink {
+  border-color: var(--pink);
+}
+
+.callout-purple {
+  border-color: var(--purple-light);
+}
+
+.callout-orange {
+  border-color: var(--orange);
+}
+
+.callout-label {
+  font-weight: 800;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.callout-pink .callout-label { color: var(--pink); }
+.callout-purple .callout-label { color: #b388ff; }
+.callout-orange .callout-label { color: var(--orange); }
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 0.95rem;
+}
+
+thead th {
+  background: var(--gradient-main);
+  color: #fff;
+  font-weight: 700;
+  padding: 12px 14px;
+  text-align: left;
+}
+
+thead th:first-child { border-radius: 8px 0 0 0; }
+thead th:last-child { border-radius: 0 8px 0 0; }
+
+tbody td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border-glow);
+  vertical-align: top;
+}
+
+tbody tr:hover {
+  background: rgba(108, 63, 160, 0.15);
+}
+
+/* Ordered & unordered lists */
+ul, ol {
+  margin: 10px 0 16px 24px;
+}
+
+li {
+  margin-bottom: 6px;
+}
+
+li ul, li ol {
+  margin-top: 6px;
+  margin-bottom: 4px;
+}
+
+/* Step boxes */
+.step-box {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin: 16px 0;
+}
+
+.step-number {
+  display: inline-block;
+  background: var(--gradient-main);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  text-align: center;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.step-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+}
+
+.step-body {
+  margin-top: 8px;
+  color: var(--text-secondary);
+}
+
+/* Checklist */
+.checklist {
+  list-style: none;
+  padding-left: 0;
+  margin: 12px 0;
+}
+
+.checklist li {
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 8px;
+}
+
+.checklist li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--purple-light);
+  border-radius: 3px;
+}
+
+/* Scenario block */
+.scenario {
+  background: rgba(233, 30, 140, 0.08);
+  border: 1px solid rgba(233, 30, 140, 0.25);
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin: 20px 0;
+}
+
+.scenario-title {
+  font-weight: 800;
+  color: var(--pink);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+/* Section divider */
+.divider {
+  height: 2px;
+  background: var(--gradient-main);
+  border: none;
+  margin: 40px 0;
+  border-radius: 2px;
+  opacity: 0.5;
+}
+
+/* Flowchart-style box */
+.flow-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.flow-step {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 8px;
+  padding: 12px 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.flow-arrow {
+  text-align: center;
+  color: var(--purple-light);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* Two-column layout */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.col-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 10px;
+  padding: 18px;
+}
+
+.col-card h4 {
+  margin-top: 0;
+}
+
+@media (max-width: 600px) {
+  .two-col { grid-template-columns: 1fr; }
+  h1 { font-size: 1.7rem; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Patient Check-In &amp; Check-Out Procedures</h1>
+<p class="subtitle">Front Office Education Guide &mdash; HRT &amp; Wellness Clinic</p>
+
+<!-- TABLE OF CONTENTS -->
+<nav class="toc">
+  <div class="toc-title">Table of Contents</div>
+  <ol>
+    <li><a href="#first-impressions">First Impressions Matter</a></li>
+    <li><a href="#standard-checkin">Standard Check-In Workflow</a></li>
+    <li><a href="#visit-specific">Visit-Specific Check-In Procedures</a>
+      <ol>
+        <li><a href="#pellet-checkin">Pellet Insertion Visits</a></li>
+        <li><a href="#glp1-checkin">GLP-1 Medication Visits</a></li>
+        <li><a href="#lab-checkin">Lab-Only Visits</a></li>
+        <li><a href="#new-patient-checkin">New Patient Visits</a></li>
+      </ol>
+    </li>
+    <li><a href="#walkins-scheduled">Walk-Ins vs. Scheduled Patients</a></li>
+    <li><a href="#forms-management">Forms Management</a></li>
+    <li><a href="#checkout-workflow">Check-Out Workflow</a></li>
+    <li><a href="#visit-specific-checkout">Visit-Specific Check-Out Procedures</a>
+      <ol>
+        <li><a href="#pellet-checkout">Pellet Insertion Check-Out</a></li>
+        <li><a href="#glp1-checkout">GLP-1 Check-Out</a></li>
+        <li><a href="#lab-checkout">Lab-Only Check-Out</a></li>
+      </ol>
+    </li>
+    <li><a href="#eod-closing">End-of-Day Closing</a></li>
+    <li><a href="#quick-reference">Quick Reference Checklists</a></li>
+    <li><a href="#common-scenarios">Common Scenarios &amp; How to Handle Them</a></li>
+  </ol>
+</nav>
+
+<hr class="divider">
+
+<!-- SECTION 1: FIRST IMPRESSIONS -->
+<h2 id="first-impressions">1. First Impressions Matter</h2>
+
+<p>The front office sets the tone for the entire patient experience. Many of our patients are seeking hormone replacement therapy or weight management for the first time, and they may feel anxious, vulnerable, or uncertain. Your greeting is the first clinical intervention of their visit.</p>
+
+<h3>The 10-Second Rule</h3>
+<p>Patients form their opinion of the practice within the first 10 seconds of interaction. Those seconds are defined by three things:</p>
+
+<ol>
+  <li><strong>Eye contact</strong> &mdash; Look up from the screen immediately when a patient approaches the window. If you are on the phone, make eye contact and hold up one finger to acknowledge them.</li>
+  <li><strong>A genuine greeting</strong> &mdash; Use a warm, professional tone. The standard greeting is: <em>"Welcome to [Clinic Name]. How can I help you today?"</em></li>
+  <li><strong>Body language</strong> &mdash; Lean slightly forward, keep an open posture, and smile. Even behind a glass window, patients can sense engagement versus indifference.</li>
+</ol>
+
+<div class="callout callout-purple">
+  <div class="callout-label">Key Takeaway</div>
+  <p>Never let a patient stand at the window for more than 15 seconds without acknowledgment. If you are busy, a simple "I'll be right with you" prevents the feeling of being invisible.</p>
+</div>
+
+<h3>Privacy at the Front Desk</h3>
+<p>Our patients often have sensitive health concerns. Keep these habits consistent:</p>
+
+<ul>
+  <li>Lower your voice when discussing visit types, diagnoses, or medication names near the window.</li>
+  <li>Never call out the reason for a visit in a waiting room. Use the patient's name only: <em>"Sarah, we're ready for you."</em></li>
+  <li>Position your monitor so the screen is not visible to other patients standing at the check-in window.</li>
+  <li>If a patient needs to discuss something sensitive, offer to step to a private area or lower window partition if available.</li>
+</ul>
+
+<h3>Setting the Professional Standard</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Do</th>
+      <th>Don't</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Greet every patient by name when possible</td>
+      <td>Continue a personal conversation while a patient waits</td>
+    </tr>
+    <tr>
+      <td>Keep the front desk organized and clutter-free</td>
+      <td>Eat at the front desk during patient hours</td>
+    </tr>
+    <tr>
+      <td>Keep personal phone out of sight</td>
+      <td>Scroll your phone while patients are in the waiting room</td>
+    </tr>
+    <tr>
+      <td>Offer water or direct patients to beverages</td>
+      <td>Gossip about patients, providers, or coworkers within earshot</td>
+    </tr>
+    <tr>
+      <td>Maintain a calm demeanor even when behind schedule</td>
+      <td>Complain about how busy or short-staffed you are</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout callout-pink">
+  <div class="callout-label">Clinical Pearl</div>
+  <p>Patients undergoing hormone therapy or weight management often experience mood fluctuations as part of their treatment. A patient who seems irritable or emotional may be experiencing a physiological response. Respond with extra patience and compassion rather than taking the behavior personally.</p>
+</div>
+
+<hr class="divider">
+
+<!-- SECTION 2: STANDARD CHECK-IN -->
+<h2 id="standard-checkin">2. Standard Check-In Workflow</h2>
+
+<p>Every patient visit begins with the same foundational check-in steps, regardless of visit type. This section covers the universal process. Visit-specific additions are covered in Section 3.</p>
+
+<div class="step-box">
+  <div><span class="step-number">1</span><span class="step-title">Greet the Patient</span></div>
+  <div class="step-body">
+    <p>Welcome the patient warmly. If they are a returning patient, acknowledge them by name: <em>"Welcome back, Ms. Johnson."</em> For new patients: <em>"Welcome to [Clinic Name]. We're glad you're here."</em></p>
+    <p>Ask for their name and appointment time. Pull up their chart in the EMR before proceeding.</p>
+  </div>
+</div>
+
+<div class="step-box">
+  <div><span class="step-number">2</span><span class="step-title">Verify Identity</span></div>
+  <div class="step-body">
+    <p>Two-point identification is required for every visit, every time&mdash;no exceptions:</p>
+    <ul>
+      <li><strong>Full legal name</strong> &mdash; Ask the patient to state their full name (do not read it to them).</li>
+      <li><strong>Date of birth</strong> &mdash; Ask the patient to state their date of birth and verify against the chart.</li>
+    </ul>
+    <p>If the patient is new, request a government-issued photo ID. Scan or photocopy it per clinic policy.</p>
+  </div>
+</div>
+
+<div class="callout callout-orange">
+  <div class="callout-label">Warning</div>
+  <p>Never skip identity verification, even for patients you recognize. This is a patient safety and compliance requirement. Verifying the wrong patient can lead to incorrect treatments, medication errors, and liability exposure.</p>
+</div>
+
+<div class="step-box">
+  <div><span class="step-number">3</span><span class="step-title">Update Demographics</span></div>
+  <div class="step-body">
+    <p>Confirm or update the following at every visit:</p>
+    <ul>
+      <li>Current address</li>
+      <li>Phone number (primary and secondary)</li>
+      <li>Email address</li>
+      <li>Emergency contact name and phone number</li>
+      <li>Preferred pharmacy (especially important for GLP-1 and other prescription patients)</li>
+    </ul>
+    <p>Ask: <em>"Has anything changed since your last visit&mdash;address, phone number, emergency contact, or pharmacy?"</em></p>
+    <p>If the patient says "no," still visually confirm the phone number and address on file are correct. Patients often forget to mention changes.</p>
+  </div>
+</div>
+
+<div class="step-box">
+  <div><span class="step-number">4</span><span class="step-title">Insurance Verification &amp; Scan</span></div>
+  <div class="step-body">
+    <p>Request the patient's insurance card at every visit. Even for self-pay patients, confirm their payment method:</p>
+    <ul>
+      <li>Scan the front and back of the insurance card.</li>
+      <li>Verify the member ID, group number, and effective date match the EMR.</li>
+      <li>If the insurance has changed since the last visit, update the EMR immediately and flag for the billing team to re-verify benefits.</li>
+      <li>For self-pay patients, confirm they understand the self-pay pricing and document acknowledgment.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="callout callout-pink">
+  <div class="callout-label">Clinical Pearl</div>
+  <p>Many HRT and weight management services are not covered by insurance. Be prepared to explain that certain services (pellet insertions, GLP-1 prescriptions, nutraceuticals) may be self-pay even if the patient has insurance. Use the phrase: <em>"This particular service is a self-pay service. I can go over the pricing with you before we get started."</em> Never promise coverage without verification.</p>
+</div>
+
+<div class="step-box">
+  <div><span class="step-number">5</span><span class="step-title">Collect Copay or Payment</span></div>
+  <div class="step-body">
+    <p>Collect payment before the patient is seen whenever possible:</p>
+    <ul>
+      <li><strong>Insurance patients:</strong> Collect copay per the eligibility check. If unsure, check the benefits verification in the system or ask the billing team.</li>
+      <li><strong>Self-pay patients:</strong> Collect the full service fee, or the deposit if a payment plan is in place.</li>
+      <li><strong>Package patients:</strong> Verify remaining sessions in their package. Note the package balance on the encounter.</li>
+    </ul>
+    <p>Provide a receipt for every payment. Log the transaction in the EMR payment module.</p>
+  </div>
+</div>
+
+<div class="step-box">
+  <div><span class="step-number">6</span><span class="step-title">Distribute &amp; Collect Paperwork</span></div>
+  <div class="step-body">
+    <p>Based on the visit type, provide the appropriate forms (see Section 5 for complete forms reference):</p>
+    <ul>
+      <li><strong>New patients:</strong> Full intake packet (demographics, medical history, consent for treatment, financial policy, HIPAA acknowledgment, patient portal enrollment).</li>
+      <li><strong>Returning patients:</strong> Any outstanding forms, updated consent if required, or annual re-attestation forms.</li>
+      <li><strong>Visit-specific forms:</strong> Procedure consents, questionnaires, or screening tools as applicable.</li>
+    </ul>
+    <p>Offer a clipboard, pen, and clear instructions: <em>"Please fill out these forms and bring them back to the window when you're finished. Let me know if you have any questions."</em></p>
+  </div>
+</div>
+
+<div class="step-box">
+  <div><span class="step-number">7</span><span class="step-title">Notify the Medical Assistant (MA)</span></div>
+  <div class="step-body">
+    <p>Once the patient is checked in and paperwork is complete:</p>
+    <ul>
+      <li>Change the patient status in the EMR to "Checked In" or "Ready" per your system's workflow.</li>
+      <li>Notify the MA verbally or via internal messaging: <em>"[Patient Name] is checked in for [visit type] with [Provider]."</em></li>
+      <li>If there are any flags (late arrival, insurance issue, missing labs, incomplete forms), communicate them to the MA at this time.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="callout callout-purple">
+  <div class="callout-label">Key Takeaway</div>
+  <p>The standard check-in should take 3 to 5 minutes for a returning patient and 8 to 12 minutes for a new patient. If check-in consistently takes longer, discuss workflow improvements with your supervisor.</p>
+</div>
+
+<hr class="divider">
+
+<!-- SECTION 3: VISIT-SPECIFIC CHECK-IN -->
+<h2 id="visit-specific">3. Visit-Specific Check-In Procedures</h2>
+
+<p>In addition to the standard check-in steps, certain visit types require additional screening, forms, or clinical information before the patient can be roomed. Complete the standard check-in first, then perform the visit-specific additions below.</p>
+
+<h3 id="pellet-checkin">3a. Pellet Insertion Visits</h3>
+
+<p>Pellet insertion is a minor in-office procedure where bioidentical hormone pellets are placed subcutaneously. Because it involves an incision, there are critical safety checks the front office must perform before the patient is roomed.</p>
+
+<h4>Additional Check-In Steps</h4>
+
+<ol>
+  <li><strong>Confirm signed procedure consent.</strong> The pellet insertion consent must be signed at every insertion, not just the first. If the consent was sent electronically before the visit, confirm it was completed. If not, provide the form now.</li>
+  <li><strong>Blood thinner screening.</strong> Ask the patient directly:
+    <ul>
+      <li><em>"Are you currently taking any blood thinners, including aspirin, ibuprofen, fish oil, or supplements like vitamin E?"</em></li>
+      <li><em>"Have you taken any aspirin or anti-inflammatory medication in the past 7 days?"</em></li>
+    </ul>
+    Document the response. If the patient answers "yes," flag the MA and provider immediately. The provider will determine whether to proceed.
+  </li>
+  <li><strong>Verify recent labs are on file.</strong> Pellet dosing is based on lab work. Check the EMR for labs drawn within the timeframe specified by the provider (typically within 4 to 6 weeks). If labs are not on file, notify the MA before rooming.</li>
+  <li><strong>Confirm post-procedure plan.</strong> Ask: <em>"Do you have someone who can drive you home today, or will you be driving yourself?"</em> While driving is generally permitted after pellet insertion, patients should be aware of the activity restrictions. Provide the post-care instruction sheet at check-in so they can review it before the procedure.</li>
+</ol>
+
+<div class="callout callout-orange">
+  <div class="callout-label">Warning</div>
+  <p>A patient on blood thinners who undergoes pellet insertion is at increased risk for bleeding, hematoma, and pellet extrusion. Never skip the blood thinner screening. If you are unsure whether a supplement counts as a blood thinner, flag the MA and let the clinical team decide.</p>
+</div>
+
+<div class="callout callout-pink">
+  <div class="callout-label">Clinical Pearl</div>
+  <p>Some patients will say they stopped their blood thinner "a couple of days ago" because they knew the procedure was coming. This is not sufficient for most protocols. The provider needs to know the exact medication and when the last dose was taken. Always ask the specific question and relay the answer to the clinical team.</p>
+</div>
+
+<h3 id="glp1-checkin">3b. GLP-1 Medication Visits</h3>
+
+<p>GLP-1 receptor agonist visits include initial consultations, dose titrations, injection teaching, and follow-ups. These patients are typically on a weight management program and require specific tracking at every visit.</p>
+
+<h4>Additional Check-In Steps</h4>
+
+<ol>
+  <li><strong>Weight documentation.</strong> Direct the patient to the scale (if the front office handles weights) or note that the MA will obtain the weight. Many clinics use a "weight slip" system:
+    <ul>
+      <li>Patient steps on the scale and you record the weight on a slip or directly into the EMR.</li>
+      <li>Some patients prefer not to see their weight. Always ask: <em>"Would you like to know your weight today?"</em> before announcing it aloud.</li>
+    </ul>
+  </li>
+  <li><strong>Adherence check.</strong> Ask the patient:
+    <ul>
+      <li><em>"Have you been able to take your medication as prescribed since your last visit?"</em></li>
+      <li><em>"Have you missed any doses?"</em></li>
+      <li><em>"Have you experienced any side effects you'd like to discuss with the provider?"</em></li>
+    </ul>
+    Note the responses in the check-in comments or patient intake form. This information helps the provider make dosing decisions.
+  </li>
+  <li><strong>Medication supply check.</strong> Ask: <em>"Do you have enough medication to last until your next appointment?"</em> If the patient is running low, flag this for the MA so a refill can be addressed during the visit.</li>
+  <li><strong>Confirm lab status.</strong> GLP-1 patients may require periodic labs (metabolic panel, A1c, lipid panel). Check whether labs are due and inform the patient if they need to be drawn today.</li>
+</ol>
+
+<div class="callout callout-purple">
+  <div class="callout-label">Key Takeaway</div>
+  <p>Weight is a sensitive topic. Never comment on a patient's weight, positively or negatively. Do not say "great job" or "looks like you gained a little." Simply record the number. The provider will discuss trends in the context of the treatment plan.</p>
+</div>
+
+<h3 id="lab-checkin">3c. Lab-Only Visits</h3>
+
+<p>Lab-only visits are appointments where the patient is coming solely for a blood draw, without seeing a provider. These visits are typically quick but require specific front-office checks to avoid wasted appointments.</p>
+
+<h4>Additional Check-In Steps</h4>
+
+<ol>
+  <li><strong>Fasting confirmation.</strong> Many hormone panels and metabolic labs require fasting. Ask:
+    <ul>
+      <li><em>"Have you had anything to eat or drink other than water in the past 8 to 12 hours?"</em></li>
+      <li>If the patient has not fasted and the labs require it, notify the MA immediately. The lab draw may need to be rescheduled.</li>
+    </ul>
+  </li>
+  <li><strong>Verify lab orders exist.</strong> Check the EMR for active lab orders. If no orders are on file, do not send the patient back. Contact the ordering provider or their nurse for clarification.</li>
+  <li><strong>Confirm the lab panel.</strong> Let the patient know what labs were ordered: <em>"The provider has ordered a hormone panel and metabolic panel. The blood draw should take about 5 to 10 minutes."</em></li>
+  <li><strong>Outside lab referrals.</strong> If the labs need to be drawn at an outside facility (Quest, LabCorp), provide the printed lab order and the facility address. Confirm the patient knows where to go.</li>
+</ol>
+
+<div class="callout callout-orange">
+  <div class="callout-label">Warning</div>
+  <p>Drawing non-fasting labs when fasting was required will produce inaccurate results and may lead to incorrect dosing decisions. This is especially critical for testosterone, estradiol, glucose, and lipid panels. Always confirm fasting status before rooming.</p>
+</div>
+
+<h3 id="new-patient-checkin">3d. New Patient Visits</h3>
+
+<p>New patients require the most thorough check-in process. First impressions are magnified because this is the patient's first encounter with the practice.</p>
+
+<h4>Additional Check-In Steps</h4>
+
+<ol>
+  <li><strong>Intake packet.</strong> Provide the full new patient intake packet if it was not completed electronically prior to the visit. The packet typically includes:
+    <ul>
+      <li>Patient demographics and emergency contacts</li>
+      <li>Comprehensive medical history</li>
+      <li>Current medication list (including supplements, vitamins, and OTC medications)</li>
+      <li>Consent for treatment</li>
+      <li>Financial policy and payment agreement</li>
+      <li>HIPAA Notice of Privacy Practices acknowledgment</li>
+      <li>Patient portal enrollment form</li>
+      <li>Symptom assessment questionnaires (hormone symptom checklist, PHQ-9, GAD-7 as applicable)</li>
+    </ul>
+  </li>
+  <li><strong>Insurance verification.</strong> New patient insurance should have been verified prior to the visit. Confirm the verification is on file. If not verified, proceed with check-in and flag for urgent verification by the billing team.</li>
+  <li><strong>Explain what to expect.</strong> New patients often do not know the flow of the visit. Briefly explain: <em>"The medical assistant will bring you back first for vitals and a health history review. Then the provider will meet with you to discuss your concerns and treatment options. The whole visit typically takes about 45 to 60 minutes."</em></li>
+  <li><strong>Photo ID and insurance card scans.</strong> Scan both sides of the insurance card and the photo ID. Store in the EMR document management system.</li>
+</ol>
+
+<div class="callout callout-pink">
+  <div class="callout-label">Clinical Pearl</div>
+  <p>Many new patients at an HRT clinic have been struggling with symptoms for months or years and may have been dismissed by previous providers. Acknowledge their decision to seek care: <em>"We're really glad you decided to come in. You're in good hands."</em> A small moment of validation can make a lasting impact on patient retention.</p>
+</div>
+
+<hr class="divider">
+
+<!-- SECTION 4: WALK-INS VS SCHEDULED -->
+<h2 id="walkins-scheduled">4. Walk-Ins vs. Scheduled Patients</h2>
+
+<p>Most visits at our clinic are by appointment. However, walk-ins do occur and must be handled professionally while protecting the schedule for existing patients.</p>
+
+<h3>Handling Walk-In Patients</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Situation</th>
+      <th>Response</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Established patient, walk-in for lab draw</td>
+      <td>Check if a phlebotomist or MA is available. If so, accommodate. If labs require fasting and patient hasn't fasted, reschedule.</td>
+    </tr>
+    <tr>
+      <td>Established patient, wants to see provider today</td>
+      <td>Check the schedule for open slots. If none, offer the next available appointment. Do not promise same-day without confirming availability.</td>
+    </tr>
+    <tr>
+      <td>New patient, walk-in</td>
+      <td>Explain that new patient visits require a dedicated time slot. Offer to schedule the next available new patient appointment. If the patient is insistent, check with the office manager.</td>
+    </tr>
+    <tr>
+      <td>Patient arrived on the wrong day</td>
+      <td>Verify the appointment in the EMR. If possible, see them today. If not, gently correct and reschedule: <em>"It looks like your appointment was scheduled for Thursday. Let me see if we can fit you in today, or if we need to keep your Thursday slot."</em></td>
+    </tr>
+    <tr>
+      <td>Medication or supply pick-up</td>
+      <td>Check if the item is ready. If so, verify patient identity before releasing. If not ready, check with the clinical team on timing.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Late Arrivals</h3>
+
+<p>Clinic policy on late arrivals should be consistently enforced:</p>
+
+<ul>
+  <li><strong>Less than 10 minutes late:</strong> Check in normally. Note the late arrival in the EMR.</li>
+  <li><strong>10 to 15 minutes late:</strong> Check with the provider or MA to confirm they can still be seen within the scheduled window.</li>
+  <li><strong>More than 15 minutes late:</strong> Per clinic policy, the patient may need to reschedule. Communicate this empathetically: <em>"I understand things come up. Unfortunately, we're not able to see you within the remaining time for your appointment. I'd love to get you rescheduled as soon as possible."</em></li>
+</ul>
+
+<div class="callout callout-purple">
+  <div class="callout-label">Key Takeaway</div>
+  <p>Consistency is critical with late arrival policies. If we enforce the policy for some patients but not others, it creates resentment and legal exposure. Apply the same standard to every patient, every time.</p>
+</div>
+
+<h3>No-Shows</h3>
+
+<p>When a patient does not arrive for their scheduled appointment:</p>
+
+<ol>
+  <li>Wait until 15 minutes past the appointment time.</li>
+  <li>Attempt to reach the patient by phone. If no answer, leave a voicemail without disclosing specific medical information: <em>"Hi, this is [Name] from [Clinic]. We had you on our schedule today and wanted to check in. Please call us at [number] to reschedule."</em></li>
+  <li>Document the no-show in the EMR, including the phone attempt.</li>
+  <li>Follow the clinic's no-show policy (letter, fee, dismissal after X no-shows).</li>
+</ol>
+
+<hr class="divider">
+
+<!-- SECTION 5: FORMS MANAGEMENT -->
+<h2 id="forms-management">5. Forms Management</h2>
+
+<p>Maintaining organized, current forms is a critical front office responsibility. Outdated forms can create compliance issues, and missing forms can delay patient care.</p>
+
+<h3>Master Forms Inventory</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Form</th>
+      <th>When Used</th>
+      <th>Frequency</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Patient Demographics</td>
+      <td>New patients; updates as needed</td>
+      <td>Initial + annual review</td>
+    </tr>
+    <tr>
+      <td>Medical History Questionnaire</td>
+      <td>New patients</td>
+      <td>Initial + annual update</td>
+    </tr>
+    <tr>
+      <td>Consent for Treatment (General)</td>
+      <td>All patients</td>
+      <td>Annual</td>
+    </tr>
+    <tr>
+      <td>Pellet Insertion Consent</td>
+      <td>Every pellet procedure</td>
+      <td>Every insertion</td>
+    </tr>
+    <tr>
+      <td>GLP-1 Treatment Agreement</td>
+      <td>GLP-1 patients</td>
+      <td>Initial + dose changes</td>
+    </tr>
+    <tr>
+      <td>Financial Policy &amp; Payment Agreement</td>
+      <td>All patients</td>
+      <td>Initial + annual or policy change</td>
+    </tr>
+    <tr>
+      <td>HIPAA Notice of Privacy Practices</td>
+      <td>All patients</td>
+      <td>Initial + significant policy revision</td>
+    </tr>
+    <tr>
+      <td>Authorization for Release of Records</td>
+      <td>As needed</td>
+      <td>Per request</td>
+    </tr>
+    <tr>
+      <td>Hormone Symptom Checklist</td>
+      <td>HRT patients</td>
+      <td>Initial + every follow-up</td>
+    </tr>
+    <tr>
+      <td>PHQ-9 / GAD-7 Screening</td>
+      <td>Per provider order or protocol</td>
+      <td>Initial + as directed</td>
+    </tr>
+    <tr>
+      <td>Patient Portal Enrollment</td>
+      <td>New patients</td>
+      <td>Initial</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Form Organization Best Practices</h3>
+
+<ul>
+  <li><strong>Maintain a labeled binder</strong> with master copies of every form. Each section should be tabbed and dated with the most recent version date.</li>
+  <li><strong>Stock check weekly.</strong> Every Monday (or designated day), verify that all forms are stocked in the front desk filing area. Reprint as needed from the master binder.</li>
+  <li><strong>Version control.</strong> When a form is updated, remove all copies of the old version from circulation. Shred old versions to avoid accidental use.</li>
+  <li><strong>Electronic forms.</strong> If your clinic uses electronic intake, verify that the correct forms are linked in the patient portal. Periodically test the patient-facing view to ensure forms render properly on mobile devices.</li>
+  <li><strong>Completed forms processing.</strong> Completed paper forms should be scanned into the EMR within 24 hours. After scanning, store originals per your retention policy or shred if the electronic copy is the official record.</li>
+</ul>
+
+<div class="callout callout-orange">
+  <div class="callout-label">Warning</div>
+  <p>Never use a form that is missing a version date or looks different from the master copy. If you are unsure whether a form is current, check with the office manager before distributing it to a patient. Using outdated consent forms can create legal liability.</p>
+</div>
+
+<hr class="divider">
+
+<!-- SECTION 6: CHECK-OUT WORKFLOW -->
+<h2 id="checkout-workflow">6. Check-Out Workflow</h2>
+
+<p>Check-out is the last impression the patient has of the visit. A smooth check-out reinforces confidence in the practice, ensures continuity of care, and captures revenue. A disorganized check-out leaves the patient feeling confused and may result in missed follow-ups or uncollected balances.</p>
+
+<h3>Standard Check-Out Steps</h3>
+
+<div class="step-box">
+  <div><span class="step-number">1</span><span class="step-title">Receive the Encounter Summary</span></div>
+  <div class="step-body">
+    <p>The MA or provider will provide a checkout slip, superbill, or route the patient via the EMR. Review the encounter for:</p>
+    <ul>
+      <li>Follow-up instructions (timing, visit type)</li>
+      <li>Orders placed (labs, imaging, referrals)</li>
+      <li>Prescriptions sent or medications dispensed</li>
+      <li>Balance due or charges for today's visit</li>
+    </ul>
+  </div>
+</div>
+
+<div class="step-box">
+  <div><span class="step-number">2</span><span class="step-title">Schedule the Follow-Up Appointment</span></div>
+  <div class="step-body">
+    <p>Before the patient leaves the window, schedule the next appointment:</p>
+    <ul>
+      <li>Refer to the provider's follow-up instructions. Common intervals at our clinic:
+        <ul>
+          <li><strong>HRT follow-up:</strong> 4 to 6 weeks after initiation; every 3 to 6 months ongoing</li>
+          <li><strong>Pellet insertion follow-up:</strong> Labs at 4 to 6 weeks post-insertion; next insertion at 3 to 5 months depending on the patient</li>
+          <li><strong>GLP-1 follow-up:</strong> Every 4 weeks during titration; every 4 to 12 weeks once stable</li>
+          <li><strong>Lab-only:</strong> Per provider order</li>
+        </ul>
+      </li>
+      <li>Offer 2 to 3 date and time options rather than an open-ended "when works for you." This speeds the process and reduces scheduling errors.</li>
+      <li>Provide a printed or electronic appointment reminder card.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="step-box">
+  <div><span class="step-number">3</span><span class="step-title">Collect Outstanding Balance</span></div>
+  <div class="step-body">
+    <p>Review the patient's account for any balance due:</p>
+    <ul>
+      <li>Charges from today's visit not yet collected (copay was collected at check-in; additional charges may have been generated during the visit).</li>
+      <li>Prior visit balances.</li>
+      <li>Payment plan installments due.</li>
+    </ul>
+    <p>Use clear, nonjudgmental language: <em>"Your balance for today is $X. Would you like to take care of that now?"</em></p>
+    <p>If the patient cannot pay today, follow the clinic's payment plan or collection policy. Document the interaction.</p>
+  </div>
+</div>
+
+<div class="step-box">
+  <div><span class="step-number">4</span><span class="step-title">Provide the Visit Summary</span></div>
+  <div class="step-body">
+    <p>If the EMR generates an After Visit Summary (AVS), print and provide it. The AVS typically includes:</p>
+    <ul>
+      <li>Diagnoses addressed during the visit</li>
+      <li>Medications prescribed or adjusted</li>
+      <li>Lab orders and where to go</li>
+      <li>Patient education materials</li>
+      <li>Follow-up appointment details</li>
+    </ul>
+    <p>Walk through the highlights: <em>"Here's your visit summary. Your next appointment is on [date]. The provider ordered labs for 4 weeks from now&mdash;you'll need to fast for those. And here are your post-procedure instructions."</em></p>
+  </div>
+</div>
+
+<div class="step-box">
+  <div><span class="step-number">5</span><span class="step-title">Process Referrals and Orders</span></div>
+  <div class="step-body">
+    <p>If the provider placed referrals, imaging orders, or outside lab orders:</p>
+    <ul>
+      <li>Verify the referral is entered in the EMR with the correct specialist and authorization if needed.</li>
+      <li>Provide the patient with printed lab orders or referral paperwork.</li>
+      <li>Explain next steps: <em>"The provider is referring you to Dr. Smith for an ultrasound. We'll send the referral today, and their office should call you within 3 to 5 business days. If you don't hear from them, call us and we'll follow up."</em></li>
+    </ul>
+  </div>
+</div>
+
+<div class="step-box">
+  <div><span class="step-number">6</span><span class="step-title">Confirm Patient Has Everything</span></div>
+  <div class="step-body">
+    <p>Before the patient leaves, confirm:</p>
+    <ul>
+      <li>Follow-up appointment scheduled (or noted to call back)</li>
+      <li>All paperwork in hand (visit summary, lab orders, referrals, post-care instructions)</li>
+      <li>Payment processed and receipt provided</li>
+      <li>Any outstanding questions addressed</li>
+    </ul>
+    <p>Close with: <em>"You're all set! We'll see you on [date]. Call us if you have any questions before then."</em></p>
+  </div>
+</div>
+
+<div class="callout callout-purple">
+  <div class="callout-label">Key Takeaway</div>
+  <p>Never let a patient leave without a follow-up appointment scheduled (unless the provider explicitly documented "no follow-up needed"). Patients who leave without a follow-up are significantly more likely to fall off their treatment plan.</p>
+</div>
+
+<hr class="divider">
+
+<!-- SECTION 7: VISIT-SPECIFIC CHECK-OUT -->
+<h2 id="visit-specific-checkout">7. Visit-Specific Check-Out Procedures</h2>
+
+<h3 id="pellet-checkout">7a. Pellet Insertion Check-Out</h3>
+
+<p>Pellet patients require detailed post-procedure instructions and specific follow-up timing. This is one of the most important check-outs to get right, because improper aftercare can lead to complications.</p>
+
+<h4>Post-Care Instructions</h4>
+
+<p>Provide the printed post-care instruction sheet and verbally review the key points:</p>
+
+<ul>
+  <li><strong>Keep the insertion site dry</strong> for 24 hours. No baths, swimming, or hot tubs for 5 to 7 days.</li>
+  <li><strong>Leave the Steri-Strips in place</strong> until they fall off on their own (typically 5 to 7 days). Do not pull them off.</li>
+  <li><strong>No strenuous lower body exercise</strong> for 72 hours (gluteal insertion) or per provider instruction. Walking is fine.</li>
+  <li><strong>Monitor for signs of infection:</strong> increasing redness, warmth, swelling, drainage, or fever. Call the office if any of these occur.</li>
+  <li><strong>Pellet extrusion is possible</strong> but uncommon. If the patient notices a small, hard object emerging from the insertion site, they should call the office.</li>
+  <li><strong>Bruising is normal.</strong> It may take 1 to 2 weeks to resolve.</li>
+</ul>
+
+<h4>Follow-Up Scheduling</h4>
+
+<ul>
+  <li><strong>Lab draw:</strong> Schedule 4 to 6 weeks post-insertion to check hormone levels.</li>
+  <li><strong>Next insertion:</strong> Discuss approximate timing (typically 3 to 5 months) and note it in the system. Some clinics pre-schedule the next insertion; others schedule after lab results are reviewed.</li>
+</ul>
+
+<div class="callout callout-pink">
+  <div class="callout-label">Clinical Pearl</div>
+  <p>Patients often forget verbal instructions immediately after a procedure due to mild anxiety or discomfort. Always hand them the printed post-care sheet and say: <em>"Everything I just went over is on this sheet. Keep it handy and call us with any concerns."</em></p>
+</div>
+
+<h3 id="glp1-checkout">7b. GLP-1 Check-Out</h3>
+
+<p>GLP-1 patient check-out focuses on medication continuity, refill timing, and next-visit scheduling.</p>
+
+<h4>Medication and Refill Coordination</h4>
+
+<ul>
+  <li><strong>Confirm prescription status.</strong> Ask the patient: <em>"Did the provider discuss your medication or any dose changes today?"</em> Cross-reference with the encounter notes.</li>
+  <li><strong>Refill timing.</strong> If the patient picks up medication from the clinic, confirm the next refill date. If it goes to a pharmacy, ensure the prescription was sent and the patient knows which pharmacy.</li>
+  <li><strong>Medication supply gap.</strong> Calculate whether the patient's current supply will last until the next appointment. If not, coordinate with the clinical team to bridge the gap.</li>
+  <li><strong>Prior authorization tracking.</strong> If a prior authorization is pending for the patient's medication, note the expected timeline and inform the patient: <em>"We're waiting on approval from your insurance. We'll call you as soon as we hear back."</em></li>
+</ul>
+
+<h4>Follow-Up Scheduling</h4>
+
+<ul>
+  <li>During titration: every 4 weeks.</li>
+  <li>Once dose is stable: per provider direction, typically every 4 to 12 weeks.</li>
+  <li>If labs were ordered: schedule the lab draw at the appropriate interval.</li>
+</ul>
+
+<div class="callout callout-orange">
+  <div class="callout-label">Warning</div>
+  <p>GLP-1 medications (semaglutide, tirzepatide) often have supply shortages and prior authorization requirements. Missing a dose due to a refill gap can cause significant side effects when restarting. Always verify the patient has adequate supply before their next appointment.</p>
+</div>
+
+<h3 id="lab-checkout">7c. Lab-Only Check-Out</h3>
+
+<p>Lab-only visits typically have a streamlined check-out:</p>
+
+<ul>
+  <li><strong>Confirm the blood draw was completed.</strong> The MA or phlebotomist should confirm all ordered labs were drawn.</li>
+  <li><strong>Results timeline.</strong> Inform the patient when to expect results: <em>"Most lab results take 3 to 5 business days. Your provider will review them and you'll get a message through the patient portal, or we'll call you."</em></li>
+  <li><strong>Follow-up appointment.</strong> If the labs are being drawn in advance of a follow-up visit, confirm that the follow-up appointment is on the books. If not, schedule it now.</li>
+  <li><strong>Collect any outstanding balance.</strong> Lab draw fees (if applicable and self-pay) should be collected at check-out if not collected at check-in.</li>
+</ul>
+
+<hr class="divider">
+
+<!-- SECTION 8: END-OF-DAY CLOSING -->
+<h2 id="eod-closing">8. End-of-Day Closing</h2>
+
+<p>A disciplined end-of-day process prevents errors from carrying over to the next day and ensures the clinic opens smoothly each morning.</p>
+
+<h3>Daily Closing Checklist</h3>
+
+<h4>Schedule &amp; Patient Management</h4>
+<ul>
+  <li>Verify all patients on today's schedule have been checked in and checked out. Investigate any incomplete encounters.</li>
+  <li>Contact no-show patients per policy (phone call, document in EMR).</li>
+  <li>Review tomorrow's schedule:
+    <ul>
+      <li>Confirm appointment confirmations were sent (text, email, or phone).</li>
+      <li>Verify insurance eligibility for tomorrow's patients.</li>
+      <li>Flag any new patients who have not completed intake paperwork.</li>
+      <li>Identify pellet patients and confirm consent and labs are on file.</li>
+      <li>Identify GLP-1 patients and confirm medication availability.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4>Financial Reconciliation</h4>
+<ul>
+  <li>Reconcile the cash drawer (if applicable). Count cash, verify against receipts, complete the daily cash log.</li>
+  <li>Run the end-of-day credit card batch report. Verify totals match EMR payment entries.</li>
+  <li>Review any outstanding balances flagged during the day and ensure follow-up tasks are assigned.</li>
+  <li>Submit the daily deposit or secure funds per clinic policy.</li>
+</ul>
+
+<h4>Administrative Tasks</h4>
+<ul>
+  <li>Scan and file any remaining paper forms into the EMR.</li>
+  <li>Process incoming faxes (lab results, referral authorizations, records requests).</li>
+  <li>Return any patient phone calls not completed during the day.</li>
+  <li>Restock the front desk: forms, pens, clipboards, business cards, appointment cards.</li>
+  <li>Straighten the waiting room: arrange magazines, dispose of trash, wipe surfaces.</li>
+</ul>
+
+<h4>Security &amp; Compliance</h4>
+<ul>
+  <li>Log out of all EMR workstations. Lock screens if computers remain powered on.</li>
+  <li>Secure paper records in locked cabinets.</li>
+  <li>Shred any documents in the shred bin (or ensure the bin is locked for pickup).</li>
+  <li>Ensure the front door is locked at the designated closing time.</li>
+  <li>Set the alarm system per clinic protocol.</li>
+</ul>
+
+<div class="callout callout-purple">
+  <div class="callout-label">Key Takeaway</div>
+  <p>Reviewing tomorrow's schedule before leaving is one of the most impactful habits a front office team can develop. It surfaces problems (missing insurance, unsigned consents, unfasted labs) when there is still time to fix them, rather than discovering them when the patient arrives.</p>
+</div>
+
+<hr class="divider">
+
+<!-- SECTION 9: QUICK REFERENCE CHECKLISTS -->
+<h2 id="quick-reference">9. Quick Reference Checklists</h2>
+
+<p>Print and post these checklists at the front desk for daily reference.</p>
+
+<h3>Standard Check-In Checklist</h3>
+
+<ul class="checklist">
+  <li>Greet the patient warmly within 15 seconds</li>
+  <li>Verify full name (patient states it)</li>
+  <li>Verify date of birth (patient states it)</li>
+  <li>Scan photo ID (new patients or as required)</li>
+  <li>Confirm/update demographics (address, phone, email, emergency contact, pharmacy)</li>
+  <li>Scan insurance card (front and back)</li>
+  <li>Verify insurance matches EMR; flag changes for billing</li>
+  <li>Collect copay or self-pay fee</li>
+  <li>Distribute required paperwork</li>
+  <li>Collect completed paperwork</li>
+  <li>Update patient status in EMR to "Checked In"</li>
+  <li>Notify MA of patient readiness and any flags</li>
+</ul>
+
+<h3>Pellet Insertion Add-On Checklist</h3>
+
+<ul class="checklist">
+  <li>Signed pellet insertion consent on file (for today's procedure)</li>
+  <li>Blood thinner screening completed and documented</li>
+  <li>Recent labs on file within required window</li>
+  <li>Post-care instruction sheet provided to patient</li>
+  <li>Driving/activity restrictions discussed</li>
+</ul>
+
+<h3>GLP-1 Visit Add-On Checklist</h3>
+
+<ul class="checklist">
+  <li>Weight obtained and documented</li>
+  <li>Adherence questions asked and responses noted</li>
+  <li>Side effects screening completed</li>
+  <li>Medication supply status confirmed</li>
+  <li>Lab status checked (due now vs. upcoming)</li>
+</ul>
+
+<h3>Lab-Only Visit Checklist</h3>
+
+<ul class="checklist">
+  <li>Fasting status confirmed</li>
+  <li>Active lab orders verified in EMR</li>
+  <li>Patient informed of lab panel ordered</li>
+  <li>Outside lab referral paperwork provided (if applicable)</li>
+</ul>
+
+<h3>Standard Check-Out Checklist</h3>
+
+<ul class="checklist">
+  <li>Review encounter summary for follow-up instructions</li>
+  <li>Schedule follow-up appointment</li>
+  <li>Collect outstanding balance</li>
+  <li>Provide visit summary (AVS)</li>
+  <li>Process referrals and provide lab orders</li>
+  <li>Confirm patient has all paperwork</li>
+  <li>Provide appointment reminder card</li>
+</ul>
+
+<h3>End-of-Day Closing Checklist</h3>
+
+<ul class="checklist">
+  <li>All patients checked in and checked out; no orphaned encounters</li>
+  <li>No-show patients contacted and documented</li>
+  <li>Tomorrow's schedule reviewed and prepped</li>
+  <li>Cash drawer reconciled</li>
+  <li>Credit card batch closed and verified</li>
+  <li>Paper forms scanned into EMR</li>
+  <li>Faxes processed</li>
+  <li>Phone calls returned</li>
+  <li>Front desk restocked</li>
+  <li>Waiting room tidied</li>
+  <li>EMR stations logged out and screens locked</li>
+  <li>Paper records secured</li>
+  <li>Shred bin emptied or locked</li>
+  <li>Front door locked and alarm set</li>
+</ul>
+
+<hr class="divider">
+
+<!-- SECTION 10: COMMON SCENARIOS -->
+<h2 id="common-scenarios">10. Common Scenarios &amp; How to Handle Them</h2>
+
+<p>These scenarios reflect real situations that occur regularly in an HRT and wellness clinic. Use them as a guide, and always escalate to the office manager or provider when unsure.</p>
+
+<div class="scenario">
+  <div class="scenario-title">Scenario: Patient Arrives Without Insurance Card</div>
+  <p><strong>Situation:</strong> A returning patient arrives for their pellet follow-up but forgot their insurance card. They say nothing has changed.</p>
+  <p><strong>Response:</strong> Verify the insurance information on file by asking the patient to confirm their member ID and insurance company name. Proceed with check-in using the existing information. Ask the patient to bring the card at their next visit or send a photo of both sides via the patient portal. Document that the card was not presented at today's visit.</p>
+</div>
+
+<div class="scenario">
+  <div class="scenario-title">Scenario: Patient Refuses to Pay Copay</div>
+  <p><strong>Situation:</strong> A patient says they have never paid a copay here before and refuses to pay the $40 copay showing in the system.</p>
+  <p><strong>Response:</strong> Remain calm and professional. Say: <em>"I understand this is unexpected. Let me look into your account to see what's changed."</em> Check the benefits verification and payment history. If the copay is correct (perhaps their plan changed at renewal), explain gently: <em>"It looks like your insurance plan updated at the beginning of the year, and the new plan does include a copay. I can print the benefits verification for your reference."</em> If the patient still refuses, check with the office manager. Do not refuse to see the patient without manager guidance.</p>
+</div>
+
+<div class="scenario">
+  <div class="scenario-title">Scenario: Patient Didn't Fast for Labs</div>
+  <p><strong>Situation:</strong> A lab-only patient arrives for fasting labs but had coffee with cream this morning.</p>
+  <p><strong>Response:</strong> Notify the MA or provider. In most cases, fasting labs will need to be rescheduled because coffee with cream can affect glucose and lipid results. Explain to the patient: <em>"For the accuracy of your results, fasting means nothing other than water for 8 to 12 hours. Since you had coffee with cream, we'll want to reschedule so we get the most accurate picture of your levels. I can get you in first thing tomorrow or another morning that works for you."</em></p>
+  <p>If the provider determines some of the labs can still be drawn (non-fasting panels), proceed with those and schedule the fasting-required labs for another day.</p>
+</div>
+
+<div class="scenario">
+  <div class="scenario-title">Scenario: Patient on Blood Thinners Arrives for Pellet Insertion</div>
+  <p><strong>Situation:</strong> During the blood thinner screening, a pellet patient mentions they take baby aspirin daily and did not stop it before the appointment.</p>
+  <p><strong>Response:</strong> Do not proceed with check-in as normal. Document the response and immediately notify the MA: <em>"Ms. Rodriguez is here for pellet insertion but reports she's been taking baby aspirin daily and did not stop prior to the visit."</em> The provider will decide whether to proceed, postpone, or adjust the plan. Do not make the clinical decision yourself. Reassure the patient: <em>"I want to make sure we have all the right information for the provider before we get started. They'll come talk with you about the best plan."</em></p>
+</div>
+
+<div class="scenario">
+  <div class="scenario-title">Scenario: GLP-1 Patient Running Out of Medication</div>
+  <p><strong>Situation:</strong> During GLP-1 check-in, the patient mentions they only have one dose left and their next appointment is 3 weeks away.</p>
+  <p><strong>Response:</strong> Flag this immediately for the MA and provider. Note in the check-in comments: <em>"Patient reports 1 dose remaining. Next scheduled appointment is 3 weeks out."</em> The clinical team needs to address the refill during this visit. If the patient does not have an appointment today and calls in, coordinate with the provider's nurse for a bridge prescription or move the appointment up.</p>
+</div>
+
+<div class="scenario">
+  <div class="scenario-title">Scenario: Upset Patient in the Waiting Room</div>
+  <p><strong>Situation:</strong> A patient has been waiting for 30 minutes past their appointment time. They approach the window visibly frustrated and say, "I've been waiting forever. This is ridiculous."</p>
+  <p><strong>Response:</strong> Acknowledge their frustration immediately: <em>"I completely understand your frustration, and I apologize for the wait."</em> Check the schedule and communicate with the MA: <em>"Let me check on the status of your visit right now."</em> Provide a specific update: <em>"The provider is running about 10 minutes behind. You should be called back shortly."</em> If the wait will be longer, offer options: <em>"Would you prefer to wait, or would you like to reschedule for a time that might work better?"</em> Never dismiss the patient's complaint or blame the provider in front of them.</p>
+</div>
+
+<div class="scenario">
+  <div class="scenario-title">Scenario: Family Member Wants to Check In for Patient</div>
+  <p><strong>Situation:</strong> A husband comes to the window and says, "I'm checking in my wife, Sarah. She's parking the car."</p>
+  <p><strong>Response:</strong> You cannot complete identity verification without the patient present. Politely explain: <em>"Thank you! I'll need Sarah to come to the window so I can verify her information directly. I'll get everything started as soon as she's here."</em> You can pull up the chart to have it ready, but do not proceed with the formal check-in steps until the patient is at the window.</p>
+</div>
+
+<div class="scenario">
+  <div class="scenario-title">Scenario: Patient Asks About Lab Results at Check-Out</div>
+  <p><strong>Situation:</strong> At check-out, a patient asks, "Did my labs from last week come back? Can you tell me my testosterone level?"</p>
+  <p><strong>Response:</strong> Front office staff should not interpret or relay lab results unless specifically directed by the provider. Say: <em>"I can see that your labs are back in the system, but the provider needs to review and interpret them before we can share the details. You should receive a message through the patient portal once they've reviewed them, or we can have the nurse call you."</em> If the results have already been reviewed and released to the portal, you can direct them there: <em>"It looks like the provider has already released your results to the patient portal. You should be able to see them there."</em></p>
+</div>
+
+<div class="scenario">
+  <div class="scenario-title">Scenario: New Patient Arrives Without Completed Intake Forms</div>
+  <p><strong>Situation:</strong> A new patient was sent the intake packet electronically 2 weeks ago but never completed it. They arrive for their appointment with nothing filled out.</p>
+  <p><strong>Response:</strong> Provide a paper intake packet immediately. Let the patient know: <em>"No problem at all. I have the forms right here. It typically takes about 10 to 15 minutes to complete. The medical assistant will bring you back as soon as you're finished."</em> Alert the MA that the patient is completing paperwork and may need extra time. If the clinic is running on a tight schedule, communicate the delay to the provider so they can adjust.</p>
+</div>
+
+<div class="scenario">
+  <div class="scenario-title">Scenario: Self-Pay Patient Asks for a Discount</div>
+  <p><strong>Situation:</strong> A self-pay patient asks if there is a discount for paying cash or if the practice offers a payment plan.</p>
+  <p><strong>Response:</strong> Respond according to clinic policy. If a cash-pay discount or payment plan exists, explain the terms. If you are unsure, say: <em>"Let me check with our billing team to see what options we have available. I want to make sure I give you accurate information."</em> Never make up pricing or approve discounts without authorization. If the clinic does offer payment plans, have the financial agreement ready for the patient to sign.</p>
+</div>
+
+<hr class="divider">
+
+<h2>Summary of Time Standards</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Activity</th>
+      <th>Target Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Patient acknowledgment at window</td>
+      <td>Within 15 seconds</td>
+    </tr>
+    <tr>
+      <td>Standard check-in (returning patient)</td>
+      <td>3 to 5 minutes</td>
+    </tr>
+    <tr>
+      <td>Standard check-in (new patient)</td>
+      <td>8 to 12 minutes (plus form completion time)</td>
+    </tr>
+    <tr>
+      <td>Pellet add-on check-in steps</td>
+      <td>2 to 3 minutes additional</td>
+    </tr>
+    <tr>
+      <td>GLP-1 add-on check-in steps</td>
+      <td>2 to 3 minutes additional</td>
+    </tr>
+    <tr>
+      <td>Lab-only check-in</td>
+      <td>2 to 3 minutes</td>
+    </tr>
+    <tr>
+      <td>Standard check-out</td>
+      <td>3 to 5 minutes</td>
+    </tr>
+    <tr>
+      <td>Pellet check-out (with post-care review)</td>
+      <td>5 to 7 minutes</td>
+    </tr>
+    <tr>
+      <td>End-of-day closing</td>
+      <td>20 to 30 minutes</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout callout-purple">
+  <div class="callout-label">Key Takeaway</div>
+  <p>This guide is a living document. As workflows change, new services are added, or policies are updated, this guide should be revised to reflect current procedures. If you notice a discrepancy between this guide and current practice, bring it to the attention of the office manager immediately.</p>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insurance &amp; Billing Basics for Front Office | Contemporary Health Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple-deep: #1a0a2e;
+  --purple-mid: #2d1b4e;
+  --purple-light: #6c3fa0;
+  --pink: #e91e8c;
+  --orange: #ff6b35;
+  --gradient-main: linear-gradient(135deg, #6c3fa0, #e91e8c, #ff6b35);
+  --text-primary: #f0e6ff;
+  --text-secondary: #c4b0db;
+  --card-bg: rgba(45, 27, 78, 0.6);
+  --border-glow: rgba(108, 63, 160, 0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--purple-deep);
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-size: 17px;
+}
+
+.container {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.guide-header {
+  text-align: center;
+  margin-bottom: 48px;
+  padding: 48px 32px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.guide-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: var(--gradient-main);
+}
+
+.guide-header .category {
+  display: inline-block;
+  padding: 4px 16px;
+  background: rgba(108, 63, 160, 0.3);
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 16px;
+}
+
+.guide-header h1 {
+  font-size: 32px;
+  font-weight: 800;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+}
+
+.guide-header .subtitle {
+  color: var(--text-secondary);
+  font-size: 16px;
+}
+
+.toc {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 48px;
+}
+
+.toc h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.toc ol {
+  list-style: none;
+  counter-reset: toc-counter;
+  padding: 0;
+}
+
+.toc ol li {
+  counter-increment: toc-counter;
+  margin-bottom: 8px;
+}
+
+.toc ol li a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.toc ol li a:hover {
+  background: rgba(108, 63, 160, 0.15);
+  color: var(--text-primary);
+}
+
+.toc ol li a::before {
+  content: counter(toc-counter, decimal-leading-zero);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--purple-light);
+  min-width: 28px;
+}
+
+.section {
+  margin-bottom: 56px;
+}
+
+.section h2 {
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border-glow);
+  color: var(--text-primary);
+}
+
+.section h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 28px 0 16px;
+  color: var(--text-primary);
+}
+
+.section h4 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 20px 0 12px;
+  color: var(--text-secondary);
+}
+
+p { margin-bottom: 16px; }
+ul, ol { margin-bottom: 16px; padding-left: 24px; }
+li { margin-bottom: 8px; }
+
+.clinical-pearl {
+  border-left: 4px solid var(--pink);
+  background: rgba(233, 30, 140, 0.1);
+  padding: 20px 24px;
+  border-radius: 0 12px 12px 0;
+  margin: 24px 0;
+}
+
+.clinical-pearl strong:first-child {
+  display: block;
+  color: var(--pink);
+  margin-bottom: 8px;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.key-takeaway {
+  border-left: 4px solid var(--purple-light);
+  background: rgba(108, 63, 160, 0.15);
+  padding: 20px 24px;
+  border-radius: 0 12px 12px 0;
+  margin: 24px 0;
+}
+
+.key-takeaway strong:first-child {
+  display: block;
+  color: var(--purple-light);
+  margin-bottom: 8px;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.warning {
+  border-left: 4px solid var(--orange);
+  background: rgba(255, 107, 53, 0.1);
+  padding: 20px 24px;
+  border-radius: 0 12px 12px 0;
+  margin: 24px 0;
+}
+
+.warning strong:first-child {
+  display: block;
+  color: var(--orange);
+  margin-bottom: 8px;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 28px;
+  margin: 24px 0;
+}
+
+.card h4 { margin-top: 0; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+thead th {
+  background: var(--gradient-main);
+  color: #fff;
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+tbody tr:nth-child(odd) { background: rgba(45, 27, 78, 0.4); }
+tbody tr:nth-child(even) { background: rgba(26, 10, 46, 0.6); }
+
+tbody td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-glow);
+  font-size: 15px;
+}
+
+.script-box {
+  background: rgba(26, 10, 46, 0.8);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 24px 0;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+.script-box .label {
+  font-style: normal;
+  font-weight: 700;
+  color: var(--pink);
+  display: block;
+  margin-bottom: 12px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.quick-ref {
+  background: linear-gradient(135deg, rgba(108, 63, 160, 0.2), rgba(233, 30, 140, 0.1));
+  border: 2px solid var(--purple-light);
+  border-radius: 12px;
+  padding: 32px;
+  margin: 32px 0;
+}
+
+.quick-ref h3 {
+  margin-top: 0;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="guide-header">
+  <div class="category">Insurance &amp; Billing</div>
+  <h1>Insurance &amp; Billing Basics for Front Office</h1>
+  <p class="subtitle">Contemporary Health Center &mdash; Front Office Education Series</p>
+</div>
+
+<nav class="toc">
+  <h2>Table of Contents</h2>
+  <ol>
+    <li><a href="#verification">Insurance Verification Basics</a></li>
+    <li><a href="#self-pay">Self-Pay vs. Insurance at CHC</a></li>
+    <li><a href="#cpt-codes">Common CPT Codes at This Clinic</a></li>
+    <li><a href="#icd-codes">Common ICD-10 Diagnosis Codes</a></li>
+    <li><a href="#eobs">Understanding EOBs</a></li>
+    <li><a href="#prior-auth">Prior Authorizations</a></li>
+    <li><a href="#collections">Patient Payment Collection</a></li>
+    <li><a href="#mistakes">Common Billing Mistakes to Avoid</a></li>
+    <li><a href="#quick-ref">Quick Reference Cards</a></li>
+  </ol>
+</nav>
+
+<!-- SECTION 1 -->
+<div class="section" id="verification">
+  <h2>1. Insurance Verification Basics</h2>
+
+  <p>Insurance verification is one of the most important tasks you perform before a patient walks through the door. Verifying benefits in advance prevents surprises at check-in, reduces claim denials, and helps the patient understand their financial responsibility before they receive care.</p>
+
+  <h3>What to Verify Before Every Appointment</h3>
+
+  <p>Every patient appointment with an insurance plan on file should have the following verified at least 48 hours before the visit:</p>
+
+  <div class="card">
+    <h4>Verification Checklist</h4>
+    <ul>
+      <li><strong>Eligibility:</strong> Is the patient's insurance plan active as of the date of service? Has the policy been terminated, or is there a gap in coverage? Is the patient the primary subscriber, or are they a dependent?</li>
+      <li><strong>Copay amount:</strong> What is the patient's copay for a specialist visit? (CHC providers typically fall under specialist copays, not primary care.) Some plans have different copays for office visits vs. procedures.</li>
+      <li><strong>Deductible:</strong> What is the patient's annual deductible, and how much has been met? If the deductible has not been met, the patient may owe the full contracted rate for the visit rather than just a copay.</li>
+      <li><strong>Coinsurance:</strong> After the deductible is met, what percentage does the patient owe? Common coinsurance splits are 80/20 (insurance pays 80%, patient pays 20%) or 70/30.</li>
+      <li><strong>Out-of-pocket maximum:</strong> Has the patient reached their out-of-pocket maximum for the year? If so, the insurance should cover 100% of allowed charges.</li>
+      <li><strong>Referral or authorization requirements:</strong> Does the plan require a referral from a primary care provider? Does the plan require prior authorization for any of the services CHC provides?</li>
+      <li><strong>Network status:</strong> Is CHC in-network with this plan? If out-of-network, the patient's out-of-pocket costs will be significantly higher, and the patient needs to know this before the visit.</li>
+    </ul>
+  </div>
+
+  <h3>Verifying Benefits for Hormone Therapy</h3>
+
+  <p>Hormone therapy benefits can be tricky because insurance plans categorize and cover HRT differently. Here is what you need to know:</p>
+
+  <ul>
+    <li><strong>Hormone pellet insertion (CPT 11980):</strong> Many plans classify this as a surgical procedure rather than a standard office visit. Some plans cover it, others do not. Some cover it only with specific diagnosis codes. Always verify whether the plan covers procedure code 11980 specifically.</li>
+    <li><strong>Compounded medications:</strong> Most insurance plans do not cover compounded bioidentical hormones. Patients using compounded hormone creams, troches, or pellets from a compounding pharmacy will typically need to pay out of pocket for the medication itself, even if the office visit is covered.</li>
+    <li><strong>Lab work for hormone panels:</strong> Most insurance plans cover diagnostic lab work when ordered with an appropriate diagnosis code. However, some plans have specific lab vendors they require (Quest, LabCorp, etc.). Verify which lab is in-network.</li>
+    <li><strong>GLP-1 medications:</strong> Coverage for weight management medications like semaglutide (Wegovy) and tirzepatide (Zepbound) varies enormously by plan. Many plans exclude weight loss medications entirely, some cover them only with specific diagnosis codes (obesity, type 2 diabetes), and almost all require prior authorization. This must be verified on a case-by-case basis.</li>
+    <li><strong>Peptide therapy:</strong> Most insurance plans do not cover peptide therapies (BPC-157, CJC-1295/Ipamorelin, PT-141, etc.). These are almost always self-pay.</li>
+  </ul>
+
+  <div class="clinical-pearl">
+    <strong>Clinical Pearl</strong>
+    When verifying hormone therapy benefits, do not simply ask "Is hormone therapy covered?" The insurance representative will not know what that means in the context of our services. Instead, ask specifically: "Is CPT code 11980 (implantation of hormone pellet, subcutaneous) a covered benefit under this plan? What is the patient's cost-share for this procedure?" Also ask about the associated office visit code separately.
+  </div>
+
+  <h3>How to Verify Insurance</h3>
+
+  <p>Insurance can be verified through several methods, depending on the payer:</p>
+
+  <ol>
+    <li><strong>Electronic verification through the practice management system:</strong> Most practice management software includes real-time eligibility checking. This is the fastest method and should be your first attempt. It provides eligibility status, copay, deductible, and coinsurance information instantly.</li>
+    <li><strong>Insurance company website/portal:</strong> Each major payer (Aetna, Blue Cross Blue Shield, Cigna, UnitedHealthcare, Humana, etc.) has a provider portal where you can look up patient eligibility and benefits. You will need login credentials for each portal.</li>
+    <li><strong>Phone verification:</strong> When electronic methods are unavailable or when you need to verify specific procedure coverage (like pellet insertion or GLP-1 medications), you may need to call the insurance company directly. When calling, always get a reference number for the call, the name of the representative, and the date and time. Document everything.</li>
+  </ol>
+
+  <div class="warning">
+    <strong>Warning</strong>
+    Insurance verification is not a guarantee of payment. Even when you verify that a patient has active coverage and a specific service is covered, the insurance company can still deny the claim after it is submitted. Always document your verification (reference number, representative name, date) so the practice has a record of what was communicated. Let patients know that verification of benefits is not a guarantee of coverage, and they are ultimately responsible for understanding their own plan.
+  </div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section" id="self-pay">
+  <h2>2. Self-Pay vs. Insurance at CHC</h2>
+
+  <p>Contemporary Health Center serves a significant number of self-pay (cash-pay) patients. This is common in hormone therapy and wellness clinics because many of the services we offer are not covered by traditional insurance, or patients choose to pay out of pocket for faster access to care without referral and authorization requirements.</p>
+
+  <h3>Why Many Patients Choose Self-Pay</h3>
+  <ul>
+    <li><strong>Compounded hormones are typically not covered by insurance.</strong> Patients who want bioidentical hormone pellets, custom-compounded creams, or other individualized formulations will pay out of pocket regardless of insurance status.</li>
+    <li><strong>Peptide therapy is not covered by insurance.</strong> All peptide therapy services and medications are self-pay.</li>
+    <li><strong>GLP-1 medications may not be covered,</strong> and even when covered, the prior authorization process can take weeks. Some patients prefer to pay out of pocket and start treatment immediately rather than wait.</li>
+    <li><strong>Privacy concerns.</strong> Some patients, particularly those seeking men's health or sexual health services, prefer not to have claims submitted to their insurance to maintain privacy.</li>
+    <li><strong>No referral needed.</strong> Self-pay patients can schedule directly without needing a referral from a primary care provider.</li>
+    <li><strong>Transparent pricing.</strong> Patients know exactly what they will pay upfront, with no surprise bills months later from insurance processing.</li>
+  </ul>
+
+  <h3>Pricing Transparency</h3>
+
+  <p>As a front office team member, you should be comfortable discussing self-pay pricing with patients. Pricing should be transparent, and patients should know what they are paying for before they receive services.</p>
+
+  <div class="key-takeaway">
+    <strong>Key Takeaway</strong>
+    Always have the current self-pay fee schedule available at the front desk. When a patient asks about pricing, provide clear, straightforward answers. Never make the patient feel embarrassed for asking about cost. Healthcare is a financial decision for many people, and they have every right to know what they are paying before receiving a service.
+  </div>
+
+  <h3>Dual Approach: Insurance for Some, Self-Pay for Others</h3>
+
+  <p>Many CHC patients use a hybrid approach:</p>
+  <ul>
+    <li><strong>Insurance for:</strong> Office visits (consults, follow-ups), lab work, Pap smears, annual wellness visits, and other services that are typically covered by insurance.</li>
+    <li><strong>Self-pay for:</strong> Pellet insertions (the pellets themselves), compounded medications, peptide therapy, GLP-1 medications when not covered, and aesthetic or wellness services.</li>
+  </ul>
+
+  <p>This means that a single patient visit may have both an insurance-billed component and a self-pay component. For example, a patient coming in for a pellet insertion may have the office visit (E/M code) billed to insurance while the pellet insertion procedure and pellets are billed as self-pay.</p>
+
+  <div class="clinical-pearl">
+    <strong>Clinical Pearl</strong>
+    When a patient has a split visit (partially insurance, partially self-pay), be very clear at check-in about what each component costs. For example: "Your office visit today will go through your insurance, and your copay for that is $40. The pellet insertion itself is $[amount] and is self-pay. So your total today will be $[copay + self-pay amount]." This prevents confusion and complaints at check-out.
+  </div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section" id="cpt-codes">
+  <h2>3. Common CPT Codes at This Clinic</h2>
+
+  <p>CPT (Current Procedural Terminology) codes are the standardized codes used to describe medical procedures and services for billing purposes. Every service the provider performs is assigned a CPT code, and insurance claims are built around these codes. You do not need to memorize every code, but understanding the most commonly used codes at CHC will help you verify benefits, discuss costs with patients, and understand billing questions.</p>
+
+  <h3>Office Visit Codes (Evaluation and Management)</h3>
+
+  <p>E/M codes describe the "office visit" portion of any appointment. The level of E/M code is determined by the provider based on the complexity of the visit. You will not select these codes; the provider assigns them. But understanding what they mean is important.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>CPT Code</th>
+        <th>Visit Type</th>
+        <th>Description</th>
+        <th>Typical Use at CHC</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>99202</td>
+        <td>New patient, straightforward</td>
+        <td>New patient visit with straightforward medical decision making</td>
+        <td>Simple new patient visit, single straightforward concern</td>
+      </tr>
+      <tr>
+        <td>99203</td>
+        <td>New patient, low complexity</td>
+        <td>New patient visit with low-complexity medical decision making</td>
+        <td>New patient HRT consult with few comorbidities</td>
+      </tr>
+      <tr>
+        <td>99204</td>
+        <td>New patient, moderate complexity</td>
+        <td>New patient visit with moderate-complexity medical decision making</td>
+        <td>New patient with multiple concerns, complex health history</td>
+      </tr>
+      <tr>
+        <td>99205</td>
+        <td>New patient, high complexity</td>
+        <td>New patient visit with high-complexity medical decision making</td>
+        <td>Complex new patient with significant comorbidities, multiple medications</td>
+      </tr>
+      <tr>
+        <td>99213</td>
+        <td>Established, low complexity</td>
+        <td>Established patient visit with low-complexity medical decision making</td>
+        <td>Routine HRT follow-up, straightforward GLP-1 check-in</td>
+      </tr>
+      <tr>
+        <td>99214</td>
+        <td>Established, moderate complexity</td>
+        <td>Established patient visit with moderate-complexity medical decision making</td>
+        <td>HRT follow-up with dosage adjustment, managing side effects, GLP-1 titration with concerns</td>
+      </tr>
+      <tr>
+        <td>99215</td>
+        <td>Established, high complexity</td>
+        <td>Established patient visit with high-complexity medical decision making</td>
+        <td>Complex patient visit with multiple issues, medication changes, new diagnoses</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Procedure Codes</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>CPT Code</th>
+        <th>Description</th>
+        <th>Plain Language</th>
+        <th>Typical Use at CHC</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>11980</td>
+        <td>Subcutaneous hormone pellet implantation</td>
+        <td>Insertion of hormone pellets under the skin</td>
+        <td>All pellet insertion procedures (testosterone, estradiol)</td>
+      </tr>
+      <tr>
+        <td>36415</td>
+        <td>Venipuncture (routine blood draw)</td>
+        <td>Drawing blood from a vein for lab testing</td>
+        <td>All lab draws performed in the office</td>
+      </tr>
+      <tr>
+        <td>96372</td>
+        <td>Therapeutic, prophylactic, or diagnostic injection, subcutaneous or intramuscular</td>
+        <td>Giving a medication injection</td>
+        <td>Testosterone injections, B12 injections, GLP-1 injections given in office</td>
+      </tr>
+      <tr>
+        <td>88175</td>
+        <td>Cytopathology, cervicovaginal, ThinPrep</td>
+        <td>Lab processing of a Pap smear sample</td>
+        <td>All Pap smears sent to the lab</td>
+      </tr>
+      <tr>
+        <td>Q0091</td>
+        <td>Screening Pap smear, obtaining, preparing, and conveyance</td>
+        <td>The act of collecting the Pap smear sample</td>
+        <td>Used alongside 88175 for Pap smear visits</td>
+      </tr>
+      <tr>
+        <td>99000</td>
+        <td>Handling and/or conveyance of specimen for transfer</td>
+        <td>Preparing and sending lab specimens to the lab</td>
+        <td>When specimens are sent to an outside lab</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="key-takeaway">
+    <strong>Key Takeaway</strong>
+    You do not assign CPT codes. That is the provider's responsibility. However, when you are verifying insurance benefits, you need to know which codes to ask about. If a patient is coming in for a pellet insertion, you need to verify coverage for both the E/M code (office visit) and 11980 (pellet insertion procedure) separately, because the insurance may cover one but not the other.
+  </div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section" id="icd-codes">
+  <h2>4. Common ICD-10 Diagnosis Codes</h2>
+
+  <p>ICD-10 codes are diagnosis codes that describe the medical reason for the visit. Every insurance claim requires at least one ICD-10 code to explain why the patient was seen. The provider assigns these codes, but understanding the most common ones at CHC will help you when verifying insurance benefits and understanding claim denials.</p>
+
+  <h3>Hormone-Related Diagnosis Codes</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ICD-10 Code</th>
+        <th>Description</th>
+        <th>When It Is Used</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>E29.1</td>
+        <td>Testicular hypofunction</td>
+        <td>Male patients with low testosterone (hypogonadism). This is the primary diagnosis code for men receiving testosterone therapy.</td>
+      </tr>
+      <tr>
+        <td>E28.39</td>
+        <td>Other primary ovarian failure</td>
+        <td>Female patients with ovarian insufficiency or failure leading to hormone deficiency. Used for women on estrogen/progesterone/testosterone therapy.</td>
+      </tr>
+      <tr>
+        <td>N95.1</td>
+        <td>Menopausal and female climacteric states</td>
+        <td>Women experiencing menopausal symptoms (hot flashes, night sweats, mood changes, vaginal dryness). Very commonly used at CHC for women on HRT.</td>
+      </tr>
+      <tr>
+        <td>E34.9</td>
+        <td>Endocrine disorder, unspecified</td>
+        <td>Used when a more specific hormone diagnosis has not yet been established, often at the initial visit before lab results are available.</td>
+      </tr>
+      <tr>
+        <td>E89.40</td>
+        <td>Asymptomatic postprocedural ovarian failure</td>
+        <td>Women who have had their ovaries removed (oophorectomy) and are in surgical menopause.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Weight Management Diagnosis Codes</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ICD-10 Code</th>
+        <th>Description</th>
+        <th>When It Is Used</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>E66.01</td>
+        <td>Morbid (severe) obesity due to excess calories</td>
+        <td>Patients with BMI 40+ or BMI 35+ with comorbidities. This is the most commonly used code for GLP-1 medication eligibility and prior authorizations.</td>
+      </tr>
+      <tr>
+        <td>E66.09</td>
+        <td>Other obesity due to excess calories</td>
+        <td>Patients with obesity (BMI 30-39.9) who do not meet morbid obesity criteria.</td>
+      </tr>
+      <tr>
+        <td>E11.9</td>
+        <td>Type 2 diabetes mellitus without complications</td>
+        <td>Patients with type 2 diabetes. GLP-1 medications were originally developed for diabetes, so this diagnosis code often has the best insurance coverage for GLP-1s.</td>
+      </tr>
+      <tr>
+        <td>E11.65</td>
+        <td>Type 2 diabetes mellitus with hyperglycemia</td>
+        <td>Diabetic patients with documented uncontrolled blood sugar.</td>
+      </tr>
+      <tr>
+        <td>Z68.35-Z68.45</td>
+        <td>BMI codes (35.0-45.9)</td>
+        <td>Used as secondary codes alongside obesity diagnoses to document the specific BMI. Required by many insurers for GLP-1 prior authorizations.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Gynecology &amp; Preventive Diagnosis Codes</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ICD-10 Code</th>
+        <th>Description</th>
+        <th>When It Is Used</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Z01.419</td>
+        <td>Encounter for gynecological examination without abnormal findings</td>
+        <td>Routine GYN exam with normal findings.</td>
+      </tr>
+      <tr>
+        <td>Z01.411</td>
+        <td>Encounter for gynecological examination with abnormal findings</td>
+        <td>GYN exam where abnormalities are found.</td>
+      </tr>
+      <tr>
+        <td>Z12.4</td>
+        <td>Encounter for screening for malignant neoplasm of cervix</td>
+        <td>Routine cervical cancer screening (Pap smear). This code is important because it triggers preventive care benefits, which often means no copay for the patient.</td>
+      </tr>
+      <tr>
+        <td>Z00.00</td>
+        <td>Encounter for general adult medical examination without abnormal findings</td>
+        <td>Annual wellness/preventive visit with normal findings.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="clinical-pearl">
+    <strong>Clinical Pearl</strong>
+    The diagnosis code used on a claim can make the difference between the claim being paid or denied. For example, a GLP-1 medication prior authorization submitted with E66.01 (morbid obesity) often has a better chance of approval than one submitted with E66.09 (other obesity), because many plans only cover GLP-1s for morbid obesity or type 2 diabetes. This is the provider's responsibility to assign correctly, but understanding this helps you follow up intelligently on denied claims and prior authorizations.
+  </div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section" id="eobs">
+  <h2>5. Understanding EOBs (Explanation of Benefits)</h2>
+
+  <p>An Explanation of Benefits (EOB) is a document sent by the insurance company to the patient (and sometimes the provider) after a claim has been processed. It is not a bill; it is a summary of how the insurance company processed the claim. Understanding EOBs helps you answer patient questions and identify claim issues.</p>
+
+  <h3>Key Components of an EOB</h3>
+
+  <div class="card">
+    <h4>What You Will See on Every EOB</h4>
+    <ul>
+      <li><strong>Patient name and member ID:</strong> Identifies which patient the EOB is for.</li>
+      <li><strong>Date of service:</strong> The date the patient was seen.</li>
+      <li><strong>Provider name:</strong> The provider who rendered the service.</li>
+      <li><strong>Service description and CPT code:</strong> What was done (office visit, procedure, lab work, etc.).</li>
+      <li><strong>Billed amount (charged amount):</strong> The amount the provider billed the insurance company. This is the full fee before any discounts.</li>
+      <li><strong>Allowed amount (approved amount):</strong> The amount the insurance company agrees to pay for the service, based on the contracted rate. This is almost always less than the billed amount.</li>
+      <li><strong>Insurance payment:</strong> The amount the insurance company actually paid toward the allowed amount.</li>
+      <li><strong>Adjustments/write-offs:</strong> The difference between the billed amount and the allowed amount. In-network providers agree to accept the allowed amount and write off the difference. This amount cannot be billed to the patient.</li>
+      <li><strong>Patient responsibility:</strong> The amount the patient owes. This can include copay, deductible, and/or coinsurance.</li>
+      <li><strong>Denial reason (if applicable):</strong> If the claim was denied, the reason code and explanation will be listed.</li>
+    </ul>
+  </div>
+
+  <h3>Example EOB Breakdown</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Amount</th>
+        <th>Explanation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Billed Amount</td>
+        <td>$250.00</td>
+        <td>What CHC charged for a 99214 office visit</td>
+      </tr>
+      <tr>
+        <td>Allowed Amount</td>
+        <td>$175.00</td>
+        <td>What the insurance contracted rate allows</td>
+      </tr>
+      <tr>
+        <td>Adjustment</td>
+        <td>$75.00</td>
+        <td>Write-off (billed minus allowed). Cannot bill patient.</td>
+      </tr>
+      <tr>
+        <td>Insurance Paid</td>
+        <td>$140.00</td>
+        <td>80% of allowed amount (plan pays 80% after deductible)</td>
+      </tr>
+      <tr>
+        <td>Patient Owes</td>
+        <td>$35.00</td>
+        <td>20% coinsurance of allowed amount</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Common Patient Questions About EOBs</h3>
+
+  <p><strong>"Why does the EOB say I owe more than my copay?"</strong></p>
+  <p>This usually means the patient's deductible has not been fully met. Until the deductible is satisfied, the patient is responsible for the full allowed amount, not just a copay. Explain that the deductible is the amount they must pay out of pocket before their insurance starts paying its share.</p>
+
+  <p><strong>"Why was my claim denied?"</strong></p>
+  <p>Common denial reasons include: the service required prior authorization that was not obtained, the diagnosis code did not support the procedure code, the patient's coverage was not active on the date of service, or the service is not a covered benefit under their plan. Check the denial reason code on the EOB and, if it is something the practice can address (like obtaining a PA retroactively or correcting a coding error), forward it to the billing team.</p>
+
+  <p><strong>"This is not a bill?"</strong></p>
+  <p>Correct. The EOB is informational. The actual bill will come from CHC. However, the "patient responsibility" amount on the EOB should match what the patient receives on their statement from the practice.</p>
+
+  <div class="warning">
+    <strong>Warning</strong>
+    If a patient brings an EOB to the front desk with questions, review it with them to the best of your ability. If you encounter something you do not understand or cannot explain, do not guess. Tell the patient: "That is a great question. Let me have our billing team look into this and get back to you." Never provide incorrect information about insurance processing; it erodes trust.
+  </div>
+</div>
+
+<!-- SECTION 6 -->
+<div class="section" id="prior-auth">
+  <h2>6. Prior Authorizations</h2>
+
+  <p>A prior authorization (PA) is a requirement from the insurance company that the provider must get approval before a specific medication, procedure, or service is provided. Without the PA, the insurance company will deny the claim, and the patient may be responsible for the full cost.</p>
+
+  <h3>Which Services Commonly Need Prior Authorization at CHC</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Service/Medication</th>
+        <th>PA Required?</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GLP-1 medications (Wegovy, Zepbound, Ozempic, Mounjaro)</td>
+        <td>Almost always</td>
+        <td>Required by nearly every insurance plan. Very common denial reason if not obtained.</td>
+      </tr>
+      <tr>
+        <td>Certain peptide medications</td>
+        <td>Sometimes</td>
+        <td>If covered at all (most peptides are self-pay), PAs may be required.</td>
+      </tr>
+      <tr>
+        <td>Specialty lab panels</td>
+        <td>Occasionally</td>
+        <td>Some plans require PA for advanced hormone panels or genetic testing.</td>
+      </tr>
+      <tr>
+        <td>Pellet insertion (11980)</td>
+        <td>Rarely</td>
+        <td>Most plans that cover pellet insertion do not require PA, but some do. Verify during insurance check.</td>
+      </tr>
+      <tr>
+        <td>Testosterone (injectable)</td>
+        <td>Sometimes</td>
+        <td>Some plans require PA for testosterone cypionate, especially for female patients.</td>
+      </tr>
+      <tr>
+        <td>Imaging/referrals</td>
+        <td>Plan dependent</td>
+        <td>MRIs, CT scans, and specialist referrals may require PA.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>What Information Is Needed for a Prior Authorization</h3>
+
+  <div class="card">
+    <h4>PA Submission Checklist</h4>
+    <ul>
+      <li><strong>Patient demographics:</strong> Full name, date of birth, member ID, group number</li>
+      <li><strong>Insurance information:</strong> Plan name, payer phone number, PA submission portal or fax number</li>
+      <li><strong>Prescribing provider information:</strong> NPI number, name, practice address, phone, fax</li>
+      <li><strong>Diagnosis codes (ICD-10):</strong> The medical reason for the medication or service</li>
+      <li><strong>Procedure or medication details:</strong> CPT code for procedures; drug name, dose, frequency, duration for medications</li>
+      <li><strong>Clinical justification:</strong> Why the medication/procedure is medically necessary. This typically includes relevant lab results, BMI, failed prior treatments, comorbidities, and clinical notes.</li>
+      <li><strong>Supporting documentation:</strong> Recent office notes, lab results, previous treatment history showing medical necessity</li>
+    </ul>
+  </div>
+
+  <h3>GLP-1 Prior Authorization: A Detailed Example</h3>
+
+  <p>Because GLP-1 medications are the most commonly PA'd items at CHC, here is a detailed walkthrough:</p>
+
+  <ol>
+    <li><strong>Identify the need:</strong> The provider prescribes a GLP-1 medication (e.g., semaglutide/Wegovy) for a patient. The provider indicates a PA is needed.</li>
+    <li><strong>Gather documentation:</strong>
+      <ul>
+        <li>Patient's current BMI and weight history</li>
+        <li>Diagnosis codes (E66.01 for morbid obesity, E11.9 for type 2 diabetes if applicable)</li>
+        <li>Documentation of previous weight loss attempts (diet, exercise, other medications tried)</li>
+        <li>Relevant lab results (A1C, fasting glucose, lipid panel)</li>
+        <li>Comorbidities related to obesity (hypertension, sleep apnea, joint disease, etc.)</li>
+        <li>Provider's clinical notes supporting medical necessity</li>
+      </ul>
+    </li>
+    <li><strong>Submit the PA:</strong> Submit through the insurance company's preferred method (online portal, fax, or phone). Document the submission date, method, and any reference numbers.</li>
+    <li><strong>Track and follow up:</strong> PAs can take 3-15 business days to process. Set a follow-up reminder for 5 business days after submission. If not approved by then, call the insurance company for a status update.</li>
+    <li><strong>Communicate with the patient:</strong> Let the patient know the PA has been submitted, the expected timeline, and that you will contact them when you hear back. If denied, inform the patient and discuss options (appeal, self-pay pricing, alternative medications).</li>
+  </ol>
+
+  <h3>PA Timeline Expectations</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Payer</th>
+        <th>Typical Turnaround</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Commercial plans (Aetna, BCBS, Cigna, UHC)</td>
+        <td>3-10 business days</td>
+        <td>Online submission is usually fastest</td>
+      </tr>
+      <tr>
+        <td>Medicare</td>
+        <td>5-14 business days</td>
+        <td>Strict criteria; may require peer-to-peer review</td>
+      </tr>
+      <tr>
+        <td>Medicaid</td>
+        <td>5-15 business days</td>
+        <td>Varies significantly by state</td>
+      </tr>
+      <tr>
+        <td>Tricare</td>
+        <td>5-10 business days</td>
+        <td>Specific formulary requirements</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Following Up on Pending PAs</h3>
+
+  <ul>
+    <li>Check the PA status at 5 business days if no response has been received.</li>
+    <li>If the PA is still "pending," ask the insurance company if additional information is needed. Sometimes PAs stall because a document is missing.</li>
+    <li>If the PA is denied, review the denial reason carefully. Common reasons include: insufficient documentation, diagnosis does not meet criteria, or the patient has not tried required step therapy (less expensive medications) first.</li>
+    <li>If denied, discuss with the provider whether to appeal. Many PA denials can be overturned on appeal, especially if additional clinical documentation is provided or a peer-to-peer review is requested.</li>
+    <li>Keep the patient informed at every step. Waiting for a PA with no communication is frustrating for patients.</li>
+  </ul>
+
+  <div class="key-takeaway">
+    <strong>Key Takeaway</strong>
+    Prior authorizations are time-sensitive and directly impact patient care. A patient who is told they need a GLP-1 medication and then waits three weeks with no update about their PA will lose confidence in the practice. Create a PA tracking system (spreadsheet, task list, or EHR-based tracker) and check it daily. Every PA should have a status and a follow-up date at all times.
+  </div>
+</div>
+
+<!-- SECTION 7 -->
+<div class="section" id="collections">
+  <h2>7. Patient Payment Collection</h2>
+
+  <p>Collecting patient payments is a critical front office function. Money that is not collected at the time of service is significantly harder (and more expensive) to collect later. The goal is to collect 100% of the patient's financial responsibility at the time of service while maintaining a compassionate and professional approach.</p>
+
+  <h3>Collecting Copays at Check-In</h3>
+
+  <p>Copays should always be collected at check-in, not at check-out. This is important for several reasons:</p>
+  <ul>
+    <li>Patients are mentally prepared to pay when they arrive. After the visit, they are focused on their health information and may be distracted or in a hurry.</li>
+    <li>If a patient leaves without paying, collecting the copay later requires a statement, postage, and staff time to follow up.</li>
+    <li>It sets a professional expectation that payment is part of the visit process.</li>
+  </ul>
+
+  <div class="script-box">
+    <span class="label">Copay Collection Script</span>
+    "Welcome, [patient name]. I have you checked in for your appointment today. Your copay for today's visit is $[amount]. Would you like to pay with a card or another method?"<br><br>
+    [If patient says they do not have payment:]<br><br>
+    "I understand. We do ask that copays be collected at the time of service. We accept credit cards, debit cards, HSA/FSA cards, cash, and checks. If you are unable to pay today, we can apply the copay to your account and send you a statement, but we do appreciate collecting it at the time of the visit whenever possible."
+  </div>
+
+  <h3>Self-Pay Pricing Discussion</h3>
+
+  <p>Discussing costs can feel uncomfortable, but it is a vital part of the patient experience. Patients appreciate transparency, and you can have this conversation professionally and empathetically.</p>
+
+  <div class="script-box">
+    <span class="label">Self-Pay Discussion Script (Phone)</span>
+    "Great question about pricing. At Contemporary Health Center, we believe in transparent pricing so you know exactly what to expect. Our [service] is $[amount]. That includes [what is included]. If you need labs, those are additional and typically run $[range] depending on the panel ordered.<br><br>
+    We accept credit cards, debit cards, HSA/FSA cards, cash, and checks. We also offer [payment plan options if available].<br><br>
+    Would you like to go ahead and schedule?"
+  </div>
+
+  <div class="script-box">
+    <span class="label">Self-Pay Discussion Script (In-Person)</span>
+    "For today's visit, the [service] is $[amount]. This covers [brief description of what is included]. Would you like to go ahead?<br><br>
+    [If patient expresses concern about cost:]<br><br>
+    I completely understand. Let me share a few options. We do offer [payment plans / financing options if available]. Some patients also use their HSA or FSA cards, which allow you to pay with pre-tax dollars. Would any of those options be helpful?"
+  </div>
+
+  <h3>Payment Plan Options</h3>
+
+  <p>For patients who cannot pay the full amount at the time of service, CHC may offer payment plan arrangements. The specific terms should be confirmed with the office manager, but general guidelines include:</p>
+
+  <ul>
+    <li>Payment plans should be documented in writing and signed by the patient.</li>
+    <li>Require a minimum down payment at the time of service (typically 50% of the total).</li>
+    <li>Remaining balance should be paid within 60-90 days in equal installments.</li>
+    <li>Collect a credit card on file for recurring payments whenever possible.</li>
+    <li>Payment plans should be offered before the patient accrues a large balance, not after.</li>
+  </ul>
+
+  <h3>How to Discuss Costs Without Making Patients Uncomfortable</h3>
+
+  <div class="card">
+    <h4>Do's and Don'ts of Financial Conversations</h4>
+    <p><strong>Do:</strong></p>
+    <ul>
+      <li>Be matter-of-fact and professional. Treat the financial discussion as a normal part of healthcare, because it is.</li>
+      <li>Provide the information proactively. Do not wait for the patient to ask; they may feel embarrassed to bring it up.</li>
+      <li>Use phrases like "your investment in your health" rather than "what you owe."</li>
+      <li>Offer alternatives (payment plans, HSA/FSA) when a patient expresses concern.</li>
+      <li>Maintain a calm, empathetic tone. Many patients have financial anxiety around healthcare costs.</li>
+    </ul>
+    <p><strong>Do Not:</strong></p>
+    <ul>
+      <li>Never express personal opinions about whether a service is "worth it" or "expensive."</li>
+      <li>Never make a patient feel judged for asking about costs or for being unable to pay.</li>
+      <li>Never discuss another patient's financial situation or payment arrangements.</li>
+      <li>Never promise discounts or adjust pricing without manager approval.</li>
+      <li>Never pressure a patient into paying for something they are clearly uncomfortable with.</li>
+    </ul>
+  </div>
+
+  <div class="warning">
+    <strong>Warning</strong>
+    Never turn a patient away for inability to pay a copay. The office policy should guide how to handle these situations, but the default approach should be to document the unpaid copay and send a statement. Patient access to healthcare should not be denied at the front desk over a copay. If you are unsure what to do, consult the office manager.
+  </div>
+</div>
+
+<!-- SECTION 8 -->
+<div class="section" id="mistakes">
+  <h2>8. Common Billing Mistakes to Avoid</h2>
+
+  <p>Billing errors cost the practice money, create patient frustration, and can lead to compliance issues. Here are the most common mistakes and how to prevent them:</p>
+
+  <div class="card">
+    <h4>Mistake 1: Not Verifying Insurance Before the Visit</h4>
+    <p>If insurance is not verified and the patient's plan is inactive, the claim will be denied. The practice may not be able to bill the patient for the full amount if they were not informed of their coverage status before the visit. Always verify at least 48 hours before the appointment.</p>
+  </div>
+
+  <div class="card">
+    <h4>Mistake 2: Collecting the Wrong Copay Amount</h4>
+    <p>Using an old copay amount on file instead of verifying the current copay can result in undercollection or overcollection. Copays change when patients change plans (often at the start of a new year). Verify annually at minimum and whenever a patient presents a new insurance card.</p>
+  </div>
+
+  <div class="card">
+    <h4>Mistake 3: Not Scanning Both Sides of the Insurance Card</h4>
+    <p>The back of the insurance card contains the payer's mailing address for claims, the member services phone number, and sometimes the claims submission address and group number. Missing this information can delay claim processing.</p>
+  </div>
+
+  <div class="card">
+    <h4>Mistake 4: Failing to Obtain or Track Prior Authorizations</h4>
+    <p>Providing a service that requires PA without obtaining it results in a guaranteed denial. Create a system to track which services need PAs and verify that the PA is approved before the service is rendered.</p>
+  </div>
+
+  <div class="card">
+    <h4>Mistake 5: Not Collecting Payment at the Time of Service</h4>
+    <p>The longer a balance goes uncollected, the less likely it is to be paid. Industry data shows that the probability of collecting drops to less than 50% after 90 days. Collect copays, self-pay fees, and known patient responsibilities at the time of service.</p>
+  </div>
+
+  <div class="card">
+    <h4>Mistake 6: Incorrect Patient Demographics</h4>
+    <p>Wrong date of birth, misspelled name, incorrect address, or outdated insurance information leads to claim rejections. Verify demographics at every visit, not just the first visit.</p>
+  </div>
+
+  <div class="card">
+    <h4>Mistake 7: Mixing Up Self-Pay and Insurance Charges</h4>
+    <p>In a practice like CHC where patients often have split visits (partially insurance, partially self-pay), it is critical to keep these separate. Billing a self-pay service to insurance or vice versa creates confusion, potential fraud issues, and delayed payment.</p>
+  </div>
+
+  <div class="card">
+    <h4>Mistake 8: Not Documenting Financial Conversations</h4>
+    <p>If you discuss payment plans, financial hardship, or waived fees with a patient, document it in the patient's financial record. Verbal agreements without documentation lead to disputes later.</p>
+  </div>
+</div>
+
+<!-- SECTION 9: QUICK REFERENCE -->
+<div class="section" id="quick-ref">
+  <h2>9. Quick Reference Cards</h2>
+
+  <div class="quick-ref">
+    <h3>CPT Code Quick Reference</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Service</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>99202-99205</td><td>New patient office visit (levels 2-5)</td><td>Level based on complexity</td></tr>
+        <tr><td>99213</td><td>Established patient, low complexity</td><td>Routine follow-ups</td></tr>
+        <tr><td>99214</td><td>Established patient, moderate complexity</td><td>Most common follow-up code</td></tr>
+        <tr><td>99215</td><td>Established patient, high complexity</td><td>Complex visits</td></tr>
+        <tr><td>11980</td><td>Hormone pellet insertion</td><td>Verify coverage specifically</td></tr>
+        <tr><td>36415</td><td>Venipuncture (blood draw)</td><td>Standard lab draw</td></tr>
+        <tr><td>96372</td><td>Therapeutic injection</td><td>IM or SC injections</td></tr>
+        <tr><td>88175</td><td>Pap smear lab processing</td><td>ThinPrep cytology</td></tr>
+        <tr><td>Q0091</td><td>Pap smear collection</td><td>Paired with 88175</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="quick-ref">
+    <h3>ICD-10 Code Quick Reference</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Diagnosis</th>
+          <th>Common Use</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>E29.1</td><td>Testicular hypofunction</td><td>Male low testosterone</td></tr>
+        <tr><td>E28.39</td><td>Primary ovarian failure</td><td>Female hormone deficiency</td></tr>
+        <tr><td>N95.1</td><td>Menopausal symptoms</td><td>Women on HRT</td></tr>
+        <tr><td>E66.01</td><td>Morbid obesity</td><td>GLP-1 eligibility</td></tr>
+        <tr><td>E66.09</td><td>Other obesity</td><td>Weight management</td></tr>
+        <tr><td>E11.9</td><td>Type 2 diabetes</td><td>GLP-1 coverage (best code)</td></tr>
+        <tr><td>Z01.419</td><td>GYN exam, normal</td><td>Routine GYN visit</td></tr>
+        <tr><td>Z12.4</td><td>Cervical cancer screening</td><td>Pap smear (preventive)</td></tr>
+        <tr><td>Z00.00</td><td>General exam, normal</td><td>Annual wellness visit</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="quick-ref">
+    <h3>Prior Authorization Checklist</h3>
+    <ul>
+      <li>Patient name, DOB, member ID, group number</li>
+      <li>Insurance plan name and PA submission method (portal, fax, phone)</li>
+      <li>Provider name, NPI number, practice address, phone, fax</li>
+      <li>Medication name, dose, frequency, duration (for medication PAs)</li>
+      <li>CPT code (for procedure PAs)</li>
+      <li>ICD-10 diagnosis codes (primary and secondary)</li>
+      <li>Clinical justification notes from the provider</li>
+      <li>Supporting lab results</li>
+      <li>Documentation of previous treatments tried (step therapy)</li>
+      <li>BMI and weight history (for GLP-1 PAs)</li>
+      <li>Comorbidity documentation (for GLP-1 PAs)</li>
+      <li>Submission date, method, reference number</li>
+      <li>Follow-up date set (5 business days)</li>
+      <li>Patient notified of PA status</li>
+    </ul>
+  </div>
+
+  <div class="quick-ref">
+    <h3>Insurance Verification Quick Checklist</h3>
+    <ul>
+      <li>Is the plan active as of the date of service?</li>
+      <li>Is the patient the subscriber or a dependent?</li>
+      <li>Is CHC in-network with this plan?</li>
+      <li>What is the copay for a specialist visit?</li>
+      <li>What is the deductible, and how much has been met?</li>
+      <li>What is the coinsurance after deductible?</li>
+      <li>Has the out-of-pocket maximum been reached?</li>
+      <li>Is a referral required?</li>
+      <li>Does this plan require PA for 11980 (pellet insertion)?</li>
+      <li>Does this plan cover GLP-1 medications? If yes, with what criteria?</li>
+      <li>Which lab is in-network (Quest, LabCorp, other)?</li>
+      <li>Document: representative name, reference number, date and time of call</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

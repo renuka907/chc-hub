@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interpreting Abnormal Pap Smears &amp; Patient Communication | Provider Education</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple-deep: #1a0a2e;
+  --purple-mid: #2d1b4e;
+  --purple-light: #6c3fa0;
+  --pink: #e91e8c;
+  --orange: #ff6b35;
+  --gradient-main: linear-gradient(135deg, #6c3fa0, #e91e8c, #ff6b35);
+  --text-primary: #f0e6ff;
+  --text-secondary: #c4b0db;
+  --card-bg: rgba(45, 27, 78, 0.6);
+  --border-glow: rgba(108, 63, 160, 0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--purple-deep);
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-size: 17px;
+}
+
+.container {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  margin-bottom: 2rem;
+}
+
+h2 {
+  color: #fff;
+  font-size: 1.7rem;
+  font-weight: 800;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--border-glow);
+}
+
+h3 {
+  color: var(--text-primary);
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-top: 1.8rem;
+  margin-bottom: 0.8rem;
+}
+
+h4 {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-top: 1.4rem;
+  margin-bottom: 0.6rem;
+}
+
+p { margin-bottom: 1rem; }
+
+a { color: var(--pink); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+strong { color: #fff; }
+
+/* Cards */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* TOC */
+.toc { margin-bottom: 2rem; }
+.toc h2 { margin-top: 0; }
+.toc ol {
+  padding-left: 1.5rem;
+  counter-reset: toc;
+}
+.toc ol li {
+  margin-bottom: 0.4rem;
+  color: var(--text-secondary);
+}
+.toc ol li a {
+  color: var(--text-secondary);
+  transition: color 0.2s;
+}
+.toc ol li a:hover { color: var(--pink); }
+
+/* Clinical Pearl */
+.clinical-pearl {
+  background: rgba(233, 30, 140, 0.1);
+  border-left: 4px solid var(--pink);
+  border-radius: 0 12px 12px 0;
+  padding: 1.2rem 1.5rem;
+  margin: 1.5rem 0;
+}
+.clinical-pearl .label {
+  font-weight: 800;
+  color: var(--pink);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+
+/* Key Takeaway */
+.key-takeaway {
+  background: rgba(108, 63, 160, 0.15);
+  border-left: 4px solid var(--purple-light);
+  border-radius: 0 12px 12px 0;
+  padding: 1.2rem 1.5rem;
+  margin: 1.5rem 0;
+}
+.key-takeaway .label {
+  font-weight: 800;
+  color: var(--purple-light);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+
+/* Warning */
+.warning {
+  background: rgba(255, 107, 53, 0.1);
+  border-left: 4px solid var(--orange);
+  border-radius: 0 12px 12px 0;
+  padding: 1.2rem 1.5rem;
+  margin: 1.5rem 0;
+}
+.warning .label {
+  font-weight: 800;
+  color: var(--orange);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+
+/* Patient Script */
+.patient-script {
+  background: rgba(108, 63, 160, 0.1);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1.2rem 0;
+  font-style: italic;
+  color: var(--text-secondary);
+  position: relative;
+}
+.patient-script .script-label {
+  font-style: normal;
+  font-weight: 700;
+  color: var(--pink);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+.patient-script p:last-child { margin-bottom: 0; }
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.2rem 0;
+  font-size: 0.95rem;
+}
+thead th {
+  background: linear-gradient(135deg, #6c3fa0, #e91e8c);
+  color: #fff;
+  font-weight: 700;
+  padding: 0.8rem 1rem;
+  text-align: left;
+}
+thead th:first-child { border-radius: 8px 0 0 0; }
+thead th:last-child { border-radius: 0 8px 0 0; }
+tbody td {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--border-glow);
+  color: var(--text-secondary);
+}
+tbody tr:nth-child(odd) { background: rgba(45, 27, 78, 0.3); }
+tbody tr:nth-child(even) { background: rgba(26, 10, 46, 0.4); }
+tbody tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+tbody tr:last-child td:last-child { border-radius: 0 0 8px 0; }
+
+/* Lists */
+ul, ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+li { margin-bottom: 0.3rem; color: var(--text-secondary); }
+li strong { color: var(--text-primary); }
+
+/* Diagrams */
+.diagram-container {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 1.5rem 0;
+  text-align: center;
+}
+.diagram-title {
+  font-weight: 700;
+  color: #fff;
+  font-size: 1.05rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Transformation Zone Diagram */
+.tz-diagram {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  margin: 0 auto 1rem;
+}
+.tz-ring {
+  position: absolute;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tz-outer {
+  width: 320px;
+  height: 320px;
+  background: rgba(108, 63, 160, 0.25);
+  border: 3px solid var(--purple-light);
+  top: 0; left: 0;
+}
+.tz-middle {
+  width: 200px;
+  height: 200px;
+  background: rgba(233, 30, 140, 0.2);
+  border: 3px dashed var(--pink);
+  top: 60px; left: 60px;
+}
+.tz-inner {
+  width: 100px;
+  height: 100px;
+  background: rgba(255, 107, 53, 0.2);
+  border: 3px solid var(--orange);
+  top: 110px; left: 110px;
+}
+.tz-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  line-height: 1.3;
+}
+.tz-legend {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+.tz-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+.tz-legend-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Flowchart */
+.flowchart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.flow-step {
+  padding: 0.7rem 1.4rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-align: center;
+  color: #fff;
+  min-width: 200px;
+  position: relative;
+}
+.flow-arrow {
+  width: 2px;
+  height: 28px;
+  background: var(--text-secondary);
+  position: relative;
+}
+.flow-arrow::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid var(--text-secondary);
+}
+.flow-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+  margin-top: 0.15rem;
+}
+.flow-branch {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+.flow-branch-item {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-glow);
+  background: rgba(45, 27, 78, 0.4);
+}
+
+/* Bethesda Hierarchy */
+.bethesda-scale {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.bethesda-bar {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.bethesda-bar .severity {
+  font-size: 0.75rem;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+/* Screening cards */
+.screening-grid {
+  display: grid;
+  gap: 1rem;
+}
+.screening-item {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+}
+.screening-item .age-group {
+  font-weight: 800;
+  color: var(--pink);
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+}
+.screening-item .method {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+/* Result sections */
+.result-section {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.result-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+.result-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #fff;
+}
+
+/* Treatment flowchart */
+.treatment-flow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* Quick ref cards */
+.quick-ref-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 600px) {
+  .quick-ref-grid { grid-template-columns: 1fr; }
+  .flow-branch { flex-direction: column; align-items: center; }
+  .tz-diagram { width: 260px; height: 260px; }
+  .tz-outer { width: 260px; height: 260px; }
+  .tz-middle { width: 160px; height: 160px; top: 50px; left: 50px; }
+  .tz-inner { width: 80px; height: 80px; top: 90px; left: 90px; }
+}
+.quick-ref-item {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+}
+.quick-ref-item h4 { margin-top: 0; }
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border-glow);
+  margin: 2rem 0;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Interpreting Abnormal Pap Smears &amp; Patient Communication</h1>
+<p class="subtitle">A comprehensive provider education guide &mdash; ASCCP 2019, USPSTF, and ACOG evidence-based recommendations</p>
+
+<!-- TABLE OF CONTENTS -->
+<div class="card toc">
+<h2 style="margin-top:0">Table of Contents</h2>
+<ol>
+  <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#anatomy-hpv">Cervical Anatomy &amp; HPV Biology</a></li>
+  <li><a href="#screening">Screening Guidelines &mdash; Current Recommendations</a></li>
+  <li><a href="#bethesda">Understanding Pap Results &mdash; The Bethesda System</a></li>
+  <li><a href="#hpv-results">The HPV Result &mdash; What It Means</a></li>
+  <li><a href="#colposcopy">Colposcopy &mdash; What Happens Next</a></li>
+  <li><a href="#treatment">Treatment &mdash; LEEP &amp; Excisional Procedures</a></li>
+  <li><a href="#risk-based">ASCCP 2019 Risk-Based Management Guidelines</a></li>
+  <li><a href="#communication">Patient Communication &mdash; The Heart of This Guide</a></li>
+  <li><a href="#special-populations">Special Populations</a></li>
+  <li><a href="#vaccination">HPV Vaccination &mdash; Provider Talking Points</a></li>
+  <li><a href="#quick-reference">Quick Reference Card</a></li>
+</ol>
+</div>
+
+<!-- SECTION 1: INTRODUCTION -->
+<h2 id="introduction">1. Introduction</h2>
+
+<p>Abnormal Pap smear results are among the most anxiety-provoking communications in primary care and women's health. How a provider delivers and explains these results profoundly shapes a patient's emotional experience, their adherence to follow-up, and their long-term relationship with cervical cancer screening.</p>
+
+<p>This guide serves a dual purpose: to provide a clinically rigorous framework for <strong>interpreting cervical cytology results</strong>, and to equip providers with <strong>practical, patient-centered communication scripts</strong> for every scenario.</p>
+
+<h3>The Evolution of Cervical Cancer Screening</h3>
+
+<p>Cervical cancer screening has undergone significant transformation over the past several decades:</p>
+
+<ul>
+  <li><strong>Conventional Pap smear (1940s&ndash;1990s):</strong> Cells smeared directly on a glass slide. Prone to sampling error and obscuring artifacts.</li>
+  <li><strong>Liquid-based cytology (1996+):</strong> Cells collected in a liquid medium (ThinPrep, SurePath), improving specimen adequacy and allowing reflex HPV testing from the same sample.</li>
+  <li><strong>Co-testing (2003+):</strong> Cytology plus HPV testing together, allowing extended screening intervals of 5 years for women 30+.</li>
+  <li><strong>Primary HPV testing (2014+, preferred 2020):</strong> HPV test alone as the first-line screen, with cytology triage for positive results. Recognized by the ACS (2020) and USPSTF as the preferred strategy.</li>
+</ul>
+
+<div class="key-takeaway">
+  <div class="label">Key Takeaway</div>
+  <p>The shift toward HPV-based screening reflects the scientific consensus that persistent high-risk HPV infection is the <strong>necessary cause</strong> of virtually all cervical cancers. Detecting the virus itself is more sensitive than detecting the cellular changes it causes.</p>
+</div>
+
+<!-- SECTION 2: ANATOMY & HPV -->
+<h2 id="anatomy-hpv">2. Cervical Anatomy &amp; HPV Biology</h2>
+
+<h3>The Transformation Zone</h3>
+
+<p>The transformation zone (TZ) is the critical anatomic region where the columnar epithelium of the endocervix transitions to the squamous epithelium of the ectocervix. This squamocolumnar junction (SCJ) is the site where approximately <strong>90% of cervical neoplasia</strong> originates, because the actively dividing metaplastic cells here are uniquely vulnerable to HPV infection.</p>
+
+<!-- Transformation Zone Diagram -->
+<div class="diagram-container">
+  <div class="diagram-title">Cervical Transformation Zone Anatomy</div>
+  <div class="tz-diagram">
+    <div class="tz-ring tz-outer">
+      <span class="tz-label" style="position:absolute; bottom:20px;">Ectocervix<br>(Squamous Epithelium)</span>
+    </div>
+    <div class="tz-ring tz-middle">
+      <span class="tz-label" style="position:absolute; top:15px;">Transformation<br>Zone (SCJ)</span>
+    </div>
+    <div class="tz-ring tz-inner">
+      <span class="tz-label" style="font-size:0.65rem;">Endocervix<br>(Columnar)</span>
+    </div>
+  </div>
+  <div class="tz-legend">
+    <div class="tz-legend-item"><div class="tz-legend-dot" style="background:rgba(108,63,160,0.5);border:2px solid var(--purple-light);"></div> Ectocervix (squamous)</div>
+    <div class="tz-legend-item"><div class="tz-legend-dot" style="background:rgba(233,30,140,0.35);border:2px dashed var(--pink);"></div> Transformation zone</div>
+    <div class="tz-legend-item"><div class="tz-legend-dot" style="background:rgba(255,107,53,0.35);border:2px solid var(--orange);"></div> Endocervix (columnar)</div>
+  </div>
+</div>
+
+<h3>HPV Biology &mdash; The Causative Agent</h3>
+
+<p>Human papillomavirus (HPV) is the necessary cause of cervical cancer. Over 200 HPV types exist, but only a subset are clinically significant for cervical disease:</p>
+
+<table>
+  <thead>
+    <tr><th>Category</th><th>HPV Types</th><th>Clinical Significance</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Highest risk</strong></td><td>16, 18</td><td>Cause ~70% of cervical cancers. HPV 16 alone accounts for 55&ndash;60%. HPV 18 is associated with adenocarcinoma.</td></tr>
+    <tr><td><strong>Other high-risk</strong></td><td>31, 33, 45, 52, 58</td><td>Account for an additional ~20% of cervical cancers</td></tr>
+    <tr><td><strong>Low-risk</strong></td><td>6, 11</td><td>Cause ~90% of genital warts. <strong>Not</strong> associated with cervical cancer.</td></tr>
+  </tbody>
+</table>
+
+<h3>HPV Natural History &amp; Progression</h3>
+
+<!-- HPV Progression Flowchart -->
+<div class="diagram-container">
+  <div class="diagram-title">HPV Infection to Cervical Cancer &mdash; Progression Pathway</div>
+  <div class="flowchart">
+    <div class="flow-step" style="background:var(--purple-light);">HPV Exposure<div class="flow-note">via sexual contact</div></div>
+    <div class="flow-arrow"></div>
+    <div class="flow-step" style="background:rgba(108,63,160,0.7);border:2px solid var(--purple-light);">HPV Infection Established</div>
+    <div class="flow-arrow"></div>
+    <div style="display:flex; gap:2rem; align-items:flex-start; justify-content:center; width:100%;">
+      <div style="text-align:center;">
+        <div class="flow-step" style="background:rgba(108,63,160,0.4);border:2px solid var(--purple-light);min-width:160px;">Transient Infection<div class="flow-note">~90% clear within 2 years</div></div>
+        <div class="flow-arrow" style="margin:0 auto;"></div>
+        <div class="flow-step" style="background:rgba(76,175,80,0.3);border:2px solid #4caf50;min-width:160px;">Cleared<div class="flow-note">No further risk</div></div>
+      </div>
+      <div style="text-align:center;">
+        <div class="flow-step" style="background:rgba(233,30,140,0.3);border:2px solid var(--pink);min-width:160px;">Persistent Infection<div class="flow-note">~10% persist beyond 2 years</div></div>
+        <div class="flow-arrow" style="margin:0 auto;"></div>
+        <div class="flow-step" style="background:rgba(233,30,140,0.25);border:2px solid var(--pink);min-width:120px;">CIN 1<div class="flow-note">Mild dysplasia</div></div>
+        <div class="flow-arrow" style="margin:0 auto;"></div>
+        <div class="flow-step" style="background:rgba(233,30,140,0.4);border:2px solid var(--pink);min-width:120px;">CIN 2<div class="flow-note">Moderate dysplasia</div></div>
+        <div class="flow-arrow" style="margin:0 auto;"></div>
+        <div class="flow-step" style="background:rgba(255,107,53,0.4);border:2px solid var(--orange);min-width:120px;">CIN 3<div class="flow-note">Severe / carcinoma in situ</div></div>
+        <div class="flow-arrow" style="margin:0 auto;"></div>
+        <div class="flow-step" style="background:rgba(255,53,53,0.5);border:2px solid #ff3535;min-width:120px;">Invasive Cancer<div class="flow-note">10&ndash;20 years from initial infection</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="clinical-pearl">
+  <div class="label">Clinical Pearl</div>
+  <p>The progression from initial HPV infection to invasive cervical cancer typically takes <strong>10 to 20 years</strong>. This long latency period is precisely what makes screening so effective &mdash; we have a wide window to detect and treat precancerous changes before they become malignant.</p>
+</div>
+
+<h3>Risk Factors for HPV Persistence</h3>
+<ul>
+  <li><strong>Immunosuppression</strong> (HIV, organ transplant recipients, chronic corticosteroid use)</li>
+  <li><strong>Cigarette smoking</strong> &mdash; directly toxic to cervical epithelium and impairs local immune response</li>
+  <li><strong>High parity</strong> (5+ full-term pregnancies)</li>
+  <li><strong>Long-term oral contraceptive use</strong> (>5 years)</li>
+  <li><strong>Co-infection with other STIs</strong> (especially Chlamydia trachomatis)</li>
+  <li><strong>HIV co-infection</strong> &mdash; dramatically increases persistence and progression risk</li>
+</ul>
+
+<!-- SECTION 3: SCREENING GUIDELINES -->
+<h2 id="screening">3. Screening Guidelines &mdash; Current Recommendations</h2>
+
+<p>The following recommendations synthesize guidance from the ASCCP, USPSTF (2018), ACS (2020), and ACOG. The trend is clearly toward HPV-based primary screening.</p>
+
+<div class="screening-grid">
+  <div class="screening-item">
+    <div class="age-group">Age 21&ndash;24</div>
+    <div class="method"><strong>Cytology alone</strong> every 3 years. No HPV testing in this age group &mdash; the high rate of transient HPV infections makes HPV testing inappropriate and leads to unnecessary procedures.</div>
+  </div>
+  <div class="screening-item">
+    <div class="age-group">Age 25&ndash;29</div>
+    <div class="method"><strong>Preferred:</strong> HPV primary testing every 5 years (ACS 2020 update)<br><strong>Acceptable:</strong> Cytology every 3 years, or co-testing (cytology + HPV) every 5 years</div>
+  </div>
+  <div class="screening-item">
+    <div class="age-group">Age 30&ndash;65</div>
+    <div class="method"><strong>Preferred:</strong> HPV primary testing every 5 years<br><strong>Acceptable:</strong> Co-testing every 5 years, or cytology alone every 3 years</div>
+  </div>
+  <div class="screening-item">
+    <div class="age-group">Age 65+</div>
+    <div class="method"><strong>Discontinue screening</strong> if adequate prior screening history (3 consecutive negative cytologies or 2 consecutive negative co-tests in the prior 10 years, with the most recent within 5 years) and <strong>no history of CIN 2+</strong></div>
+  </div>
+  <div class="screening-item">
+    <div class="age-group">Post-Hysterectomy</div>
+    <div class="method"><strong>Discontinue screening</strong> if the hysterectomy was for a benign indication (fibroids, prolapse, abnormal bleeding without dysplasia) and there is no history of CIN 2 or worse</div>
+  </div>
+  <div class="screening-item">
+    <div class="age-group">Immunocompromised</div>
+    <div class="method">Begin screening at age 21. Cytology annually or as directed by specialist. More aggressive surveillance and lower threshold for colposcopy.</div>
+  </div>
+  <div class="screening-item">
+    <div class="age-group">HIV-Positive</div>
+    <div class="method">Cytology at time of HIV diagnosis, then annually. Co-testing can be used after age 30. If 3 consecutive normal results, can extend to every 3 years. Continue screening throughout life (do not stop at age 65).</div>
+  </div>
+</div>
+
+<div class="clinical-pearl">
+  <div class="label">Clinical Pearl</div>
+  <p><strong>Why don't we screen before age 21?</strong> Even in sexually active adolescents, transient HPV infection is nearly universal. The vast majority of HPV infections and associated low-grade cytologic abnormalities in this age group will spontaneously regress. Screening before 21 leads to unnecessary colposcopies, biopsies, and excisional treatments that can cause cervical incompetence and psychological harm &mdash; with no mortality benefit.</p>
+</div>
+
+<!-- SECTION 4: BETHESDA SYSTEM -->
+<h2 id="bethesda">4. Understanding Pap Results &mdash; The Bethesda System</h2>
+
+<p>The Bethesda System (TBS) provides standardized terminology for reporting cervical cytology. Understanding each category &mdash; its pathological meaning, clinical significance, and management &mdash; is essential for both accurate triage and clear patient communication.</p>
+
+<!-- Bethesda Hierarchy Diagram -->
+<div class="diagram-container">
+  <div class="diagram-title">Bethesda Classification &mdash; Escalating Severity</div>
+  <div class="bethesda-scale">
+    <div class="bethesda-bar" style="background:rgba(76,175,80,0.5);">NILM <span class="severity">Normal</span></div>
+    <div class="bethesda-bar" style="background:rgba(108,63,160,0.5);">ASC-US <span class="severity">Mildest abnormality</span></div>
+    <div class="bethesda-bar" style="background:rgba(108,63,160,0.7);">LSIL <span class="severity">Low-grade changes (CIN 1)</span></div>
+    <div class="bethesda-bar" style="background:rgba(233,30,140,0.45);">ASC-H <span class="severity">Cannot exclude high-grade</span></div>
+    <div class="bethesda-bar" style="background:rgba(233,30,140,0.7);">HSIL <span class="severity">High-grade changes (CIN 2/3)</span></div>
+    <div class="bethesda-bar" style="background:rgba(255,107,53,0.6);">AGC <span class="severity">Glandular cell abnormality</span></div>
+    <div class="bethesda-bar" style="background:rgba(255,53,53,0.6);">SCC / Adenocarcinoma <span class="severity">Invasive malignancy</span></div>
+  </div>
+</div>
+
+<!-- NILM -->
+<h3>A. NILM &mdash; Negative for Intraepithelial Lesion or Malignancy</h3>
+
+<div class="result-section">
+  <div class="result-header">
+    <span class="result-badge" style="background:rgba(76,175,80,0.6);">NILM</span>
+    <span style="color:var(--text-secondary);">Normal result</span>
+  </div>
+  <p><strong>What it means:</strong> No evidence of precancerous or cancerous changes. The cervical cells appear normal. Benign findings such as reactive cellular changes, atrophy, or presence of organisms (Trichomonas, Candida, bacterial vaginosis) may be noted but do not affect the cytologic interpretation.</p>
+  <p><strong>Clinical significance:</strong> Reassuring. Return to routine screening interval based on age and method.</p>
+  <p><strong>Management:</strong> Routine screening per guidelines (3 or 5 years depending on method).</p>
+  <div class="patient-script">
+    <span class="script-label">Patient Script</span>
+    <p>"Your Pap smear came back completely normal. Everything looks healthy. We'll plan to repeat this at your next scheduled screening. Keep up with your regular visits and let us know if you have any concerns in the meantime."</p>
+  </div>
+</div>
+
+<!-- ASC-US -->
+<h3>B. ASC-US &mdash; Atypical Squamous Cells of Undetermined Significance</h3>
+
+<div class="result-section">
+  <div class="result-header">
+    <span class="result-badge" style="background:var(--purple-light);">ASC-US</span>
+    <span style="color:var(--text-secondary);">Most common abnormal result (~4&ndash;5% of Paps)</span>
+  </div>
+  <p><strong>What it means:</strong> The squamous cells show changes that are slightly beyond normal but are not definitive for a squamous intraepithelial lesion. These changes may result from HPV, inflammation, atrophy, or reactive processes. The cells are "equivocal" &mdash; the pathologist cannot determine with certainty whether the changes are clinically significant.</p>
+  <p><strong>Clinical significance:</strong> ASC-US is the <strong>most common abnormal Pap result</strong>. Approximately 50&ndash;60% of ASC-US results are associated with HPV infection. Only about 5&ndash;17% of ASC-US cases harbor an underlying CIN 2 or worse lesion. The HPV status determines the clinical risk and next steps.</p>
+  <p><strong>Management (ASCCP 2019):</strong></p>
+  <ul>
+    <li><strong>Age 25+, HPV positive</strong> (or HPV 16/18 positive): Colposcopy</li>
+    <li><strong>Age 25+, HPV negative:</strong> Repeat screening (co-test or HPV primary) in 3 years</li>
+    <li><strong>Age 25+, HPV status unknown:</strong> Reflex HPV testing on the liquid-based cytology specimen</li>
+    <li><strong>Age 21&ndash;24:</strong> Repeat cytology in 1 year (no HPV testing)</li>
+  </ul>
+  <div class="patient-script">
+    <span class="script-label">Patient Script &mdash; ASC-US</span>
+    <p>"Your Pap showed some slightly irregular cells &mdash; this is called ASC-US, which is the mildest type of abnormality we can see. It's actually the most common abnormal Pap result, and most of the time it means nothing serious at all. What we need to do is [check for HPV / schedule a closer look] to make sure everything is okay. This is NOT a cancer diagnosis &mdash; this is us being thorough."</p>
+  </div>
+</div>
+
+<!-- LSIL -->
+<h3>C. LSIL &mdash; Low-Grade Squamous Intraepithelial Lesion</h3>
+
+<div class="result-section">
+  <div class="result-header">
+    <span class="result-badge" style="background:rgba(233,30,140,0.5);">LSIL</span>
+    <span style="color:var(--text-secondary);">Corresponds to CIN 1 / mild dysplasia</span>
+  </div>
+  <p><strong>What it means:</strong> The cells show definitive changes consistent with HPV infection &mdash; specifically, koilocytotic atypia (cells with perinuclear halos and nuclear enlargement). LSIL on cytology histologically corresponds to CIN 1 (cervical intraepithelial neoplasia grade 1), which represents an active HPV infection affecting the lower one-third of the epithelium.</p>
+  <p><strong>Clinical significance:</strong> LSIL is essentially the <strong>cytologic manifestation of a productive HPV infection</strong>. The vast majority (60&ndash;90%) will regress spontaneously, particularly in younger women. Approximately 12&ndash;16% of LSIL cases harbor an underlying CIN 2+. Because roughly 77% of LSIL results are HPV-positive, reflex HPV testing has limited triage value here.</p>
+  <p><strong>Management (ASCCP 2019):</strong></p>
+  <ul>
+    <li><strong>Age 25+:</strong> Colposcopy (same pathway as ASC-US HPV-positive)</li>
+    <li><strong>Age 21&ndash;24:</strong> Repeat cytology in 1 year. Do NOT perform colposcopy &mdash; the extremely high regression rate in this age group means observation is preferred.</li>
+  </ul>
+  <div class="patient-script">
+    <span class="script-label">Patient Script &mdash; LSIL</span>
+    <p>"Your Pap results show some cell changes caused by HPV &mdash; this is called LSIL, or a low-grade change. I want you to know that most women's bodies clear HPV on their own within a year or two. What we recommend is a colposcopy &mdash; which is basically looking at your cervix with a magnifying instrument &mdash; so we can see exactly what's happening. The goal is monitoring, not panic. Does that make sense?"</p>
+  </div>
+</div>
+
+<!-- ASC-H -->
+<h3>D. ASC-H &mdash; Atypical Squamous Cells, Cannot Exclude HSIL</h3>
+
+<div class="result-section">
+  <div class="result-header">
+    <span class="result-badge" style="background:var(--pink);">ASC-H</span>
+    <span style="color:var(--text-secondary);">Higher concern &mdash; possible underlying high-grade lesion</span>
+  </div>
+  <p><strong>What it means:</strong> The cells are atypical but with features that raise concern for a high-grade squamous intraepithelial lesion (HSIL). Unlike ASC-US, where the changes are more equivocal, ASC-H cells have qualitative features (nuclear size, chromatin pattern, nuclear-to-cytoplasmic ratio) suggestive of but not diagnostic for HSIL.</p>
+  <p><strong>Clinical significance:</strong> ASC-H carries a substantially higher risk of underlying CIN 2/3 compared to ASC-US. Studies report that <strong>26&ndash;68%</strong> of ASC-H cases harbor CIN 2 or worse on histologic follow-up. This makes ASC-H a high-risk result that warrants prompt evaluation.</p>
+  <p><strong>Management (ASCCP 2019):</strong></p>
+  <ul>
+    <li><strong>All ages:</strong> Colposcopy, regardless of HPV status</li>
+    <li>HPV reflex testing has limited value here due to the high prevalence of HPV in ASC-H</li>
+  </ul>
+  <div class="patient-script">
+    <span class="script-label">Patient Script &mdash; ASC-H</span>
+    <p>"Your Pap results showed some cell changes that we want to evaluate more closely. The result is called ASC-H, which means the cells looked a little more atypical than what we'd typically see with a minor change. I want you to know that this doesn't mean cancer &mdash; but it does mean we need to take a closer look with a procedure called a colposcopy so we can see your cervix in detail and make sure nothing significant is going on."</p>
+  </div>
+</div>
+
+<!-- HSIL -->
+<h3>E. HSIL &mdash; High-Grade Squamous Intraepithelial Lesion</h3>
+
+<div class="result-section">
+  <div class="result-header">
+    <span class="result-badge" style="background:var(--orange);">HSIL</span>
+    <span style="color:var(--text-secondary);">Corresponds to CIN 2 or CIN 3 / moderate-to-severe dysplasia</span>
+  </div>
+  <p><strong>What it means:</strong> The cells show definitive features of a high-grade precancerous lesion. Cytologic hallmarks include cells with high nuclear-to-cytoplasmic ratios, hyperchromatic nuclei, coarse chromatin, and irregular nuclear membranes. HSIL encompasses what histologically corresponds to CIN 2 (moderate dysplasia) and CIN 3 (severe dysplasia / carcinoma in situ).</p>
+  <p><strong>Clinical significance:</strong> HSIL is a clinically significant result. Approximately <strong>53&ndash;66%</strong> of HSIL cytology results are confirmed as CIN 2+ on biopsy, and 2% harbor occult invasive cancer. Without treatment, CIN 3 has a <strong>30%+</strong> lifetime risk of progressing to invasive cancer.</p>
+  <p><strong>Management (ASCCP 2019):</strong></p>
+  <ul>
+    <li><strong>Age 25+, not pregnant:</strong> Two acceptable options:
+      <ul>
+        <li><strong>Expedited LEEP</strong> (loop electrosurgical excision) &mdash; immediate treatment without prior colposcopy, particularly appropriate when the patient is not concerned about future fertility or when CIN 3 risk is &ge;60%</li>
+        <li><strong>Colposcopy with biopsy</strong> &mdash; standard evaluation</li>
+      </ul>
+    </li>
+    <li><strong>Age 21&ndash;24:</strong> Colposcopy (NOT expedited LEEP). Observation may be appropriate for CIN 2 in this age group due to high spontaneous regression rates.</li>
+    <li><strong>Pregnant:</strong> Colposcopy. No excisional treatment during pregnancy. Re-evaluate postpartum.</li>
+  </ul>
+  <div class="warning">
+    <div class="label">Important</div>
+    <p>HSIL requires action. Even when counseling patients with reassurance, ensure they understand the importance of follow-through. The 10&ndash;20 year progression window provides comfort, but delays in evaluation can narrow that window considerably.</p>
+  </div>
+  <div class="patient-script">
+    <span class="script-label">Patient Script &mdash; HSIL</span>
+    <p>"I want to talk to you about your Pap results. We found some cell changes that are more significant &mdash; this is called HSIL, which means high-grade changes. I want to be clear: this is NOT cancer. But it is something we need to address, because left untreated over many years, it could potentially develop into cancer. The good news is we caught it early, and we have a straightforward treatment called a LEEP that takes care of it. You're going to be okay &mdash; we're on top of this."</p>
+  </div>
+</div>
+
+<!-- AGC -->
+<h3>F. AGC &mdash; Atypical Glandular Cells</h3>
+
+<div class="result-section">
+  <div class="result-header">
+    <span class="result-badge" style="background:var(--orange);">AGC</span>
+    <span style="color:var(--text-secondary);">Uncommon but high-risk &mdash; requires thorough evaluation</span>
+  </div>
+  <p><strong>What it means:</strong> The glandular cells (from the endocervix or endometrium) show atypical features that exceed reactive or reparative changes but fall short of a definitive diagnosis of adenocarcinoma. AGC can be further subcategorized as AGC-NOS (not otherwise specified) or AGC "favor neoplasia."</p>
+  <p><strong>Clinical significance:</strong> AGC is uncommon (&lt;1% of Pap results) but carries a <strong>disproportionately high risk</strong> of clinically significant pathology. Studies show that 9&ndash;38% of AGC cases harbor CIN 2+, adenocarcinoma in situ (AIS), or invasive cancer. Critically, the source of abnormal glandular cells may be either the <strong>cervix</strong> (endocervical adenocarcinoma, AIS) or the <strong>endometrium</strong> (endometrial hyperplasia, endometrial carcinoma). Both sites must be evaluated.</p>
+  <p><strong>Management (ASCCP 2019):</strong></p>
+  <ul>
+    <li><strong>All patients:</strong> Colposcopy <strong>plus</strong> endocervical curettage (ECC)</li>
+    <li><strong>Add endometrial biopsy</strong> if: age &ge;35, abnormal uterine bleeding at any age, or AGC "favor endometrial origin"</li>
+    <li>HPV testing should be performed if not already done</li>
+    <li>AGC "favor neoplasia" or AIS on cytology: excisional procedure (cold knife cone preferred) for definitive diagnosis</li>
+  </ul>
+  <div class="warning">
+    <div class="label">Important</div>
+    <p>AGC is one of the most under-recognized high-risk Pap results. <strong>Do not manage AGC like ASC-US.</strong> The workup is more extensive because of the potential for endometrial pathology. Missing an endometrial cancer in a patient with AGC is a significant clinical and medicolegal concern.</p>
+  </div>
+  <div class="patient-script">
+    <span class="script-label">Patient Script &mdash; AGC</span>
+    <p>"Your Pap results showed some changes in a different type of cell than what we usually see. This is called atypical glandular cells, and we take this result very seriously &mdash; not because we think it's cancer, but because this type of change needs a thorough evaluation. We're going to do a few things: a colposcopy to look closely at your cervix, and we may also take a small sample from inside the uterus to make sure everything is healthy there too. I want to be upfront with you that this is a more involved workup, but we're doing it to be thorough and make sure we don't miss anything."</p>
+  </div>
+</div>
+
+<!-- SCC / Adenocarcinoma -->
+<h3>G. Squamous Cell Carcinoma / Adenocarcinoma</h3>
+
+<div class="result-section">
+  <div class="result-header">
+    <span class="result-badge" style="background:rgba(255,53,53,0.7);">SCC / Adenocarcinoma</span>
+    <span style="color:var(--text-secondary);">Invasive malignancy on cytology</span>
+  </div>
+  <p><strong>What it means:</strong> The cytology shows features diagnostic of invasive squamous cell carcinoma or adenocarcinoma. Cellular features include markedly atypical cells, necrotic debris (tumor diathesis), and malignant cellular morphology. This is rare as a primary finding on screening cytology.</p>
+  <p><strong>Clinical significance:</strong> Requires <strong>urgent evaluation and referral</strong>. A tissue biopsy is needed for histologic confirmation, staging, and treatment planning.</p>
+  <p><strong>Management:</strong></p>
+  <ul>
+    <li><strong>Urgent referral to gynecologic oncology</strong></li>
+    <li>Biopsy for histologic confirmation</li>
+    <li>Staging evaluation (examination under anesthesia, imaging as indicated)</li>
+    <li>Multidisciplinary treatment planning</li>
+  </ul>
+  <div class="patient-script">
+    <span class="script-label">Patient Script &mdash; SCC / Adenocarcinoma</span>
+    <p>"I need to talk with you about your Pap results, and I want to be honest and direct with you. The results show cells that are concerning for a possible cancer of the cervix. I know that is a very difficult thing to hear. What I want you to know is that we have an excellent team of specialists who focus specifically on this, and we are going to get you in to see them as quickly as possible. There are very effective treatments available. You will not go through this alone &mdash; we are going to take care of you every step of the way. I'm going to make the referral today."</p>
+  </div>
+</div>
+
+<!-- SECTION 5: HPV RESULTS -->
+<h2 id="hpv-results">5. The HPV Result &mdash; What It Means</h2>
+
+<p>With the shift toward HPV-based screening, understanding HPV results and their interplay with cytology is increasingly critical.</p>
+
+<h3>HPV Test Components</h3>
+<ul>
+  <li><strong>HPV Negative:</strong> No high-risk HPV detected. Very reassuring &mdash; the negative predictive value of an HPV test is &gt;99% for CIN 3+.</li>
+  <li><strong>HPV Positive (non-16/18):</strong> A high-risk HPV type is detected, but it is not type 16 or 18. This carries intermediate risk.</li>
+  <li><strong>HPV 16 Positive:</strong> The single most oncogenic HPV type. Carries the highest individual risk of CIN 3+. Always warrants colposcopy when detected.</li>
+  <li><strong>HPV 18 Positive:</strong> Associated with cervical adenocarcinoma (harder to detect on colposcopy). Also warrants colposcopy when detected.</li>
+</ul>
+
+<div class="key-takeaway">
+  <div class="label">Key Takeaway</div>
+  <p><strong>HPV 16/18 genotyping matters</strong> because these two types account for ~70% of cervical cancers and carry the highest immediate risk of CIN 3+. A patient who is HPV 16-positive with NILM cytology has a higher risk of CIN 3+ than a patient with ASC-US / other high-risk HPV positive. This is why HPV 16/18-positive results go directly to colposcopy regardless of cytology.</p>
+</div>
+
+<h3>Co-Testing Results &mdash; Management Decision Grid</h3>
+
+<table>
+  <thead>
+    <tr><th>Cytology Result</th><th>HPV Status</th><th>Management (Age 25+)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>NILM</td><td>HPV Negative</td><td>Routine screening in 5 years</td></tr>
+    <tr><td>NILM</td><td>HPV Positive (non-16/18)</td><td>Repeat co-test or HPV test in 1 year</td></tr>
+    <tr><td>NILM</td><td>HPV 16 or 18 Positive</td><td>Colposcopy</td></tr>
+    <tr><td>ASC-US</td><td>HPV Negative</td><td>Repeat screening in 3 years</td></tr>
+    <tr><td>ASC-US</td><td>HPV Positive (any type)</td><td>Colposcopy</td></tr>
+    <tr><td>LSIL</td><td>HPV Negative</td><td>Repeat in 1 year</td></tr>
+    <tr><td>LSIL</td><td>HPV Positive (any type)</td><td>Colposcopy</td></tr>
+    <tr><td>ASC-H</td><td>Any HPV result</td><td>Colposcopy</td></tr>
+    <tr><td>HSIL</td><td>Any HPV result</td><td>Colposcopy or expedited LEEP</td></tr>
+    <tr><td>AGC</td><td>Any HPV result</td><td>Colposcopy + ECC +/- endometrial biopsy</td></tr>
+  </tbody>
+</table>
+
+<div class="clinical-pearl">
+  <div class="label">Clinical Pearl</div>
+  <p>The combination of <strong>NILM cytology + HPV negative</strong> provides the greatest reassurance. The risk of CIN 3+ in the next 5 years is approximately <strong>0.05%</strong> &mdash; lower than the risk after a single negative cytology alone. This is why co-testing or HPV primary screening permits 5-year intervals.</p>
+</div>
+
+<!-- SECTION 6: COLPOSCOPY -->
+<h2 id="colposcopy">6. Colposcopy &mdash; What Happens Next</h2>
+
+<h3>What Is Colposcopy?</h3>
+<p>Colposcopy is a magnified visual examination of the cervix, vagina, and vulva using a colposcope (a binocular magnifying instrument with a bright light source). The procedure uses chemical agents to highlight abnormal areas:</p>
+<ul>
+  <li><strong>3&ndash;5% acetic acid (vinegar):</strong> Applied to the cervix. Abnormal areas with increased nuclear density turn white (acetowhite epithelium). The intensity, speed of onset, and border sharpness of the acetowhite change correlate with lesion severity.</li>
+  <li><strong>Lugol's iodine solution:</strong> Normal squamous epithelium (rich in glycogen) stains dark mahogany brown. Abnormal or immature cells (glycogen-depleted) do not stain and appear yellow or unstained (Schiller-positive).</li>
+</ul>
+
+<h3>What Patients Should Expect</h3>
+<p>Providers should prepare patients with the following information:</p>
+<ul>
+  <li>The procedure is performed in the office, similar to a Pap smear</li>
+  <li>A speculum is placed, and the cervix is visualized through the colposcope (which does not enter the body)</li>
+  <li>Vinegar solution is applied &mdash; may cause mild stinging</li>
+  <li>If abnormal areas are seen, a small biopsy (about the size of a grain of rice) may be taken &mdash; this feels like a brief pinch or cramp</li>
+  <li>The entire procedure takes approximately 15&ndash;20 minutes</li>
+  <li>Patients may experience mild spotting or brownish discharge for a few days after biopsy</li>
+  <li>NSAIDs before the procedure can help with discomfort</li>
+</ul>
+
+<h3>Biopsy Types</h3>
+<ul>
+  <li><strong>Punch biopsy:</strong> Small tissue sample taken from the most abnormal-appearing area(s) of the cervix under colposcopic guidance. Multiple biopsies may be taken.</li>
+  <li><strong>Endocervical curettage (ECC):</strong> A small curette is used to sample the endocervical canal. Indicated when the transformation zone is not fully visible, when there is a cytology-histology discrepancy, or when AGC is the indication for colposcopy.</li>
+</ul>
+
+<h3>Histologic Results and Management</h3>
+
+<table>
+  <thead>
+    <tr><th>Histology Result</th><th>Meaning</th><th>Management</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>CIN 1</strong></td><td>Mild dysplasia. Active HPV infection affecting the lower third of epithelium.</td><td>Observation &mdash; repeat co-testing at 12 months. CIN 1 is NOT treated because 60&ndash;80% regress spontaneously.</td></tr>
+    <tr><td><strong>CIN 2</strong></td><td>Moderate dysplasia. HPV-driven changes involving the lower two-thirds of epithelium.</td><td>Treatment with excision (LEEP preferred). Exception: age 21&ndash;24 with adequate colposcopy may observe with repeat cytology/colposcopy at 6-month intervals.</td></tr>
+    <tr><td><strong>CIN 3</strong></td><td>Severe dysplasia / carcinoma in situ. Full-thickness epithelial involvement.</td><td>Treatment with excision (LEEP, cold knife cone). Not optional &mdash; CIN 3 has a 30%+ lifetime risk of progressing to invasive cancer.</td></tr>
+    <tr><td><strong>AIS</strong></td><td>Adenocarcinoma in situ. Glandular precursor lesion.</td><td>Cold knife cone (preferred over LEEP for AIS due to need for intact margins). Consider hysterectomy if childbearing complete.</td></tr>
+    <tr><td><strong>Invasive carcinoma</strong></td><td>Invasion beyond the basement membrane.</td><td>Referral to gynecologic oncology for staging and definitive treatment.</td></tr>
+  </tbody>
+</table>
+
+<!-- SECTION 7: TREATMENT -->
+<h2 id="treatment">7. Treatment &mdash; LEEP &amp; Excisional Procedures</h2>
+
+<h3>LEEP (Loop Electrosurgical Excision Procedure)</h3>
+<p>LEEP is the <strong>most commonly performed excisional procedure</strong> for cervical dysplasia. A thin wire loop carrying electrical current is used to excise the transformation zone and any visible lesion. It can be performed in the office under local anesthesia.</p>
+<ul>
+  <li><strong>Advantages:</strong> Outpatient, quick (10&ndash;20 minutes), provides tissue specimen for histologic evaluation, excellent cure rates (90&ndash;95% for CIN 2/3)</li>
+  <li><strong>Allows assessment of margin status</strong> &mdash; pathologist evaluates whether dysplastic cells extend to the edges of the specimen</li>
+</ul>
+
+<h3>Cold Knife Cone (CKC)</h3>
+<p>A surgical cone biopsy performed with a scalpel under anesthesia (usually in the operating room). Reserved for specific situations:</p>
+<ul>
+  <li>Adenocarcinoma in situ (AIS) &mdash; CKC preferred because intact margins are critical and glandular lesions can be multifocal</li>
+  <li>Endocervical lesion not fully visualized</li>
+  <li>LEEP margins positive on repeated procedures</li>
+  <li>Suspicion of microinvasion</li>
+</ul>
+
+<h3>Cryotherapy</h3>
+<p>Freezing of the cervix with nitrous oxide or CO2. <strong>Rarely used in current practice</strong> in resource-rich settings because it does not provide a tissue specimen for histologic evaluation. May still be used in resource-limited settings per WHO guidelines.</p>
+
+<!-- Treatment Algorithm Flowchart -->
+<div class="diagram-container">
+  <div class="diagram-title">Treatment Decision Flowchart</div>
+  <div class="flowchart">
+    <div class="flow-step" style="background:var(--purple-light);">Abnormal Pap Result</div>
+    <div class="flow-arrow"></div>
+    <div class="flow-step" style="background:rgba(233,30,140,0.5);border:2px solid var(--pink);">Colposcopy with Biopsy</div>
+    <div class="flow-arrow"></div>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;width:100%;">
+      <div style="text-align:center;">
+        <div class="flow-step" style="background:rgba(76,175,80,0.4);border:2px solid #4caf50;min-width:130px;font-size:0.85rem;">CIN 1<div class="flow-note">Observe</div></div>
+      </div>
+      <div style="text-align:center;">
+        <div class="flow-step" style="background:rgba(233,30,140,0.35);border:2px solid var(--pink);min-width:130px;font-size:0.85rem;">CIN 2<div class="flow-note">LEEP (or observe 21&ndash;24)</div></div>
+      </div>
+      <div style="text-align:center;">
+        <div class="flow-step" style="background:rgba(255,107,53,0.4);border:2px solid var(--orange);min-width:130px;font-size:0.85rem;">CIN 3 / AIS<div class="flow-note">Excision (LEEP or CKC)</div></div>
+      </div>
+      <div style="text-align:center;">
+        <div class="flow-step" style="background:rgba(255,53,53,0.5);border:2px solid #ff3535;min-width:130px;font-size:0.85rem;">Invasive<div class="flow-note">Gyn-Oncology referral</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>Post-LEEP Patient Counseling</h3>
+<p>After LEEP, patients should be counseled:</p>
+<ul>
+  <li><strong>What to expect:</strong> Watery, blood-tinged, or brownish discharge for 2&ndash;4 weeks. Mild cramping is normal.</li>
+  <li><strong>Restrictions for 4 weeks:</strong> Nothing in the vagina (no intercourse, tampons, or douching). Avoid heavy lifting, strenuous exercise, and swimming/baths (showers are fine).</li>
+  <li><strong>When to seek care:</strong> Heavy bleeding (soaking more than a pad per hour), fever &gt;100.4F, foul-smelling discharge, or severe pain.</li>
+  <li><strong>Follow-up:</strong> Co-testing (HPV + cytology) at 6 months and 12 months post-treatment. Then per ASCCP surveillance guidelines (typically annual co-testing for 3 years, then every 3 years for 25 years total).</li>
+</ul>
+
+<h3>Impact on Future Pregnancy</h3>
+<div class="warning">
+  <div class="label">Counseling Point</div>
+  <p>Excisional procedures (LEEP, CKC) remove a portion of the cervix, which can slightly increase the risk of <strong>preterm premature rupture of membranes (PPROM)</strong> and <strong>preterm birth</strong> in future pregnancies. The risk is proportional to the amount of tissue removed and the number of excisions. A single LEEP with a small excision carries a modest risk increase. Multiple excisions or deep cones carry a more significant risk. This is an important counseling point for reproductive-age patients, but it should <strong>never</strong> be a reason to defer treatment of CIN 3.</p>
+</div>
+
+<!-- SECTION 8: ASCCP 2019 RISK-BASED -->
+<h2 id="risk-based">8. ASCCP 2019 Risk-Based Management Guidelines</h2>
+
+<p>The 2019 ASCCP Risk-Based Management Consensus Guidelines represent a paradigm shift from <strong>result-based</strong> to <strong>risk-based</strong> management. Rather than managing based solely on the current test result, management is now determined by the <strong>estimated risk of CIN 3+</strong> based on the current result AND the patient's screening history.</p>
+
+<h3>The Fundamental Concept</h3>
+<p>Two patients with identical current results can have very different risks depending on their screening history. For example:</p>
+<ul>
+  <li>A patient with ASC-US / HPV-positive who had <strong>prior negative HPV tests</strong> has a lower risk of CIN 3+ than a patient with the same result who has <strong>no prior screening history</strong>.</li>
+  <li>A patient with NILM / HPV-positive who had <strong>prior HPV-positive results</strong> has a higher risk than one whose prior tests were all negative (indicating a new versus persistent infection).</li>
+</ul>
+
+<h3>Risk Thresholds</h3>
+
+<table>
+  <thead>
+    <tr><th>CIN 3+ Risk</th><th>Clinical Action</th><th>Rationale</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>&lt;4%</strong></td><td>Return in 5 years</td><td>Very low risk; routine surveillance appropriate</td></tr>
+    <tr><td><strong>4&ndash;24%</strong></td><td>Return in 1 year</td><td>Intermediate risk; closer surveillance without invasive evaluation</td></tr>
+    <tr><td><strong>25&ndash;59%</strong></td><td>Colposcopy</td><td>Elevated risk warranting visual evaluation and biopsy</td></tr>
+    <tr><td><strong>60&ndash;100%</strong></td><td>Colposcopy or expedited treatment (LEEP)</td><td>High risk; immediate treatment without colposcopy is acceptable</td></tr>
+  </tbody>
+</table>
+
+<div class="key-takeaway">
+  <div class="label">Key Takeaway</div>
+  <p>Equal management for equal risk. The clinical action is now anchored to the <strong>risk level</strong>, not the specific combination of tests. This means the same management applies whether the risk comes from HSIL on cytology or from persistent HPV 16 with LSIL &mdash; as long as the calculated risk falls in the same threshold.</p>
+</div>
+
+<div class="clinical-pearl">
+  <div class="label">Clinical Pearl &mdash; The ASCCP Management Calculator</div>
+  <p>The ASCCP provides a free, evidence-based management tool at <strong>asccp.org</strong>. Providers can input the patient's current test results and screening history to receive a specific risk estimate and corresponding management recommendation. This tool should be used routinely in clinical practice &mdash; it is the definitive implementation of the 2019 guidelines and eliminates guesswork.</p>
+</div>
+
+<!-- SECTION 9: PATIENT COMMUNICATION -->
+<h2 id="communication">9. Patient Communication &mdash; The Heart of This Guide</h2>
+
+<p>The clinical management of abnormal Pap results is well-defined by guidelines. What is less standardized &mdash; but equally important &mdash; is <strong>how</strong> we communicate these results to patients. An abnormal Pap smear is one of the most anxiety-provoking results a patient can receive. Many patients immediately equate "abnormal" with "cancer." The way a provider explains the result will determine whether the patient feels informed and empowered, or terrified and confused.</p>
+
+<h3>General Communication Principles</h3>
+
+<div class="card">
+  <h4>1. Lead with reassurance</h4>
+  <p>In the vast majority of cases, an abnormal Pap does NOT mean cancer. State this explicitly and early: "I want to start by telling you that this is not a cancer diagnosis."</p>
+
+  <h4>2. Use plain language</h4>
+  <p>Avoid jargon whenever possible. Instead of "atypical squamous cells of undetermined significance," say "slightly irregular cells." Name the medical term once for their reference, then use everyday language.</p>
+
+  <h4>3. Normalize HPV</h4>
+  <p>"Nearly every sexually active person will get HPV at some point in their life." This single sentence can dramatically reduce stigma and anxiety. HPV is so common that it is considered a near-universal consequence of sexual activity.</p>
+
+  <h4>4. De-stigmatize</h4>
+  <p>Patients frequently experience shame around HPV diagnosis. Address this directly: "Having HPV does NOT mean anything about your lifestyle or your partner's faithfulness. This virus can be dormant for years."</p>
+
+  <h4>5. Be clear about next steps and timeline</h4>
+  <p>Ambiguity breeds anxiety. Tell the patient exactly what happens next, when it will happen, and what to expect.</p>
+
+  <h4>6. Address the anxiety directly</h4>
+  <p>"I know this can feel scary, and it's completely normal to feel worried when you hear 'abnormal.' Let me walk you through what this actually means."</p>
+</div>
+
+<h3>Result-Specific Communication Scripts</h3>
+
+<h4>Script 1: ASC-US Result</h4>
+<div class="patient-script">
+  <span class="script-label">Patient Script &mdash; ASC-US</span>
+  <p>"Your Pap showed some slightly irregular cells &mdash; this is called ASC-US, which is the mildest type of abnormality we can see. It's actually the most common abnormal Pap result, and most of the time it means nothing serious at all. What we need to do is [check for HPV / schedule a closer look] to make sure everything is okay. This is NOT a cancer diagnosis &mdash; this is us being thorough."</p>
+</div>
+
+<h4>Script 2: LSIL Result</h4>
+<div class="patient-script">
+  <span class="script-label">Patient Script &mdash; LSIL</span>
+  <p>"Your Pap results show some cell changes caused by HPV &mdash; this is called LSIL, or a low-grade change. I want you to know that most women's bodies clear HPV on their own within a year or two. What we recommend is a colposcopy &mdash; which is basically looking at your cervix with a magnifying instrument &mdash; so we can see exactly what's happening. The goal is monitoring, not panic. Does that make sense?"</p>
+</div>
+
+<h4>Script 3: HSIL Result</h4>
+<div class="patient-script">
+  <span class="script-label">Patient Script &mdash; HSIL</span>
+  <p>"I want to talk to you about your Pap results. We found some cell changes that are more significant &mdash; this is called HSIL, which means high-grade changes. I want to be clear: this is NOT cancer. But it is something we need to address, because left untreated over many years, it could potentially develop into cancer. The good news is we caught it early, and we have a straightforward treatment called a LEEP that takes care of it. You're going to be okay &mdash; we're on top of this."</p>
+</div>
+
+<h4>Script 4: Explaining HPV to a Patient</h4>
+<div class="patient-script">
+  <span class="script-label">Patient Script &mdash; HPV Explanation</span>
+  <p>"Nearly every sexually active person will get HPV at some point in their life &mdash; it's that common. Most of the time, your immune system clears it without you ever knowing. When it doesn't clear, that's when we can see changes on a Pap smear. Having HPV does NOT mean anything about your lifestyle or your partner's faithfulness &mdash; this virus can be dormant for years. What matters now is that we're monitoring it and staying on top of your screening."</p>
+</div>
+
+<h4>Script 5: Explaining HPV to a Partner or Couple</h4>
+<div class="patient-script">
+  <span class="script-label">Patient Script &mdash; HPV for Partners/Couples</span>
+  <p>"HPV is incredibly common &mdash; we're talking about 80% of sexually active adults. It can live quietly in the body for years, even decades, before showing up. There's no way to know who gave it to whom or when it was contracted. There's also no test for HPV in men (other than for visible warts). The most important thing is that [patient] stays up to date on screening. This is not about blame &mdash; it's about health."</p>
+</div>
+
+<h3>Communication Do's and Don'ts</h3>
+
+<table>
+  <thead>
+    <tr><th>Do</th><th>Don't</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>"Your Pap showed some irregular cells"</td><td>"You have abnormal cells"</td></tr>
+    <tr><td>"This is very common"</td><td>"This is unusual"</td></tr>
+    <tr><td>"Most of the time, the body clears this"</td><td>"We need to watch this carefully"</td></tr>
+    <tr><td>"This is not cancer"</td><td>"This could become cancer" (as an opener)</td></tr>
+    <tr><td>"We want to take a closer look"</td><td>"We need to do more tests"</td></tr>
+    <tr><td>"HPV is extremely common"</td><td>"You have an STI"</td></tr>
+    <tr><td>"I know this can feel scary"</td><td>"Don't worry about it"</td></tr>
+  </tbody>
+</table>
+
+<!-- SECTION 10: SPECIAL POPULATIONS -->
+<h2 id="special-populations">10. Special Populations</h2>
+
+<h3>Pregnancy</h3>
+<div class="card">
+  <ul>
+    <li><strong>Pap screening is safe during pregnancy</strong> and should be performed if due</li>
+    <li><strong>Colposcopy is safe</strong> during pregnancy &mdash; the procedure itself poses no risk to the fetus</li>
+    <li><strong>Biopsy:</strong> Perform only if a high-grade lesion or invasive cancer is suspected. Defer biopsy of low-grade appearing lesions.</li>
+    <li><strong>Endocervical curettage (ECC) is CONTRAINDICATED</strong> during pregnancy</li>
+    <li><strong>LEEP / excisional procedures are NOT performed during pregnancy</strong> due to bleeding risk and risk of preterm labor</li>
+    <li><strong>Management:</strong> If CIN 2/3 confirmed on biopsy, re-evaluate with colposcopy each trimester. Definitive treatment is deferred to postpartum (minimum 4&ndash;6 weeks after delivery). Many cases of CIN 2 will regress postpartum.</li>
+  </ul>
+</div>
+
+<h3>HIV-Positive and Immunosuppressed Patients</h3>
+<div class="card">
+  <ul>
+    <li>HPV clearance is significantly impaired; persistence and progression rates are much higher</li>
+    <li>Begin screening at age 21 (same as general population)</li>
+    <li>More frequent screening: cytology annually, or co-testing after age 30</li>
+    <li>Lower threshold for colposcopy &mdash; ASC-US in HIV+ patients warrants colposcopy regardless of HPV status in many expert recommendations</li>
+    <li>Do NOT stop screening at age 65 &mdash; continue lifelong</li>
+    <li>ART (antiretroviral therapy) improves HPV clearance and can lead to regression of CIN</li>
+  </ul>
+</div>
+
+<h3>Young Adults (Age 21&ndash;24)</h3>
+<div class="card">
+  <ul>
+    <li>Management is more conservative in this age group due to <strong>extremely high regression rates</strong></li>
+    <li>ASC-US: repeat cytology in 1 year (no HPV testing)</li>
+    <li>LSIL: repeat cytology in 1 year (NOT colposcopy)</li>
+    <li>HSIL: colposcopy (NOT expedited LEEP)</li>
+    <li>CIN 2 on biopsy: observation with repeat colposcopy/cytology at 6-month intervals is acceptable if colposcopy is adequate</li>
+    <li>CIN 3 on biopsy: treatment recommended</li>
+    <li>Rationale: HPV infection is nearly universal in sexually active young adults. Overtreatment causes harm (excisional procedures affect fertility and preterm birth risk) without clear mortality benefit in this age group.</li>
+  </ul>
+</div>
+
+<h3>Post-HPV Vaccination</h3>
+<div class="card">
+  <ul>
+    <li><strong>Vaccinated individuals still require cervical cancer screening</strong></li>
+    <li>Gardasil 9 covers 9 HPV types, but does not cover ALL high-risk types</li>
+    <li>Patients vaccinated before HPV exposure benefit the most, but ~10% of cervical cancers are caused by types not in the vaccine</li>
+    <li>As vaccinated cohorts age, the prevalence of vaccine-type HPV in the population is declining &mdash; but screening remains necessary</li>
+    <li>Screening intervals and methods are the same for vaccinated and unvaccinated individuals</li>
+  </ul>
+</div>
+
+<!-- SECTION 11: HPV VACCINATION -->
+<h2 id="vaccination">11. HPV Vaccination &mdash; Provider Talking Points</h2>
+
+<h3>Gardasil 9 (9-Valent HPV Vaccine)</h3>
+<table>
+  <thead>
+    <tr><th>Feature</th><th>Details</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Types covered</strong></td><td>HPV 6, 11, 16, 18, 31, 33, 45, 52, 58</td></tr>
+    <tr><td><strong>FDA-approved ages</strong></td><td>9&ndash;45 years</td></tr>
+    <tr><td><strong>Dosing schedule</strong></td><td>2 doses (0 and 6&ndash;12 months) if started before age 15; 3 doses (0, 1&ndash;2, and 6 months) if started at age 15+</td></tr>
+    <tr><td><strong>Efficacy</strong></td><td>Prevents ~90% of HPV-related cervical cancers. Also prevents vulvar, vaginal, anal, oropharyngeal cancers and genital warts.</td></tr>
+    <tr><td><strong>Already HPV-positive?</strong></td><td>Still beneficial &mdash; protects against other HPV types the patient hasn't been exposed to yet</td></tr>
+  </tbody>
+</table>
+
+<h3>Addressing Vaccine Hesitancy</h3>
+
+<div class="card">
+  <h4>Frame as cancer prevention</h4>
+  <p>The most effective approach is to frame the HPV vaccine as a <strong>cancer prevention vaccine</strong>, not an STI vaccine. "This vaccine prevents cancer &mdash; specifically cervical cancer, throat cancer, and several other types. We recommend it the same way we recommend any cancer prevention measure."</p>
+
+  <h4>Normalize the timing</h4>
+  <p>"We recommend this vaccine starting at age 9&ndash;12 because the immune response is strongest at that age, and it works best when given before any exposure to the virus. This is the same reason we give other childhood vaccines &mdash; we want protection in place before any risk."</p>
+
+  <h4>Address safety concerns</h4>
+  <p>"The HPV vaccine has been given to hundreds of millions of people worldwide and has an excellent safety record. It has been extensively studied for over 15 years. The most common side effects are soreness at the injection site and mild headache."</p>
+
+  <h4>For older patients (27&ndash;45)</h4>
+  <p>"While the greatest benefit is when given young, adults up to 45 can still benefit, especially if they haven't been exposed to all the HPV types in the vaccine. This is a shared clinical decision &mdash; let's discuss whether it makes sense for you."</p>
+</div>
+
+<div class="clinical-pearl">
+  <div class="label">Clinical Pearl</div>
+  <p>In clinical trials, when providers recommended the HPV vaccine with the same confidence and urgency as other routine vaccines (like Tdap and meningococcal), acceptance rates were significantly higher. The strongest predictor of vaccination is a <strong>strong provider recommendation</strong>. Avoid presenting it as optional or giving the impression that you are uncertain about it.</p>
+</div>
+
+<!-- SECTION 12: QUICK REFERENCE -->
+<h2 id="quick-reference">12. Quick Reference Card</h2>
+
+<h3>Bethesda Results at a Glance</h3>
+
+<table>
+  <thead>
+    <tr><th>Result</th><th>Risk Level</th><th>Primary Management (Age 25+)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>NILM</strong></td><td>Normal</td><td>Routine screening</td></tr>
+    <tr><td><strong>ASC-US</strong></td><td>Low</td><td>HPV triage: HPV+ = colposcopy; HPV- = repeat in 3 years</td></tr>
+    <tr><td><strong>LSIL</strong></td><td>Low-Moderate</td><td>Colposcopy</td></tr>
+    <tr><td><strong>ASC-H</strong></td><td>Moderate-High</td><td>Colposcopy</td></tr>
+    <tr><td><strong>HSIL</strong></td><td>High</td><td>Colposcopy or expedited LEEP</td></tr>
+    <tr><td><strong>AGC</strong></td><td>High</td><td>Colposcopy + ECC +/- EMB</td></tr>
+    <tr><td><strong>SCC / Adeno</strong></td><td>Malignant</td><td>Urgent Gyn-Oncology referral</td></tr>
+  </tbody>
+</table>
+
+<h3>When to Refer for Colposcopy</h3>
+
+<div class="card">
+  <ul>
+    <li>ASC-US with HPV positive (any type)</li>
+    <li>NILM with HPV 16 or 18 positive</li>
+    <li>LSIL (age 25+)</li>
+    <li>ASC-H (all ages)</li>
+    <li>HSIL (all ages)</li>
+    <li>AGC (all ages)</li>
+    <li>Any cytology suspicious for invasive cancer</li>
+    <li>Persistent HPV positivity (non-16/18) with NILM at 1-year follow-up</li>
+  </ul>
+</div>
+
+<h3>ASCCP 2019 Risk Thresholds &mdash; Quick Reference</h3>
+
+<div class="quick-ref-grid">
+  <div class="quick-ref-item">
+    <h4 style="color:#4caf50;">&lt;4% CIN 3+ Risk</h4>
+    <p style="color:var(--text-secondary);margin:0;">Return in 5 years</p>
+  </div>
+  <div class="quick-ref-item">
+    <h4 style="color:var(--purple-light);">4&ndash;24% CIN 3+ Risk</h4>
+    <p style="color:var(--text-secondary);margin:0;">Return in 1 year</p>
+  </div>
+  <div class="quick-ref-item">
+    <h4 style="color:var(--pink);">25&ndash;59% CIN 3+ Risk</h4>
+    <p style="color:var(--text-secondary);margin:0;">Colposcopy</p>
+  </div>
+  <div class="quick-ref-item">
+    <h4 style="color:var(--orange);">60&ndash;100% CIN 3+ Risk</h4>
+    <p style="color:var(--text-secondary);margin:0;">Colposcopy or treatment</p>
+  </div>
+</div>
+
+<h3>Patient Communication &mdash; Key Phrases</h3>
+
+<table>
+  <thead>
+    <tr><th>Situation</th><th>Key Phrase</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Any abnormal result</td><td>"Abnormal does not mean cancer."</td></tr>
+    <tr><td>HPV diagnosis</td><td>"Nearly every sexually active person gets HPV &mdash; it's that common."</td></tr>
+    <tr><td>Low-grade changes</td><td>"Most of the time, your body clears this on its own."</td></tr>
+    <tr><td>Needing colposcopy</td><td>"We want to take a closer look &mdash; this is a monitoring step."</td></tr>
+    <tr><td>High-grade changes</td><td>"We caught this early and have a straightforward treatment."</td></tr>
+    <tr><td>Addressing fear</td><td>"I know this can feel scary. Let me walk you through what this means."</td></tr>
+    <tr><td>De-stigmatizing HPV</td><td>"This says nothing about you or your partner. HPV can be dormant for years."</td></tr>
+    <tr><td>Explaining next steps</td><td>"Here's exactly what happens next and when."</td></tr>
+  </tbody>
+</table>
+
+<hr class="divider">
+
+<div class="key-takeaway">
+  <div class="label">Final Note</div>
+  <p>Cervical cancer is one of the most preventable cancers in medicine. With proper screening, timely management of precancerous lesions, and HPV vaccination, we have the tools to virtually eliminate this disease. The provider's role extends beyond ordering tests and interpreting results &mdash; it includes communicating with compassion, reducing stigma, and ensuring that every patient understands their results and the importance of follow-through. The way you deliver an abnormal Pap result may be the single most important factor in whether your patient returns for her next appointment.</p>
+</div>
+
+<hr class="divider">
+<p style="color:var(--text-secondary);font-size:0.85rem;text-align:center;margin-top:2rem;">
+  <strong>References:</strong> ASCCP 2019 Risk-Based Management Consensus Guidelines | USPSTF 2018 Cervical Cancer Screening Recommendation | ACS 2020 Cervical Cancer Screening Guideline Update | ACOG Practice Bulletins 140 &amp; 157 | The Bethesda System for Reporting Cervical Cytology, 3rd Edition
+</p>
+
+</div>
+</body>
+</html>

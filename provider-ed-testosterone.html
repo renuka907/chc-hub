@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Understanding Testosterone, Free Testosterone & SHBG in Male Patients</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-deep: #1a0a2e;
+    --purple-mid: #2d1b4e;
+    --purple-light: #6c3fa0;
+    --pink: #e91e8c;
+    --orange: #ff6b35;
+    --gradient-main: linear-gradient(135deg, #6c3fa0, #e91e8c, #ff6b35);
+    --text-primary: #f0e6ff;
+    --text-secondary: #c4b0db;
+    --card-bg: rgba(45, 27, 78, 0.6);
+    --border-glow: rgba(108, 63, 160, 0.3);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--purple-deep);
+    color: var(--text-primary);
+    line-height: 1.8;
+    font-size: 17px;
+  }
+
+  .content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 30px;
+  }
+
+  .section-header {
+    background: var(--gradient-main);
+    color: #fff;
+    padding: 16px 28px;
+    border-radius: 10px;
+    margin: 36px 0 20px;
+  }
+  .section-header h2 {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 20px 0 10px;
+    border-bottom: 2px solid var(--border-glow);
+    padding-bottom: 6px;
+  }
+
+  p { margin-bottom: 12px; }
+
+  /* Cards */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-glow);
+    border-radius: 10px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .card-header {
+    background: rgba(108, 63, 160, 0.4);
+    padding: 12px 20px;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #fff;
+    border-bottom: 1px solid var(--border-glow);
+  }
+  .card-body {
+    padding: 16px 20px;
+  }
+
+  /* Clinical Pearl (pink border) */
+  .clinical-pearl {
+    background: rgba(233, 30, 140, 0.1);
+    border-left: 4px solid var(--pink);
+    padding: 16px 20px;
+    border-radius: 0 10px 10px 0;
+    margin: 14px 0;
+  }
+  .clinical-pearl .label {
+    font-weight: 700;
+    color: var(--pink);
+    margin-bottom: 6px;
+  }
+
+  /* Key Takeaway (purple border) */
+  .key-takeaway {
+    background: rgba(108, 63, 160, 0.15);
+    border-left: 4px solid var(--purple-light);
+    padding: 16px 20px;
+    border-radius: 0 10px 10px 0;
+    margin: 14px 0;
+  }
+  .key-takeaway .label {
+    font-weight: 700;
+    color: var(--purple-light);
+    margin-bottom: 6px;
+  }
+
+  /* Warning (orange border) */
+  .warning-box {
+    background: rgba(255, 107, 53, 0.1);
+    border-left: 4px solid var(--orange);
+    padding: 16px 20px;
+    border-radius: 0 10px 10px 0;
+    margin: 14px 0;
+  }
+  .warning-box .label {
+    font-weight: 700;
+    color: var(--orange);
+    margin-bottom: 6px;
+  }
+
+  /* Script boxes */
+  .script {
+    background: var(--card-bg);
+    border: 1px solid var(--border-glow);
+    border-left: 4px solid var(--purple-light);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+    margin: 14px 0;
+  }
+  .script .label {
+    font-weight: 700;
+    color: var(--purple-light);
+    margin-bottom: 8px;
+  }
+  .script p {
+    font-style: italic;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 0.95rem;
+  }
+  th {
+    background: var(--gradient-main);
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 700;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(108, 63, 160, 0.2);
+    color: var(--text-primary);
+  }
+  tr:nth-child(even) {
+    background: rgba(45, 27, 78, 0.4);
+  }
+  tr:nth-child(odd) {
+    background: rgba(26, 10, 46, 0.6);
+  }
+  tr:hover {
+    background: rgba(108, 63, 160, 0.2);
+  }
+
+  /* Two column layout */
+  .two-col {
+    display: flex;
+    gap: 18px;
+    margin: 14px 0;
+  }
+  .two-col > div { flex: 1; }
+
+  ul, ol { margin-left: 22px; margin-bottom: 12px; }
+  li { margin-bottom: 5px; }
+
+  /* Flow chart */
+  .flow-chart {
+    background: var(--card-bg);
+    border: 1px solid var(--border-glow);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 14px 0;
+  }
+  .flow-step {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .flow-step .num {
+    background: var(--gradient-main);
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.9rem;
+    margin-right: 14px;
+    flex-shrink: 0;
+  }
+
+  strong { color: #fff; }
+
+  a { color: var(--pink); }
+
+  @media (max-width: 700px) {
+    .two-col { flex-direction: column; }
+    .content { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="content">
+
+<!-- SECTION 1: THE BASICS -->
+<div class="section-header"><h2>1. What Are These Hormones? (The Basics)</h2></div>
+
+<div class="card">
+  <div class="card-header">Total Testosterone (TT)</div>
+  <div class="card-body">
+    <p><strong>What it is:</strong> The TOTAL amount of testosterone circulating in the blood — both the testosterone that's "busy" (bound to proteins) and the testosterone that's "free" to work.</p>
+    <p><strong>Think of it as:</strong> Your total bank balance — it tells you everything in the account, but not how much you can actually spend right now.</p>
+    <p><strong>Normal range (adult males):</strong> 300–1,000 ng/dL (varies by lab)</p>
+    <p><strong>Made by:</strong> ~95% from the testes (Leydig cells), ~5% from the adrenal glands</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Free Testosterone (FT)</div>
+  <div class="card-body">
+    <p><strong>What it is:</strong> The small fraction (~2-3%) of testosterone that is NOT bound to any protein. This is the testosterone that's actually available to enter cells and DO things — build muscle, maintain libido, support mood, etc.</p>
+    <p><strong>Think of it as:</strong> The cash in your wallet — it's what you can actually use right now.</p>
+    <p><strong>Normal range (adult males):</strong> 5–21 ng/dL (or 1–3% of total T)</p>
+    <p><strong>Why it matters:</strong> A man can have a "normal" total T but STILL feel terrible if his free T is low. This is the number that most closely correlates with symptoms.</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">SHBG (Sex Hormone-Binding Globulin)</div>
+  <div class="card-body">
+    <p><strong>What it is:</strong> A protein made by the liver that grabs onto testosterone and holds it tight. Once testosterone is bound to SHBG, it can't enter cells — it's basically locked up.</p>
+    <p><strong>Think of it as:</strong> A vault that locks up your money. The more SHBG you have, the more of your testosterone is locked away and unavailable.</p>
+    <p><strong>Normal range (adult males):</strong> 10–57 nmol/L</p>
+    <p><strong>The relationship:</strong> SHBG up = Free T down (more locked up) · SHBG down = Free T up (more available)</p>
+  </div>
+</div>
+
+<div class="clinical-pearl">
+  <div class="label">Clinical Pearl — The Pizza Delivery Analogy (Great for Patients)</div>
+  <p><strong>Total Testosterone</strong> = All the pizza you ordered tonight.<br>
+  <strong>SHBG-bound Testosterone</strong> = The pizzas still locked in the delivery car. You paid for them, they're yours, but you can't eat them yet.<br>
+  <strong>Albumin-bound Testosterone</strong> = Pizzas sitting on the counter — loosely held, can be grabbed if needed (this is "bioavailable" T).<br>
+  <strong>Free Testosterone</strong> = The slice in your hand. That's the one actually feeding you.</p>
+</div>
+
+<!-- SECTION 2: HOW THEY WORK TOGETHER -->
+<div class="section-header"><h2>2. How They Work Together</h2></div>
+
+<p>About 98% of circulating testosterone is bound to proteins:</p>
+
+<table>
+  <tr><th>Fraction</th><th>% of Total T</th><th>Bound To</th><th>Available?</th></tr>
+  <tr><td><strong>SHBG-bound</strong></td><td>~44-65%</td><td>SHBG (tight binding)</td><td>No — locked up</td></tr>
+  <tr><td><strong>Albumin-bound</strong></td><td>~33-54%</td><td>Albumin (loose binding)</td><td>Partially — can break free</td></tr>
+  <tr><td><strong>Free Testosterone</strong></td><td>~2-3%</td><td>Nothing</td><td>Yes — fully active</td></tr>
+</table>
+
+<div class="key-takeaway">
+  <div class="label">Key Takeaway — Bioavailable Testosterone</div>
+  <p>= Free T + Albumin-bound T. Some providers prefer this measure because albumin holds testosterone loosely and it can detach easily at the tissue level. Think of it as "spendable money" — both the cash in your wallet AND the money in your easily-accessible checking account.</p>
+</div>
+
+<div class="key-takeaway">
+  <div class="label">Clinical Pearl</div>
+  <p>This is why you should ALWAYS check Total T, Free T, AND SHBG together. Total T alone can be misleading. A man with Total T of 500 ng/dL and high SHBG might have less usable testosterone than a man with Total T of 400 ng/dL and low SHBG.</p>
+</div>
+
+<!-- SECTION 3: WHAT AFFECTS SHBG -->
+<div class="section-header"><h2>3. What Makes SHBG Go Up or Down?</h2></div>
+
+<div class="two-col">
+  <div class="card">
+    <div class="card-header">Things That RAISE SHBG (= Less Free T)</div>
+    <div class="card-body">
+      <ul>
+        <li><strong>Aging</strong> — SHBG increases ~1-2% per year after 40</li>
+        <li><strong>Liver disease</strong> (cirrhosis, hepatitis)</li>
+        <li><strong>Hyperthyroidism</strong></li>
+        <li><strong>Anticonvulsants</strong> (phenytoin, carbamazepine)</li>
+        <li><strong>HIV</strong></li>
+        <li><strong>Estrogen therapy</strong> (exogenous)</li>
+        <li><strong>Anorexia / severe calorie restriction</strong></li>
+        <li><strong>Excessive alcohol use</strong></li>
+        <li><strong>High-fiber / vegetarian diets</strong></li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">Things That LOWER SHBG (= More Free T)</div>
+    <div class="card-body">
+      <ul>
+        <li><strong>Obesity</strong> — especially visceral fat</li>
+        <li><strong>Type 2 Diabetes / Insulin Resistance</strong></li>
+        <li><strong>Hypothyroidism</strong></li>
+        <li><strong>Metabolic syndrome</strong></li>
+        <li><strong>Nephrotic syndrome</strong></li>
+        <li><strong>Exogenous androgens / anabolic steroids</strong></li>
+        <li><strong>Corticosteroids</strong></li>
+        <li><strong>Growth hormone use</strong></li>
+        <li><strong>PCOS medications</strong> (in context)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="warning-box">
+  <div class="label">Warning — The Obesity Paradox</div>
+  <p>Obese men often have LOW SHBG (which should mean more free T), BUT they also have lower total T production AND higher aromatase activity converting T to estrogen. So they can end up with low total T, low-ish free T, AND low SHBG — a triple mess. Always look at the full picture.</p>
+</div>
+
+<!-- SECTION 4: INTERPRETING THE NUMBERS -->
+<div class="section-header"><h2>4. Interpreting Results — What the Numbers Mean</h2></div>
+
+<h3>Reference Ranges (Adult Males)</h3>
+
+<table>
+  <tr><th>Lab Value</th><th>Low</th><th>Normal</th><th>High</th><th>Optimal*</th></tr>
+  <tr><td><strong>Total Testosterone</strong></td><td>&lt;300 ng/dL</td><td>300–1,000 ng/dL</td><td>&gt;1,000 ng/dL</td><td>500–900 ng/dL</td></tr>
+  <tr><td><strong>Free Testosterone</strong></td><td>&lt;5 ng/dL</td><td>5–21 ng/dL</td><td>&gt;21 ng/dL</td><td>10–20 ng/dL</td></tr>
+  <tr><td><strong>SHBG</strong></td><td>&lt;10 nmol/L</td><td>10–57 nmol/L</td><td>&gt;57 nmol/L</td><td>20–40 nmol/L</td></tr>
+  <tr><td><strong>Bioavailable T</strong></td><td>&lt;131 ng/dL</td><td>131–682 ng/dL</td><td>&gt;682 ng/dL</td><td>—</td></tr>
+</table>
+<p style="font-size: 0.85rem; color: var(--text-secondary);">*Optimal ranges reflect functional/integrative medicine targets, not just lab "normal." Ranges vary by lab and age.</p>
+
+<h3>Common Patterns & What They Tell You</h3>
+
+<table>
+  <tr><th>Pattern</th><th>Total T</th><th>Free T</th><th>SHBG</th><th>What's Happening</th><th>Think About</th></tr>
+  <tr><td><strong>Classic Low T</strong></td><td>Low</td><td>Low</td><td>Normal</td><td>Testes not producing enough</td><td>TRT candidate. Check LH/FSH (primary vs secondary)</td></tr>
+  <tr><td><strong>Hidden Low T</strong></td><td>Normal</td><td>LOW</td><td>HIGH</td><td>Making enough T but SHBG is locking it up</td><td>Most commonly missed! Patient has symptoms despite "normal" total T. Consider TRT or address SHBG driver</td></tr>
+  <tr><td><strong>Metabolic/Obese</strong></td><td>Low</td><td>Low-Normal</td><td>LOW</td><td>Low production + obesity driving SHBG down</td><td>Weight loss, lifestyle, check insulin/A1c, may need TRT</td></tr>
+  <tr><td><strong>Age-Related</strong></td><td>Low-Normal</td><td>Low</td><td>HIGH</td><td>Normal aging — T drops 1-2%/yr while SHBG climbs</td><td>Very common in 50-70+ men. Symptomatic? Consider TRT</td></tr>
+  <tr><td><strong>Overtreatment</strong></td><td>HIGH</td><td>HIGH</td><td>Low</td><td>Too much exogenous T, SHBG suppressed</td><td>Reduce dose. Check H&H, PSA, estradiol</td></tr>
+  <tr><td><strong>Liver Issue</strong></td><td>Normal</td><td>Low</td><td>Very HIGH</td><td>Liver pumping out excess SHBG</td><td>Check liver function, hepatitis panel, alcohol hx</td></tr>
+  <tr><td><strong>Thyroid-Driven</strong></td><td>Normal</td><td>Low</td><td>HIGH</td><td>Hyperthyroidism elevating SHBG</td><td>Check TSH, free T3/T4 — fix the thyroid first</td></tr>
+</table>
+
+<div class="key-takeaway">
+  <div class="label">Key Takeaway — The #1 Missed Diagnosis</div>
+  <p><strong>Normal Total T + Low Free T + High SHBG.</strong> This patient walks into his PCP's office, gets a total T of 550, and is told "you're normal." But he feels exhausted, has no sex drive, brain fog, and can't build muscle. His free T is 4.2 and SHBG is 72. He's functionally hypogonadal despite a "normal" total T. This is why we check the full panel.</p>
+</div>
+
+<!-- SECTION 5: SYMPTOMS -->
+<div class="section-header"><h2>5. Symptoms of Low vs. High Testosterone</h2></div>
+
+<div class="two-col">
+  <div class="card">
+    <div class="card-header">Low Testosterone Symptoms</div>
+    <div class="card-body">
+      <p><strong>Sexual:</strong></p>
+      <ul>
+        <li>Low or absent libido</li>
+        <li>Erectile dysfunction</li>
+        <li>Reduced morning erections</li>
+        <li>Decreased ejaculate volume</li>
+      </ul>
+      <p><strong>Physical:</strong></p>
+      <ul>
+        <li>Fatigue / low energy</li>
+        <li>Loss of muscle mass & strength</li>
+        <li>Increased body fat (especially belly)</li>
+        <li>Decreased bone density</li>
+        <li>Gynecomastia (breast tissue)</li>
+        <li>Hair loss (body hair thinning)</li>
+        <li>Hot flashes / night sweats</li>
+      </ul>
+      <p><strong>Mental/Emotional:</strong></p>
+      <ul>
+        <li>Brain fog / poor concentration</li>
+        <li>Depression / irritability</li>
+        <li>Poor motivation</li>
+        <li>Sleep disturbances</li>
+        <li>Memory issues</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">High Testosterone Symptoms (Usually from TRT/Steroids)</div>
+    <div class="card-body">
+      <p><strong>Cardiovascular:</strong></p>
+      <ul>
+        <li>Polycythemia (elevated H&H) — clot risk</li>
+        <li>Elevated blood pressure</li>
+        <li>Edema / fluid retention</li>
+      </ul>
+      <p><strong>Skin:</strong></p>
+      <ul>
+        <li>Acne (back, shoulders, face)</li>
+        <li>Oily skin</li>
+        <li>Accelerated male pattern baldness</li>
+      </ul>
+      <p><strong>Behavioral:</strong></p>
+      <ul>
+        <li>Irritability / aggression</li>
+        <li>Mood swings</li>
+        <li>Sleep apnea worsening</li>
+      </ul>
+      <p><strong>Reproductive:</strong></p>
+      <ul>
+        <li>Testicular atrophy (on exogenous T)</li>
+        <li>Infertility (suppressed LH/FSH)</li>
+        <li>Elevated estradiol (aromatization)</li>
+      </ul>
+      <p><strong>Lab Red Flags:</strong></p>
+      <ul>
+        <li>Hematocrit &gt;54% — phlebotomy needed</li>
+        <li>PSA elevation — urology referral</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 6: PATIENT EDUCATION SCRIPTS -->
+<div class="section-header"><h2>6. How to Explain It to Patients (Scripts)</h2></div>
+
+<div class="script">
+  <div class="label">Script — Explaining Total vs. Free Testosterone</div>
+  <p>"Think of your total testosterone like your total paycheck. That's the big number. But not all of that money is available to spend — some goes to taxes, some goes to bills that are automatically taken out. Your FREE testosterone is like your take-home pay. That's what actually hits your pocket and what your body can use day to day. Right now, your take-home pay is pretty low, even though your gross paycheck looks okay."</p>
+</div>
+
+<div class="script">
+  <div class="label">Script — Explaining High SHBG</div>
+  <p>"You have this protein called SHBG — think of it like a sponge that soaks up your testosterone. The more SHBG you have, the more testosterone gets soaked up and becomes unavailable. Your SHBG is running high right now, which means even though you're producing a decent amount of testosterone, a lot of it is getting gobbled up before your body can use it. That's why you're feeling the way you do."</p>
+</div>
+
+<div class="script">
+  <div class="label">Script — Explaining Why Total T Alone Is Misleading</div>
+  <p>"When your last doctor checked your testosterone and said it was 'normal,' they were looking at the total number. And technically, yes, it is in the normal range. But that's like saying your bank account has $5,000 in it without mentioning that $4,500 of it is frozen. The amount that's actually available and working in your body — your free testosterone — is low. That's what's causing your symptoms."</p>
+</div>
+
+<div class="script">
+  <div class="label">Script — Explaining Low T to a Skeptical Patient</div>
+  <p>"I know there's a lot of stuff on the internet about testosterone, and some of it makes it sound like a scam or just a 'feel good' thing. But testosterone is a real hormone with real medical effects. When your levels are genuinely low, it affects your energy, your mood, your bones, your heart health, your ability to build and maintain muscle. This isn't about bodybuilding — it's about your body having what it needs to function properly."</p>
+</div>
+
+<!-- SECTION 7: MONITORING ON TRT -->
+<div class="section-header"><h2>7. Lab Monitoring for Patients on TRT</h2></div>
+
+<table>
+  <tr><th>Lab</th><th>Baseline</th><th>6 Weeks</th><th>3 Months</th><th>6 Months</th><th>Annual</th><th>Why</th></tr>
+  <tr><td>Total T</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Ensure therapeutic range</td></tr>
+  <tr><td>Free T</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Actual usable testosterone</td></tr>
+  <tr><td>SHBG</td><td>Yes</td><td></td><td>Yes</td><td></td><td>Yes</td><td>Track binding changes</td></tr>
+  <tr><td>Estradiol (E2)</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Aromatization monitoring</td></tr>
+  <tr><td>CBC (H&H)</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Polycythemia risk</td></tr>
+  <tr><td>PSA</td><td>Yes</td><td></td><td>Yes</td><td>Yes</td><td>Yes</td><td>Prostate safety (men 40+)</td></tr>
+  <tr><td>Lipid Panel</td><td>Yes</td><td></td><td></td><td>Yes</td><td>Yes</td><td>CV risk monitoring</td></tr>
+  <tr><td>CMP</td><td>Yes</td><td></td><td></td><td>Yes</td><td>Yes</td><td>Liver/kidney function</td></tr>
+  <tr><td>LH/FSH</td><td>Yes</td><td></td><td></td><td></td><td>PRN</td><td>Baseline (will suppress on TRT)</td></tr>
+  <tr><td>DHEA-S</td><td>Yes</td><td></td><td></td><td></td><td>Yes</td><td>Adrenal function</td></tr>
+  <tr><td>Thyroid (TSH, fT3/fT4)</td><td>Yes</td><td></td><td></td><td></td><td>Yes</td><td>R/O thyroid as SHBG driver</td></tr>
+</table>
+
+<div class="warning-box">
+  <div class="label">Warning — Red Flags — When to Act</div>
+  <ul>
+    <li><strong>Hematocrit &gt;54%:</strong> Hold TRT, therapeutic phlebotomy, recheck in 4 weeks</li>
+    <li><strong>PSA &gt;4.0 or rapid rise (&gt;1.4 ng/mL/year):</strong> Urology referral</li>
+    <li><strong>Estradiol &gt;40 pg/mL with symptoms:</strong> Consider anastrozole 0.25-0.5mg 2x/week</li>
+    <li><strong>Total T &gt;1,200 or Free T significantly above range:</strong> Reduce dose</li>
+    <li><strong>New sleep apnea symptoms:</strong> Sleep study referral</li>
+  </ul>
+</div>
+
+<!-- SECTION 8: QUICK REFERENCE -->
+<div class="section-header"><h2>8. Quick Reference Card</h2></div>
+
+<div class="card">
+  <div class="card-header">The 60-Second Assessment</div>
+  <div class="card-body">
+    <div class="flow-chart">
+      <div class="flow-step"><div class="num">1</div><div>Check <strong>Total T</strong> — Is it in range (300-1,000)?</div></div>
+      <div class="flow-step"><div class="num">2</div><div>Check <strong>Free T</strong> — Is it actually adequate (10 ng/dL or above)?</div></div>
+      <div class="flow-step"><div class="num">3</div><div>Check <strong>SHBG</strong> — Is it driving free T down (&gt;50) or is it low (&lt;20)?</div></div>
+      <div class="flow-step"><div class="num">4</div><div>If SHBG is high — <strong>WHY?</strong> (age, liver, thyroid, meds, diet)</div></div>
+      <div class="flow-step"><div class="num">5</div><div>If SHBG is low — <strong>WHY?</strong> (obesity, diabetes, insulin resistance)</div></div>
+      <div class="flow-step"><div class="num">6</div><div>Match labs to <strong>symptoms</strong> — treat the patient, not the number</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="key-takeaway">
+  <div class="label">Remember</div>
+  <p><strong>Total T</strong> tells you production. <strong>Free T</strong> tells you function. <strong>SHBG</strong> tells you why they don't always match. Always check all three. Always correlate with symptoms. The numbers tell a story — learn to read it.</p>
+</div>
+
+</div><!-- end .content -->
+
+</body>
+</html>

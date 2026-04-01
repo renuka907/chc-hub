@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Colposcopy &amp; Cervical Anomalies — Clinical Education Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-deep: #1a0a2e;
+    --purple-mid: #2d1b4e;
+    --purple-light: #6c3fa0;
+    --pink: #e91e8c;
+    --orange: #ff6b35;
+    --gradient-main: linear-gradient(135deg, #6c3fa0, #e91e8c, #ff6b35);
+    --text-primary: #f0e6ff;
+    --text-secondary: #c4b0db;
+    --card-bg: rgba(45, 27, 78, 0.6);
+    --border-glow: rgba(108, 63, 160, 0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    color: var(--text-primary);
+    line-height: 1.6;
+    background: var(--purple-deep);
+    font-size: 11pt;
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 30px;
+  }
+
+  h1 {
+    font-size: 28pt;
+    font-weight: 800;
+    background: var(--gradient-main);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  h1 + p.subtitle {
+    color: var(--text-secondary);
+    font-size: 12pt;
+    margin-bottom: 30px;
+  }
+
+  h2.section-title {
+    font-size: 20pt;
+    color: var(--text-primary);
+    border-bottom: 3px solid var(--purple-light);
+    padding-bottom: 8px;
+    margin: 40px 0 15px 0;
+  }
+
+  h3 {
+    font-size: 14pt;
+    color: #d4a5ff;
+    margin: 20px 0 8px 0;
+  }
+
+  h4 {
+    font-size: 12pt;
+    color: #c490f0;
+    margin: 15px 0 6px 0;
+  }
+
+  p { margin-bottom: 10px; }
+
+  a { color: var(--pink); text-decoration: none; }
+  a:hover { text-decoration: underline; color: var(--orange); }
+
+  /* TOC */
+  .toc {
+    background: var(--card-bg);
+    border: 1px solid var(--border-glow);
+    border-radius: 12px;
+    padding: 25px 30px;
+    margin: 20px 0 30px 0;
+  }
+  .toc ol {
+    font-size: 12pt;
+    line-height: 2.2;
+    padding-left: 20px;
+  }
+  .toc a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+  .toc a:hover {
+    color: var(--pink);
+  }
+
+  /* Info boxes */
+  .info-box {
+    background: var(--card-bg);
+    border-left: 4px solid var(--purple-light);
+    padding: 15px 20px;
+    border-radius: 0 12px 12px 0;
+    margin: 15px 0;
+  }
+  .info-box h4 { margin-top: 0; color: inherit; }
+
+  /* Clinical pearl — pink */
+  .info-box.pearl, .info-box.blue {
+    border-left-color: var(--pink);
+  }
+  /* Key takeaway — purple */
+  .info-box.takeaway, .info-box.green {
+    border-left-color: var(--purple-light);
+  }
+  /* Warning — orange */
+  .info-box.warning, .info-box.yellow {
+    border-left-color: var(--orange);
+  }
+  /* Red alert — pink bold */
+  .info-box.red {
+    border-left-color: #ff3366;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    font-size: 10pt;
+  }
+  th {
+    background: var(--gradient-main);
+    color: white;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+  }
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-glow);
+    color: var(--text-primary);
+  }
+  tr:nth-child(even) {
+    background: rgba(26, 10, 46, 0.5);
+  }
+  tr:nth-child(odd) {
+    background: rgba(45, 27, 78, 0.3);
+  }
+
+  ul, ol { margin: 8px 0 12px 20px; }
+  li { margin-bottom: 4px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin: 15px 0; }
+
+  @media (max-width: 600px) {
+    .two-col, .three-col { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-glow);
+    border-radius: 12px;
+    padding: 15px;
+  }
+  .card h4 { margin-top: 0; font-size: 11pt; }
+
+  .clinical-image {
+    text-align: center;
+    margin: 20px 0;
+  }
+  .clinical-image img {
+    max-width: 100%;
+    max-height: 350px;
+    border-radius: 8px;
+    border: 2px solid var(--border-glow);
+    box-shadow: 0 2px 12px rgba(108, 63, 160, 0.3);
+  }
+  .clinical-image .caption {
+    font-size: 9pt;
+    color: var(--text-secondary);
+    margin-top: 8px;
+    font-style: italic;
+  }
+  .clinical-image .label {
+    font-size: 10pt;
+    font-weight: 700;
+    color: #d4a5ff;
+    margin-bottom: 5px;
+  }
+
+  .image-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+  }
+  @media (max-width: 600px) {
+    .image-row { grid-template-columns: 1fr; }
+  }
+  .image-card {
+    text-align: center;
+    background: var(--card-bg);
+    border: 1px solid var(--border-glow);
+    border-radius: 12px;
+    padding: 15px;
+  }
+  .image-card img {
+    max-width: 100%;
+    max-height: 250px;
+    border-radius: 6px;
+    border: 1px solid var(--border-glow);
+  }
+  .image-card h4 { margin: 10px 0 5px 0; color: #d4a5ff; }
+  .image-card p { font-size: 9pt; color: var(--text-secondary); }
+
+  .severity-low { border-left: 4px solid #4caf50; }
+  .severity-mod { border-left: 4px solid var(--orange); }
+  .severity-high { border-left: 4px solid #ff3366; }
+
+  .doc-template {
+    background: rgba(26, 10, 46, 0.7);
+    border: 2px dashed var(--border-glow);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 15px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 10pt;
+    line-height: 1.8;
+    color: var(--text-primary);
+  }
+  .doc-template .field { color: var(--pink); font-weight: bold; }
+
+  .mnemonic {
+    background: var(--card-bg);
+    border: 1px solid var(--border-glow);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 15px 0;
+    text-align: center;
+  }
+  .mnemonic h3 { color: #d4a5ff; margin-bottom: 10px; }
+
+  .cervix-svg { max-width: 300px; margin: 0 auto; display: block; }
+
+  strong { color: var(--text-primary); }
+  em { color: var(--text-secondary); }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>Colposcopy &amp; Cervical Anomalies</h1>
+  <p class="subtitle">Clinical Education Guide — Identification, Classification &amp; Documentation of Cervical Findings With Clinical Photographs &amp; Histopathology Images</p>
+
+  <!-- TABLE OF CONTENTS -->
+  <h2 class="section-title" id="toc">Table of Contents</h2>
+  <div class="toc">
+    <ol>
+      <li><a href="#section-1">Overview &amp; Indications for Colposcopy</a></li>
+      <li><a href="#section-2">Cervical Anatomy Review</a></li>
+      <li><a href="#section-3">The Colposcopy Procedure</a></li>
+      <li><a href="#section-4">Normal Colposcopic Findings — With Clinical Images</a></li>
+      <li><a href="#section-5">Abnormal Findings — Visual Guide With Clinical Images</a></li>
+      <li><a href="#section-6">Cervical Anomaly Classification (Bethesda &amp; CIN)</a></li>
+      <li><a href="#section-7">Swede Scoring System</a></li>
+      <li><a href="#section-8">Biopsy Decision-Making</a></li>
+      <li><a href="#section-9">Documentation Guide &amp; Templates</a></li>
+      <li><a href="#section-10">Follow-Up &amp; Management Algorithms</a></li>
+      <li><a href="#section-11">Quick Reference Card</a></li>
+      <li><a href="#atlas-normal">Clinical Photo Atlas — Normal Cervix</a></li>
+      <li><a href="#atlas-polyps">Clinical Photo Atlas — Polyps &amp; Cysts</a></li>
+      <li><a href="#atlas-abnormal">Clinical Photo Atlas — Abnormal Findings</a></li>
+      <li><a href="#atlas-cervicitis">Clinical Photo Atlas — Cervicitis</a></li>
+      <li><a href="#atlas-cancer">Clinical Photo Atlas — Cervical Cancer</a></li>
+      <li><a href="#atlas-treatment">Clinical Photo Atlas — Treatment</a></li>
+      <li><a href="#atlas-iarc">IARC/WHO Atlas — Colposcopic Views</a></li>
+      <li><a href="#image-index">Image Index &amp; Summary</a></li>
+    </ol>
+  </div>
+
+  <!-- SECTION 1: OVERVIEW -->
+  <h2 class="section-title" id="section-1">1. Overview &amp; Indications</h2>
+
+  <h3>What is Colposcopy?</h3>
+  <p>Colposcopy is a diagnostic procedure using a colposcope (a binocular magnifying instrument, 6-40x magnification) to examine the cervix, vagina, and vulva for signs of disease after an abnormal Pap smear or positive HPV test.</p>
+
+  <div class="info-box pearl">
+    <h4>Purpose</h4>
+    <p>To identify the location, size, and severity of cervical lesions and determine whether biopsy is needed. Colposcopy is NOT a screening tool — it's a <strong>diagnostic evaluation</strong> triggered by abnormal screening results.</p>
+  </div>
+
+  <h3>Indications for Colposcopy</h3>
+  <div class="two-col">
+    <div class="card">
+      <h4>Standard Indications</h4>
+      <ul>
+        <li>HSIL on Pap smear</li>
+        <li>ASC-H (atypical squamous cells, cannot exclude HSIL)</li>
+        <li>LSIL on Pap (age ≥25)</li>
+        <li>ASC-US with positive HPV test</li>
+        <li>AGC (atypical glandular cells)</li>
+        <li>Persistent HPV 16/18 positive</li>
+        <li>Unsatisfactory Pap with positive HPV</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Other Indications</h4>
+      <ul>
+        <li>Visible cervical lesion on speculum exam</li>
+        <li>Unexplained abnormal vaginal bleeding</li>
+        <li>DES exposure in utero</li>
+        <li>History of cervical dysplasia needing follow-up</li>
+        <li>Post-treatment surveillance (after LEEP/CKC)</li>
+        <li>Immunocompromised with abnormal screening</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Contraindications</h3>
+  <ul>
+    <li><strong>Active cervicitis</strong> — treat infection first, then reschedule</li>
+    <li><strong>Heavy menstruation</strong> — obscures visualization</li>
+    <li><strong>Pregnancy</strong> — colposcopy can be performed but <strong>NO ECC</strong> (endocervical curettage)</li>
+  </ul>
+
+  <!-- SECTION 2: ANATOMY -->
+  <h2 class="section-title" id="section-2">2. Cervical Anatomy Review</h2>
+
+  <h3>Key Anatomical Landmarks</h3>
+
+  <div style="text-align: center; margin: 20px 0;">
+    <svg viewBox="0 0 400 400" class="cervix-svg" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="200" cy="200" r="150" fill="#3d1a5e" stroke="#6c3fa0" stroke-width="2"/>
+      <circle cx="200" cy="200" r="80" fill="#4a2270" stroke="#e91e8c" stroke-width="2" stroke-dasharray="8,4"/>
+      <ellipse cx="200" cy="200" rx="25" ry="12" fill="#1a0a2e" stroke="#e91e8c" stroke-width="1.5"/>
+      <text x="200" y="45" text-anchor="middle" font-size="12" font-weight="bold" fill="#d4a5ff">ECTOCERVIX</text>
+      <text x="200" y="60" text-anchor="middle" font-size="10" fill="#c4b0db">(Original Squamous Epithelium)</text>
+      <text x="200" y="150" text-anchor="middle" font-size="11" font-weight="bold" fill="#e91e8c">TRANSFORMATION</text>
+      <text x="200" y="165" text-anchor="middle" font-size="11" font-weight="bold" fill="#e91e8c">ZONE (T-zone)</text>
+      <text x="200" y="205" text-anchor="middle" font-size="10" font-weight="bold" fill="white">OS</text>
+      <text x="310" y="195" font-size="9" font-weight="bold" fill="#e91e8c">SCJ</text>
+      <text x="295" y="207" font-size="8" fill="#c4b0db">(Squamocolumnar</text>
+      <text x="295" y="217" font-size="8" fill="#c4b0db">Junction)</text>
+      <text x="200" y="30" text-anchor="middle" font-size="9" fill="#c4b0db">12 o'clock</text>
+      <text x="370" y="205" text-anchor="middle" font-size="9" fill="#c4b0db">3</text>
+      <text x="200" y="380" text-anchor="middle" font-size="9" fill="#c4b0db">6 o'clock</text>
+      <text x="30" y="205" text-anchor="middle" font-size="9" fill="#c4b0db">9</text>
+    </svg>
+    <p style="font-size: 9pt; color: var(--text-secondary); margin-top: 5px;"><em>Diagram: Normal cervical anatomy with clock orientation (patient supine)</em></p>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h4>Ectocervix</h4>
+      <p>Covered by <strong>squamous epithelium</strong> (pink, smooth, shiny). This is the visible portion of the cervix during speculum exam.</p>
+    </div>
+    <div class="card">
+      <h4>Endocervix</h4>
+      <p>Lined by <strong>columnar epithelium</strong> (red, grape-like/villous). Located within the cervical canal above the os.</p>
+    </div>
+  </div>
+
+  <div class="info-box pearl">
+    <h4>The Transformation Zone (T-Zone)</h4>
+    <p>The area between the original and new squamocolumnar junction (SCJ) where columnar epithelium undergoes <strong>squamous metaplasia</strong>. This is where <strong>~90% of cervical neoplasia originates</strong>. The entire T-zone MUST be visualized for a satisfactory colposcopy.</p>
+  </div>
+
+  <h3>Squamocolumnar Junction (SCJ) Types</h3>
+  <table>
+    <tr><th>SCJ Type</th><th>Visibility</th><th>Clinical Significance</th></tr>
+    <tr><td><strong>Type 1</strong></td><td>Fully visible on ectocervix</td><td>Entire T-zone visible — satisfactory colposcopy</td></tr>
+    <tr><td><strong>Type 2</strong></td><td>Partially in endocervical canal</td><td>May need endocervical speculum to visualize</td></tr>
+    <tr><td><strong>Type 3</strong></td><td>Entirely within canal, not visible</td><td>Unsatisfactory colposcopy — consider ECC or LEEP</td></tr>
+  </table>
+
+  <!-- SECTION 3: PROCEDURE -->
+  <h2 class="section-title" id="section-3">3. The Colposcopy Procedure</h2>
+
+  <div class="clinical-image">
+    <div class="label">Colposcopy Setup</div>
+    <img src="images/colposcopy-procedure.png" alt="Colposcopy procedure setup">
+    <div class="caption">Figure: Colposcopy examination showing speculum placement and colposcope positioning. Source: Wikimedia Commons (CC)</div>
+  </div>
+
+  <h3>Step-by-Step Procedure</h3>
+  <table>
+    <tr><th>Step</th><th>Action</th><th>Purpose</th></tr>
+    <tr><td><strong>1</strong></td><td>Insert speculum, visualize cervix</td><td>Baseline assessment of cervix</td></tr>
+    <tr><td><strong>2</strong></td><td>Apply <strong>normal saline</strong></td><td>Remove mucus, assess surface vessels with green filter</td></tr>
+    <tr><td><strong>3</strong></td><td>Apply <strong>3-5% acetic acid</strong> (vinegar)</td><td>Causes protein coagulation → abnormal areas turn WHITE</td></tr>
+    <tr><td><strong>4</strong></td><td>Wait 60-90 seconds, observe</td><td>Acetowhite changes become visible; note intensity, borders, location</td></tr>
+    <tr><td><strong>5</strong></td><td>Apply <strong>Lugol's iodine</strong> (Schiller test)</td><td>Normal epithelium stains BROWN; abnormal stays YELLOW</td></tr>
+    <tr><td><strong>6</strong></td><td>Colposcopic assessment &amp; scoring</td><td>Grade findings, identify worst area</td></tr>
+    <tr><td><strong>7</strong></td><td>Biopsy if indicated</td><td>Target most abnormal area(s); consider ECC</td></tr>
+    <tr><td><strong>8</strong></td><td>Apply hemostatic agent (Monsel's/silver nitrate)</td><td>Control biopsy site bleeding</td></tr>
+  </table>
+
+  <div class="info-box warning">
+    <h4>Key Principle: Acetic Acid Response</h4>
+    <p><strong>Why it works:</strong> Acetic acid causes reversible coagulation of nuclear proteins. Areas with <strong>higher nuclear density</strong> (dysplasia, neoplasia) have more protein → turn <strong>whiter and more opaque</strong>.</p>
+    <ul>
+      <li><strong>Thin, translucent acetowhite</strong> → likely low-grade (CIN 1 / LSIL)</li>
+      <li><strong>Dense, opaque, oyster-white</strong> → likely high-grade (CIN 2-3 / HSIL)</li>
+      <li><strong>Rapid onset</strong> (appears quickly, fades slowly) → more severe</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 4: NORMAL FINDINGS WITH CLINICAL IMAGES -->
+  <h2 class="section-title" id="section-4">4. Normal Colposcopic Findings</h2>
+
+  <h3>A. Normal Cervix — VIA (Visual Inspection with Acetic Acid) Negative</h3>
+  <div class="clinical-image">
+    <div class="label">Normal Cervix After Acetic Acid Application</div>
+    <img src="images/normal-cervix.gif" alt="Normal cervix - VIA negative">
+    <div class="caption">Figure: Normal cervix after application of acetic acid (VIA negative). The cervix shows smooth, pink squamous epithelium with no acetowhite changes. The os is centrally visible. Source: Wikimedia Commons (CC)</div>
+  </div>
+
+  <h3>B. Cervical Ectropion (Ectopy)</h3>
+  <div class="clinical-image">
+    <div class="label">Cervical Ectropion — Normal Variant</div>
+    <img src="images/ectropion.jpg" alt="Cervical ectropion" style="max-height: 300px;">
+    <div class="caption">Figure: Nulliparous cervix showing ectropion — columnar epithelium visible as red, granular tissue around the os. This is a NORMAL finding, especially common in young women, OCP users, and during pregnancy. NOT pathological — does not require treatment. Source: Wikimedia Commons (CC BY-SA 3.0)</div>
+  </div>
+
+  <h3>C. Nabothian Cysts</h3>
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/nabothian-cysts.jpg" alt="Nabothian cysts gross">
+      <h4>Nabothian Cysts — Gross Appearance</h4>
+      <p>Smooth, round, yellow-white translucent cysts on the cervix. Formed when squamous metaplasia covers columnar glands, trapping mucus. <strong>Completely benign</strong> — no treatment needed.</p>
+    </div>
+    <div class="image-card">
+      <img src="images/nabothian-histology.jpg" alt="Nabothian cysts histology">
+      <h4>Nabothian Cysts — Histology</h4>
+      <p>H&amp;E stain showing mucus-filled cystic spaces lined by endocervical-type epithelium, surrounded by mature squamous epithelium. Benign retention cysts.</p>
+    </div>
+  </div>
+  <p style="font-size: 8pt; color: var(--text-secondary); text-align: center;">Images: Wikimedia Commons (CC BY-SA 2.0 / CC BY 4.0)</p>
+
+  <div class="info-box takeaway">
+    <h4>Normal Findings Summary</h4>
+    <ul>
+      <li>Smooth, pink squamous epithelium — no acetowhite changes</li>
+      <li>Visible SCJ (entire T-zone seen)</li>
+      <li>Columnar epithelium / ectropion — red, grape-like; NOT abnormal</li>
+      <li>Nabothian cysts — benign retention cysts; round, translucent</li>
+      <li>Mild, thin, translucent acetowhite in immature metaplasia — normal</li>
+      <li>Fine, regular vascular patterns</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 5: ABNORMAL FINDINGS -->
+  <h2 class="section-title" id="section-5">5. Abnormal Findings — Visual Guide</h2>
+
+  <h3>A. Acetowhite Epithelium — CIN 1 (Low-Grade)</h3>
+  <div class="clinical-image">
+    <div class="label">CIN 1 — Acetowhite Change After Acetic Acid (VIA Positive)</div>
+    <img src="images/cin1-acetowhite.gif" alt="CIN 1 acetowhite changes">
+    <div class="caption">Figure: Cervix showing acetowhite epithelium after acetic acid application (VIA positive). White patches visible on the cervical surface indicate areas of increased nuclear density consistent with CIN 1. Note the thin, translucent quality and irregular borders — characteristic of low-grade disease. Source: Wikimedia Commons (CC)</div>
+  </div>
+
+  <div class="two-col">
+    <div class="card severity-low">
+      <h4>Thin / Translucent Acetowhite (LOW GRADE)</h4>
+      <ul>
+        <li>Faint white, semi-transparent</li>
+        <li>Irregular, feathered borders</li>
+        <li>Appears <strong>slowly</strong> after acetic acid</li>
+        <li>Fades <strong>quickly</strong></li>
+        <li>Suggests: CIN 1 / LSIL</li>
+      </ul>
+    </div>
+    <div class="card severity-high">
+      <h4>Dense / Opaque Acetowhite (HIGH GRADE)</h4>
+      <ul>
+        <li>Thick, oyster-white, opaque</li>
+        <li>Sharp, well-defined borders</li>
+        <li>Appears <strong>rapidly</strong> after acetic acid</li>
+        <li>Persists <strong>&gt;1 minute</strong></li>
+        <li>Suggests: CIN 2-3 / HSIL</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>B. Vascular Patterns</h3>
+  <div class="two-col">
+    <div class="card severity-low">
+      <h4>Fine Punctation (LOW GRADE)</h4>
+      <svg viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg" width="120" style="display:block;margin:10px auto;">
+        <circle cx="75" cy="75" r="65" fill="#3d1a5e" stroke="#6c3fa0" stroke-width="1.5"/>
+        <circle cx="55" cy="55" r="1.5" fill="#e91e8c"/><circle cx="70" cy="53" r="1.5" fill="#e91e8c"/>
+        <circle cx="85" cy="55" r="1.5" fill="#e91e8c"/><circle cx="95" cy="57" r="1.5" fill="#e91e8c"/>
+        <circle cx="60" cy="68" r="1.5" fill="#e91e8c"/><circle cx="75" cy="66" r="1.5" fill="#e91e8c"/>
+        <circle cx="90" cy="68" r="1.5" fill="#e91e8c"/><circle cx="55" cy="80" r="1.5" fill="#e91e8c"/>
+        <circle cx="70" cy="78" r="1.5" fill="#e91e8c"/><circle cx="85" cy="80" r="1.5" fill="#e91e8c"/>
+        <circle cx="60" cy="92" r="1.5" fill="#e91e8c"/><circle cx="75" cy="90" r="1.5" fill="#e91e8c"/>
+        <circle cx="90" cy="92" r="1.5" fill="#e91e8c"/>
+      </svg>
+      <p>Evenly spaced, small, uniform red dots. Represents capillary loop tips viewed end-on. Regular intercapillary distance.</p>
+    </div>
+    <div class="card severity-high">
+      <h4>Coarse Punctation (HIGH GRADE)</h4>
+      <svg viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg" width="120" style="display:block;margin:10px auto;">
+        <circle cx="75" cy="75" r="65" fill="#3d1a5e" stroke="#6c3fa0" stroke-width="1.5"/>
+        <circle cx="52" cy="52" r="3" fill="#ff3366"/><circle cx="78" cy="48" r="2.5" fill="#ff3366"/>
+        <circle cx="95" cy="58" r="3.5" fill="#ff3366"/><circle cx="58" cy="72" r="3" fill="#ff3366"/>
+        <circle cx="82" cy="68" r="4" fill="#ff3366"/><circle cx="100" cy="78" r="2" fill="#ff3366"/>
+        <circle cx="60" cy="90" r="3.5" fill="#ff3366"/><circle cx="80" cy="88" r="3" fill="#ff3366"/>
+        <circle cx="95" cy="95" r="2.5" fill="#ff3366"/>
+      </svg>
+      <p>Irregularly spaced, dilated, varying-sized dots. Wide, uneven intercapillary distance. Vessels appear dilated and prominent.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card severity-low">
+      <h4>Fine Mosaic (LOW GRADE)</h4>
+      <svg viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg" width="120" style="display:block;margin:10px auto;">
+        <circle cx="75" cy="75" r="65" fill="#3d1a5e" stroke="#6c3fa0" stroke-width="1.5"/>
+        <line x1="45" y1="50" x2="105" y2="50" stroke="#e91e8c" stroke-width="0.8"/>
+        <line x1="45" y1="65" x2="105" y2="65" stroke="#e91e8c" stroke-width="0.8"/>
+        <line x1="45" y1="80" x2="105" y2="80" stroke="#e91e8c" stroke-width="0.8"/>
+        <line x1="45" y1="95" x2="105" y2="95" stroke="#e91e8c" stroke-width="0.8"/>
+        <line x1="55" y1="43" x2="55" y2="102" stroke="#e91e8c" stroke-width="0.8"/>
+        <line x1="70" y1="43" x2="70" y2="102" stroke="#e91e8c" stroke-width="0.8"/>
+        <line x1="85" y1="43" x2="85" y2="102" stroke="#e91e8c" stroke-width="0.8"/>
+        <line x1="100" y1="43" x2="100" y2="102" stroke="#e91e8c" stroke-width="0.8"/>
+      </svg>
+      <p>Regular, small, evenly-sized "tiles" or "chicken wire" pattern. Vessels form a uniform grid.</p>
+    </div>
+    <div class="card severity-high">
+      <h4>Coarse Mosaic (HIGH GRADE)</h4>
+      <svg viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg" width="120" style="display:block;margin:10px auto;">
+        <circle cx="75" cy="75" r="65" fill="#3d1a5e" stroke="#6c3fa0" stroke-width="1.5"/>
+        <line x1="42" y1="48" x2="108" y2="52" stroke="#ff3366" stroke-width="2"/>
+        <line x1="45" y1="72" x2="105" y2="68" stroke="#ff3366" stroke-width="2.5"/>
+        <line x1="48" y1="92" x2="102" y2="95" stroke="#ff3366" stroke-width="2"/>
+        <line x1="55" y1="40" x2="52" y2="102" stroke="#ff3366" stroke-width="2"/>
+        <line x1="78" y1="42" x2="75" y2="100" stroke="#ff3366" stroke-width="2.5"/>
+        <line x1="98" y1="44" x2="100" y2="100" stroke="#ff3366" stroke-width="2"/>
+      </svg>
+      <p>Irregular, large, uneven tile pattern. Thick, prominent vessel borders with variable block sizes.</p>
+    </div>
+  </div>
+
+  <!-- MORE ABNORMAL FINDINGS + CLINICAL IMAGES -->
+  <h3>C. Cervical Polyps</h3>
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/cervical-polyp.jpg" alt="Cervical polyp">
+      <h4>Cervical Polyp — Clinical Appearance</h4>
+      <p>Smooth, red/pink, pedunculated growth protruding from the cervical os. Most are <strong>benign</strong> (endocervical polyps). Can cause irregular bleeding, post-coital spotting, or vaginal discharge.</p>
+    </div>
+    <div class="image-card">
+      <img src="images/polyp-histology.jpg" alt="Cervical polyp histology">
+      <h4>Endocervical Polyp — Histology</h4>
+      <p>H&amp;E stain showing polypoid tissue with endocervical-type glands, fibrovascular stroma, and chronic inflammatory cells. Benign — but always send for histology to rule out malignancy.</p>
+    </div>
+  </div>
+  <p style="font-size: 8pt; color: var(--text-secondary); text-align: center;">Images: Wikimedia Commons (CC BY-SA 3.0 / CC BY 4.0)</p>
+
+  <div class="info-box">
+    <h4>Cervical Polyps — Key Points</h4>
+    <ul>
+      <li><strong>Prevalence:</strong> ~2-5% of women; more common in multiparous women aged 40-60</li>
+      <li><strong>Types:</strong> Endocervical (most common) or ectocervical</li>
+      <li><strong>Presentation:</strong> Often asymptomatic; may cause intermenstrual bleeding, post-coital bleeding, or mucous discharge</li>
+      <li><strong>Management:</strong> Simple polypectomy (twist and remove with ring forceps); send ALL polyps for histology</li>
+      <li><strong>Malignancy risk:</strong> &lt;1% — but adenocarcinoma can present as a polyp, so ALWAYS histologically evaluate</li>
+      <li><strong>Recurrence:</strong> ~6-12% may recur; follow-up Pap smear recommended</li>
+    </ul>
+  </div>
+
+  <h3>D. Atypical Vessels</h3>
+  <div class="info-box red">
+    <h4>Red Flag Finding — Atypical Vessels</h4>
+    <p>Bizarre, irregular, non-branching vessels that do NOT follow normal patterns:</p>
+    <ul>
+      <li><strong>Comma-shaped</strong> or <strong>corkscrew</strong> vessels</li>
+      <li><strong>Spaghetti-like</strong> — long, hairpin turns</li>
+      <li><strong>Abrupt caliber changes</strong></li>
+      <li><strong>Irregular branching</strong> — does not dichotomize normally</li>
+    </ul>
+    <p><strong>→ Highly suspicious for invasive cancer. MUST BIOPSY immediately.</strong></p>
+  </div>
+
+  <h3>E. Ridge Sign &amp; Inner Border Sign</h3>
+  <div class="two-col">
+    <div class="card severity-high">
+      <h4>Ridge Sign (Raised Edge)</h4>
+      <p>An opaque, raised ridge at the SCJ within a lesion. Represents the <strong>demarcation between CIN 2 and CIN 3</strong>. Highly predictive of CIN 2+.</p>
+    </div>
+    <div class="card severity-high">
+      <h4>Inner Border Sign</h4>
+      <p>A well-demarcated area of <strong>denser acetowhite within a larger acetowhite lesion</strong> — a "lesion within a lesion." The inner border is higher-grade disease. <strong>Biopsy the inner lesion.</strong></p>
+    </div>
+  </div>
+
+  <!-- CERVICAL CANCER CLINICAL IMAGES -->
+  <h3>F. Cervical Cancer — Gross Pathology</h3>
+
+  <div class="info-box red">
+    <h4>Red Flags Suspicious for Invasive Cancer</h4>
+    <ul>
+      <li><strong>Atypical vessels</strong> — bizarre, non-branching, corkscrew pattern</li>
+      <li><strong>Ulceration or necrosis</strong> — irregular surface erosion</li>
+      <li><strong>Exophytic or papillary mass</strong></li>
+      <li><strong>Dense acetowhite + coarse vessels + irregular surface</strong></li>
+      <li><strong>Bleeds easily on contact</strong> (friable tissue)</li>
+    </ul>
+    <p><strong>→ Biopsy IMMEDIATELY. Refer to gynecologic oncology if cancer confirmed.</strong></p>
+  </div>
+
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/scc-cervix.jpg" alt="Squamous cell carcinoma of cervix">
+      <h4>Squamous Cell Carcinoma — Cervix</h4>
+      <p>Gross specimen showing invasive squamous cell carcinoma of the cervix. Note the irregular, friable, exophytic mass replacing normal cervical tissue. SCC accounts for ~70% of cervical cancers.</p>
+    </div>
+    <div class="image-card">
+      <img src="images/cervical-carcinoma-gross.jpg" alt="Carcinoma of the cervix">
+      <h4>Cervical Carcinoma — Gross Pathology</h4>
+      <p>Gross specimen showing advanced cervical carcinoma with visible tumor mass. The normal cervical anatomy is distorted by the neoplastic growth.</p>
+    </div>
+  </div>
+
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/cervical-carcinoma-adnexa.jpg" alt="Cervical carcinoma with adnexa">
+      <h4>Cervical Carcinoma with Adnexa</h4>
+      <p>Radical hysterectomy specimen showing cervical carcinoma with bilateral adnexa (ovaries and fallopian tubes). Demonstrates extent of surgical intervention for advanced disease.</p>
+    </div>
+    <div class="image-card">
+      <img src="images/cervical-cancer-specimen.jpg" alt="Cervical cancer hysterectomy specimen" style="max-height: 250px;">
+      <h4>Cervical Cancer — Hysterectomy Specimen</h4>
+      <p>Uterus with cervical cancer (also shows incidental leiomyoma). The cervical os area shows irregular, necrotic tumor tissue replacing the normal smooth cervix.</p>
+    </div>
+  </div>
+  <p style="font-size: 8pt; color: var(--text-secondary); text-align: center;">All images: Wikimedia Commons (Creative Commons licensed — educational use)</p>
+
+  <!-- SECTION 6: CLASSIFICATION -->
+  <h2 class="section-title" id="section-6">6. Classification Systems</h2>
+
+  <h3>Bethesda System (Cytology) vs. CIN (Histology)</h3>
+  <table>
+    <tr><th>Pap Result (Bethesda)</th><th>Histology (CIN)</th><th>Description</th><th>HPV</th></tr>
+    <tr><td>Normal / NILM</td><td>Normal</td><td>No abnormality</td><td>—</td></tr>
+    <tr><td>ASC-US</td><td>—</td><td>Borderline atypical cells; triage with HPV</td><td>~50%</td></tr>
+    <tr><td>LSIL</td><td><strong>CIN 1</strong></td><td>Mild dysplasia — lower 1/3 of epithelium</td><td>~80%</td></tr>
+    <tr><td>ASC-H</td><td>CIN 2-3 possible</td><td>Atypical cells, can't rule out high-grade</td><td>~80%</td></tr>
+    <tr><td>HSIL</td><td><strong>CIN 2</strong></td><td>Moderate dysplasia — lower 2/3</td><td>&gt;95%</td></tr>
+    <tr><td>HSIL</td><td><strong>CIN 3 / CIS</strong></td><td>Severe dysplasia / full thickness</td><td>&gt;95%</td></tr>
+    <tr><td>SCC / Adenocarcinoma</td><td><strong>Invasive cancer</strong></td><td>Invasion beyond basement membrane</td><td>&gt;99%</td></tr>
+  </table>
+
+  <div class="info-box">
+    <h4>Important Distinction</h4>
+    <p><strong>Cytology</strong> (Pap smear) = screening → Bethesda terminology (LSIL, HSIL)<br>
+    <strong>Histology</strong> (biopsy) = diagnostic → CIN grading (CIN 1, 2, 3)<br>
+    <strong>Don't mix them up in documentation!</strong></p>
+  </div>
+
+  <h3>CIN Grading — Histology Images</h3>
+  <div class="image-row">
+    <div class="image-card severity-mod">
+      <img src="images/cin1-histology.jpg" alt="CIN 1 histology">
+      <h4>CIN 1 — Mild Dysplasia</h4>
+      <p>Histology showing dysplastic cells confined to the <strong>lower 1/3</strong> of the epithelium. Upper layers show normal maturation. Most CIN 1 regresses spontaneously (~60-70% within 2 years).</p>
+    </div>
+    <div class="image-card severity-high">
+      <img src="images/cin3-histology.jpg" alt="CIN 3 histology">
+      <h4>CIN 3 — Severe Dysplasia / CIS</h4>
+      <p>Histology showing dysplastic cells occupying <strong>full thickness</strong> of the epithelium. Loss of normal maturation pattern. High nuclear-to-cytoplasmic ratio throughout. <strong>Requires treatment.</strong></p>
+    </div>
+  </div>
+  <p style="font-size: 8pt; color: var(--text-secondary); text-align: center;">Images: Wikimedia Commons (CC BY-SA 3.0)</p>
+
+  <h3>CIN Grading — Visual Diagram</h3>
+  <div style="text-align: center; margin: 20px 0;">
+    <svg viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <line x1="20" y1="155" x2="580" y2="155" stroke="#c4b0db" stroke-width="2"/>
+      <text x="300" y="175" text-anchor="middle" font-size="10" fill="#c4b0db">— Basement Membrane —</text>
+      <rect x="20" y="20" width="120" height="135" fill="#1b5e20" rx="5" opacity="0.6"/>
+      <text x="80" y="14" text-anchor="middle" font-size="11" font-weight="bold" fill="#4caf50">NORMAL</text>
+      <text x="80" y="90" text-anchor="middle" font-size="9" fill="#c4b0db">Orderly maturation</text>
+      <rect x="155" y="20" width="120" height="135" fill="#1b5e20" rx="5" opacity="0.6"/>
+      <rect x="155" y="110" width="120" height="45" fill="#f57f17" rx="0" opacity="0.5"/>
+      <text x="215" y="14" text-anchor="middle" font-size="11" font-weight="bold" fill="#ff6b35">CIN 1</text>
+      <text x="215" y="135" text-anchor="middle" font-size="9" fill="#f0e6ff">Lower 1/3</text>
+      <rect x="290" y="20" width="120" height="135" fill="#1b5e20" rx="5" opacity="0.6"/>
+      <rect x="290" y="65" width="120" height="90" fill="#e65100" rx="0" opacity="0.5"/>
+      <text x="350" y="14" text-anchor="middle" font-size="11" font-weight="bold" fill="#ff6b35">CIN 2</text>
+      <text x="350" y="112" text-anchor="middle" font-size="9" fill="#f0e6ff">Lower 2/3</text>
+      <rect x="425" y="20" width="120" height="135" fill="#b71c1c" rx="5" opacity="0.5"/>
+      <text x="485" y="14" text-anchor="middle" font-size="11" font-weight="bold" fill="#ff3366">CIN 3</text>
+      <text x="485" y="90" text-anchor="middle" font-size="9" fill="#f0e6ff">Full thickness</text>
+    </svg>
+  </div>
+
+  <!-- SECTION 7: SWEDE SCORE -->
+  <h2 class="section-title" id="section-7">7. Swede Scoring System</h2>
+
+  <p>Standardized colposcopic scoring system to predict histological grade. <strong>Score ≥5 is highly predictive of CIN 2+.</strong></p>
+
+  <table>
+    <tr><th>Parameter</th><th>Score 0</th><th>Score 1</th><th>Score 2</th></tr>
+    <tr>
+      <td><strong>Acetowhite</strong></td>
+      <td>Zero or transparent</td>
+      <td>Thin, milky white</td>
+      <td>Dense, oyster-white, rapid</td>
+    </tr>
+    <tr>
+      <td><strong>Margins &amp; Surface</strong></td>
+      <td>Diffuse, irregular</td>
+      <td>Sharp but irregular/jagged; flat</td>
+      <td>Sharp, even, smooth; raised/rolling edges</td>
+    </tr>
+    <tr>
+      <td><strong>Vessels</strong></td>
+      <td>Fine/absent</td>
+      <td>Fine punctation or mosaic</td>
+      <td>Coarse punctation/mosaic or atypical</td>
+    </tr>
+    <tr>
+      <td><strong>Lesion Size</strong></td>
+      <td>&lt;5mm or &lt;1 quadrant</td>
+      <td>5-15mm or 1-2 quadrants</td>
+      <td>&gt;15mm, 3-4 quadrants, or undefined</td>
+    </tr>
+    <tr>
+      <td><strong>Iodine Staining</strong></td>
+      <td>Brown (positive)</td>
+      <td>Faintly or patchy yellow</td>
+      <td>Distinctly yellow (negative)</td>
+    </tr>
+  </table>
+
+  <div class="two-col">
+    <div class="info-box takeaway" style="margin:0;">
+      <h4>Score 0-4: LOW GRADE likely</h4>
+      <p>PPV for CIN 2+: ~5-10%<br>Consider observation or biopsy</p>
+    </div>
+    <div class="info-box red" style="margin:0;">
+      <h4>Score 5-10: HIGH GRADE likely</h4>
+      <p>PPV for CIN 2+: ~70-90%<br><strong>Biopsy required</strong></p>
+    </div>
+  </div>
+
+  <!-- SECTION 8: BIOPSY -->
+  <h2 class="section-title" id="section-8">8. Biopsy Decision-Making</h2>
+
+  <h3>When to Biopsy</h3>
+  <div class="info-box">
+    <h4>ASCCP 2019 Guidelines</h4>
+    <ul>
+      <li><strong>Biopsy the worst area</strong> — target the densest acetowhite, coarsest vessels</li>
+      <li><strong>≥2 biopsies improve sensitivity</strong> — at least 2 targeted biopsies when lesion is large or multifocal</li>
+      <li><strong>Random biopsies</strong> of normal-appearing T-zone acceptable if referral cytology was HSIL/ASC-H</li>
+      <li><strong>ECC</strong> — perform if SCJ not fully visible or colposcopy unsatisfactory</li>
+    </ul>
+  </div>
+
+  <h3>Biopsy Technique</h3>
+  <ul>
+    <li>Use punch biopsy forceps (Tischler or Baby Tischler)</li>
+    <li>Biopsy at the <strong>edge of the worst-looking area</strong></li>
+    <li>Get adequate depth — include stroma beneath epithelium</li>
+    <li><strong>Label specimens separately</strong> (e.g., "12 o'clock biopsy," "6 o'clock biopsy")</li>
+    <li>Apply Monsel's solution or silver nitrate for hemostasis</li>
+    <li><strong>Never biopsy during pregnancy without OB consultation</strong></li>
+  </ul>
+
+  <h3>When NOT to Biopsy</h3>
+  <ul>
+    <li>Normal colposcopy with low-risk referral (ASC-US/HPV+) — can defer</li>
+    <li>Active cervicitis — treat first</li>
+    <li>Pregnancy — ECC absolutely contraindicated; ectocervical biopsy only if cancer suspected</li>
+  </ul>
+
+  <!-- SECTION 9: DOCUMENTATION -->
+  <h2 class="section-title" id="section-9">9. Documentation Guide</h2>
+
+  <div class="info-box pearl">
+    <h4>Documentation Essentials</h4>
+    <p>Complete colposcopy documentation is <strong>medico-legally required</strong> and critical for continuity of care. Use clock positions, quadrants, and standardized terminology.</p>
+  </div>
+
+  <h3>Clock Position &amp; Quadrant Reference</h3>
+  <div style="text-align: center; margin: 20px 0;">
+    <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" width="250" style="margin: 0 auto; display: block;">
+      <circle cx="150" cy="150" r="120" fill="#3d1a5e" stroke="#6c3fa0" stroke-width="2"/>
+      <ellipse cx="150" cy="150" rx="20" ry="10" fill="#1a0a2e"/>
+      <text x="150" y="28" text-anchor="middle" font-size="14" font-weight="bold" fill="#f0e6ff">12</text>
+      <text x="237" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#f0e6ff">1</text>
+      <text x="275" y="155" text-anchor="middle" font-size="14" font-weight="bold" fill="#f0e6ff">3</text>
+      <text x="237" y="225" text-anchor="middle" font-size="14" font-weight="bold" fill="#f0e6ff">5</text>
+      <text x="150" y="285" text-anchor="middle" font-size="14" font-weight="bold" fill="#f0e6ff">6</text>
+      <text x="63" y="225" text-anchor="middle" font-size="14" font-weight="bold" fill="#f0e6ff">7</text>
+      <text x="25" y="155" text-anchor="middle" font-size="14" font-weight="bold" fill="#f0e6ff">9</text>
+      <text x="63" y="85" text-anchor="middle" font-size="14" font-weight="bold" fill="#f0e6ff">11</text>
+      <text x="110" y="90" text-anchor="middle" font-size="9" fill="#e91e8c" font-weight="bold">Q1</text>
+      <text x="190" y="90" text-anchor="middle" font-size="9" fill="#e91e8c" font-weight="bold">Q2</text>
+      <text x="190" y="220" text-anchor="middle" font-size="9" fill="#e91e8c" font-weight="bold">Q3</text>
+      <text x="110" y="220" text-anchor="middle" font-size="9" fill="#e91e8c" font-weight="bold">Q4</text>
+      <line x1="150" y1="35" x2="150" y2="265" stroke="#6c3fa0" stroke-width="0.5" stroke-dasharray="4,4"/>
+      <line x1="35" y1="150" x2="265" y2="150" stroke="#6c3fa0" stroke-width="0.5" stroke-dasharray="4,4"/>
+    </svg>
+    <p style="font-size: 9pt; color: var(--text-secondary);"><em>Clock positions &amp; quadrants (patient supine, as viewed through speculum)</em></p>
+  </div>
+
+  <h3>Required Documentation Elements</h3>
+  <table>
+    <tr><th>Element</th><th>What to Document</th></tr>
+    <tr><td><strong>Indication</strong></td><td>Referral reason (Pap result, HPV status, clinical finding)</td></tr>
+    <tr><td><strong>Adequacy</strong></td><td>Satisfactory/unsatisfactory; SCJ Type 1/2/3; entire T-zone seen?</td></tr>
+    <tr><td><strong>Normal findings</strong></td><td>Squamous epithelium, columnar epithelium, ectropion, nabothian cysts</td></tr>
+    <tr><td><strong>Abnormal findings</strong></td><td>Acetowhite (thin/dense), punctation (fine/coarse), mosaic (fine/coarse), atypical vessels, iodine staining</td></tr>
+    <tr><td><strong>Location</strong></td><td>Clock position(s), quadrant(s), distance from os, relationship to SCJ</td></tr>
+    <tr><td><strong>Size</strong></td><td>Estimated mm or % of cervix involved; number of quadrants</td></tr>
+    <tr><td><strong>Impression</strong></td><td>Normal, low-grade, high-grade, suspicious for invasion</td></tr>
+    <tr><td><strong>Procedures</strong></td><td>Biopsy site(s) with clock positions, ECC yes/no, hemostatic agent</td></tr>
+    <tr><td><strong>Swede Score</strong></td><td>Total score with individual parameters</td></tr>
+    <tr><td><strong>Plan</strong></td><td>Follow-up recommendations, patient education</td></tr>
+  </table>
+
+  <!-- DOCUMENTATION TEMPLATES -->
+  <h3>Template: Normal Colposcopy</h3>
+  <div class="doc-template">
+    <strong>COLPOSCOPY REPORT</strong><br><br>
+    <span class="field">Indication:</span> Abnormal Pap smear showing _______ with HPV _______, dated _______.<br><br>
+    <span class="field">Procedure:</span> After informed consent, patient placed in lithotomy position. Speculum inserted. Cervix visualized under colposcopic magnification. Normal saline applied, followed by 5% acetic acid. Lugol's iodine applied.<br><br>
+    <span class="field">Adequacy:</span> Satisfactory colposcopy. SCJ Type ___ — fully visualized at 360°. Entire transformation zone visible.<br><br>
+    <span class="field">Findings:</span><br>
+    • Original squamous epithelium: Normal, smooth, pink<br>
+    • Transformation zone: Mature squamous metaplasia, no acetowhite changes<br>
+    • SCJ: Clearly identified, no abnormalities<br>
+    • Iodine staining: Uniform brown uptake throughout T-zone<br>
+    • Vascular pattern: Normal, fine branching vessels<br>
+    • No acetowhite epithelium, punctation, mosaic, or atypical vessels<br><br>
+    <span class="field">Colposcopic Impression:</span> Normal<br>
+    <span class="field">Swede Score:</span> 0/10<br><br>
+    <span class="field">Procedures:</span> No biopsy performed. ECC not performed.<br>
+    <span class="field">Plan:</span> Follow ASCCP management guidelines based on referral cytology.
+  </div>
+
+  <h3>Template: Abnormal Colposcopy with Biopsy</h3>
+  <div class="doc-template">
+    <strong>COLPOSCOPY REPORT</strong><br><br>
+    <span class="field">Indication:</span> [Referral cytology and HPV status]<br><br>
+    <span class="field">Procedure:</span> After informed consent, patient in lithotomy. Speculum inserted. Cervix visualized at ___x magnification. Normal saline applied. 5% acetic acid applied; observed for 2 minutes. Lugol's iodine applied.<br><br>
+    <span class="field">Adequacy:</span> [Satisfactory/Unsatisfactory]. SCJ Type ___. [Entire T-zone visible / extends into canal].<br><br>
+    <span class="field">Findings:</span><br>
+    • Acetowhite epithelium: [Dense/thin], located at [clock positions], [sharp/irregular] borders<br>
+    • Vascular pattern: [Fine/coarse] [punctation/mosaic] at [clock positions]<br>
+    • Lesion size: ~___ mm, involving ___ quadrant(s), from ___ to ___ o'clock<br>
+    • Iodine staining: [Mustard yellow / partial uptake] at [location]<br>
+    • Atypical vessels: [Present/absent]<br>
+    • Inner border/ridge sign: [Present/absent]<br><br>
+    <span class="field">Colposcopic Impression:</span> [Low-grade / High-grade / Suspicious for invasion]<br>
+    <span class="field">Swede Score:</span> ___/10 (AW: ___, Margins: ___, Vessels: ___, Size: ___, Iodine: ___)<br><br>
+    <span class="field">Procedures:</span><br>
+    • Cervical biopsy #1: ___ o'clock — [description]<br>
+    • Cervical biopsy #2: ___ o'clock — [description]<br>
+    • ECC: [Performed / Not performed]<br><br>
+    <span class="field">Hemostasis:</span> Achieved with [Monsel's / silver nitrate]. [Minimal/moderate] bleeding.<br>
+    <span class="field">Complications:</span> None<br><br>
+    <span class="field">Patient Instructions:</span> No tampons, douching, or intercourse for 48-72 hours. Expect mild spotting and brown/black discharge. Return if heavy bleeding, fever, or foul-smelling discharge.<br><br>
+    <span class="field">Plan:</span> Await biopsy/ECC results. Follow-up in 2-4 weeks. Manage per ASCCP 2019 guidelines.
+  </div>
+
+  <!-- SECTION 10: MANAGEMENT -->
+  <h2 class="section-title" id="section-10">10. Follow-Up &amp; Management</h2>
+
+  <h3>ASCCP 2019 Risk-Based Management</h3>
+
+  <table>
+    <tr><th>Histology</th><th>Management</th><th>Follow-Up</th></tr>
+    <tr>
+      <td><strong>CIN 1</strong></td>
+      <td>Observation (preferred)<br>Repeat co-testing at 12 months</td>
+      <td>If persists &gt;2 years, consider treatment<br>If regresses → routine screening</td>
+    </tr>
+    <tr>
+      <td><strong>CIN 2</strong></td>
+      <td><strong>Age &lt;25:</strong> Observation acceptable<br><strong>Age ≥25:</strong> Treatment (excision preferred)</td>
+      <td>If observation: colpo + cytology q6mo<br>If treated: co-test at 12 &amp; 24 mo</td>
+    </tr>
+    <tr>
+      <td><strong>CIN 3</strong></td>
+      <td><strong>Treatment required</strong><br>LEEP or cold knife conization</td>
+      <td>Co-test at 12 &amp; 24 months<br>Then q3yr × 25 years total</td>
+    </tr>
+    <tr>
+      <td><strong>AIS</strong></td>
+      <td><strong>Excision required</strong><br>CKC with negative margins preferred<br>Hysterectomy if childbearing complete</td>
+      <td>Co-test q6mo × 5 years</td>
+    </tr>
+  </table>
+
+  <h3>Treatment Options</h3>
+  <div class="two-col">
+    <div class="card">
+      <h4>Excisional (Diagnostic + Therapeutic)</h4>
+      <ul>
+        <li><strong>LEEP / LLETZ</strong> — most common; loop excision</li>
+        <li><strong>Cold knife conization (CKC)</strong> — preferred for AIS</li>
+        <li><strong>Laser conization</strong></li>
+      </ul>
+      <p><em>Advantage: Provides tissue for histology</em></p>
+    </div>
+    <div class="card">
+      <h4>Ablative (Destroys tissue)</h4>
+      <ul>
+        <li><strong>Cryotherapy</strong> — freezing; small CIN 1-2</li>
+        <li><strong>Thermal ablation</strong></li>
+        <li><strong>Laser ablation</strong></li>
+      </ul>
+      <p><em>Limitation: No specimen; only if entire lesion visible, no invasion suspected</em></p>
+    </div>
+  </div>
+
+  <!-- SECTION 11: QUICK REFERENCE -->
+  <h2 class="section-title" id="section-11">11. Quick Reference Card</h2>
+
+  <div class="mnemonic">
+    <h3>LOW vs HIGH Grade at a Glance</h3>
+    <table style="margin: 10px auto; text-align: left; max-width: 600px;">
+      <tr><th>Feature</th><th style="background: #4caf50;">LOW Grade</th><th style="background: #ff3366;">HIGH Grade</th></tr>
+      <tr><td><strong>Acetowhite</strong></td><td>Thin, translucent, slow onset</td><td>Dense, opaque, rapid onset</td></tr>
+      <tr><td><strong>Borders</strong></td><td>Irregular, feathered, diffuse</td><td>Sharp, smooth, well-defined</td></tr>
+      <tr><td><strong>Punctation</strong></td><td>Fine, regular spacing</td><td>Coarse, irregular spacing</td></tr>
+      <tr><td><strong>Mosaic</strong></td><td>Fine, small uniform tiles</td><td>Coarse, large irregular tiles</td></tr>
+      <tr><td><strong>Iodine</strong></td><td>Partial/patchy uptake</td><td>Mustard yellow (negative)</td></tr>
+      <tr><td><strong>Vessels</strong></td><td>Fine, regular</td><td>Dilated, irregular, atypical</td></tr>
+      <tr><td><strong>Surface</strong></td><td>Flat</td><td>Raised, rolled edges</td></tr>
+    </table>
+  </div>
+
+  <div class="info-box warning">
+    <h4>Colposcopy Checklist</h4>
+    <ol>
+      <li>Confirm indication &amp; review referral cytology/HPV</li>
+      <li>Informed consent obtained &amp; documented</li>
+      <li>LMP confirmed — rule out pregnancy if applicable</li>
+      <li>Speculum placed — cervix visualized</li>
+      <li>Saline applied → assess native vessels (green filter)</li>
+      <li>Acetic acid applied → wait 60-90 sec → assess acetowhite, punctation, mosaic</li>
+      <li>Lugol's iodine → identify iodine-negative areas</li>
+      <li>Assess SCJ visibility → Type 1/2/3</li>
+      <li>Calculate Swede Score</li>
+      <li>Biopsy worst area(s) — label by clock position</li>
+      <li>ECC if indicated</li>
+      <li>Hemostasis achieved</li>
+      <li>Document ALL findings with clock positions</li>
+      <li>Patient instructions given (verbal + written)</li>
+      <li>Schedule follow-up</li>
+    </ol>
+  </div>
+
+  <h3>Image Summary — What You'll See</h3>
+  <table>
+    <tr><th>Finding</th><th>Appearance</th><th>Grade</th><th>Action</th></tr>
+    <tr><td>Normal cervix</td><td>Smooth, pink, no acetowhite</td><td>Normal</td><td>Document, no biopsy</td></tr>
+    <tr><td>Ectropion</td><td>Red, granular tissue around os</td><td>Normal variant</td><td>No treatment</td></tr>
+    <tr><td>Nabothian cysts</td><td>Round, yellow-white, translucent</td><td>Benign</td><td>No treatment</td></tr>
+    <tr><td>Cervical polyp</td><td>Pedunculated, red/pink growth from os</td><td>Usually benign</td><td>Polypectomy + histology</td></tr>
+    <tr><td>Thin acetowhite</td><td>Faint white, irregular borders</td><td>Low (CIN 1)</td><td>Consider biopsy/observe</td></tr>
+    <tr><td>Dense acetowhite</td><td>Oyster-white, sharp borders</td><td>High (CIN 2-3)</td><td><strong>Biopsy required</strong></td></tr>
+    <tr><td>Fine punctation</td><td>Small, uniform dots</td><td>Low</td><td>Consider biopsy</td></tr>
+    <tr><td>Coarse punctation</td><td>Large, irregular dots</td><td>High</td><td><strong>Biopsy required</strong></td></tr>
+    <tr><td>Fine mosaic</td><td>Regular tile pattern</td><td>Low</td><td>Consider biopsy</td></tr>
+    <tr><td>Coarse mosaic</td><td>Irregular, thick tiles</td><td>High</td><td><strong>Biopsy required</strong></td></tr>
+    <tr><td>Atypical vessels</td><td>Corkscrew, comma-shaped</td><td>Suspicious</td><td><strong>Biopsy immediately</strong></td></tr>
+    <tr><td>Exophytic mass</td><td>Irregular, friable, bleeding</td><td>Cancer</td><td><strong>Biopsy → Gyn-Onc referral</strong></td></tr>
+  </table>
+
+  <!-- CLINICAL PHOTO ATLAS — NORMAL CERVIX -->
+  <h2 class="section-title" id="atlas-normal">Clinical Photo Atlas — Normal Cervix</h2>
+  <p>The following are real clinical photographs of the cervix as seen through a speculum during examination. Understanding normal variations is essential before identifying pathology.</p>
+
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/normal-cervix-view.jpg" alt="Normal cervix">
+      <h4>Normal Cervix — Nulliparous</h4>
+      <p>Smooth, pink squamous epithelium. Small, round os. No lesions, polyps, or acetowhite changes visible. This is a healthy cervix.</p>
+    </div>
+    <div class="image-card">
+      <img src="images/normal-cervix-view2.jpg" alt="Normal cervix view 2">
+      <h4>Normal Cervix — Another View</h4>
+      <p>Healthy cervix viewed through speculum. Note the uniform pink color, smooth surface, and clearly visible os. No abnormalities.</p>
+    </div>
+  </div>
+
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/normal-scj.jpg" alt="Normal squamocolumnar junction">
+      <h4>Normal Squamocolumnar Junction (SCJ)</h4>
+      <p>The SCJ is the critical landmark where squamous epithelium (pink, smooth) meets columnar epithelium (red, granular). The transformation zone surrounds it. This is where ~90% of cervical neoplasia originates.</p>
+    </div>
+    <div class="image-card">
+      <img src="images/multiparous-cervix.jpg" alt="Multiparous cervix">
+      <h4>Multiparous Cervix (After Vaginal Births)</h4>
+      <p>Cervix of a woman who has given birth vaginally. Note the <strong>slit-shaped os</strong> (vs round in nulliparous). This is a normal post-delivery change. Some nabothian cysts may be visible.</p>
+    </div>
+  </div>
+
+  <h3>Ectropion (Ectopy) — Normal Variant</h3>
+  <div class="clinical-image">
+    <img src="images/ectropion.jpg" alt="Cervical ectropion" style="max-height: 350px;">
+    <div class="caption">Cervical ectropion showing red, granular columnar epithelium visible around the os. Common in young women, pregnancy, and OCP use. This is NOT a disease — it's a normal physiological variant. Does not require treatment unless symptomatic (excessive discharge).</div>
+  </div>
+
+  <!-- POLYPS & CYSTS GALLERY -->
+  <h2 class="section-title" id="atlas-polyps">Clinical Photo Atlas — Polyps &amp; Cysts</h2>
+
+  <h3>Cervical Polyps</h3>
+  <div class="clinical-image">
+    <img src="images/cervical-polyp.jpg" alt="Cervical polyp clinical">
+    <div class="caption"><strong>Cervical polyp</strong> — pedunculated, red-pink growth protruding from the cervical os. Smooth surface, well-vascularized. Most are benign endocervical polyps arising from endocervical glands. Can cause intermenstrual bleeding, post-coital spotting, or mucous discharge.</div>
+  </div>
+
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/polyp-gross-anterior.jpg" alt="Fibroglandular cervical polyp anterior view">
+      <h4>Cervical Polyp — Gross Specimen (Anterior)</h4>
+      <p>Resected fibroglandular cervical polyp, anterior view. Smooth, well-circumscribed, pedunculated mass. This is a pathology specimen from polypectomy. Always send for histological evaluation.</p>
+    </div>
+    <div class="image-card">
+      <img src="images/polyp-gross-posterior.jpg" alt="Fibroglandular cervical polyp posterior view">
+      <h4>Cervical Polyp — Gross Specimen (Posterior)</h4>
+      <p>Same polyp, posterior view. Note the stalk (pedicle) where it attached to the cervical canal. Fibroglandular polyps contain both glandular and fibrous tissue elements.</p>
+    </div>
+  </div>
+
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/polyp-histology.jpg" alt="Endocervical polyp histology">
+      <h4>Endocervical Polyp — Histology (H&amp;E)</h4>
+      <p>Microscopic view showing endocervical-type glands within a fibrovascular stroma. Scattered chronic inflammatory cells. <strong>Benign.</strong> Malignancy rate in cervical polyps is &lt;1%.</p>
+    </div>
+    <div class="image-card">
+      <img src="images/polyp-doppler.jpg" alt="Cervical polyp power Doppler">
+      <h4>Cervical Polyp — Ultrasound (Power Doppler)</h4>
+      <p>Transvaginal ultrasound with power Doppler showing a cervical polyp with its feeding blood vessel highlighted in orange/red. Useful for pre-procedure assessment.</p>
+    </div>
+  </div>
+
+  <h3>Nabothian Cysts</h3>
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/nabothian-cysts.jpg" alt="Nabothian cysts gross">
+      <h4>Nabothian Cysts — Clinical Appearance</h4>
+      <p>Round, smooth, yellow-white translucent cysts on the cervix surface. Formed when squamous metaplasia covers and traps mucus-secreting columnar glands. <strong>Completely benign</strong> — no treatment needed. Very common finding.</p>
+    </div>
+    <div class="image-card">
+      <img src="images/nabothian-histology.jpg" alt="Nabothian cysts histology">
+      <h4>Nabothian Cysts — Histology (H&amp;E)</h4>
+      <p>Mucus-filled cystic spaces lined by a single layer of endocervical-type columnar epithelium. Surrounded by mature squamous epithelium. Benign retention cysts — no clinical significance.</p>
+    </div>
+  </div>
+
+  <!-- ABNORMAL FINDINGS & CIN GALLERY -->
+  <h2 class="section-title" id="atlas-abnormal">Clinical Photo Atlas — Abnormal Findings</h2>
+
+  <h3>VIA (Visual Inspection with Acetic Acid) — Normal vs Abnormal</h3>
+  <div class="image-row">
+    <div class="image-card severity-low" style="border-left-color: #4caf50;">
+      <img src="images/normal-cervix.gif" alt="VIA negative - normal">
+      <h4>VIA Negative (Normal)</h4>
+      <p>Cervix after acetic acid application shows <strong>no acetowhite changes</strong>. The epithelium remains uniformly pink. This is a normal result — no dysplasia suspected.</p>
+    </div>
+    <div class="image-card severity-high">
+      <img src="images/cin1-acetowhite.gif" alt="VIA positive - CIN 1">
+      <h4>VIA Positive (CIN 1)</h4>
+      <p>Cervix after acetic acid showing <strong>acetowhite patches</strong> — white areas indicate increased nuclear density. This case shows CIN 1 (low-grade) changes. The acetowhite areas have somewhat irregular borders and thin/translucent quality.</p>
+    </div>
+  </div>
+
+  <div class="info-box warning">
+    <h4>What to Look For After Acetic Acid</h4>
+    <ul>
+      <li><strong>Timing:</strong> Wait a full 60-90 seconds after applying 3-5% acetic acid</li>
+      <li><strong>Location:</strong> Is the acetowhite change within the transformation zone? Near the SCJ?</li>
+      <li><strong>Intensity:</strong> Faint/translucent (low-grade) vs dense/oyster-white (high-grade)</li>
+      <li><strong>Borders:</strong> Irregular/feathered (low-grade) vs sharp/well-defined (high-grade)</li>
+      <li><strong>Speed:</strong> Slow onset &amp; quick fade (low) vs rapid onset &amp; persistent (high)</li>
+      <li><strong>Don't confuse:</strong> Immature metaplasia can show faint acetowhite — this is NORMAL</li>
+    </ul>
+  </div>
+
+  <h3>CIN Histology — Low-Grade vs High-Grade</h3>
+  <div class="image-row">
+    <div class="image-card severity-mod">
+      <img src="images/cin1-histology.jpg" alt="CIN 1 histology">
+      <h4>CIN 1 — Mild Dysplasia (Low-Grade)</h4>
+      <p>Dysplastic cells confined to <strong>lower 1/3</strong> of epithelium. Upper 2/3 shows normal maturation with decreasing nuclear size. Koilocytes (HPV cytopathic effect) often present. <strong>60-70% regress spontaneously</strong> within 2 years.</p>
+    </div>
+    <div class="image-card severity-high">
+      <img src="images/cin3-histology.jpg" alt="CIN 3 histology">
+      <h4>CIN 3 — Severe Dysplasia / CIS (High-Grade)</h4>
+      <p>Dysplastic cells occupy <strong>full thickness</strong>. No normal maturation pattern. High nuclear-to-cytoplasmic ratio, frequent mitoses, nuclear pleomorphism throughout. Basement membrane still intact (not invasive). <strong>Treatment required.</strong></p>
+    </div>
+  </div>
+
+  <!-- CERVICITIS GALLERY -->
+  <h2 class="section-title" id="atlas-cervicitis">Clinical Photo Atlas — Cervicitis</h2>
+  <p>Cervicitis (inflammation of the cervix) must be identified and treated <strong>before</strong> performing colposcopy, as it can obscure findings and cause false-positive acetowhite changes.</p>
+
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/infectious-cervicitis.jpg" alt="Infectious cervicitis">
+      <h4>Infectious Cervicitis</h4>
+      <p>Cervix showing mucopurulent discharge, erythema, and friability consistent with infectious cervicitis. Common causes: <em>Chlamydia trachomatis</em>, <em>Neisseria gonorrhoeae</em>, <em>Trichomonas vaginalis</em>, HSV. <strong>Treat infection first, then reschedule colposcopy.</strong></p>
+    </div>
+    <div class="image-card">
+      <img src="images/herpetic-cervicitis.jpg" alt="Herpetic cervicitis">
+      <h4>Herpetic Cervicitis (HSV)</h4>
+      <p>Cervix showing herpetic ulcerations — shallow, irregular erosions with surrounding erythema. HSV cervicitis can mimic dysplasia on colposcopy. Look for vesicles, ulcers, and severe pain as distinguishing features.</p>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <h4>Cervicitis — Documentation Points</h4>
+    <ul>
+      <li><strong>Appearance:</strong> Erythema, edema, friability, mucopurulent discharge</li>
+      <li><strong>Testing:</strong> NAAT for chlamydia/gonorrhea, wet prep for trich, HSV culture if ulcers</li>
+      <li><strong>Management:</strong> Treat per CDC STI guidelines → reschedule colposcopy in 4-6 weeks</li>
+      <li><strong>Colposcopy contraindicated:</strong> Active cervicitis → treat first, then evaluate</li>
+    </ul>
+  </div>
+
+  <!-- CERVICAL CANCER GALLERY -->
+  <h2 class="section-title" id="atlas-cancer">Clinical Photo Atlas — Cervical Cancer</h2>
+  <p>The following are gross pathology specimens of cervical cancer. These images show what advanced disease looks like on surgical specimens — understanding these helps recognize early warning signs during colposcopy.</p>
+
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/scc-cervix.jpg" alt="Squamous cell carcinoma cervix">
+      <h4>Squamous Cell Carcinoma (SCC)</h4>
+      <p>Gross specimen showing invasive SCC of the cervix. Irregular, friable, exophytic tumor mass replacing normal cervical tissue. SCC accounts for <strong>~70-80%</strong> of all cervical cancers. Almost always HPV-related.</p>
+    </div>
+    <div class="image-card">
+      <img src="images/cervical-carcinoma-gross.jpg" alt="Cervical carcinoma gross">
+      <h4>Cervical Carcinoma — Cross Section</h4>
+      <p>Gross pathology specimen showing cervical carcinoma. The normal cervical architecture is distorted by neoplastic growth. Note tumor invasion into the cervical stroma.</p>
+    </div>
+  </div>
+
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/cancer-epithelioma-anterior.jpg" alt="Cervical epithelioma anterior">
+      <h4>Cervical Epithelioma — Anterior View</h4>
+      <p>Gross specimen of cervical epithelioma (carcinoma), anterior surface. The cervix shows massive tumor growth destroying normal anatomy. Note the irregular, necrotic surface.</p>
+    </div>
+    <div class="image-card">
+      <img src="images/cancer-epithelioma-posterior.jpg" alt="Cervical epithelioma posterior">
+      <h4>Cervical Epithelioma — Posterior View</h4>
+      <p>Same specimen, posterior view. Advanced cervical cancer with extensive tissue destruction. This is what late-stage disease looks like — the goal of screening and colposcopy is to catch it EARLY, before this point.</p>
+    </div>
+  </div>
+
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/cervical-carcinoma-adnexa.jpg" alt="Cervical carcinoma with adnexa">
+      <h4>Radical Hysterectomy Specimen</h4>
+      <p>Complete hysterectomy specimen with bilateral adnexa (ovaries + tubes) for cervical carcinoma. Shows the extent of surgical intervention required for invasive cervical cancer.</p>
+    </div>
+    <div class="image-card">
+      <img src="images/cervical-cancer-specimen.jpg" alt="Uterine specimen with cervical cancer" style="max-height: 250px;">
+      <h4>Uterus with Cervical Cancer</h4>
+      <p>Opened uterine specimen showing cervical cancer (also contains incidental leiomyoma). The cervical canal area shows irregular, necrotic tumor tissue.</p>
+    </div>
+  </div>
+
+  <div class="info-box red">
+    <h4>When to Suspect Invasive Cancer on Colposcopy</h4>
+    <ul>
+      <li><strong>Visible mass</strong> — exophytic, papillary, or ulcerated</li>
+      <li><strong>Atypical vessels</strong> — corkscrew, comma, spaghetti patterns</li>
+      <li><strong>Contact bleeding</strong> — bleeds easily when touched (friable)</li>
+      <li><strong>Necrosis</strong> — areas of tissue death, foul odor</li>
+      <li><strong>Dense acetowhite + coarse vessels + raised surface</strong></li>
+    </ul>
+    <p><strong>Action: Biopsy immediately → Refer to gynecologic oncology</strong></p>
+  </div>
+
+  <!-- TREATMENT IMAGES -->
+  <h2 class="section-title" id="atlas-treatment">Clinical Photo Atlas — Treatment</h2>
+
+  <h3>Cervical Cryotherapy</h3>
+  <div class="clinical-image">
+    <img src="images/cryotherapy.png" alt="Cervical cryotherapy">
+    <div class="caption"><strong>Cryotherapy</strong> — a cryoprobe is applied to the cervix to freeze and destroy abnormal tissue. Used for small, fully visible CIN 1-2 lesions when the entire lesion and SCJ are visible. The freeze-thaw-freeze technique is standard. Limitations: no tissue specimen for histology; not for glandular disease, suspected invasion, or large lesions.</div>
+  </div>
+
+  <!-- IARC/WHO COLPOSCOPY ATLAS -->
+  <h2 class="section-title" id="atlas-iarc">IARC/WHO Atlas — Colposcopic Views</h2>
+  <p>The following images are from the <strong>IARC/WHO Atlas of Colposcopy</strong> — the international gold standard for colposcopy education. Each shows the cervix as seen through a colposcope at different stages of the exam (saline → acetic acid → Lugol's iodine).</p>
+
+  <h3>Normal Cervix — Three-Step Examination</h3>
+  <div class="three-col">
+    <div class="image-card">
+      <img src="images/iarc-normal-saline.jpg" alt="Normal cervix after saline">
+      <h4>After Normal Saline</h4>
+      <p>Smooth, pink epithelium. SCJ visible. Normal vascular pattern.</p>
+    </div>
+    <div class="image-card">
+      <img src="images/iarc-normal-acetic.jpg" alt="Normal cervix after acetic acid">
+      <h4>After Acetic Acid</h4>
+      <p><strong>No acetowhite changes.</strong> Epithelium remains pink/translucent. This is a normal result.</p>
+    </div>
+    <div class="image-card">
+      <img src="images/iarc-normal-iodine.jpg" alt="Normal cervix after Lugol's iodine">
+      <h4>After Lugol's Iodine</h4>
+      <p><strong>Uniform brown staining</strong> (iodine-positive). Glycogen-rich normal squamous epithelium stains dark brown.</p>
+    </div>
+  </div>
+  <p style="font-size: 8pt; color: var(--text-secondary); text-align: center;">Source: IARC/WHO Atlas of Colposcopy</p>
+
+  <h3>Ectropion — Colposcopic View</h3>
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/iarc-ectropion-saline.jpg" alt="Ectropion after saline">
+      <h4>Ectropion — After Saline</h4>
+      <p>Red, grape-like columnar epithelium visible around the os. This is eversion of endocervical tissue — a <strong>normal variant</strong>, not pathology.</p>
+    </div>
+    <div class="image-card">
+      <img src="images/iarc-ectropion-acetic.jpg" alt="Ectropion after acetic acid">
+      <h4>Ectropion — After Acetic Acid</h4>
+      <p>Columnar epithelium turns pale/white with grape-like pattern. <strong>Don't confuse with acetowhite lesion</strong> — the villous pattern distinguishes it from dysplasia.</p>
+    </div>
+  </div>
+
+  <h3>Nabothian Cysts — Colposcopic View</h3>
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/iarc-nabothian-colpo.jpg" alt="Nabothian cysts colposcopy">
+      <h4>Nabothian Cysts — Colposcopic View</h4>
+      <p>Round, smooth, yellow-white cysts visible on the cervix surface. These are trapped mucus glands covered by squamous metaplasia. <strong>Completely benign.</strong></p>
+    </div>
+    <div class="image-card">
+      <img src="images/iarc-nabothian-acetic.jpg" alt="Nabothian cysts after acetic acid">
+      <h4>Nabothian Cysts — After Acetic Acid</h4>
+      <p>Cysts remain visible as raised, smooth structures. The overlying epithelium may show faint acetowhite due to metaplasia — this is <strong>normal, not dysplasia</strong>.</p>
+    </div>
+  </div>
+
+  <h3>Cervical Polyp — Colposcopic Views (IARC Atlas)</h3>
+  <p>Mucous polyps are the most common type — a localized overgrowth of endocervical columnar epithelium. On colposcopy, they appear as single or multiple soft reddish masses protruding from the external os.</p>
+
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/iarc-polyp-C6a.jpg" alt="Cervical polyp colposcopy">
+      <h4>Cervical Polyp — Colposcopic View</h4>
+      <p>Soft, reddish mass protruding from the os. The polyp is usually mobile and can be pushed in different directions to visualize the SCJ behind it.</p>
+    </div>
+    <div class="image-card">
+      <img src="images/iarc-polyp-C6c.jpg" alt="Cervical polyp inflamed">
+      <h4>Inflamed Cervical Polyp</h4>
+      <p>Polyps can be inflamed and congested, bleeding easily on contact. Can be removed by twisting with sponge-holding forceps. <strong>Always send for histology.</strong></p>
+    </div>
+  </div>
+
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/iarc-polyp-C6b.jpg" alt="Polyp acetowhite metaplasia">
+      <h4>Polyp — Acetowhite (Metaplasia)</h4>
+      <p>Polyps can be acetowhite because of <strong>metaplastic changes</strong> on the surface. This is usually benign — but must be distinguished from dysplasia on the polyp.</p>
+    </div>
+    <div class="image-card">
+      <img src="images/iarc-polyp-C6d.jpg" alt="Polyp acetowhite close-up">
+      <h4>Polyp — Acetowhite Close-Up</h4>
+      <p>Close-up of acetowhite changes on a cervical polyp surface after acetic acid. The acetowhite pattern here is from metaplasia.</p>
+    </div>
+  </div>
+
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/iarc-polyp-C6e.jpg" alt="Polyp with premalignant lesion">
+      <h4>Polyp with Dense Acetowhite Area</h4>
+      <p>Rarely, a <strong>premalignant lesion</strong> may appear as a dense acetowhite area on the polyp. Also note: an acetowhite area on the cervix may be concealed behind a polyp — always look behind it!</p>
+    </div>
+    <div class="image-card">
+      <img src="images/iarc-polyp-C6f.jpg" alt="Polyp after Lugol's iodine">
+      <h4>Polyp — After Lugol's Iodine</h4>
+      <p>A polyp does NOT stain with Lugol's iodine (remains yellow/unstained) because it's covered by columnar epithelium, which lacks glycogen. Surrounding squamous epithelium stains brown.</p>
+    </div>
+  </div>
+
+  <div class="clinical-image">
+    <img src="images/iarc-polyp-C6g.jpg" alt="Fibroid polyp" style="max-height: 280px;">
+    <div class="caption"><strong>Fibroid polyp:</strong> Sometimes cervical or even corporal fibroids may extrude from the os. Fibroid polyps have a smooth surface, pale whitish color, and firm consistency. Unlike mucous polyps, they are NOT as mobile and usually have a thick stem. Source: IARC/WHO Atlas of Colposcopy</div>
+  </div>
+
+  <h3>Condyloma (HPV Warts) — Colposcopic View</h3>
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/iarc-condyloma-saline.jpg" alt="Cervical condyloma">
+      <h4>Condyloma — After Saline</h4>
+      <p>Raised, papillomatous (finger-like) projections on the cervix. Caused by low-risk HPV types (usually 6, 11). May appear as white, pink, or flesh-colored raised lesions.</p>
+    </div>
+    <div class="image-card">
+      <img src="images/iarc-condyloma-acetic.jpg" alt="Condyloma after acetic acid">
+      <h4>Condyloma — After Acetic Acid</h4>
+      <p>Turns bright white with characteristic <strong>papillomatous surface</strong> — "cauliflower-like" or finger-like projections. Distinguished from flat acetowhite lesions by the raised, irregular surface contour.</p>
+    </div>
+  </div>
+
+  <h3>Leukoplakia — Colposcopic View</h3>
+  <div class="image-row">
+    <div class="image-card">
+      <img src="images/iarc-leukoplakia-saline.jpg" alt="Cervical leukoplakia">
+      <h4>Leukoplakia — Before Acetic Acid</h4>
+      <p>White patch visible on the cervix <strong>BEFORE applying acetic acid</strong>. This is the key distinction — leukoplakia is visible with saline alone (keratinized epithelium). Can be benign OR can overlie dysplasia.</p>
+    </div>
+    <div class="image-card">
+      <img src="images/iarc-leukoplakia-acetic.jpg" alt="Leukoplakia after acetic acid">
+      <h4>Leukoplakia — After Acetic Acid</h4>
+      <p>White patch persists and may become more prominent. <strong>Always biopsy leukoplakia</strong> — it may be benign hyperkeratosis, but can hide CIN 2-3 or even cancer underneath the keratin layer.</p>
+    </div>
+  </div>
+
+  <div class="info-box warning">
+    <h4>Leukoplakia — Key Teaching Point</h4>
+    <p><strong>Leukoplakia = white BEFORE acetic acid.</strong> Acetowhite = white AFTER acetic acid. Don't confuse them!</p>
+    <ul>
+      <li>Leukoplakia is visible as a white plaque on the native cervix (with saline)</li>
+      <li>It represents keratinization — abnormal for the cervix (which is normally non-keratinized)</li>
+      <li>May be benign (hyperkeratosis, chronic irritation) OR may overlie dysplasia</li>
+      <li><strong>ALWAYS biopsy</strong> — you can't see through it with acetic acid</li>
+    </ul>
+  </div>
+
+  <h3>LSIL / CIN 1 — Colposcopic View</h3>
+  <div class="three-col">
+    <div class="image-card severity-low">
+      <img src="images/iarc-lsil-saline.jpg" alt="LSIL after saline">
+      <h4>After Saline</h4>
+      <p>Cervix appears mostly normal. Subtle changes may be difficult to see without magnification.</p>
+    </div>
+    <div class="image-card severity-low">
+      <img src="images/iarc-lsil-acetic.jpg" alt="LSIL after acetic acid">
+      <h4>After Acetic Acid</h4>
+      <p><strong>Thin, translucent acetowhite</strong> patches with irregular borders. Slow onset. Fades relatively quickly.</p>
+    </div>
+    <div class="image-card severity-low">
+      <img src="images/iarc-lsil-iodine.jpg" alt="LSIL after iodine">
+      <h4>After Lugol's Iodine</h4>
+      <p><strong>Patchy iodine uptake</strong> — areas of faint yellow or partial staining mixed with brown. Helps delineate borders.</p>
+    </div>
+  </div>
+
+  <h3>HSIL / CIN 2-3 — Colposcopic View</h3>
+  <div class="three-col">
+    <div class="image-card severity-high">
+      <img src="images/iarc-hsil-cin2-saline.jpg" alt="HSIL after saline">
+      <h4>After Saline</h4>
+      <p>May show subtle surface irregularity and abnormal vascular patterns even before acetic acid. Green filter helps visualize vessels.</p>
+    </div>
+    <div class="image-card severity-high">
+      <img src="images/iarc-hsil-cin2-acetic1.jpg" alt="HSIL after acetic acid">
+      <h4>After Acetic Acid</h4>
+      <p><strong>Dense, opaque acetowhite</strong> with sharp, well-defined borders. Rapid onset. Note the difference in intensity vs the LSIL images above.</p>
+    </div>
+    <div class="image-card severity-high">
+      <img src="images/iarc-hsil-cin2-acetic2.jpg" alt="HSIL after acetic acid closeup">
+      <h4>After Acetic Acid (Close-up)</h4>
+      <p>Dense acetowhite lesion with <strong>sharp margins</strong>. May show coarse punctation or mosaic pattern within. This is CIN 2 — <strong>biopsy required</strong>.</p>
+    </div>
+  </div>
+  <p style="font-size: 8pt; color: var(--text-secondary); text-align: center;">Source: IARC/WHO Atlas of Colposcopy — Case AABH (38yo, HPV+, histology: HSIL-CIN2)</p>
+
+  <h3>Invasive Cervical Cancer — Colposcopic View</h3>
+  <div class="image-row">
+    <div class="image-card severity-high">
+      <img src="images/iarc-cancer-saline.jpg" alt="Cervical cancer after saline">
+      <h4>Invasive Cancer — After Saline</h4>
+      <p>Irregular, friable cervix with <strong>abnormal surface contour</strong>. May show necrosis, ulceration, or exophytic growth. Bleeds easily on contact.</p>
+    </div>
+    <div class="image-card severity-high">
+      <img src="images/iarc-cancer-acetic.jpg" alt="Cervical cancer after acetic acid">
+      <h4>Invasive Cancer — After Acetic Acid</h4>
+      <p>Dense acetowhite with <strong>atypical vessels</strong> — irregular, dilated, non-branching. Surface may show erosion, papillary projections, or necrotic areas. <strong>Biopsy immediately → Gyn-Onc referral.</strong></p>
+    </div>
+  </div>
+  <div class="clinical-image">
+    <img src="images/iarc-cancer-closeup.jpg" alt="Cervical cancer close-up" style="max-height: 300px;">
+    <div class="caption">Close-up view of invasive cervical cancer. Note the irregular surface, atypical vessel patterns, and tissue destruction. This is what we're trying to PREVENT through screening and early colposcopy. Source: IARC/WHO Atlas</div>
+  </div>
+
+  <div class="info-box red">
+    <h4>Side-by-Side Comparison: What Changes Between Steps</h4>
+    <table style="margin: 10px 0;">
+      <tr><th>Finding</th><th>After Saline</th><th>After Acetic Acid</th><th>After Lugol's Iodine</th></tr>
+      <tr><td><strong>Normal</strong></td><td>Pink, smooth</td><td>No change</td><td>Brown (positive)</td></tr>
+      <tr><td><strong>Ectropion</strong></td><td>Red, granular</td><td>Pale, villous pattern</td><td>No stain (columnar)</td></tr>
+      <tr><td><strong>LSIL</strong></td><td>Subtle or normal</td><td>Thin acetowhite, slow</td><td>Patchy yellow/brown</td></tr>
+      <tr><td><strong>HSIL</strong></td><td>May see vessels</td><td>Dense acetowhite, rapid</td><td>Bright yellow (negative)</td></tr>
+      <tr><td><strong>Leukoplakia</strong></td><td>White patch visible!</td><td>Stays white</td><td>Variable</td></tr>
+      <tr><td><strong>Cancer</strong></td><td>Irregular mass/ulcer</td><td>Dense white + atypical vessels</td><td>Yellow, irregular</td></tr>
+    </table>
+  </div>
+
+  <!-- IMAGE INDEX & SUMMARY -->
+  <h2 class="section-title" id="image-index">Image Index &amp; Summary</h2>
+  <p>This guide contains <strong>40+ clinical images</strong> from the following sources:</p>
+
+  <table>
+    <tr><th>Category</th><th># Images</th><th>What You'll See</th></tr>
+    <tr><td>Normal Cervix</td><td>7</td><td>Nulliparous, multiparous, SCJ, 3-step exam</td></tr>
+    <tr><td>Ectropion</td><td>3</td><td>Clinical + colposcopic views (saline, acetic acid)</td></tr>
+    <tr><td>Nabothian Cysts</td><td>4</td><td>Clinical, colposcopic, histology</td></tr>
+    <tr><td>Cervical Polyps</td><td>7</td><td>Clinical, gross specimen, histology, ultrasound, colposcopic</td></tr>
+    <tr><td>Condyloma (HPV warts)</td><td>2</td><td>Colposcopic (saline, acetic acid)</td></tr>
+    <tr><td>Leukoplakia</td><td>2</td><td>Before &amp; after acetic acid</td></tr>
+    <tr><td>LSIL / CIN 1</td><td>4</td><td>VIA, 3-step colposcopy, histology</td></tr>
+    <tr><td>HSIL / CIN 2-3</td><td>5</td><td>3-step colposcopy, histology</td></tr>
+    <tr><td>Cervicitis</td><td>2</td><td>Infectious, herpetic (HSV)</td></tr>
+    <tr><td>Cervical Cancer</td><td>9</td><td>Colposcopic views, gross specimens, surgical</td></tr>
+    <tr><td>Treatment</td><td>1</td><td>Cryotherapy</td></tr>
+  </table>
+
+  <div class="info-box pearl">
+    <h4>Want More Images?</h4>
+    <p>For hundreds more clinical colposcopy images, visit these free educational atlases:</p>
+    <ul>
+      <li><strong>IARC/WHO Atlas of Colposcopy</strong> — <a href="https://screening.iarc.fr/atlascolpo.php">screening.iarc.fr/atlascolpo.php</a> — 100+ cases, searchable by diagnosis</li>
+      <li><strong>IFCPC Picture Gallery</strong> — <a href="https://ifcpc.org/Picture-Gallery">ifcpc.org/Picture-Gallery</a> — colposcopy, cytology, histology</li>
+      <li><strong>WHO Colposcopy Textbook</strong> — <a href="https://www.ncbi.nlm.nih.gov/books/NBK568379/">NCBI Bookshelf (free)</a></li>
+      <li><strong>ASCCP Image Atlas</strong> — <a href="https://www.asccp.org">asccp.org</a> (membership required)</li>
+    </ul>
+  </div>
+
+</div><!-- end .container -->
+
+</body>
+</html>

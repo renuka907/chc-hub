@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vitals &amp; Patient Intake: The MA's Complete Guide | CHC Education</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple-deep: #1a0a2e;
+  --purple-mid: #2d1b4e;
+  --purple-light: #6c3fa0;
+  --pink: #e91e8c;
+  --orange: #ff6b35;
+  --gradient-main: linear-gradient(135deg, #6c3fa0, #e91e8c, #ff6b35);
+  --text-primary: #f0e6ff;
+  --text-secondary: #c4b0db;
+  --card-bg: rgba(45, 27, 78, 0.6);
+  --border-glow: rgba(108, 63, 160, 0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--purple-deep);
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-size: 17px;
+}
+
+.container {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.header-category {
+  display: inline-block;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.header h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+.header-subtitle {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+}
+
+.header-meta {
+  margin-top: 16px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* TOC */
+.toc {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin-bottom: 48px;
+}
+
+.toc h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.toc ol {
+  list-style: none;
+  counter-reset: toc-counter;
+  padding-left: 0;
+}
+
+.toc ol li {
+  counter-increment: toc-counter;
+  margin-bottom: 8px;
+}
+
+.toc ol li::before {
+  content: counter(toc-counter, decimal-leading-zero) ".";
+  color: var(--pink);
+  font-weight: 700;
+  margin-right: 10px;
+}
+
+.toc a {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.toc a:hover {
+  color: var(--pink);
+}
+
+/* Sections */
+h2.section-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-top: 56px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border-glow);
+}
+
+h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 32px;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-top: 24px;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+}
+
+p {
+  margin-bottom: 16px;
+  color: var(--text-secondary);
+}
+
+ul, ol {
+  margin-bottom: 16px;
+  padding-left: 24px;
+  color: var(--text-secondary);
+}
+
+li {
+  margin-bottom: 6px;
+}
+
+strong {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+/* Callout boxes */
+.clinical-pearl {
+  border-left: 4px solid var(--pink);
+  background: rgba(233, 30, 140, 0.1);
+  padding: 20px 24px;
+  border-radius: 0 12px 12px 0;
+  margin: 24px 0;
+}
+
+.clinical-pearl .callout-title {
+  font-weight: 700;
+  color: var(--pink);
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.key-takeaway {
+  border-left: 4px solid var(--purple-light);
+  background: rgba(108, 63, 160, 0.15);
+  padding: 20px 24px;
+  border-radius: 0 12px 12px 0;
+  margin: 24px 0;
+}
+
+.key-takeaway .callout-title {
+  font-weight: 700;
+  color: var(--purple-light);
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.warning {
+  border-left: 4px solid var(--orange);
+  background: rgba(255, 107, 53, 0.1);
+  padding: 20px 24px;
+  border-radius: 0 12px 12px 0;
+  margin: 24px 0;
+}
+
+.warning .callout-title {
+  font-weight: 700;
+  color: var(--orange);
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Cards */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin: 24px 0;
+}
+
+.card h4 {
+  margin-top: 0;
+  color: var(--text-primary);
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 0.95rem;
+}
+
+thead th {
+  background: var(--gradient-main);
+  color: #fff;
+  font-weight: 700;
+  padding: 12px 16px;
+  text-align: left;
+}
+
+thead th:first-child {
+  border-radius: 8px 0 0 0;
+}
+
+thead th:last-child {
+  border-radius: 0 8px 0 0;
+}
+
+tbody tr:nth-child(odd) {
+  background: rgba(26, 10, 46, 0.6);
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(45, 27, 78, 0.4);
+}
+
+td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-glow);
+  color: var(--text-secondary);
+}
+
+/* Quick reference */
+.quick-reference {
+  background: var(--card-bg);
+  border: 2px solid var(--pink);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin: 40px 0;
+}
+
+.quick-reference h3 {
+  margin-top: 0;
+  color: var(--pink);
+}
+
+/* Scenario boxes */
+.scenario {
+  background: rgba(26, 10, 46, 0.8);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin: 24px 0;
+}
+
+.scenario-label {
+  font-weight: 700;
+  color: var(--orange);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+/* Steps */
+.steps {
+  counter-reset: step-counter;
+  list-style: none;
+  padding-left: 0;
+}
+
+.steps li {
+  counter-increment: step-counter;
+  padding-left: 40px;
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.steps li::before {
+  content: counter(step-counter);
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 28px;
+  height: 28px;
+  background: var(--gradient-main);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .container { padding: 24px 16px; }
+  .header h1 { font-size: 1.6rem; }
+  h2.section-title { font-size: 1.3rem; }
+  table { font-size: 0.85rem; }
+  td, thead th { padding: 8px 10px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <div class="header-category">Vitals &amp; Intake</div>
+  <h1>Vitals &amp; Patient Intake: The MA's Complete Guide</h1>
+  <p class="header-subtitle">Contemporary Health Center &mdash; Fort Myers, FL</p>
+  <p class="header-meta">Education Module | Medical Assistants</p>
+</div>
+
+<nav class="toc">
+  <h2>Table of Contents</h2>
+  <ol>
+    <li><a href="#why-vitals-matter">Why Accurate Vitals Matter in Hormone Therapy</a></li>
+    <li><a href="#blood-pressure">Blood Pressure: Technique, Cuff Sizing, and When to Repeat</a></li>
+    <li><a href="#heart-rate">Heart Rate Assessment</a></li>
+    <li><a href="#temperature">Temperature Measurement</a></li>
+    <li><a href="#pulse-ox">Pulse Oximetry</a></li>
+    <li><a href="#height-weight-bmi">Height, Weight, and BMI</a></li>
+    <li><a href="#waist-circumference">Waist Circumference and Metabolic Syndrome Screening</a></li>
+    <li><a href="#pain-assessment">Pain Assessment</a></li>
+    <li><a href="#intake-new-patient">Intake Workflow: New Patients</a></li>
+    <li><a href="#intake-hrt">Intake Workflow: Returning HRT Patients</a></li>
+    <li><a href="#intake-glp1">Intake Workflow: GLP-1 Weight Management Patients</a></li>
+    <li><a href="#intake-mens-health">Intake Workflow: Men's Health / TRT Patients</a></li>
+    <li><a href="#common-mistakes">Common Intake Mistakes and How to Avoid Them</a></li>
+    <li><a href="#alert-provider">When to Alert the Provider Immediately</a></li>
+    <li><a href="#ehr-documentation">Documentation Tips for the EHR</a></li>
+    <li><a href="#quick-reference">Quick Reference Card</a></li>
+  </ol>
+</nav>
+
+<!-- SECTION 1 -->
+<h2 class="section-title" id="why-vitals-matter">1. Why Accurate Vitals Matter in Hormone Therapy</h2>
+
+<p>At Contemporary Health Center, accurate vitals are not a routine formality &mdash; they directly influence clinical decisions about hormone dosing, medication adjustments, and patient safety. Every number you record has downstream consequences for the provider's treatment plan.</p>
+
+<h3>Blood Pressure and Testosterone Replacement Therapy</h3>
+<p>Testosterone replacement therapy (TRT) can cause fluid retention, increased red blood cell production (erythrocytosis), and elevation in blood pressure. A patient whose blood pressure was normal at baseline may develop hypertension several weeks into TRT. If you record an inaccurate blood pressure reading, the provider may miss an early warning sign that requires dose adjustment or additional monitoring.</p>
+
+<p>Estrogen therapy can also influence blood pressure, though the effect varies. Some women on pellet hormone replacement therapy experience improvements in blood pressure, while others may see elevations. Accurate trending over time is essential.</p>
+
+<div class="clinical-pearl">
+  <div class="callout-title">Clinical Pearl</div>
+  <p>A patient on testosterone cypionate 200 mg weekly who presents with a blood pressure of 158/94 may need a dose reduction, a hematocrit check, or a referral for blood pressure management. This clinical decision depends entirely on the accuracy of the vital signs you obtain. Always use the correct cuff size and proper positioning.</p>
+</div>
+
+<h3>Weight Tracking for GLP-1 Patients</h3>
+<p>For patients on semaglutide (Wegovy/Ozempic) or tirzepatide (Mounjaro/Zepbound), weight is the primary outcome measure. The provider uses weight trends to determine:</p>
+<ul>
+  <li>Whether the current dose is effective or needs titration upward</li>
+  <li>Whether the patient has hit a plateau requiring intervention</li>
+  <li>Rate of weight loss (too rapid can indicate muscle loss or nutritional deficiency)</li>
+  <li>Continued eligibility for the medication based on BMI criteria</li>
+</ul>
+
+<p>An error of even two to three pounds can alter clinical decisions. Always weigh patients on the same scale, at the same time of day when possible, and with shoes removed.</p>
+
+<h3>Heart Rate Monitoring</h3>
+<p>Both thyroid hormone optimization and certain peptide therapies can affect resting heart rate. An elevated resting heart rate in a patient on thyroid medication may suggest overreplacement. Semaglutide has been associated with modest increases in heart rate in some patients. Documenting accurate resting heart rate at each visit provides the provider with valuable trend data.</p>
+
+<div class="key-takeaway">
+  <div class="callout-title">Key Takeaway</div>
+  <p>In a hormone therapy and wellness clinic, vitals are not routine checkboxes. They are clinical data points that directly inform dosing decisions, safety monitoring, and treatment effectiveness. Accuracy matters more here than in many other clinical settings.</p>
+</div>
+
+<!-- SECTION 2 -->
+<h2 class="section-title" id="blood-pressure">2. Blood Pressure: Technique, Cuff Sizing, and When to Repeat</h2>
+
+<h3>Proper Blood Pressure Measurement Technique</h3>
+<p>Blood pressure measurement errors are one of the most common sources of inaccurate vitals. Following the correct procedure every time is critical, especially when the reading may influence decisions about hormone dosing.</p>
+
+<ol class="steps">
+  <li><strong>Patient preparation:</strong> The patient should be seated in a chair with feet flat on the floor (not dangling from an exam table), back supported, and legs uncrossed. The arm should be supported at heart level on a table or armrest. The patient should have been seated for at least five minutes before measurement.</li>
+  <li><strong>Remove restrictive clothing:</strong> Roll up the sleeve or remove the arm from the sleeve. Do not take blood pressure over thick clothing. A thin single layer is acceptable if necessary, but bare arm is preferred.</li>
+  <li><strong>Select the correct cuff size:</strong> The bladder of the cuff should encircle at least 80 percent of the upper arm circumference. A cuff that is too small will give a falsely high reading. A cuff that is too large will give a falsely low reading. Measure arm circumference if you are uncertain.</li>
+  <li><strong>Position the cuff:</strong> Place the cuff on bare skin with the artery marker aligned over the brachial artery (medial aspect of the antecubital fossa). The lower edge of the cuff should be approximately two to three centimeters above the elbow crease.</li>
+  <li><strong>Instruct the patient:</strong> Ask the patient not to talk during the measurement. Talking can raise systolic pressure by 10 to 15 mmHg.</li>
+  <li><strong>Take the reading:</strong> Use the automated device according to manufacturer instructions. Record the systolic, diastolic, and the arm used (right or left).</li>
+  <li><strong>Document immediately:</strong> Enter the reading into the EHR before moving on to the next task to prevent transcription errors.</li>
+</ol>
+
+<h3>Cuff Sizing Guide</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Arm Circumference</th>
+      <th>Cuff Size</th>
+      <th>Bladder Width x Length</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>22 to 26 cm</td>
+      <td>Small adult</td>
+      <td>12 x 22 cm</td>
+    </tr>
+    <tr>
+      <td>27 to 34 cm</td>
+      <td>Standard adult</td>
+      <td>16 x 30 cm</td>
+    </tr>
+    <tr>
+      <td>35 to 44 cm</td>
+      <td>Large adult</td>
+      <td>16 x 36 cm</td>
+    </tr>
+    <tr>
+      <td>45 to 52 cm</td>
+      <td>Adult thigh / bariatric</td>
+      <td>16 x 42 cm</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>When to Repeat a Blood Pressure Reading</h3>
+
+<p>You should repeat a blood pressure measurement in the following situations:</p>
+
+<ul>
+  <li><strong>Elevated first reading (systolic 130 or higher, or diastolic 80 or higher):</strong> Wait two to three minutes and repeat on the same arm. Document both readings and indicate which was repeated.</li>
+  <li><strong>Significant difference from previous visit:</strong> If the reading is more than 20 mmHg different (higher or lower) from the patient's last recorded blood pressure, repeat the measurement and verify technique.</li>
+  <li><strong>Patient reports rushing, pain, or anxiety:</strong> Allow the patient to sit quietly for five minutes and repeat. Note the circumstances in the chart.</li>
+  <li><strong>Suspected cuff size error:</strong> If you realize mid-measurement that the cuff may be too small or large, switch cuffs and repeat.</li>
+  <li><strong>Equipment malfunction:</strong> If the device gives an error code, irregular reading, or you suspect a malfunction, use a different device and repeat.</li>
+</ul>
+
+<div class="warning">
+  <div class="callout-title">Warning</div>
+  <p>Never adjust a blood pressure reading based on what you "think" it should be. If a patient who normally runs 118/72 suddenly reads 162/98, document the actual reading and repeat it. Do not assume the device is wrong. If the repeat confirms the elevation, alert the provider before they enter the room.</p>
+</div>
+
+<h3>Common Errors That Produce Inaccurate Readings</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Error</th>
+      <th>Effect on Reading</th>
+      <th>How to Avoid</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Cuff too small</td>
+      <td>Falsely high (up to 10-40 mmHg)</td>
+      <td>Measure arm circumference; use correct cuff</td>
+    </tr>
+    <tr>
+      <td>Cuff too large</td>
+      <td>Falsely low</td>
+      <td>Measure arm circumference; use correct cuff</td>
+    </tr>
+    <tr>
+      <td>Arm unsupported or below heart level</td>
+      <td>Falsely high</td>
+      <td>Support arm on table at heart level</td>
+    </tr>
+    <tr>
+      <td>Arm above heart level</td>
+      <td>Falsely low</td>
+      <td>Ensure arm is at heart level</td>
+    </tr>
+    <tr>
+      <td>Legs crossed</td>
+      <td>Falsely high (up to 5-8 mmHg)</td>
+      <td>Instruct patient to uncross legs, feet flat</td>
+    </tr>
+    <tr>
+      <td>Patient talking</td>
+      <td>Falsely high (up to 10-15 mmHg)</td>
+      <td>Instruct silence during measurement</td>
+    </tr>
+    <tr>
+      <td>Full bladder</td>
+      <td>Falsely high (up to 10-15 mmHg)</td>
+      <td>Allow patient to void first if needed</td>
+    </tr>
+    <tr>
+      <td>Measured immediately on arrival</td>
+      <td>Falsely elevated ("white coat" effect)</td>
+      <td>Allow 5 minutes seated rest before measuring</td>
+    </tr>
+    <tr>
+      <td>Over thick clothing</td>
+      <td>Falsely high</td>
+      <td>Measure on bare arm or single thin layer</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- SECTION 3 -->
+<h2 class="section-title" id="heart-rate">3. Heart Rate Assessment</h2>
+
+<p>Heart rate is typically obtained simultaneously with blood pressure using an automated device, but understanding how to assess it manually and what the values mean in your patient population is important.</p>
+
+<h3>Normal Resting Heart Rate</h3>
+<p>A normal resting heart rate for an adult is 60 to 100 beats per minute (bpm). Athletes or very fit individuals may have resting heart rates in the 50s or even high 40s, which is not concerning if asymptomatic.</p>
+
+<h3>Heart Rate Considerations in Your Patient Population</h3>
+
+<div class="card">
+  <h4>Thyroid Patients</h4>
+  <p>Patients on thyroid hormone replacement (levothyroxine, liothyronine/T3, or desiccated thyroid) may develop elevated heart rates if their dose is too high. A resting heart rate above 100 bpm in a thyroid patient warrants provider notification before the visit proceeds. Conversely, hypothyroid patients not yet optimized may present with bradycardia (heart rate below 60 bpm).</p>
+</div>
+
+<div class="card">
+  <h4>GLP-1 Patients</h4>
+  <p>Clinical trials of semaglutide showed mean increases in resting heart rate of 1 to 4 bpm. While modest, this is worth monitoring in patients who already have elevated baseline heart rates or cardiac histories. Document any palpitations reported during intake.</p>
+</div>
+
+<div class="card">
+  <h4>TRT Patients</h4>
+  <p>Testosterone can increase red blood cell mass (erythrocytosis), which in extreme cases may affect cardiovascular parameters. While direct heart rate effects are less common, elevated heart rate combined with elevated blood pressure in a TRT patient is a signal to alert the provider.</p>
+</div>
+
+<h3>Manual Pulse Assessment</h3>
+<p>If the automated device does not capture heart rate, or if you need to verify an irregular reading:</p>
+<ol>
+  <li>Use the radial artery (thumb side of the wrist) or the brachial artery</li>
+  <li>Use your index and middle fingers (never your thumb, which has its own pulse)</li>
+  <li>Count beats for a full 60 seconds if the rhythm seems irregular; otherwise, count for 30 seconds and multiply by two</li>
+  <li>Note regularity: is the rhythm regular, regularly irregular, or irregularly irregular?</li>
+  <li>Document both the rate and rhythm</li>
+</ol>
+
+<div class="clinical-pearl">
+  <div class="callout-title">Clinical Pearl</div>
+  <p>An "irregularly irregular" pulse (beats with no discernible pattern) may indicate atrial fibrillation, which is a medical finding that requires immediate provider notification. Do not dismiss irregular rhythms as device error.</p>
+</div>
+
+<!-- SECTION 4 -->
+<h2 class="section-title" id="temperature">4. Temperature Measurement</h2>
+
+<p>Temperature is a standard vital sign that provides important clinical context. At Contemporary Health Center, temperature measurement helps rule out acute infection (important before procedures like pellet insertions) and can provide clues about thyroid function.</p>
+
+<h3>Methods and Normal Values</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Normal Range</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Oral (most common in clinic)</td>
+      <td>97.6 to 99.6 F (36.4 to 37.6 C)</td>
+      <td>Wait 15 min after hot/cold drinks</td>
+    </tr>
+    <tr>
+      <td>Temporal artery</td>
+      <td>97.4 to 100.1 F</td>
+      <td>Quick, non-invasive; wipe forehead first</td>
+    </tr>
+    <tr>
+      <td>Tympanic</td>
+      <td>97.6 to 100.4 F</td>
+      <td>Pull ear up and back for adults; avoid if ear infection</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Clinical Relevance in This Practice</h3>
+<ul>
+  <li><strong>Pre-procedure check:</strong> A temperature above 100.4 F (38.0 C) before a pellet insertion is a reason to postpone the procedure. Alert the provider.</li>
+  <li><strong>Thyroid patients:</strong> Persistently low body temperatures (below 97.0 F consistently) may suggest undertreated hypothyroidism. This is not an emergency, but note it for the provider.</li>
+  <li><strong>Post-injection site infections:</strong> If a patient presents with fever and an injection site that is red, warm, or swollen, this may indicate a localized infection requiring treatment.</li>
+</ul>
+
+<!-- SECTION 5 -->
+<h2 class="section-title" id="pulse-ox">5. Pulse Oximetry</h2>
+
+<p>Pulse oximetry (SpO2) measures the percentage of hemoglobin in the blood that is saturated with oxygen. Normal SpO2 is 95 to 100 percent in a healthy adult at sea level.</p>
+
+<h3>Proper Technique</h3>
+<ul>
+  <li>Use the index or middle finger (avoid the thumb)</li>
+  <li>Ensure the finger is warm. Cold fingers give unreliable readings. If the patient's hands are cold, warm them first or try a different finger.</li>
+  <li>Remove nail polish or acrylic nails from the measurement finger, as they can interfere with the sensor. Dark-colored polish (black, dark blue, dark green) is more likely to cause inaccuracy than light colors.</li>
+  <li>Ensure the patient is still; movement artifacts are a common source of error</li>
+  <li>Wait for a stable waveform before recording the value</li>
+</ul>
+
+<h3>When SpO2 is Relevant at This Clinic</h3>
+<p>While SpO2 is not the primary focus of most hormone therapy visits, it provides a safety baseline. A SpO2 reading below 92 percent is clinically significant and requires immediate provider notification. Patients on TRT who develop erythrocytosis (elevated hematocrit) may theoretically be at risk for thromboembolic events, though SpO2 alone would not detect this. A sudden drop in SpO2 in any patient, especially with chest pain or shortness of breath, is an emergency.</p>
+
+<!-- SECTION 6 -->
+<h2 class="section-title" id="height-weight-bmi">6. Height, Weight, and BMI</h2>
+
+<h3>Weight Measurement</h3>
+<p>Accurate weight measurement is critically important in this practice, particularly for GLP-1 patients where weight is the primary treatment outcome.</p>
+
+<h4>Standard Protocol</h4>
+<ol class="steps">
+  <li><strong>Use the same scale consistently.</strong> Calibrate or verify calibration monthly. If your clinic has multiple scales, assign specific scales to specific rooms and document which scale was used if there is any question.</li>
+  <li><strong>Ask the patient to remove shoes.</strong> Shoes can add one to three pounds depending on type.</li>
+  <li><strong>Heavy outer clothing should be removed</strong> (coats, jackets, heavy sweaters). Light indoor clothing is acceptable and standard.</li>
+  <li><strong>Have the patient empty pockets</strong> of keys, phones, wallets, and other heavy items.</li>
+  <li><strong>The patient should stand centered on the scale</strong> with weight evenly distributed on both feet, arms at sides, and looking straight ahead.</li>
+  <li><strong>Record the weight in the unit used by your EHR</strong> (typically pounds). If the scale reads in kilograms, convert accurately: weight in pounds = weight in kg x 2.205.</li>
+</ol>
+
+<div class="clinical-pearl">
+  <div class="callout-title">Clinical Pearl</div>
+  <p>For GLP-1 patients, consistency of measurement conditions is more important than absolute accuracy. If a patient was weighed in street clothes with shoes at their last visit, doing the same this visit maintains valid comparison data. However, best practice is always shoes off and pockets emptied. Establish the standard at the first visit and maintain it.</p>
+</div>
+
+<h3>Height Measurement</h3>
+<p>Height should be measured at the initial visit and at least annually thereafter. For patients over 50 or those on long-term hormonal therapy, annual height measurement can detect changes that may indicate bone density loss.</p>
+<ul>
+  <li>Use a stadiometer (wall-mounted or freestanding). Do not estimate height or use the patient's self-reported height.</li>
+  <li>Patient should be standing straight with heels, buttocks, and shoulder blades touching the backboard</li>
+  <li>Head should be in the Frankfort horizontal plane (the lower edge of the eye socket in line with the upper edge of the ear opening, creating a horizontal line)</li>
+  <li>Record in feet and inches or centimeters per your EHR</li>
+</ul>
+
+<h3>BMI Calculation</h3>
+<p>Body Mass Index (BMI) is calculated using the following formula:</p>
+
+<div class="card">
+  <h4>BMI Formula</h4>
+  <p><strong>BMI = (Weight in pounds x 703) / (Height in inches x Height in inches)</strong></p>
+  <p>Example: A patient weighing 210 pounds who is 5 feet 6 inches tall (66 inches):</p>
+  <p>BMI = (210 x 703) / (66 x 66) = 147,630 / 4,356 = <strong>33.9</strong></p>
+</div>
+
+<h4>BMI Categories</h4>
+<table>
+  <thead>
+    <tr>
+      <th>BMI Range</th>
+      <th>Category</th>
+      <th>Clinical Significance at CHC</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Below 18.5</td>
+      <td>Underweight</td>
+      <td>GLP-1 therapy contraindicated; assess nutritional status</td>
+    </tr>
+    <tr>
+      <td>18.5 to 24.9</td>
+      <td>Normal weight</td>
+      <td>GLP-1 typically not indicated unless other metabolic criteria met</td>
+    </tr>
+    <tr>
+      <td>25.0 to 29.9</td>
+      <td>Overweight</td>
+      <td>GLP-1 may be indicated if comorbidities present (diabetes, hypertension, dyslipidemia)</td>
+    </tr>
+    <tr>
+      <td>30.0 to 34.9</td>
+      <td>Obesity Class I</td>
+      <td>GLP-1 therapy generally indicated; eligible for most programs</td>
+    </tr>
+    <tr>
+      <td>35.0 to 39.9</td>
+      <td>Obesity Class II</td>
+      <td>Strong indication for GLP-1; may need more aggressive dosing</td>
+    </tr>
+    <tr>
+      <td>40.0 and above</td>
+      <td>Obesity Class III</td>
+      <td>Strong indication; consider multi-modal approach</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="key-takeaway">
+  <div class="callout-title">Key Takeaway</div>
+  <p>BMI is used to determine eligibility for GLP-1 medications and to track treatment progress. While BMI has known limitations (it does not distinguish between muscle and fat mass), it remains the standard insurance and prescribing criterion. Always calculate it accurately and enter it into the EHR at every visit for GLP-1 patients.</p>
+</div>
+
+<!-- SECTION 7 -->
+<h2 class="section-title" id="waist-circumference">7. Waist Circumference and Metabolic Syndrome Screening</h2>
+
+<p>Waist circumference is a surrogate marker for visceral (abdominal) fat, which is more metabolically active and associated with higher cardiovascular risk than subcutaneous fat. It is a key component of metabolic syndrome screening and is particularly relevant for patients in our weight management program.</p>
+
+<h3>Measurement Technique</h3>
+<ol class="steps">
+  <li>Ask the patient to stand and lift their shirt to expose the abdomen. Ensure privacy and dignity.</li>
+  <li>Locate the top of the iliac crest (hip bone) on each side. You can find this by palpating the sides of the torso, moving downward until you feel the bony prominence.</li>
+  <li>Place the measuring tape horizontally around the abdomen at the level of the iliac crest. The tape should be snug but not compressing the skin.</li>
+  <li>Ensure the tape is level all the way around (not angled up or down in the back).</li>
+  <li>Ask the patient to breathe normally. Take the measurement at the end of a normal exhalation.</li>
+  <li>Record the measurement in centimeters or inches per your documentation standard.</li>
+</ol>
+
+<h3>Clinical Thresholds</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Sex</th>
+      <th>Waist Circumference Threshold</th>
+      <th>Clinical Significance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Male</td>
+      <td>Greater than 40 inches (102 cm)</td>
+      <td>Increased cardiometabolic risk; component of metabolic syndrome criteria</td>
+    </tr>
+    <tr>
+      <td>Female</td>
+      <td>Greater than 35 inches (88 cm)</td>
+      <td>Increased cardiometabolic risk; component of metabolic syndrome criteria</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="clinical-pearl">
+  <div class="callout-title">Clinical Pearl</div>
+  <p>Waist circumference, combined with BMI, provides a more complete picture of metabolic risk than either measurement alone. A patient with a BMI of 28 (overweight) and a waist circumference of 42 inches (male) has a meaningfully different risk profile than a patient with the same BMI and a waist circumference of 36 inches. For GLP-1 patients, trending waist circumference alongside weight shows whether the patient is losing visceral fat, which is the most clinically significant outcome.</p>
+</div>
+
+<h3>Metabolic Syndrome Criteria</h3>
+<p>A diagnosis of metabolic syndrome requires three or more of the following five criteria. While the MA does not diagnose metabolic syndrome, understanding these criteria helps you recognize why the provider orders certain labs and measurements:</p>
+
+<ol>
+  <li><strong>Elevated waist circumference:</strong> Greater than 40 inches (male) or greater than 35 inches (female)</li>
+  <li><strong>Elevated triglycerides:</strong> 150 mg/dL or higher (or on medication for elevated triglycerides)</li>
+  <li><strong>Reduced HDL cholesterol:</strong> Less than 40 mg/dL (male) or less than 50 mg/dL (female)</li>
+  <li><strong>Elevated blood pressure:</strong> 130/85 mmHg or higher (or on antihypertensive medication)</li>
+  <li><strong>Elevated fasting glucose:</strong> 100 mg/dL or higher (or on medication for elevated glucose)</li>
+</ol>
+
+<!-- SECTION 8 -->
+<h2 class="section-title" id="pain-assessment">8. Pain Assessment</h2>
+
+<p>While pain is not the primary reason most patients visit Contemporary Health Center, a brief pain assessment should be part of the intake process. Some patients may present with pain related to their treatment (injection site soreness, pellet insertion site discomfort) or unrelated pain that affects their overall wellness.</p>
+
+<h3>Standard Pain Assessment Protocol</h3>
+<ul>
+  <li><strong>Ask about pain at every visit:</strong> "Are you experiencing any pain or discomfort today?"</li>
+  <li><strong>If yes, use the numeric rating scale (NRS):</strong> "On a scale of 0 to 10, where 0 is no pain and 10 is the worst pain you have ever experienced, how would you rate your pain?"</li>
+  <li><strong>Document the following:</strong>
+    <ul>
+      <li>Location of pain</li>
+      <li>Quality (sharp, dull, burning, aching, throbbing)</li>
+      <li>Duration (when did it start? is it constant or intermittent?)</li>
+      <li>Severity (0-10 scale)</li>
+      <li>What makes it better or worse</li>
+      <li>Any treatments tried (medications, ice, heat)</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>Pain Assessment Specific to This Practice</h3>
+<div class="card">
+  <h4>Post-Pellet Insertion Pain</h4>
+  <p>Patients returning after a pellet insertion who report pain at the insertion site need documentation of: pain severity, onset timing (immediately after vs. days later), associated symptoms (redness, swelling, warmth, drainage), and whether it is improving or worsening. Distinguish between expected post-procedure discomfort (mild soreness, bruising) and signs of complication (severe pain, expanding redness, fever).</p>
+</div>
+
+<div class="card">
+  <h4>Injection Site Pain</h4>
+  <p>Patients on intramuscular testosterone injections or subcutaneous GLP-1/peptide injections may report injection site soreness, lumps, or irritation. Document the specific injection site, when the last injection was given, and the severity and nature of the complaint.</p>
+</div>
+
+<div class="card">
+  <h4>Joint and Muscle Pain</h4>
+  <p>Some patients on hormone therapy report improvements in joint pain, while others on certain peptides (e.g., BPC-157) are specifically seeking treatment for musculoskeletal issues. Document baseline pain levels so the provider can assess treatment response.</p>
+</div>
+
+<!-- SECTION 9 -->
+<h2 class="section-title" id="intake-new-patient">9. Intake Workflow: New Patients</h2>
+
+<p>New patient intake is the most comprehensive and time-intensive intake process. A thorough new patient intake sets the foundation for the patient's entire treatment journey. Missing information at this stage creates downstream problems for the provider and delays treatment.</p>
+
+<h3>Pre-Visit Preparation</h3>
+<p>When possible, new patient paperwork should be sent electronically before the appointment. Verify the following are completed before the patient arrives or as they check in:</p>
+<ul>
+  <li>New patient registration form (demographics, emergency contact)</li>
+  <li>Insurance information (if applicable; note that many of our services are cash-pay)</li>
+  <li>HIPAA acknowledgment / Notice of Privacy Practices</li>
+  <li>Consent for treatment</li>
+  <li>Financial agreement / payment policy acknowledgment</li>
+</ul>
+
+<h3>Step-by-Step New Patient Intake</h3>
+
+<ol class="steps">
+  <li><strong>Greet and identify the patient.</strong> Verify identity using two identifiers (full name and date of birth). Compare with photo ID if this is a first visit.</li>
+  <li><strong>Verify demographics.</strong> Confirm and update in the EHR: full legal name, preferred name (if different), date of birth, address, phone number(s), email address, emergency contact with phone number and relationship.</li>
+  <li><strong>Insurance card scan.</strong> If the patient has insurance, scan or photograph both sides of the insurance card. Verify the member ID, group number, and confirm the patient is the subscriber or a dependent. For cash-pay patients, document that no insurance is on file and confirm they understand the fee structure.</li>
+  <li><strong>Consent forms.</strong> Ensure all required consent forms are signed and dated. Scan any paper forms into the EHR. Required forms typically include: general consent for treatment, financial agreement, HIPAA acknowledgment, and any service-specific consents.</li>
+  <li><strong>Medication list.</strong> Obtain a complete list of all current medications including: prescription medications (name, dose, frequency, prescribing provider), over-the-counter medications and supplements (including vitamins, herbal supplements, and protein shakes), and hormone preparations from other providers or compounding pharmacies. Ask specifically about: hormones, thyroid medications, blood pressure medications, cholesterol medications, blood thinners, and diabetes medications. Many patients forget to list supplements; probe specifically.</li>
+  <li><strong>Allergy list.</strong> Document all known allergies with the type of reaction for each. Include: medication allergies (especially anesthetics, adhesives, and antibiotics which are relevant for pellet procedures), food allergies, latex allergy (critical for procedure patients), environmental allergies. Ask specifically: "Have you ever had a reaction to lidocaine or any local anesthetic?" This is directly relevant to pellet insertions.</li>
+  <li><strong>Surgical history.</strong> Obtain a complete surgical history including: hysterectomy (with or without oophorectomy, unilateral or bilateral), prostate procedures, thyroidectomy, bariatric surgery (affects GLP-1 decisions), breast surgeries, and any other relevant procedures with approximate dates.</li>
+  <li><strong>Medical history.</strong> Review the medical history form for completeness. Key conditions to verify are documented: cardiovascular disease, blood clots (DVT/PE), cancer history (especially breast, uterine, prostate), liver disease, kidney disease, thyroid disorders, diabetes, PCOS, endometriosis, and mental health conditions.</li>
+  <li><strong>Family history.</strong> Particularly relevant in this practice: family history of breast cancer, uterine cancer, prostate cancer, ovarian cancer, blood clots, heart disease, and early menopause.</li>
+  <li><strong>Social history.</strong> Tobacco use (current, former, never; pack-years if applicable), alcohol use (type, frequency, quantity), recreational drug use, exercise habits, and occupation.</li>
+  <li><strong>Obtain vitals.</strong> Follow the vital signs protocols outlined in Sections 2 through 8 of this guide.</li>
+  <li><strong>Chief complaint and reason for visit.</strong> Document why the patient is here in their own words. Common reasons at CHC: "I want to start hormone therapy," "I'm interested in weight loss medication," "My doctor told me my testosterone is low," "I'm going through menopause and nothing is helping." Document verbatim when possible.</li>
+</ol>
+
+<div class="warning">
+  <div class="callout-title">Warning</div>
+  <p>Never skip the allergy verification step, even if the patient says "I already filled this out online." Verify verbally and confirm in the chart. A missed allergy to lidocaine could result in an anaphylactic reaction during a pellet insertion procedure. A missed latex allergy could cause a reaction during any procedure involving gloves.</p>
+</div>
+
+<!-- SECTION 10 -->
+<h2 class="section-title" id="intake-hrt">10. Intake Workflow: Returning HRT Patients</h2>
+
+<p>Returning hormone replacement therapy patients require a focused intake that assesses how they are responding to their current therapy, identifies any side effects, and captures data the provider needs for dose adjustments.</p>
+
+<h3>Symptom Assessment Checklist</h3>
+<p>For female HRT patients (pellet and other modalities), assess the following symptoms on a 1 to 10 scale (1 = absent/minimal, 10 = severe/constant):</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Symptom</th>
+      <th>Rating (1-10)</th>
+      <th>Notes for Documentation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Hot flashes/night sweats</td>
+      <td>___ / 10</td>
+      <td>Frequency (per day/night), severity, duration</td>
+    </tr>
+    <tr>
+      <td>Sleep quality</td>
+      <td>___ / 10</td>
+      <td>Difficulty falling asleep, staying asleep, early waking</td>
+    </tr>
+    <tr>
+      <td>Mood (irritability, anxiety, depression)</td>
+      <td>___ / 10</td>
+      <td>Type of mood change, new vs. longstanding</td>
+    </tr>
+    <tr>
+      <td>Energy level</td>
+      <td>___ / 10</td>
+      <td>Comparison to last visit, time of day worst</td>
+    </tr>
+    <tr>
+      <td>Libido/sexual function</td>
+      <td>___ / 10</td>
+      <td>Change from baseline, vaginal dryness, pain</td>
+    </tr>
+    <tr>
+      <td>Brain fog/memory/concentration</td>
+      <td>___ / 10</td>
+      <td>Impact on daily function or work</td>
+    </tr>
+    <tr>
+      <td>Joint pain/muscle aches</td>
+      <td>___ / 10</td>
+      <td>Location, new onset or longstanding</td>
+    </tr>
+    <tr>
+      <td>Hair changes (thinning, loss, facial hair)</td>
+      <td>___ / 10</td>
+      <td>Where, when noticed, severity</td>
+    </tr>
+    <tr>
+      <td>Skin changes (acne, oiliness, dryness)</td>
+      <td>___ / 10</td>
+      <td>Location, timing relative to pellet insertion</td>
+    </tr>
+    <tr>
+      <td>Weight changes</td>
+      <td>___ / 10</td>
+      <td>Gain or loss, how much, over what time period</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Bleeding History for Female HRT Patients</h3>
+<p>This is particularly important for patients on estrogen and progesterone therapy, or estrogen-only therapy in women who have had a hysterectomy. Ask and document:</p>
+<ul>
+  <li>Any vaginal bleeding since last visit? (Yes/No)</li>
+  <li>If yes: when did it start, how long did it last, how heavy (spotting, light, moderate, heavy)?</li>
+  <li>Is this a new symptom or has it occurred before?</li>
+  <li>Is the patient taking progesterone as prescribed?</li>
+  <li>Date of last mammogram and last pelvic ultrasound (if applicable)</li>
+</ul>
+
+<div class="warning">
+  <div class="callout-title">Warning</div>
+  <p>Post-menopausal bleeding (any vaginal bleeding that occurs after a woman has gone 12 months without a period) requires immediate provider notification and further workup. Even if the patient attributes it to her pellets, the provider must evaluate this. Never dismiss post-menopausal bleeding as "normal" or "from the hormones" without provider assessment.</p>
+</div>
+
+<h3>Side Effects Assessment</h3>
+<p>Ask about common side effects specific to hormone therapy:</p>
+<ul>
+  <li><strong>Acne:</strong> New onset acne, especially on chin, jawline, chest, or back (may indicate excess testosterone)</li>
+  <li><strong>Facial hair growth:</strong> New or worsening hirsutism</li>
+  <li><strong>Voice changes:</strong> Deepening of the voice (irreversible if testosterone-related; alert provider immediately)</li>
+  <li><strong>Breast tenderness:</strong> Common early in estrogen therapy, usually resolves</li>
+  <li><strong>Bloating or water retention:</strong> Timing relative to pellet insertion</li>
+  <li><strong>Mood changes:</strong> Distinguish between improvement and worsening since starting therapy</li>
+  <li><strong>Pellet insertion site:</strong> Any redness, swelling, drainage, pellet extrusion, or persistent pain</li>
+</ul>
+
+<h3>Medication Reconciliation</h3>
+<p>At every returning visit, verify the current medication list. Ask specifically:</p>
+<ul>
+  <li>"Has anything changed with your medications since your last visit?"</li>
+  <li>"Have any other doctors started you on new medications?"</li>
+  <li>"Are you still taking [progesterone/DHEA/thyroid medication/other] as prescribed?"</li>
+  <li>"Have you started any new supplements?"</li>
+</ul>
+
+<!-- SECTION 11 -->
+<h2 class="section-title" id="intake-glp1">11. Intake Workflow: GLP-1 Weight Management Patients</h2>
+
+<p>GLP-1 patients require specific intake data that tracks their weight loss progress, medication adherence, and screens for common side effects that may require dose adjustment.</p>
+
+<h3>Required Data Points at Every GLP-1 Visit</h3>
+
+<ol class="steps">
+  <li><strong>Weight:</strong> Follow the weight measurement protocol in Section 6. Record to the nearest 0.1 pound if your scale allows. Calculate and record total weight lost from baseline and weight change since last visit.</li>
+  <li><strong>BMI:</strong> Recalculate at each visit. This is critical for continued eligibility documentation, especially for insurance-covered prescriptions.</li>
+  <li><strong>Waist circumference:</strong> Measure and record at each visit for patients in the weight management program. This provides additional evidence of visceral fat loss.</li>
+  <li><strong>Blood pressure:</strong> GLP-1 medications may improve blood pressure over time. Trending is important for patients also on antihypertensives, as they may need dose reductions as they lose weight.</li>
+  <li><strong>Current dose:</strong> Confirm which dose the patient is currently taking. GLP-1 medications involve a titration schedule, and patients may be on different doses at different visits.</li>
+  <li><strong>Adherence assessment:</strong> Ask: "How many doses have you missed in the last month?" and "When was your last injection?" Non-adherence is the most common reason for inadequate weight loss.</li>
+</ol>
+
+<h3>GI Symptom Screening</h3>
+<p>Gastrointestinal side effects are the most common reason patients struggle with GLP-1 medications. Screen for each of the following at every visit:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Symptom</th>
+      <th>Questions to Ask</th>
+      <th>When to Alert Provider</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Nausea</td>
+      <td>How often? How severe (1-10)? Timing relative to injection? Affecting food intake?</td>
+      <td>If persistent beyond 72 hours post-injection, or causing inability to eat or drink</td>
+    </tr>
+    <tr>
+      <td>Vomiting</td>
+      <td>How many times per day? Duration? Able to keep fluids down?</td>
+      <td>Any vomiting occurring more than once per day or lasting more than 24 hours</td>
+    </tr>
+    <tr>
+      <td>Diarrhea</td>
+      <td>Frequency? Consistency? Duration? Blood present?</td>
+      <td>More than 3 loose stools per day for more than 2 days, or any blood in stool</td>
+    </tr>
+    <tr>
+      <td>Constipation</td>
+      <td>Days since last bowel movement? Straining? Bloating?</td>
+      <td>No bowel movement for 5 or more days, or severe abdominal pain with constipation</td>
+    </tr>
+    <tr>
+      <td>Abdominal pain</td>
+      <td>Location? Severity? Constant or intermittent? Radiating to back?</td>
+      <td>Severe, persistent, or radiating to the back (possible pancreatitis)</td>
+    </tr>
+    <tr>
+      <td>GERD/heartburn</td>
+      <td>New or worsening? Frequency? Positional?</td>
+      <td>New onset or significantly worsening reflux, especially with difficulty swallowing</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="warning">
+  <div class="callout-title">Warning</div>
+  <p>Severe, persistent abdominal pain that radiates to the back in a patient on a GLP-1 medication may indicate pancreatitis, which is a rare but serious side effect. This requires immediate provider evaluation. Do not attribute severe abdominal pain to "just a stomach ache" in a GLP-1 patient.</p>
+</div>
+
+<h3>Injection Site Assessment</h3>
+<p>Ask the patient to show you their injection sites (abdomen, thigh, or upper arm if applicable). Look for:</p>
+<ul>
+  <li>Redness, swelling, or induration at injection sites</li>
+  <li>Lipodystrophy (lumps or depressions in the subcutaneous tissue from repeated injection in the same spot)</li>
+  <li>Bruising patterns that may suggest improper technique</li>
+  <li>Verify the patient is rotating sites properly</li>
+</ul>
+
+<h3>Dietary and Exercise Adherence</h3>
+<p>While detailed dietary counseling is the provider's or nutritionist's role, the MA should briefly assess:</p>
+<ul>
+  <li>"How is your appetite since starting/adjusting the medication?"</li>
+  <li>"Are you able to eat enough to meet your nutritional needs?"</li>
+  <li>"Have you been able to maintain any physical activity?" (type, frequency, duration)</li>
+  <li>"Are you taking your protein supplement as recommended?" (muscle preservation is key)</li>
+</ul>
+
+<!-- SECTION 12 -->
+<h2 class="section-title" id="intake-mens-health">12. Intake Workflow: Men's Health / TRT Patients</h2>
+
+<p>Men presenting for testosterone replacement therapy (TRT) or ongoing men's health management require a focused intake that assesses treatment response, monitors for side effects, and captures symptom data the provider uses for dosing decisions.</p>
+
+<h3>ADAM Questionnaire (Androgen Deficiency in the Aging Male)</h3>
+<p>The ADAM questionnaire is a screening tool for androgen deficiency. It may be administered at the initial visit and periodically to track symptom improvement. The MA should be familiar with administering it:</p>
+
+<div class="card">
+  <h4>ADAM Questionnaire</h4>
+  <p>The patient answers Yes or No to each of the following questions:</p>
+  <ol>
+    <li>Do you have a decrease in libido (sex drive)?</li>
+    <li>Do you have a lack of energy?</li>
+    <li>Do you have a decrease in strength and/or endurance?</li>
+    <li>Have you lost height?</li>
+    <li>Have you noticed a decreased "enjoyment of life"?</li>
+    <li>Are you sad and/or grumpy?</li>
+    <li>Are your erections less strong?</li>
+    <li>Have you noticed a recent deterioration in your ability to play sports?</li>
+    <li>Are you falling asleep after dinner?</li>
+    <li>Has there been a recent deterioration in your work performance?</li>
+  </ol>
+  <p><strong>Scoring:</strong> A "Yes" answer to question 1 or 7, or to any three other questions, suggests androgen deficiency. Provide the completed questionnaire to the provider.</p>
+</div>
+
+<h3>TRT Patient Follow-Up Data</h3>
+<p>For patients already on testosterone therapy, collect the following at each visit:</p>
+
+<ul>
+  <li><strong>Current testosterone dose and frequency:</strong> Confirm what they are actually taking, not just what was prescribed. Some patients self-adjust doses.</li>
+  <li><strong>Injection compliance:</strong> "How many injections have you missed in the last month?" and "When was your last injection?"</li>
+  <li><strong>Date and time of last injection relative to today's visit:</strong> This is critical because testosterone levels vary depending on where the patient is in their injection cycle. The provider needs this information to interpret lab results.</li>
+  <li><strong>Symptom response:</strong> Energy, mood, libido, erectile function, muscle strength, sleep quality &mdash; has each improved, stayed the same, or worsened since the last visit or since starting therapy?</li>
+  <li><strong>Side effects screening:</strong>
+    <ul>
+      <li>Acne (location, severity)</li>
+      <li>Hair loss or thinning</li>
+      <li>Mood changes (irritability, aggression, emotional lability)</li>
+      <li>Breast tenderness or gynecomastia (breast tissue growth)</li>
+      <li>Testicular atrophy (shrinkage) &mdash; ask sensitively</li>
+      <li>Peripheral edema (ankle swelling)</li>
+      <li>Sleep apnea symptoms (snoring, witnessed apneas, daytime sleepiness)</li>
+      <li>Polycythemia symptoms (headaches, dizziness, flushing, visual changes)</li>
+    </ul>
+  </li>
+  <li><strong>Adjunct medications:</strong> Is the patient taking HCG, anastrozole, or other prescribed adjuncts? Verify dose and compliance.</li>
+</ul>
+
+<div class="clinical-pearl">
+  <div class="callout-title">Clinical Pearl</div>
+  <p>The timing of a testosterone trough level is critical. For patients on weekly or biweekly injections, the blood draw should ideally occur at the trough (just before the next scheduled injection). If a patient injects on Mondays and has labs drawn on Tuesday, the level will be near peak and not trough, which can mislead clinical decisions. Document the injection schedule and timing of the draw clearly.</p>
+</div>
+
+<!-- SECTION 13 -->
+<h2 class="section-title" id="common-mistakes">13. Common Intake Mistakes and How to Avoid Them</h2>
+
+<p>The following are the most frequently observed intake errors in clinical practice. Being aware of these pitfalls will help you provide more accurate and complete data to the provider.</p>
+
+<div class="card">
+  <h4>Mistake 1: Copying Forward Without Verifying</h4>
+  <p><strong>The problem:</strong> Carrying over medication lists, allergy lists, or vital signs from a previous visit without verifying that they are still current.</p>
+  <p><strong>Why it matters:</strong> Patients start and stop medications between visits. A medication list that says a patient is still on amlodipine 5 mg when they discontinued it two months ago creates confusion for the provider and potentially dangerous drug interaction assumptions.</p>
+  <p><strong>The fix:</strong> At every visit, verbally confirm: "I see on your chart that you are taking [medication list]. Is this still accurate? Have any changes been made?"</p>
+</div>
+
+<div class="card">
+  <h4>Mistake 2: Not Documenting Subjective Complaints</h4>
+  <p><strong>The problem:</strong> A patient mentions something in passing ("I've been feeling kind of dizzy lately" or "I had some spotting last week") and the MA does not document it because the patient did not present it as a formal complaint.</p>
+  <p><strong>Why it matters:</strong> The provider may not ask about these symptoms if they are not in the chart, and they could be clinically significant (dizziness in a TRT patient could indicate polycythemia; spotting in a post-menopausal HRT patient requires workup).</p>
+  <p><strong>The fix:</strong> If a patient mentions any symptom, even casually, document it. Use the patient's own words when possible. "Patient mentions feeling 'kind of dizzy' for the past week, occurring mostly when standing."</p>
+</div>
+
+<div class="card">
+  <h4>Mistake 3: Rushing Through Vitals</h4>
+  <p><strong>The problem:</strong> Taking blood pressure immediately when the patient sits down, not allowing adequate rest time, using the wrong cuff size, or taking the reading while the patient is talking.</p>
+  <p><strong>Why it matters:</strong> An inaccurate blood pressure reading could trigger unnecessary concern (if falsely elevated) or miss a genuine problem (if falsely normal). In a practice where hormone dosing decisions depend on blood pressure trends, accuracy is paramount.</p>
+  <p><strong>The fix:</strong> Follow the blood pressure protocol in Section 2 every single time. It takes an extra two to three minutes, but the clinical value of an accurate reading far outweighs the time cost.</p>
+</div>
+
+<div class="card">
+  <h4>Mistake 4: Not Asking About Supplements</h4>
+  <p><strong>The problem:</strong> Asking "What medications are you taking?" without specifically asking about supplements, vitamins, herbs, and over-the-counter products.</p>
+  <p><strong>Why it matters:</strong> Many patients do not consider supplements to be "medications." However, supplements can interact with hormone therapy (e.g., DIM or I3C supplements affect estrogen metabolism; St. John's Wort affects many medications; biotin supplements can interfere with lab results including thyroid tests and troponin).</p>
+  <p><strong>The fix:</strong> After asking about prescription medications, always follow up with: "Are you taking any vitamins, supplements, herbs, protein powders, or over-the-counter products?" Ask specifically about biotin, as it is commonly taken and affects multiple lab assays used in this practice.</p>
+</div>
+
+<div class="card">
+  <h4>Mistake 5: Incorrect Weight Measurement</h4>
+  <p><strong>The problem:</strong> Weighing patients inconsistently (sometimes with shoes, sometimes without; sometimes after a meal, sometimes fasting; using different scales).</p>
+  <p><strong>Why it matters:</strong> For GLP-1 patients, a "weight gain" of 2 pounds that is actually explained by wearing heavy boots instead of sandals this visit can lead to unnecessary dose increases, patient frustration, and wasted medication.</p>
+  <p><strong>The fix:</strong> Standardize the protocol: shoes off, pockets emptied, same scale, light clothing. Document any deviations ("weight taken in heavy boots at patient request due to foot injury").</p>
+</div>
+
+<div class="card">
+  <h4>Mistake 6: Failing to Document Timing</h4>
+  <p><strong>The problem:</strong> Not documenting when the patient's last injection was, when they last ate (relevant for fasting labs), or when symptoms started.</p>
+  <p><strong>Why it matters:</strong> A testosterone level drawn 24 hours after injection versus 7 days after injection tells a completely different story. A fasting glucose drawn 2 hours after the patient ate a breakfast sandwich is meaningless.</p>
+  <p><strong>The fix:</strong> Always ask and document: "When was your last injection?" "When did you last eat or drink anything other than water?" "When did this symptom start?"</p>
+</div>
+
+<!-- SECTION 14 -->
+<h2 class="section-title" id="alert-provider">14. When to Alert the Provider Immediately</h2>
+
+<p>The following situations require that you alert the provider before the patient is seen in the normal visit flow. Do not wait for the provider to review the chart. Go to them directly or use your clinic's immediate notification system.</p>
+
+<div class="warning">
+  <div class="callout-title">Critical Alert Situations</div>
+  <p>The following findings require immediate provider notification. Do not proceed with normal intake flow until the provider has been notified.</p>
+</div>
+
+<h3>Critical Vital Signs</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Finding</th>
+      <th>Threshold</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Systolic blood pressure</td>
+      <td>Greater than 180 mmHg</td>
+      <td>Notify provider immediately; do not leave patient unattended</td>
+    </tr>
+    <tr>
+      <td>Diastolic blood pressure</td>
+      <td>Greater than 120 mmHg</td>
+      <td>Notify provider immediately; ask about symptoms (headache, vision changes, chest pain)</td>
+    </tr>
+    <tr>
+      <td>Heart rate</td>
+      <td>Greater than 150 bpm or less than 40 bpm</td>
+      <td>Notify provider immediately; keep patient seated</td>
+    </tr>
+    <tr>
+      <td>Oxygen saturation</td>
+      <td>Less than 92%</td>
+      <td>Notify provider immediately; apply supplemental O2 if available and within scope</td>
+    </tr>
+    <tr>
+      <td>Temperature</td>
+      <td>Greater than 103 F (39.4 C)</td>
+      <td>Notify provider; this patient may have a serious infection</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Acute Symptoms Requiring Immediate Escalation</h3>
+<ul>
+  <li><strong>Chest pain or chest tightness:</strong> Regardless of suspected cause. This is especially critical in TRT patients (elevated hematocrit increases clot risk) and post-menopausal women. If the patient appears in acute distress, call 911 first, then notify the provider.</li>
+  <li><strong>Severe headache with sudden onset:</strong> Particularly concerning in patients on hormone therapy or with elevated blood pressure. Could indicate hypertensive emergency or cerebrovascular event.</li>
+  <li><strong>Visual changes (sudden vision loss, double vision, visual field deficits):</strong> May indicate stroke, retinal event, or hypertensive emergency.</li>
+  <li><strong>Shortness of breath at rest:</strong> Could indicate pulmonary embolism (especially relevant in patients on estrogen therapy or TRT with erythrocytosis), anaphylaxis, or cardiac event.</li>
+  <li><strong>Unilateral leg swelling with pain:</strong> Classic presentation of deep vein thrombosis (DVT). Particularly important in patients on estrogen therapy.</li>
+  <li><strong>Suicidal ideation:</strong> If a patient expresses thoughts of self-harm or suicide during intake, do not leave them alone. Stay with the patient and notify the provider immediately. If the patient is in immediate danger, call 911. Do not dismiss statements like "I'd be better off dead" or "I don't want to be here anymore" as casual remarks.</li>
+  <li><strong>Severe allergic reaction signs:</strong> Swelling of face, lips, or tongue; difficulty breathing; hives; this could be anaphylaxis. Call 911 if severe. Have the provider assess immediately.</li>
+  <li><strong>Active, heavy vaginal bleeding:</strong> Soaking through a pad per hour or less in a post-menopausal patient or any patient on HRT. Provider must evaluate immediately.</li>
+  <li><strong>Syncope (fainting) or near-syncope:</strong> A patient who faints in the clinic or reports having fainted recently needs immediate evaluation.</li>
+</ul>
+
+<div class="clinical-pearl">
+  <div class="callout-title">Clinical Pearl</div>
+  <p>Trust your instincts. If something about a patient concerns you &mdash; they look pale, seem confused, are slurring speech, or just "don't look right" compared to previous visits &mdash; alert the provider. It is always better to notify the provider about a concern that turns out to be nothing than to miss a genuine emergency. You will never be faulted for erring on the side of caution.</p>
+</div>
+
+<!-- SECTION 15 -->
+<h2 class="section-title" id="ehr-documentation">15. Documentation Tips for the EHR</h2>
+
+<p>Accurate and thorough documentation protects the patient, the provider, and you. It also ensures continuity of care, which is especially important in a specialty practice where treatment decisions build on data from previous visits.</p>
+
+<h3>General Documentation Principles</h3>
+<ul>
+  <li><strong>Document in real time.</strong> Enter data into the EHR as you collect it. Do not rely on memory or scraps of paper that you plan to enter later. Information is lost or confused when documentation is delayed.</li>
+  <li><strong>Use the patient's own words</strong> for subjective complaints. Place quotation marks around direct quotes. "Patient states she has been having 'terrible hot flashes, waking up drenched every night'" is more valuable than "Patient reports hot flashes."</li>
+  <li><strong>Be specific with numbers.</strong> "Blood pressure elevated" is useless. "Blood pressure 148/92 right arm, seated, repeated after 3 minutes: 142/88" is clinically useful.</li>
+  <li><strong>Document what was done, not just what was found.</strong> "Repeated blood pressure due to initial elevated reading" explains why there are two readings. "Weighed patient without shoes, light clothing" confirms the protocol was followed.</li>
+  <li><strong>Document refusals.</strong> If a patient refuses a measurement, vital sign, or procedure, document it: "Patient declined waist circumference measurement at this visit." This protects you and the practice.</li>
+  <li><strong>Never alter or delete documentation</strong> after the fact without using the EHR's proper amendment process. Alterations without proper documentation are a legal and compliance risk.</li>
+</ul>
+
+<h3>Documentation Templates for Common Scenarios</h3>
+
+<div class="scenario">
+  <div class="scenario-label">Documentation Example: GLP-1 Follow-Up</div>
+  <p><strong>Vitals:</strong> Weight 214.6 lbs (shoes off, pockets emptied). Previous weight 218.2 lbs (4 weeks ago). Weight change: -3.6 lbs this period. Total weight lost from baseline: 18.4 lbs. BMI 34.6 (previous 35.2). Waist circumference 41 inches (previous 42.5 inches). BP 128/82 R arm seated. HR 72 reg. Temp 98.2 oral. SpO2 98%.</p>
+  <p><strong>Current medication:</strong> Semaglutide 1.0 mg subcutaneous weekly. Patient confirms taking as prescribed, last dose 5 days ago. No missed doses this month.</p>
+  <p><strong>GI symptom screen:</strong> Nausea 3/10, occurs day of injection, resolves by next day. No vomiting. Bowel movements daily, no constipation. No abdominal pain. No heartburn.</p>
+  <p><strong>Injection sites:</strong> Inspected abdomen &mdash; no redness, induration, or lipodystrophy. Patient rotating between four quadrants of abdomen.</p>
+  <p><strong>Patient reports:</strong> "Energy is better, my clothes are fitting looser, but I still don't have much appetite." Eating approximately 1200 calories per day. Taking protein supplement daily. Walking 30 minutes 4 times per week.</p>
+</div>
+
+<div class="scenario">
+  <div class="scenario-label">Documentation Example: HRT Follow-Up (Female, Pellet Therapy)</div>
+  <p><strong>Vitals:</strong> Weight 156.8 lbs. BP 122/76 R arm seated. HR 68 reg. Temp 98.0 oral. SpO2 99%.</p>
+  <p><strong>Last pellet insertion:</strong> 14 weeks ago (11/15/2025). Estradiol pellet 12.5 mg + Testosterone pellet 100 mg, right upper gluteal.</p>
+  <p><strong>Symptom assessment:</strong> Hot flashes 2/10 (improved from 8/10 at start of therapy). Sleep 7/10 (reports sleeping through the night most nights now). Mood 3/10 (occasional irritability, much improved from baseline). Energy 3/10 ("starting to feel the pellets wearing off"). Libido 4/10 (improved from 8/10 at baseline but declining in last 2 weeks). Brain fog 2/10 (significantly improved).</p>
+  <p><strong>Side effects:</strong> Denies acne, facial hair growth, voice changes. Reports mild breast tenderness that resolved 2 weeks after insertion. No vaginal bleeding. Insertion site healed without complication.</p>
+  <p><strong>Medications confirmed:</strong> Progesterone 100 mg oral nightly (taking as prescribed). No changes to other medications. No new supplements.</p>
+  <p><strong>Patient states:</strong> "I'm feeling great but I think the pellets are starting to wear off. My energy is dropping and I'm not sleeping as well the last couple weeks."</p>
+</div>
+
+<!-- SECTION 16 -->
+<h2 class="section-title" id="quick-reference">16. Quick Reference Card</h2>
+
+<div class="quick-reference">
+  <h3>Vital Signs Quick Reference</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Vital Sign</th>
+        <th>Normal Adult Range</th>
+        <th>Alert Provider If</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Systolic BP</td>
+        <td>Less than 120 mmHg (optimal)</td>
+        <td>Greater than 180 or less than 90</td>
+      </tr>
+      <tr>
+        <td>Diastolic BP</td>
+        <td>Less than 80 mmHg (optimal)</td>
+        <td>Greater than 120 or less than 60</td>
+      </tr>
+      <tr>
+        <td>Heart Rate</td>
+        <td>60-100 bpm</td>
+        <td>Greater than 150 or less than 40; irregular rhythm</td>
+      </tr>
+      <tr>
+        <td>Temperature</td>
+        <td>97.6-99.6 F (oral)</td>
+        <td>Greater than 100.4 F (pre-procedure); Greater than 103 F (any)</td>
+      </tr>
+      <tr>
+        <td>SpO2</td>
+        <td>95-100%</td>
+        <td>Less than 92%</td>
+      </tr>
+      <tr>
+        <td>Respirations</td>
+        <td>12-20 breaths/min</td>
+        <td>Greater than 24 or less than 10</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top: 28px;">Intake Checklists by Visit Type</h3>
+
+  <h4>New Patient</h4>
+  <ul>
+    <li>Identity verification (two identifiers + photo ID)</li>
+    <li>Demographics verified and updated</li>
+    <li>Insurance card scanned (or cash-pay documented)</li>
+    <li>All consent forms signed and scanned</li>
+    <li>Complete medication list (including supplements)</li>
+    <li>Complete allergy list (with reactions)</li>
+    <li>Surgical history</li>
+    <li>Medical history reviewed for completeness</li>
+    <li>Family history</li>
+    <li>Social history</li>
+    <li>Complete vitals (BP, HR, temp, SpO2, height, weight, BMI)</li>
+    <li>Waist circumference (if weight management)</li>
+    <li>Chief complaint documented in patient's words</li>
+  </ul>
+
+  <h4>Returning HRT Patient</h4>
+  <ul>
+    <li>Weight and vitals</li>
+    <li>Medication reconciliation</li>
+    <li>Symptom assessment (1-10 scales)</li>
+    <li>Side effects screening</li>
+    <li>Bleeding history (female patients)</li>
+    <li>Pellet insertion site check (if applicable)</li>
+    <li>Date of last pellet insertion</li>
+    <li>Date of last labs</li>
+  </ul>
+
+  <h4>GLP-1 Patient</h4>
+  <ul>
+    <li>Weight (shoes off, pockets empty, same scale)</li>
+    <li>BMI calculation</li>
+    <li>Waist circumference</li>
+    <li>Blood pressure</li>
+    <li>Current dose confirmed</li>
+    <li>Adherence assessment</li>
+    <li>GI symptom screening (nausea, vomiting, constipation, diarrhea, abdominal pain)</li>
+    <li>Injection site inspection</li>
+    <li>Dietary and exercise adherence</li>
+    <li>Weight change calculations (this visit, total from baseline)</li>
+  </ul>
+
+  <h4>Men's Health / TRT Patient</h4>
+  <ul>
+    <li>Weight and vitals</li>
+    <li>ADAM questionnaire (initial or periodic)</li>
+    <li>Current testosterone dose and frequency confirmed</li>
+    <li>Date and time of last injection</li>
+    <li>Injection compliance</li>
+    <li>Symptom response assessment</li>
+    <li>Side effects screening (acne, hair, mood, gynecomastia, edema, sleep apnea)</li>
+    <li>Adjunct medications verified (HCG, anastrozole)</li>
+  </ul>
+
+  <h3 style="margin-top: 28px;">Emergency Escalation</h3>
+  <p><strong>Call 911 immediately for:</strong> Chest pain with distress, difficulty breathing, loss of consciousness, signs of stroke (facial droop, arm weakness, speech difficulty), severe allergic reaction (anaphylaxis), active suicidal plan with means.</p>
+  <p><strong>Notify provider immediately for:</strong> BP greater than 180/120, HR greater than 150 or less than 40, SpO2 less than 92%, temp greater than 103 F, suicidal ideation (any), post-menopausal bleeding, severe sudden headache, unilateral leg swelling, syncope, any patient who "doesn't look right."</p>
+</div>
+
+</div>
+</body>
+</html>
