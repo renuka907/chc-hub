@@ -175,29 +175,30 @@ export default function TanitaCalculator() {
     const win = window.open('', '_blank');
     win.document.write(`<!DOCTYPE html><html><head><title>Tanita Body Composition Results</title>
       <style>
+        @page { size: letter; margin: 0.4in 0.5in; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 24px; color: #1e293b; font-size: 13px; }
-        .print-header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #0d9488; padding-bottom: 12px; }
-        .print-header h1 { font-size: 20px; color: #0d9488; margin-bottom: 4px; }
-        .print-header p { color: #64748b; font-size: 12px; }
-        .patient-info { display: flex; gap: 24px; margin-bottom: 16px; padding: 10px; background: #f0fdfa; border-radius: 8px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 16px; color: #1e293b; font-size: 15px; }
+        .print-header { text-align: center; margin-bottom: 12px; border-bottom: 2px solid #0d9488; padding-bottom: 8px; }
+        .print-header h1 { font-size: 22px; color: #0d9488; margin-bottom: 2px; }
+        .print-header p { color: #64748b; font-size: 13px; }
+        .patient-info { display: flex; gap: 20px; margin-bottom: 10px; padding: 8px 10px; background: #f0fdfa; border-radius: 6px; font-size: 14px; }
         .patient-info span { font-weight: 600; }
-        .summary-badges { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
-        .badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .summary-badges { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+        .badge { padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
         .badge-teal { background: #ccfbf1; color: #0f766e; }
         .badge-blue { background: #dbeafe; color: #1e40af; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th { background: #f1f5f9; text-align: left; padding: 8px 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; border-bottom: 2px solid #e2e8f0; }
-        td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+        th { background: #f1f5f9; text-align: left; padding: 6px 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 8px 8px; border-bottom: 1px solid #e2e8f0; font-size: 15px; }
         tr:hover { background: #fafafa; }
         .good { color: #059669; font-weight: 600; }
         .bad { color: #dc2626; font-weight: 600; }
         .neutral { color: #64748b; }
-        .explanation { font-size: 12px; color: #475569; margin-top: 2px; font-style: italic; }
+        .explanation { font-size: 13px; color: #475569; margin-top: 2px; font-style: italic; }
         .arrow-up::before { content: "↑ "; }
         .arrow-down::before { content: "↓ "; }
-        .footer { margin-top: 24px; text-align: center; font-size: 11px; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 12px; }
-        @media print { body { padding: 12px; } }
+        .footer { margin-top: 10px; text-align: center; font-size: 11px; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 8px; }
+        @media print { body { padding: 0; } }
       </style></head><body>
       <div class="print-header">
         <h1>Tanita Body Composition Analysis</h1>
