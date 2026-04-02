@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Megaphone, CheckCircle2, Users, ChevronDown, ChevronUp, Plus, X, Send } from "lucide-react";
+import { Megaphone, CheckCircle2, Users, ChevronDown, ChevronUp, Plus, X, Send, History } from "lucide-react";
 
 function AckList({ announcementId }) {
     const { data: acks = [], isLoading } = useQuery({
@@ -109,11 +109,18 @@ export default function Announcements() {
     const queryClient = useQueryClient();
     const [showForm, setShowForm] = useState(false);
     const [expandedAck, setExpandedAck] = useState(null);
+    const [showArchived, setShowArchived] = useState(false);
     const isAdminOrManager = currentUser?.role === 'admin' || currentUser?.role === 'manager';
 
     const { data: announcements = [], isLoading } = useQuery({
         queryKey: ['announcements'],
         queryFn: () => entities.Announcement.filter({ is_active: true }, '-created_at', 5),
+    });
+
+    const { data: archivedAnnouncements = [], isLoading: isLoadingArchived } = useQuery({
+        queryKey: ['announcements-archived'],
+        queryFn: () => entities.Announcement.filter({ is_active: false }, '-created_at', 20),
+        enabled: showArchived,
     });
 
     const { data: myAcks = [] } = useQuery({
@@ -203,7 +210,7 @@ export default function Announcements() {
                 const acked = myAckIds.has(ann.id);
                 const priority = ann.priority || 'normal';
                 return (
-                    <Card key={ann.id} className={`border ${priorityStyles[priority]} shadow-sm hover:shadow-md transition-shadow`}>
+                    <Card key={ann.id} className={`border ${priorityStyles[priority]} shadow-sm hover:shadow-md transition-shadow`} data-active="true">
                         <CardContent className="p-4">
                             <div className="flex items-start justify-between gap-3">
                                 <div className="flex-1 min-w-0">
@@ -258,6 +265,61 @@ export default function Announcements() {
                     </Card>
                 );
             })}
+
+            {/* View Past Announcements */}
+            <button
+                onClick={() => setShowArchived(!showArchived)}
+                className="flex items-center gap-2 text-xs text-[#6B9FCC] hover:text-[#3A6B8C] transition-colors mx-auto mt-2"
+            >
+                <History className="w-3.5 h-3.5" />
+                {showArchived ? 'Hide past announcements' : 'View past announcements'}
+                {showArchived ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+            </button>
+
+            {showArchived && (
+                <div className="space-y-2 mt-2">
+                    {isLoadingArchived && <p className="text-xs text-gray-400 text-center py-2">Loading...</p>}
+                    {!isLoadingArchived && archivedAnnouncements.length === 0 && (
+                        <p className="text-xs text-gray-400 text-center py-2">No past announcements</p>
+                    )}
+                    {archivedAnnouncements.map(ann => {
+                        const priority = ann.priority || 'normal';
+                        return (
+                            <Card key={ann.id} className="border border-gray-200 bg-gray-50 shadow-sm opacity-80">
+                                <CardContent className="p-3">
+                                    <div className="flex items-start justify-between gap-3">
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-2 flex-wrap">
+                                                <h3 className="font-semibold text-gray-600 text-sm">{ann.title}</h3>
+                                                <Badge className={`text-[10px] ${priorityBadge[priority]}`}>
+                                                    {priority === 'urgent' ? '🚨 Urgent' : priority === 'important' ? '⚠️ Important' : '📢 Info'}
+                                                </Badge>
+                                                <Badge variant="outline" className="text-[10px] text-gray-400 border-gray-300">Archived</Badge>
+                                            </div>
+                                            <p className="text-sm text-gray-500 mt-1 whitespace-pre-wrap">{ann.message}</p>
+                                            <p className="text-[10px] text-gray-400 mt-2">
+                                                {new Date(ann.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                                            </p>
+                                        </div>
+                                        {isAdminOrManager && (
+                                            <div className="flex items-center gap-1 shrink-0">
+                                                <button
+                                                    onClick={() => setExpandedAck(expandedAck === ann.id ? null : ann.id)}
+                                                    className="text-xs text-[#6B9FCC] hover:text-[#3A6B8C] flex items-center gap-1"
+                                                >
+                                                    <Users className="w-3 h-3" />
+                                                    {expandedAck === ann.id ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                    {isAdminOrManager && expandedAck === ann.id && <AckList announcementId={ann.id} />}
+                                </CardContent>
+                            </Card>
+                        );
+                    })}
+                </div>
+            )}
         </div>
     );
 }
