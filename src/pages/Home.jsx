@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import Announcements from "@/components/Announcements";
+import { useState } from "react";
 import { 
     BookOpen, 
     FileText, 
@@ -14,13 +15,12 @@ import {
     Camera,
     Sparkles,
     Heart,
-    Star,
     Award,
-    Trophy,
-    Users,
     Lightbulb,
     Smile,
-    Quote
+    Quote,
+    Send,
+    MessageCircle
 } from "lucide-react";
 
 const MOTIVATIONAL_QUOTES = [
@@ -103,6 +103,93 @@ function getDayOfYear() {
     return Math.floor(diff / (1000 * 60 * 60 * 24));
 }
 
+function ShoutOutBoard() {
+    const [shoutOuts, setShoutOuts] = useState(() => {
+        try {
+            return JSON.parse(localStorage.getItem('chc_shoutouts') || '[]');
+        } catch { return []; }
+    });
+    const [newMessage, setNewMessage] = useState('');
+    const [authorName, setAuthorName] = useState('');
+
+    const addShoutOut = () => {
+        if (!newMessage.trim()) return;
+        const entry = {
+            id: Date.now(),
+            message: newMessage.trim(),
+            author: authorName.trim() || 'Anonymous',
+            date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        };
+        const updated = [entry, ...shoutOuts].slice(0, 20);
+        setShoutOuts(updated);
+        localStorage.setItem('chc_shoutouts', JSON.stringify(updated));
+        setNewMessage('');
+        setAuthorName('');
+    };
+
+    return (
+        <div className="bg-gradient-to-r from-[#FCF0F4] via-white to-[#E8F0FA] rounded-2xl p-6 shadow-md border border-[#E8A0B5]/20">
+            <div className="flex items-center space-x-3 mb-4">
+                <div className="w-10 h-10 bg-[#F9E0EA] rounded-xl flex items-center justify-center">
+                    <Award className="w-5 h-5 text-[#E8A0B5]" />
+                </div>
+                <h3 className="text-lg font-bold text-[#3A6B8C]">Team Shout-Out Board</h3>
+                <Sparkles className="w-4 h-4 text-[#6B9FCC]" />
+            </div>
+
+            {/* Submit a shout-out */}
+            <div className="bg-white rounded-xl p-4 mb-4 border border-[#B8D4E8]/30">
+                <div className="flex gap-3 mb-3">
+                    <input
+                        type="text"
+                        placeholder="Your name (optional)"
+                        value={authorName}
+                        onChange={(e) => setAuthorName(e.target.value)}
+                        className="flex-shrink-0 w-40 border border-[#B8D4E8]/50 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#6B9FCC] focus:outline-none"
+                    />
+                    <input
+                        type="text"
+                        placeholder="Give a shout-out to a teammate! 💗"
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && addShoutOut()}
+                        className="flex-1 border border-[#B8D4E8]/50 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#6B9FCC] focus:outline-none"
+                    />
+                    <button
+                        onClick={addShoutOut}
+                        className="px-4 py-2 bg-[#E8A0B5] hover:bg-[#D48BA3] text-white text-sm font-semibold rounded-lg transition-colors flex items-center gap-1.5"
+                    >
+                        <Send className="w-4 h-4" /> Post
+                    </button>
+                </div>
+            </div>
+
+            {/* Shout-out messages */}
+            <div className="space-y-3 max-h-64 overflow-y-auto">
+                {shoutOuts.length === 0 ? (
+                    <div className="bg-white/70 rounded-xl p-5 text-center">
+                        <Heart className="w-8 h-8 text-[#E8A0B5] mx-auto mb-2" />
+                        <p className="text-[#3A6B8C] text-base font-medium">
+                            Be the first to give a shout-out! 💗
+                        </p>
+                        <p className="text-sm text-gray-400 mt-1">Recognize a teammate who made your day.</p>
+                    </div>
+                ) : (
+                    shoutOuts.map((s) => (
+                        <div key={s.id} className="bg-white/70 rounded-xl px-4 py-3 flex items-start gap-3">
+                            <MessageCircle className="w-5 h-5 text-[#E8A0B5] flex-shrink-0 mt-0.5" />
+                            <div className="flex-1">
+                                <p className="text-sm text-[#3A6B8C]">{s.message}</p>
+                                <p className="text-xs text-gray-400 mt-1">— {s.author} · {s.date}</p>
+                            </div>
+                        </div>
+                    ))
+                )}
+            </div>
+        </div>
+    );
+}
+
 export default function Home() {
     const dayOfYear = getDayOfYear();
     const todayQuote = MOTIVATIONAL_QUOTES[dayOfYear % MOTIVATIONAL_QUOTES.length];
@@ -154,12 +241,12 @@ export default function Home() {
                                         </span>
                                     )}
                                     <div className="flex flex-col items-center text-center space-y-1.5">
-                                        <div className="w-10 h-10 bg-white/40 rounded-lg flex items-center justify-center shadow-sm group-hover:bg-white/60 transition-colors">
-                                            <Icon className="w-5 h-5 text-white" />
+                                        <div className="w-10 h-10 bg-white/50 rounded-lg flex items-center justify-center shadow-sm group-hover:bg-white/70 transition-colors">
+                                            <Icon className="w-5 h-5 text-[#3A6B8C]" />
                                         </div>
                                         <div>
-                                            <h3 className="text-sm font-bold text-white leading-tight">{item.title}</h3>
-                                            <p className="text-[11px] text-white/70 leading-tight mt-0.5">{item.desc}</p>
+                                            <h3 className="text-sm font-bold text-white drop-shadow-sm leading-tight">{item.title}</h3>
+                                            <p className="text-[11px] text-white/90 drop-shadow-sm leading-tight mt-0.5">{item.desc}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -168,6 +255,9 @@ export default function Home() {
                     })}
                 </div>
             </div>
+
+            {/* Announcements */}
+            <Announcements />
 
             {/* Daily Motivation + Daily Laugh Row */}
             <div className="grid md:grid-cols-2 gap-6">
@@ -210,64 +300,19 @@ export default function Home() {
                 </div>
             </div>
 
-            {/* Team Stats / Recognition Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {/* Tasks Completed */}
-                <div className="bg-white rounded-2xl p-5 shadow-md border border-[#B8D4E8]/40 text-center">
-                    <div className="w-12 h-12 bg-[#E8F0FA] rounded-xl flex items-center justify-center mx-auto mb-3">
-                        <Trophy className="w-6 h-6 text-[#6B9FCC]" />
-                    </div>
-                    <div className="text-3xl font-bold text-[#3A6B8C]">—</div>
-                    <p className="text-sm text-gray-500 mt-1">Tasks This Week</p>
+            {/* Wellness Tip */}
+            <div className="bg-white rounded-2xl p-5 shadow-md border border-[#E8A0B5]/30 flex items-center gap-4">
+                <div className="w-12 h-12 bg-[#F9E0EA] rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Lightbulb className="w-6 h-6 text-[#E8A0B5]" />
                 </div>
-
-                {/* Team Member of the Week */}
-                <div className="bg-white rounded-2xl p-5 shadow-md border border-[#E8A0B5]/30 text-center">
-                    <div className="w-12 h-12 bg-[#F9E0EA] rounded-xl flex items-center justify-center mx-auto mb-3">
-                        <Star className="w-6 h-6 text-[#E8A0B5]" />
-                    </div>
-                    <div className="text-lg font-bold text-[#3A6B8C]">⭐ TBD</div>
-                    <p className="text-sm text-gray-500 mt-1">Star of the Week</p>
-                </div>
-
-                {/* Patient Satisfaction */}
-                <div className="bg-white rounded-2xl p-5 shadow-md border border-[#B8D4E8]/40 text-center">
-                    <div className="w-12 h-12 bg-[#E8F0FA] rounded-xl flex items-center justify-center mx-auto mb-3">
-                        <Heart className="w-6 h-6 text-[#6B9FCC]" />
-                    </div>
-                    <div className="text-3xl font-bold text-[#3A6B8C]">—</div>
-                    <p className="text-sm text-gray-500 mt-1">Patient Satisfaction</p>
-                </div>
-
-                {/* Quick Wellness Tip */}
-                <div className="bg-white rounded-2xl p-5 shadow-md border border-[#E8A0B5]/30 text-center">
-                    <div className="w-12 h-12 bg-[#F9E0EA] rounded-xl flex items-center justify-center mx-auto mb-3">
-                        <Lightbulb className="w-6 h-6 text-[#E8A0B5]" />
-                    </div>
-                    <p className="text-sm text-[#3A6B8C] font-medium leading-snug">{todayTip}</p>
+                <div>
+                    <h4 className="text-sm font-bold text-[#3A6B8C] mb-0.5">Wellness Tip of the Day</h4>
+                    <p className="text-sm text-[#3A6B8C] leading-snug">{todayTip}</p>
                 </div>
             </div>
 
             {/* Shout-Out Board */}
-            <div className="bg-gradient-to-r from-[#FCF0F4] via-white to-[#E8F0FA] rounded-2xl p-6 shadow-md border border-[#E8A0B5]/20">
-                <div className="flex items-center space-x-3 mb-3">
-                    <div className="w-10 h-10 bg-[#F9E0EA] rounded-xl flex items-center justify-center">
-                        <Award className="w-5 h-5 text-[#E8A0B5]" />
-                    </div>
-                    <h3 className="text-lg font-bold text-[#3A6B8C]">Team Shout-Out Board</h3>
-                    <Sparkles className="w-4 h-4 text-[#6B9FCC]" />
-                </div>
-                <div className="bg-white/70 rounded-xl p-5 text-center">
-                    <Heart className="w-8 h-8 text-[#E8A0B5] mx-auto mb-2" />
-                    <p className="text-[#3A6B8C] text-lg font-medium">
-                        Thank you for showing up every day with heart and dedication. 💗
-                    </p>
-                    <p className="text-sm text-gray-400 mt-2">You make this clinic a better place — one patient, one smile, one moment at a time.</p>
-                </div>
-            </div>
-
-            {/* Announcements */}
-            <Announcements />
+            <ShoutOutBoard />
 
 
         </div>
