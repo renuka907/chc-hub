@@ -78,6 +78,7 @@ import PapOrderingWizard from './pages/PapOrderingWizard';
 import PricingManagement from './pages/PricingManagement';
 import ProcedureDetail from './pages/ProcedureDetail';
 import ProceduresManagement from './pages/ProceduresManagement';
+import ProteinCalculator from './pages/ProteinCalculator';
 import ProviderEducation from './pages/ProviderEducation';
 import ProviderReferral from './pages/ProviderReferral';
 import QuoteDetail from './pages/QuoteDetail';
@@ -126,6 +127,7 @@ export const PAGES = {
     "PricingManagement": PricingManagement,
     "ProcedureDetail": ProcedureDetail,
     "ProceduresManagement": ProceduresManagement,
+    "ProteinCalculator": ProteinCalculator,
     "ProviderEducation": ProviderEducation,
     "ProviderReferral": ProviderReferral,
     "QuoteDetail": QuoteDetail,

@@ -27,7 +27,8 @@ import {
                         TrendingUp,
                         Upload,
                         BarChart3,
-                        Activity
+                        Activity,
+                        Beef
                     } from "lucide-react";
 
 export default function Layout({ children, currentPageName }) {
@@ -116,6 +117,7 @@ export default function Layout({ children, currentPageName }) {
                 { name: "Lab Tests", path: "LabTestDirectory", icon: Stethoscope },
                 { name: "Pap Ordering Wizard", path: "PapOrderingWizard", icon: FileText },
                 { name: "Medication Calculator", path: "MedicationCalculator", icon: Stethoscope },
+                { name: "Protein Calculator", path: "ProteinCalculator", icon: Beef },
                 { name: "PREVENT Calculator", path: "RiskCalculator", icon: Activity },
                 { name: "Medication Reference", path: "MedicationReference", icon: Stethoscope },
                 { name: "Provider Directory", path: "ProviderReferral", icon: Users },
