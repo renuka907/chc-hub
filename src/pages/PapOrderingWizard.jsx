@@ -22,7 +22,8 @@ export default function PapOrderingWizard() {
         iudPresent: "",
         iudType: "",
         ovariesStatus: "",
-        previousAbnormal: ""
+        previousAbnormal: "",
+        recentPapHPV: ""
     });
 
     const [result, setResult] = useState(null);
@@ -41,7 +42,8 @@ export default function PapOrderingWizard() {
             iudPresent: "",
             iudType: "",
             ovariesStatus: "",
-            previousAbnormal: ""
+            previousAbnormal: "",
+            recentPapHPV: ""
         });
         setResult(null);
     };
@@ -54,14 +56,18 @@ export default function PapOrderingWizard() {
         const needsSTI = formData.stiPanel === "yes";
         const isMedicare = formData.insurance === "medicare";
         const isHighRisk = formData.reason === "high-risk";
+        const hadRecentPap = formData.recentPapHPV === "yes";
+        const hasDysplasiaHistory = formData.postHystHistory === "dysplasia" || formData.postHystHistory === "cin" || formData.postHystHistory === "cancer";
 
         let labName = "";
         let testCodes = [];
         let cptCodes = [];
+        let hcpcsCodes = [];
         let primaryICD10 = "";
         let secondaryICD10 = [];
         let specimenSource = "";
         let warnings = [];
+        let medicareWarnings = [];
         let requiresHPV = true;
 
         // Under 21 logic
@@ -75,10 +81,12 @@ export default function PapOrderingWizard() {
                     labName: "NOT RECOMMENDED",
                     testCodes: [],
                     cptCodes: [],
+                    hcpcsCodes: [],
                     primaryICD10: "",
                     secondaryICD10: [],
                     specimenSource: "",
                     warnings,
+                    medicareWarnings: [],
                     requiresHPV: false,
                     requiredFields: []
                 };
@@ -132,15 +140,26 @@ export default function PapOrderingWizard() {
             if (formData.postHystHistory === "no-history") {
                 warnings.push("⚠️ Pap NOT typically indicated per USPSTF (no history of dysplasia/cancer)");
                 if (isMedicare) {
-                    warnings.push("🔵 Medicare coverage may require documentation of medical necessity");
+                    medicareWarnings.push("🚨 MEDICARE WILL NOT COVER screening Pap or HPV for post-hysterectomy patients without cervix and no history of dysplasia/cancer. Patient will be responsible for full cost.");
+                    medicareWarnings.push("⚠️ Recommend NOT ordering — or obtain signed ABN (Advance Beneficiary Notice) before proceeding.");
                 }
-                primaryICD10 = "Z01.419"; // Screening code if ordered anyway
+                primaryICD10 = "Z01.419";
             } else if (formData.postHystHistory === "dysplasia") {
                 primaryICD10 = "Z87.410";
+                if (isMedicare) {
+                    medicareWarnings.push("🔵 MEDICARE: Post-hysterectomy with dysplasia history — Pap may be covered as DIAGNOSTIC (not screening). Use diagnostic ICD-10 codes.");
+                    medicareWarnings.push("🔵 Use Z87.410 as primary diagnosis. Do NOT use screening codes (Z01.419).");
+                }
             } else if (formData.postHystHistory === "cin") {
                 primaryICD10 = "Z86.001";
+                if (isMedicare) {
+                    medicareWarnings.push("🔵 MEDICARE: Post-hysterectomy with CIN history — Pap may be covered as DIAGNOSTIC. Use Z86.001 as primary.");
+                }
             } else {
                 primaryICD10 = "Z85.41";
+                if (isMedicare) {
+                    medicareWarnings.push("🔵 MEDICARE: Post-hysterectomy with cervical cancer history — Pap covered as DIAGNOSTIC. Use Z85.41 as primary.");
+                }
             }
         }
         // Standard screening with cervix
@@ -186,7 +205,96 @@ export default function PapOrderingWizard() {
                     warnings.push('🟢 Type "Add STI panel" in order instructions field');
                 }
             }
-            // Quest or Medicare
+            // Medicare with cervix — COMPREHENSIVE COVERAGE RULES (NCD 210.2.1)
+            else if (isMedicare) {
+                labName = "Quest Diagnostics";
+
+                // Medicare frequency check
+                if (hadRecentPap && formData.reason !== "followup") {
+                    if (isHighRisk) {
+                        medicareWarnings.push("⚠️ MEDICARE HIGH-RISK: Pap covered every 12 months. Verify last Pap was >12 months ago.");
+                    } else {
+                        medicareWarnings.push("🚨 MEDICARE FREQUENCY: Screening Pap is covered once every 24 months. Patient had Pap/HPV in the last 24 months — this order will likely be DENIED. Patient will be responsible for full cost.");
+                    }
+                }
+
+                if (formData.reason === "followup") {
+                    // Follow-up is diagnostic, not screening — standard codes apply
+                    testCodes = needsSTI ? ["91386"] : ["91414"];
+                    cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624", "87625"];
+                    
+                    if (formData.previousAbnormal === "asc-us") {
+                        primaryICD10 = "R87.610";
+                    } else if (formData.previousAbnormal === "lsil") {
+                        primaryICD10 = "R87.612";
+                    } else if (formData.previousAbnormal === "hsil") {
+                        primaryICD10 = "R87.613";
+                    } else if (formData.previousAbnormal === "hpv") {
+                        primaryICD10 = "R87.810";
+                    } else {
+                        primaryICD10 = "R87.610";
+                    }
+                    warnings.push("🔵 MEDICARE: Follow-up is DIAGNOSTIC — standard CPT codes apply (not G0476).");
+                }
+                // Medicare OVER 65 with cervix
+                else if (age > 65) {
+                    requiresHPV = false;
+                    // Pap-only for over 65
+                    testCodes = ["58315"];
+                    cptCodes = ["88175"];
+
+                    if (isHighRisk) {
+                        primaryICD10 = "Z91.89";
+                        secondaryICD10.push("Z01.411");
+                        medicareWarnings.push("⚠️ MEDICARE DOES NOT COVER HPV SCREENING FOR PATIENTS OVER 65. HPV testing will be patient responsibility (~$150+). Consider Pap-only order.");
+                        medicareWarnings.push("🔵 MEDICARE HIGH-RISK OVER 65: Pap covered every 12 months. HPV is NOT covered even for high-risk patients over 65.");
+                        warnings.push("📋 Medicare high-risk: Pap every 12 months (no HPV)");
+                    } else {
+                        primaryICD10 = "Z01.419";
+                        secondaryICD10.push("Z11.51");
+                        medicareWarnings.push("⚠️ MEDICARE DOES NOT COVER HPV SCREENING FOR PATIENTS OVER 65. HPV testing will be patient responsibility (~$150+). Consider Pap-only order.");
+                        medicareWarnings.push("🔵 MEDICARE OVER 65: Use Quest code 58315 (Pap only). Do NOT use 91414 (Pap+HPV combo) — HPV portion will be denied.");
+                        warnings.push("📋 Medicare screening: Pap covered every 24 months");
+                    }
+                }
+                // Medicare age 30-65 with cervix — HPV covered with G0476
+                else if (age >= 30 && age <= 65) {
+                    if (isHighRisk) {
+                        testCodes = needsSTI ? ["91386"] : ["91414"];
+                        cptCodes = ["88175"];
+                        hcpcsCodes = ["G0476"];
+                        primaryICD10 = "Z91.89";
+                        secondaryICD10.push("Z11.51");
+                        secondaryICD10.push("Z01.411");
+                        medicareWarnings.push("🔵 MEDICARE: Use G0476 for HPV screening. Do NOT use 87624/87625 (will be denied).");
+                        medicareWarnings.push("🔵 MEDICARE HIGH-RISK: Pap+HPV covered every 12 months.");
+                        warnings.push("📋 Dual diagnosis required: Z11.51 (HPV screening) + Z01.411 (Pap encounter)");
+                    } else {
+                        testCodes = needsSTI ? ["91386"] : ["91414"];
+                        cptCodes = ["88175"];
+                        hcpcsCodes = ["G0476"];
+                        primaryICD10 = "Z11.51";
+                        secondaryICD10.push("Z01.419");
+                        medicareWarnings.push("🔵 MEDICARE: Use G0476 for HPV screening. Do NOT use 87624/87625 (will be denied).");
+                        medicareWarnings.push("📋 MEDICARE SCREENING: Pap+HPV covered once every 24 months. Ensure >24 months since last screening.");
+                        warnings.push("📋 Medicare dual diagnosis: Primary Z11.51 + Secondary Z01.419");
+                    }
+                }
+                // Medicare under 30 with cervix — no HPV screening (not indicated <30)
+                else {
+                    requiresHPV = false;
+                    testCodes = ["58315"];
+                    cptCodes = ["88175"];
+                    primaryICD10 = "Z01.419";
+                    warnings.push("🔵 Patient under 30: HPV co-testing not recommended per guidelines");
+                    medicareWarnings.push("📋 MEDICARE: Pap-only for patients under 30. Covered every 24 months (12 months if high-risk).");
+                }
+
+                if (needsSTI) {
+                    warnings.push("🟣 Quest code includes STI panel (CT/GC/Trich) - ALL IN ONE");
+                }
+            }
+            // Quest (non-Medicare)
             else {
                 labName = "Quest Diagnostics";
 
@@ -205,18 +313,11 @@ export default function PapOrderingWizard() {
                     } else {
                         primaryICD10 = "R87.610";
                     }
-                } else if (isMedicare && isHighRisk) {
-                    testCodes = needsSTI ? ["91386"] : ["91414"];
-                    cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624", "87625"];
-                    primaryICD10 = "Z91.89";
-                    secondaryICD10.push("Z11.51");
                 } else {
                     testCodes = needsSTI ? ["91386"] : ["91414"];
                     cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624", "87625"];
-                    primaryICD10 = isMedicare ? "Z01.419" : "Z01.419";
-                    if (!isMedicare || (isMedicare && !isHighRisk)) {
-                        secondaryICD10.push("Z11.51");
-                    }
+                    primaryICD10 = "Z01.419";
+                    secondaryICD10.push("Z11.51");
                 }
 
                 if (needsSTI) {
@@ -237,10 +338,12 @@ export default function PapOrderingWizard() {
             labName,
             testCodes,
             cptCodes,
+            hcpcsCodes,
             primaryICD10,
             secondaryICD10,
             specimenSource,
             warnings,
+            medicareWarnings,
             requiresHPV,
             requiredFields
         };
@@ -262,6 +365,13 @@ export default function PapOrderingWizard() {
             setStep(2);
         } else if (step === 2) {
             if (!formData.insurance) return;
+            if (formData.insurance === "medicare") {
+                setStep(2.5); // Medicare frequency check
+            } else {
+                setStep(3);
+            }
+        } else if (step === 2.5) {
+            if (!formData.recentPapHPV) return;
             setStep(3);
         } else if (step === 3) {
             if (!formData.hysterectomyStatus) return;
@@ -313,7 +423,14 @@ export default function PapOrderingWizard() {
         } else if (step === 5.5) setStep(5);
         else if (step === 5) setStep(3);
         else if (step === 4) setStep(3);
-        else if (step === 3) setStep(2);
+        else if (step === 3) {
+            if (formData.insurance === "medicare") {
+                setStep(2.5);
+            } else {
+                setStep(2);
+            }
+        }
+        else if (step === 2.5) setStep(2);
         else if (step === 2) {
             const age = parseInt(formData.age);
             if (age < 21) {
@@ -344,6 +461,7 @@ export default function PapOrderingWizard() {
                                 step === 1 ? "Patient Age" :
                                 step === 1.5 ? "Clinical Indication (Under 21)" :
                                 step === 2 ? "Insurance Provider" :
+                                step === 2.5 ? "Medicare Screening Frequency" :
                                 step === 3 ? "Hysterectomy Status" :
                                 step === 4 ? "Post-Hysterectomy History" :
                                 step === 5 ? "Reason for Test" :
@@ -421,6 +539,14 @@ export default function PapOrderingWizard() {
                         )}
 
                         {/* Step 2: Insurance */}
+                        {step === 2 && formData.insurance === "medicare" && parseInt(formData.age) > 65 && (
+                            <Alert className="bg-red-50 border-red-300 mb-4">
+                                <AlertCircle className="h-4 w-4 text-red-600" />
+                                <AlertDescription className="text-red-800">
+                                    <strong>Medicare + Over 65:</strong> HPV screening is NOT covered. Special rules apply.
+                                </AlertDescription>
+                            </Alert>
+                        )}
                         {step === 2 && (
                             <div className="space-y-4">
                                 <Label className="text-lg font-semibold">Patient's Insurance</Label>
@@ -436,6 +562,42 @@ export default function PapOrderingWizard() {
                                     <div className="flex items-center space-x-2 p-3 border rounded hover:bg-purple-50">
                                         <RadioGroupItem value="other" id="other" />
                                         <Label htmlFor="other" className="cursor-pointer flex-1">All Other Insurance → Quest Diagnostics</Label>
+                                    </div>
+                                </RadioGroup>
+                            </div>
+                        )}
+
+                        {/* Step 2.5: Medicare Frequency Check */}
+                        {step === 2.5 && (
+                            <div className="space-y-4">
+                                <Alert className="bg-blue-50 border-blue-300">
+                                    <AlertCircle className="h-4 w-4 text-blue-600" />
+                                    <AlertDescription className="text-blue-800">
+                                        <strong>Medicare Coverage Rule (NCD 210.2.1):</strong> Screening Pap is covered once every <strong>24 months</strong> (or every <strong>12 months</strong> if high-risk: HIV+, immunocompromised, DES exposure, or history of CIN2+).
+                                    </AlertDescription>
+                                </Alert>
+                                <Label className="text-lg font-semibold">Has this patient had a Pap/HPV in the last 24 months?</Label>
+                                <RadioGroup value={formData.recentPapHPV} onValueChange={(val) => updateFormData("recentPapHPV", val)}>
+                                    <div className="flex items-center space-x-2 p-3 border rounded hover:bg-red-50">
+                                        <RadioGroupItem value="yes" id="recent-yes" />
+                                        <Label htmlFor="recent-yes" className="cursor-pointer flex-1">
+                                            <div>Yes — had Pap/HPV within last 24 months</div>
+                                            <div className="text-xs text-red-600 mt-1">⚠️ Medicare may deny — screening not due yet</div>
+                                        </Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2 p-3 border rounded hover:bg-green-50">
+                                        <RadioGroupItem value="no" id="recent-no" />
+                                        <Label htmlFor="recent-no" className="cursor-pointer flex-1">
+                                            <div>No — more than 24 months since last screening</div>
+                                            <div className="text-xs text-green-600 mt-1">✅ Screening is due per Medicare frequency</div>
+                                        </Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2 p-3 border rounded hover:bg-gray-50">
+                                        <RadioGroupItem value="unknown" id="recent-unknown" />
+                                        <Label htmlFor="recent-unknown" className="cursor-pointer flex-1">
+                                            <div>Unknown — unable to verify</div>
+                                            <div className="text-xs text-yellow-600 mt-1">⚠️ Recommend verifying before ordering</div>
+                                        </Label>
                                     </div>
                                 </RadioGroup>
                             </div>
@@ -627,10 +789,26 @@ export default function PapOrderingWizard() {
                         {/* Step 8: Results */}
                         {step === 8 && result && (
                             <div className="space-y-6">
+                                {/* Medicare-specific denial risk warnings — prominent red boxes */}
+                                {result.medicareWarnings && result.medicareWarnings.length > 0 && (
+                                    <div className="space-y-2 p-4 bg-red-50 border-2 border-red-400 rounded-lg">
+                                        <h3 className="text-lg font-bold text-red-800 flex items-center gap-2">
+                                            <AlertCircle className="h-5 w-5" />
+                                            Medicare Coverage Alerts (NCD 210.2.1)
+                                        </h3>
+                                        {result.medicareWarnings.map((warning, idx) => (
+                                            <Alert key={`mw-${idx}`} className={warning.includes("🚨") ? "bg-red-100 border-red-400" : warning.includes("⚠️") ? "bg-yellow-100 border-yellow-400" : "bg-blue-100 border-blue-300"}>
+                                                <AlertCircle className="h-4 w-4" />
+                                                <AlertDescription className="font-semibold text-sm">{warning}</AlertDescription>
+                                            </Alert>
+                                        ))}
+                                    </div>
+                                )}
+
                                 {result.warnings.length > 0 && (
                                     <div className="space-y-2">
                                         {result.warnings.map((warning, idx) => (
-                                            <Alert key={idx} className={warning.includes("NOT") ? "bg-red-50 border-red-200" : warning.includes("🟢") ? "bg-green-50 border-green-200" : warning.includes("🔵") ? "bg-blue-50 border-blue-200" : "bg-yellow-50 border-yellow-200"}>
+                                            <Alert key={idx} className={warning.includes("NOT") ? "bg-red-50 border-red-200" : warning.includes("🟢") ? "bg-green-50 border-green-200" : warning.includes("🔵") ? "bg-blue-50 border-blue-200" : warning.includes("📋") ? "bg-indigo-50 border-indigo-200" : "bg-yellow-50 border-yellow-200"}>
                                                 <AlertCircle className="h-4 w-4" />
                                                 <AlertDescription className="font-medium">{warning}</AlertDescription>
                                             </Alert>
@@ -669,6 +847,21 @@ export default function PapOrderingWizard() {
                                                 </CardContent>
                                             </Card>
                                         </div>
+
+                                        {/* HCPCS Codes (Medicare G-codes) */}
+                                        {result.hcpcsCodes && result.hcpcsCodes.length > 0 && (
+                                            <Card className="bg-amber-50 border-amber-300">
+                                                <CardHeader>
+                                                    <CardTitle className="text-amber-900">⚕️ HCPCS Codes (Medicare)</CardTitle>
+                                                </CardHeader>
+                                                <CardContent>
+                                                    {result.hcpcsCodes.map((code, idx) => (
+                                                        <div key={idx} className="text-2xl font-bold text-amber-700 mb-1">{code}</div>
+                                                    ))}
+                                                    <p className="text-sm text-amber-800 mt-2 font-medium">Use HCPCS G0476 instead of CPT 87624/87625 for Medicare HPV screening</p>
+                                                </CardContent>
+                                            </Card>
+                                        )}
 
                                         <Card className="bg-green-50">
                                             <CardHeader>
