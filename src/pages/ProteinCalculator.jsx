@@ -139,24 +139,52 @@ export default function ProteinCalculator() {
   };
 
   const handlePrint = () => {
-    if (!resultsRef.current) return;
-    const printContent = resultsRef.current.innerHTML;
+    if (!result) return;
+    const planHtml = result.plan.map(section => {
+      const rows = section.items.map(item =>
+        `<tr><td>${item.name}</td><td>${formatNumber(item.servingOz)} oz${item.servingNote ? ` (${item.servingNote})` : ''}</td><td>${formatNumber(item.protein)}g</td><td><strong>${formatNumber(item.runningTotal)}g</strong></td></tr>`
+      ).join('');
+      return `<h3 style="margin:10px 0 4px;font-size:13px;font-weight:700;color:#334155;border-bottom:1px solid #cbd5e1;padding-bottom:2px;">${section.name} <span style="font-weight:400;color:#64748b;font-size:11px;">(target: ${formatNumber(section.target)}g)</span></h3>
+        <table><thead><tr><th>Food</th><th>Serving</th><th>Protein</th><th>Running Total</th></tr></thead><tbody>${rows}</tbody></table>`;
+    }).join('');
+
     const win = window.open('', '_blank');
     win.document.write(`<!DOCTYPE html><html><head><title>Protein Meal Plan</title>
       <style>
         @page { size: letter; margin: 0.5in; }
-        * { box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1e293b; }
-        h1 { margin: 0 0 6px; color: #3a6b8c; }
-        .summary { margin-bottom: 12px; padding: 10px 12px; background: #f0f7ff; border-radius: 8px; border: 1px solid #dbeafe; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
-        th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #e2e8f0; font-size: 13px; }
-        th { background: #f8fafc; text-transform: uppercase; letter-spacing: 0.04em; font-size: 11px; color: #64748b; }
-        .section-title { margin: 14px 0 6px; font-size: 15px; font-weight: 700; color: #334155; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1e293b; font-size: 13px; }
+        .header { display: flex; align-items: baseline; justify-content: space-between; border-bottom: 2px solid #3a6b8c; padding-bottom: 6px; margin-bottom: 8px; }
+        .header h1 { font-size: 18px; color: #3a6b8c; }
+        .header .date { font-size: 11px; color: #64748b; }
+        .summary-row { display: flex; gap: 16px; margin-bottom: 10px; padding: 8px 12px; background: #f0f7ff; border-radius: 6px; border: 1px solid #dbeafe; }
+        .summary-item { flex: 1; }
+        .summary-item .label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 600; }
+        .summary-item .value { font-size: 16px; font-weight: 700; color: #1e293b; }
+        .summary-item .sub { font-size: 10px; color: #64748b; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 4px; }
+        th, td { text-align: left; padding: 3px 6px; border-bottom: 1px solid #e2e8f0; font-size: 12px; }
+        th { background: #f8fafc; text-transform: uppercase; letter-spacing: 0.04em; font-size: 10px; color: #64748b; }
       </style></head><body>
-      <h1>Protein Intake Meal Plan</h1>
-      <div class="summary">Printed ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
-      ${printContent}
+      <div class="header">
+        <h1>Protein Intake Meal Plan</h1>
+        <span class="date">${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+      </div>
+      <div class="summary-row">
+        <div class="summary-item">
+          <div class="label">Patient Weight</div>
+          <div class="value">${formatNumber(result.weight, 0)} lbs</div>
+        </div>
+        <div class="summary-item">
+          <div class="label">Daily Range (0.8–1.0 g/lb)</div>
+          <div class="value">${formatNumber(result.min)}g – ${formatNumber(result.max)}g</div>
+        </div>
+        <div class="summary-item">
+          <div class="label">Meal Plan Target (0.9 g/lb)</div>
+          <div class="value">${formatNumber(result.midpoint)}g</div>
+        </div>
+      </div>
+      ${planHtml}
     </body></html>`);
     win.document.close();
     win.focus();
