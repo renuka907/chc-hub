@@ -109,44 +109,20 @@ export default function Home() {
     const todayJoke = DAILY_JOKES[dayOfYear % DAILY_JOKES.length];
     const todayTip = WELLNESS_TIPS[dayOfYear % WELLNESS_TIPS.length];
 
-    const quickLinks = [
-        {
-            title: "Resource Library",
-            description: "Access education materials, aftercare instructions, and consent forms",
-            icon: BookOpen,
-            path: "Library",
-            color: "from-[#6B9FCC] to-[#5889B5]"
-        },
-        {
-            title: "Pricing",
-            description: "Manage pricing for procedures, products, and packages",
-            icon: DollarSign,
-            path: "PricingManagement",
-            color: "from-[#7BAFD4] to-[#6B9FCC]"
-        },
-        {
-            title: "Checkout Quote",
-            description: "Generate price quotes for procedures and products",
-            icon: DollarSign,
-            path: "CheckoutQuote",
-            color: "from-[#E8A0B5] to-[#D48BA3]"
-        },
-    ];
-
     return (
         <div className="space-y-8">
-            {/* Hero Banner */}
-            <div className="bg-gradient-to-r from-[#6B9FCC] via-[#7BAFD4] to-[#E8A0B5] rounded-3xl p-8 md:p-12 shadow-lg">
-                <div className="flex items-center justify-between">
+            {/* Hero Banner with Resource Cards */}
+            <div className="bg-gradient-to-r from-[#6B9FCC] via-[#7BAFD4] to-[#E8A0B5] rounded-3xl p-8 md:p-10 shadow-lg">
+                <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center space-x-4">
-                        <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-md">
-                            <Stethoscope className="w-8 h-8 text-white" />
+                        <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-md">
+                            <Stethoscope className="w-7 h-7 text-white" />
                         </div>
                         <div>
-                            <h1 className="text-4xl md:text-5xl font-bold text-white">
+                            <h1 className="text-3xl md:text-4xl font-bold text-white">
                                 CHC Hub
                             </h1>
-                            <p className="text-lg text-white/80 mt-1">
+                            <p className="text-base text-white/80 mt-0.5">
                                 Step-by-step care made simple
                             </p>
                         </div>
@@ -155,6 +131,41 @@ export default function Home() {
                         <span>✨</span>
                         <span>Powered by AI</span>
                     </div>
+                </div>
+
+                {/* Resource Cards inside banner */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                    {[
+                        { title: "Resource Library", desc: "Education, aftercare & consent forms", icon: BookOpen, path: "Library" },
+                        { title: "Pricing", desc: "Procedures, products & packages", icon: DollarSign, path: "PricingManagement" },
+                        { title: "Checkout Quote", desc: "Generate price quotes", icon: FileText, path: "CheckoutQuote" },
+                        { title: "Inventory", desc: "Supplies, meds & equipment", icon: Package, path: "InventoryManagement" },
+                        { title: "Lab Tests", desc: "Quest Diagnostics directory", icon: TestTube, path: "LabTestDirectory" },
+                        { title: "FAQs & Questions", desc: "Browse FAQs or submit questions", icon: MessageSquare, path: "FAQ" },
+                        { title: "Skin Analysis", desc: "AI-powered skin assessment", icon: Camera, path: "SkinAnalysis", ai: true },
+                    ].map((item) => {
+                        const Icon = item.icon;
+                        return (
+                            <Link key={item.path} to={createPageUrl(item.path)}>
+                                <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 hover:bg-white/30 transition-all duration-200 cursor-pointer group relative h-full">
+                                    {item.ai && (
+                                        <span className="absolute top-1.5 right-1.5 bg-white/70 text-[#D48BA3] text-[9px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
+                                            <Sparkles className="w-2.5 h-2.5" /> AI
+                                        </span>
+                                    )}
+                                    <div className="flex flex-col items-center text-center space-y-1.5">
+                                        <div className="w-10 h-10 bg-white/40 rounded-lg flex items-center justify-center shadow-sm group-hover:bg-white/60 transition-colors">
+                                            <Icon className="w-5 h-5 text-white" />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-sm font-bold text-white leading-tight">{item.title}</h3>
+                                            <p className="text-[11px] text-white/70 leading-tight mt-0.5">{item.desc}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
+                        );
+                    })}
                 </div>
             </div>
 
@@ -258,144 +269,7 @@ export default function Home() {
             {/* Announcements */}
             <Announcements />
 
-            {/* Choose Section Header */}
-            <div className="bg-white rounded-3xl p-6 shadow-md border border-[#B8D4E8]/40">
-                <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-[#E8F0FA] rounded-xl flex items-center justify-center">
-                        <BookOpen className="w-6 h-6 text-[#6B9FCC]" />
-                    </div>
-                    <h2 className="text-2xl font-bold text-[#3A6B8C]">Choose Resource Category</h2>
-                </div>
-            </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {quickLinks.map((link) => {
-                    const Icon = link.icon;
-                    const gradientMap = {
-                        "from-[#6B9FCC] to-[#5889B5]": "from-[#D4E6F5] to-[#B8D4E8]",
-                        "from-[#7BAFD4] to-[#6B9FCC]": "from-[#D4E6F5] to-[#E8F0FA]",
-                        "from-[#E8A0B5] to-[#D48BA3]": "from-[#F9E0EA] to-[#F0C8D6]"
-                    };
-                    const bgGradient = gradientMap[link.color] || "from-gray-200 to-gray-300";
-                    
-                    return (
-                        <Link key={link.path} to={createPageUrl(link.path)}>
-                            <div className={`h-full bg-gradient-to-br ${bgGradient} rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer relative overflow-hidden`}>
-                                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <div className="w-8 h-8 bg-white/50 rounded-full flex items-center justify-center">
-                                        <span className="text-lg">✓</span>
-                                    </div>
-                                </div>
-                                <div className="flex flex-col items-center text-center space-y-2">
-                                    <div className="w-12 h-12 bg-white/60 rounded-xl flex items-center justify-center shadow-sm">
-                                        <Icon className="w-6 h-6 text-[#3A6B8C]" />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-base font-bold text-[#3A6B8C] mb-1">
-                                            {link.title}
-                                        </h3>
-                                        <p className="text-xs text-gray-600">
-                                            {link.description}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </Link>
-                    );
-                })}
-
-                <Link to={createPageUrl("InventoryManagement")}>
-                    <div className="h-full bg-gradient-to-br from-[#F5DEB3] to-[#F0C88C] rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer relative overflow-hidden">
-                        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <div className="w-8 h-8 bg-white/50 rounded-full flex items-center justify-center">
-                                <span className="text-lg">✓</span>
-                            </div>
-                        </div>
-                        <div className="flex flex-col items-center text-center space-y-2">
-                            <div className="w-12 h-12 bg-white/60 rounded-xl flex items-center justify-center shadow-sm">
-                                <Package className="w-6 h-6 text-[#3A6B8C]" />
-                            </div>
-                            <div>
-                                <h3 className="text-base font-bold text-[#3A6B8C] mb-1">
-                                    Inventory
-                                </h3>
-                                <p className="text-xs text-gray-600">
-                                    Track supplies, medications, and equipment
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </Link>
-
-                <Link to={createPageUrl("LabTestDirectory")}>
-                    <div className="h-full bg-gradient-to-br from-[#F9E0EA] to-[#F0C8D6] rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer relative overflow-hidden">
-                        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <div className="w-8 h-8 bg-white/50 rounded-full flex items-center justify-center">
-                                <span className="text-lg">✓</span>
-                            </div>
-                        </div>
-                        <div className="flex flex-col items-center text-center space-y-2">
-                            <div className="w-12 h-12 bg-white/60 rounded-xl flex items-center justify-center shadow-sm">
-                                <TestTube className="w-6 h-6 text-[#3A6B8C]" />
-                            </div>
-                            <div>
-                                <h3 className="text-base font-bold text-[#3A6B8C] mb-1">
-                                    Lab Tests
-                                </h3>
-                                <p className="text-xs text-gray-600">
-                                    Quest Diagnostics test directory
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </Link>
-
-                <Link to={createPageUrl("FAQ")}>
-                    <div className="h-full bg-gradient-to-br from-[#D4E6F5] to-[#B8D4E8] rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer relative overflow-hidden">
-                        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <div className="w-8 h-8 bg-white/50 rounded-full flex items-center justify-center">
-                                <span className="text-lg">✓</span>
-                            </div>
-                        </div>
-                        <div className="flex flex-col items-center text-center space-y-2">
-                            <div className="w-12 h-12 bg-white/60 rounded-xl flex items-center justify-center shadow-sm">
-                                <MessageSquare className="w-6 h-6 text-[#3A6B8C]" />
-                            </div>
-                            <div>
-                                <h3 className="text-base font-bold text-[#3A6B8C] mb-1">
-                                    FAQs & Questions
-                                </h3>
-                                <p className="text-xs text-gray-600">
-                                    Browse FAQs or submit questions
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </Link>
-
-                <Link to={createPageUrl("SkinAnalysis")}>
-                    <div className="h-full bg-gradient-to-br from-[#F0C8D6] to-[#E8A0B5] rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer relative overflow-hidden">
-                        <div className="absolute top-2 right-2">
-                            <span className="bg-white/80 text-[#D48BA3] text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm flex items-center gap-1">
-                                <Sparkles className="w-3 h-3" /> AI
-                            </span>
-                        </div>
-                        <div className="flex flex-col items-center text-center space-y-2">
-                            <div className="w-12 h-12 bg-white/60 rounded-xl flex items-center justify-center shadow-sm">
-                                <Camera className="w-6 h-6 text-[#3A6B8C]" />
-                            </div>
-                            <div>
-                                <h3 className="text-base font-bold text-[#3A6B8C] mb-1">
-                                    Skin Analysis
-                                </h3>
-                                <p className="text-xs text-gray-600">
-                                    AI-powered skin assessment & recommendations
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </Link>
-            </div>
         </div>
     );
 }
