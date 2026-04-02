@@ -4,51 +4,221 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Apple, Beef, Calculator, Printer, RotateCcw, Utensils } from 'lucide-react';
+import { Apple, Beef, Calculator, Leaf, Printer, RotateCcw, Utensils } from 'lucide-react';
 
-const FOODS = {
-  breakfast: [
-    { name: 'Eggs', servingOz: 3.5, servingNote: '2 large', protein: 12 },
-    { name: 'Greek yogurt', servingOz: 6, protein: 15 },
-    { name: 'Cottage cheese', servingOz: 4, protein: 14 },
-    { name: 'Protein shake', servingOz: 12, servingNote: '1 shake', protein: 25 },
-    { name: 'Turkey sausage', servingOz: 3, servingNote: '2 links', protein: 10 },
-  ],
-  lunch: [
-    { name: 'Chicken breast', servingOz: 4, protein: 35 },
-    { name: 'Turkey deli meat', servingOz: 3, protein: 18 },
-    { name: 'Tuna', servingOz: 3, protein: 22 },
-    { name: 'Salmon', servingOz: 4, protein: 25 },
-    { name: 'Ground beef', servingOz: 4, protein: 22 },
-  ],
-  dinner: [
-    { name: 'Steak', servingOz: 6, protein: 42 },
-    { name: 'Chicken thigh', servingOz: 5, protein: 30 },
-    { name: 'Pork chop', servingOz: 5, protein: 36 },
-    { name: 'Shrimp', servingOz: 4, protein: 24 },
-    { name: 'Cod', servingOz: 4, protein: 20 },
-  ],
-  snacks: [
-    { name: 'String cheese', servingOz: 1, servingNote: '1 pc', protein: 7 },
-    { name: 'Almonds', servingOz: 1, protein: 6 },
-    { name: 'Beef jerky', servingOz: 1, protein: 10 },
-    { name: 'Protein bar', servingOz: 2, servingNote: '1 bar', protein: 20 },
-    { name: 'Edamame', servingOz: 2.5, servingNote: '1/2 cup', protein: 9 },
-    { name: 'Hard boiled egg', servingOz: 2, servingNote: '1 egg', protein: 6 },
-  ],
+const DIETS = [
+  { key: 'standard', label: 'Standard (No Restriction)' },
+  { key: 'vegetarian', label: 'Vegetarian' },
+  { key: 'vegan', label: 'Vegan / Plant-Based' },
+  { key: 'keto', label: 'Keto / Low Carb' },
+  { key: 'carnivore', label: 'Carnivore' },
+  { key: 'pescatarian', label: 'Pescatarian' },
+];
+
+const DIET_FOODS = {
+  standard: {
+    breakfast: [
+      { name: 'Eggs', servingOz: 3.5, servingNote: '2 large', protein: 12 },
+      { name: 'Greek yogurt', servingOz: 6, protein: 15 },
+      { name: 'Cottage cheese', servingOz: 4, protein: 14 },
+      { name: 'Protein shake', servingOz: 12, servingNote: '1 shake', protein: 25 },
+      { name: 'Turkey sausage', servingOz: 3, servingNote: '2 links', protein: 10 },
+    ],
+    lunch: [
+      { name: 'Chicken breast', servingOz: 4, protein: 35 },
+      { name: 'Turkey deli meat', servingOz: 3, protein: 18 },
+      { name: 'Tuna', servingOz: 3, protein: 22 },
+      { name: 'Salmon', servingOz: 4, protein: 25 },
+      { name: 'Ground beef', servingOz: 4, protein: 22 },
+    ],
+    dinner: [
+      { name: 'Steak', servingOz: 6, protein: 42 },
+      { name: 'Chicken thigh', servingOz: 5, protein: 30 },
+      { name: 'Pork chop', servingOz: 5, protein: 36 },
+      { name: 'Shrimp', servingOz: 4, protein: 24 },
+      { name: 'Cod', servingOz: 4, protein: 20 },
+    ],
+    snacks: [
+      { name: 'String cheese', servingOz: 1, servingNote: '1 pc', protein: 7 },
+      { name: 'Almonds', servingOz: 1, protein: 6 },
+      { name: 'Beef jerky', servingOz: 1, protein: 10 },
+      { name: 'Protein bar', servingOz: 2, servingNote: '1 bar', protein: 20 },
+      { name: 'Edamame', servingOz: 2.5, servingNote: '1/2 cup', protein: 9 },
+      { name: 'Hard boiled egg', servingOz: 2, servingNote: '1 egg', protein: 6 },
+    ],
+  },
+  vegetarian: {
+    breakfast: [
+      { name: 'Eggs', servingOz: 3.5, servingNote: '2 large', protein: 12 },
+      { name: 'Greek yogurt', servingOz: 6, protein: 15 },
+      { name: 'Cottage cheese', servingOz: 4, protein: 14 },
+      { name: 'Protein shake (whey)', servingOz: 12, servingNote: '1 shake', protein: 25 },
+      { name: 'Peanut butter toast', servingOz: 2, servingNote: '2 tbsp', protein: 8 },
+    ],
+    lunch: [
+      { name: 'Paneer', servingOz: 4, protein: 18 },
+      { name: 'Black bean bowl', servingOz: 6, servingNote: '1 cup', protein: 15 },
+      { name: 'Lentil soup', servingOz: 8, servingNote: '1 cup', protein: 18 },
+      { name: 'Grilled halloumi', servingOz: 3, protein: 21 },
+      { name: 'Quinoa salad', servingOz: 6, servingNote: '1 cup', protein: 8 },
+    ],
+    dinner: [
+      { name: 'Tofu stir-fry', servingOz: 6, protein: 20 },
+      { name: 'Chickpea curry', servingOz: 8, servingNote: '1.5 cups', protein: 18 },
+      { name: 'Egg frittata', servingOz: 6, servingNote: '3 eggs', protein: 18 },
+      { name: 'Bean & cheese burrito', servingOz: 8, servingNote: '1 large', protein: 22 },
+      { name: 'Tempeh bowl', servingOz: 4, protein: 20 },
+    ],
+    snacks: [
+      { name: 'String cheese', servingOz: 1, servingNote: '1 pc', protein: 7 },
+      { name: 'Almonds', servingOz: 1, protein: 6 },
+      { name: 'Edamame', servingOz: 2.5, servingNote: '1/2 cup', protein: 9 },
+      { name: 'Hard boiled egg', servingOz: 2, servingNote: '1 egg', protein: 6 },
+      { name: 'Hummus & pita', servingOz: 3, servingNote: '1/3 cup + pita', protein: 7 },
+      { name: 'Trail mix', servingOz: 1.5, protein: 5 },
+    ],
+  },
+  vegan: {
+    breakfast: [
+      { name: 'Tofu scramble', servingOz: 6, protein: 20 },
+      { name: 'Pea protein shake', servingOz: 12, servingNote: '1 shake', protein: 25 },
+      { name: 'Peanut butter oatmeal', servingOz: 8, servingNote: '1 cup + 2 tbsp PB', protein: 14 },
+      { name: 'Chia pudding (soy milk)', servingOz: 6, protein: 10 },
+      { name: 'Soy yogurt', servingOz: 6, protein: 9 },
+    ],
+    lunch: [
+      { name: 'Lentil soup', servingOz: 8, servingNote: '1 cup', protein: 18 },
+      { name: 'Black bean bowl', servingOz: 6, servingNote: '1 cup', protein: 15 },
+      { name: 'Tempeh sandwich', servingOz: 4, protein: 20 },
+      { name: 'Chickpea salad wrap', servingOz: 6, protein: 14 },
+      { name: 'Edamame & quinoa bowl', servingOz: 8, protein: 18 },
+    ],
+    dinner: [
+      { name: 'Tofu stir-fry', servingOz: 6, protein: 20 },
+      { name: 'Seitan', servingOz: 3, protein: 21 },
+      { name: 'Chickpea curry', servingOz: 8, servingNote: '1.5 cups', protein: 18 },
+      { name: 'Black bean tacos', servingOz: 8, servingNote: '3 tacos', protein: 16 },
+      { name: 'Lentil bolognese', servingOz: 8, servingNote: '1.5 cups', protein: 16 },
+    ],
+    snacks: [
+      { name: 'Edamame', servingOz: 2.5, servingNote: '1/2 cup', protein: 9 },
+      { name: 'Almonds', servingOz: 1, protein: 6 },
+      { name: 'Pumpkin seeds', servingOz: 1, protein: 9 },
+      { name: 'Roasted chickpeas', servingOz: 2, servingNote: '1/3 cup', protein: 7 },
+      { name: 'Peanut butter & celery', servingOz: 2, servingNote: '2 tbsp', protein: 7 },
+      { name: 'Protein bar (vegan)', servingOz: 2, servingNote: '1 bar', protein: 20 },
+    ],
+  },
+  keto: {
+    breakfast: [
+      { name: 'Eggs & bacon', servingOz: 5, servingNote: '3 eggs + 2 strips', protein: 24 },
+      { name: 'Sausage patties', servingOz: 3, servingNote: '2 patties', protein: 14 },
+      { name: 'Cream cheese omelet', servingOz: 5, servingNote: '3 eggs + 1 oz', protein: 20 },
+      { name: 'Avocado & smoked salmon', servingOz: 4, protein: 14 },
+      { name: 'Full-fat Greek yogurt', servingOz: 6, protein: 15 },
+    ],
+    lunch: [
+      { name: 'Chicken thigh (skin-on)', servingOz: 5, protein: 30 },
+      { name: 'Bacon cheeseburger (no bun)', servingOz: 6, protein: 32 },
+      { name: 'Tuna salad lettuce wrap', servingOz: 5, protein: 25 },
+      { name: 'Cobb salad', servingOz: 8, protein: 28 },
+      { name: 'Pulled pork', servingOz: 4, protein: 22 },
+    ],
+    dinner: [
+      { name: 'Ribeye steak', servingOz: 6, protein: 42 },
+      { name: 'Salmon with butter', servingOz: 5, protein: 30 },
+      { name: 'Pork belly', servingOz: 4, protein: 20 },
+      { name: 'Lamb chops', servingOz: 5, protein: 32 },
+      { name: 'Shrimp in garlic butter', servingOz: 5, protein: 30 },
+    ],
+    snacks: [
+      { name: 'Pork rinds', servingOz: 1, protein: 9 },
+      { name: 'String cheese', servingOz: 1, servingNote: '1 pc', protein: 7 },
+      { name: 'Almonds', servingOz: 1, protein: 6 },
+      { name: 'Pepperoni slices', servingOz: 1, protein: 6 },
+      { name: 'Hard boiled egg', servingOz: 2, servingNote: '1 egg', protein: 6 },
+      { name: 'Beef jerky', servingOz: 1, protein: 10 },
+    ],
+  },
+  carnivore: {
+    breakfast: [
+      { name: 'Eggs & bacon', servingOz: 5, servingNote: '3 eggs + 3 strips', protein: 27 },
+      { name: 'Breakfast sausage', servingOz: 4, servingNote: '3 links', protein: 16 },
+      { name: 'Ground beef patty', servingOz: 4, protein: 22 },
+      { name: 'Bone broth', servingOz: 8, servingNote: '1 cup', protein: 10 },
+      { name: 'Egg & cheese scramble', servingOz: 5, servingNote: '3 eggs + 1 oz', protein: 25 },
+    ],
+    lunch: [
+      { name: 'Ribeye steak', servingOz: 6, protein: 42 },
+      { name: 'Chicken wings', servingOz: 6, servingNote: '8 wings', protein: 30 },
+      { name: 'Ground beef', servingOz: 6, protein: 33 },
+      { name: 'Pork ribs', servingOz: 6, protein: 28 },
+      { name: 'Lamb burger', servingOz: 5, protein: 28 },
+    ],
+    dinner: [
+      { name: 'NY strip steak', servingOz: 8, protein: 56 },
+      { name: 'Brisket', servingOz: 6, protein: 36 },
+      { name: 'Salmon fillet', servingOz: 6, protein: 36 },
+      { name: 'Pork chop', servingOz: 6, protein: 42 },
+      { name: 'Lamb shoulder', servingOz: 6, protein: 34 },
+    ],
+    snacks: [
+      { name: 'Beef jerky', servingOz: 1.5, protein: 15 },
+      { name: 'Pork rinds', servingOz: 1, protein: 9 },
+      { name: 'Hard boiled eggs', servingOz: 4, servingNote: '2 eggs', protein: 12 },
+      { name: 'Bone broth', servingOz: 8, servingNote: '1 cup', protein: 10 },
+      { name: 'Beef sticks', servingOz: 1.5, servingNote: '2 sticks', protein: 12 },
+      { name: 'Sardines', servingOz: 2, servingNote: '1 tin', protein: 12 },
+    ],
+  },
+  pescatarian: {
+    breakfast: [
+      { name: 'Eggs', servingOz: 3.5, servingNote: '2 large', protein: 12 },
+      { name: 'Smoked salmon on toast', servingOz: 3, protein: 18 },
+      { name: 'Greek yogurt', servingOz: 6, protein: 15 },
+      { name: 'Protein shake', servingOz: 12, servingNote: '1 shake', protein: 25 },
+      { name: 'Cottage cheese', servingOz: 4, protein: 14 },
+    ],
+    lunch: [
+      { name: 'Tuna salad', servingOz: 4, protein: 28 },
+      { name: 'Salmon bowl', servingOz: 4, protein: 25 },
+      { name: 'Shrimp tacos', servingOz: 5, servingNote: '3 tacos', protein: 24 },
+      { name: 'Lentil soup', servingOz: 8, servingNote: '1 cup', protein: 18 },
+      { name: 'Sardine & avocado toast', servingOz: 3, protein: 16 },
+    ],
+    dinner: [
+      { name: 'Grilled salmon', servingOz: 6, protein: 36 },
+      { name: 'Cod fillet', servingOz: 6, protein: 30 },
+      { name: 'Shrimp stir-fry', servingOz: 5, protein: 30 },
+      { name: 'Mahi mahi', servingOz: 6, protein: 32 },
+      { name: 'Mussels', servingOz: 6, servingNote: '1 lb in shell', protein: 24 },
+    ],
+    snacks: [
+      { name: 'String cheese', servingOz: 1, servingNote: '1 pc', protein: 7 },
+      { name: 'Almonds', servingOz: 1, protein: 6 },
+      { name: 'Edamame', servingOz: 2.5, servingNote: '1/2 cup', protein: 9 },
+      { name: 'Hard boiled egg', servingOz: 2, servingNote: '1 egg', protein: 6 },
+      { name: 'Smoked salmon bites', servingOz: 2, protein: 12 },
+      { name: 'Tuna pouch', servingOz: 2.5, servingNote: '1 pouch', protein: 16 },
+    ],
+  },
 };
 
-const MEAL_SPLITS = [
-  { key: 'Breakfast', ratio: 0.25, foods: FOODS.breakfast, icon: Apple },
-  { key: 'Lunch', ratio: 0.3, foods: FOODS.lunch, icon: Utensils },
-  { key: 'Dinner', ratio: 0.3, foods: FOODS.dinner, icon: Beef },
-  { key: 'Snacks', ratio: 0.15, foods: FOODS.snacks, icon: Apple },
-];
+const getMealSplits = (dietKey) => {
+  const foods = DIET_FOODS[dietKey] || DIET_FOODS.standard;
+  return [
+    { key: 'Breakfast', ratio: 0.25, foods: foods.breakfast, icon: Apple },
+    { key: 'Lunch', ratio: 0.3, foods: foods.lunch, icon: Utensils },
+    { key: 'Dinner', ratio: 0.3, foods: foods.dinner, icon: Beef },
+    { key: 'Snacks', ratio: 0.15, foods: foods.snacks, icon: Leaf },
+  ];
+};
 
 const formatNumber = (value, decimals = 1) => Number.isFinite(value) ? value.toFixed(decimals) : '0.0';
 
-const buildMealPlan = (target) => {
-  const sections = MEAL_SPLITS.map((meal) => {
+const buildMealPlan = (target, dietKey = 'standard') => {
+  const mealSplits = getMealSplits(dietKey);
+  const sections = mealSplits.map((meal) => {
     const mealTarget = target * meal.ratio;
     const items = [];
     let mealTotal = 0;
@@ -106,6 +276,7 @@ const buildMealPlan = (target) => {
 
 export default function ProteinCalculator() {
   const [weight, setWeight] = useState('');
+  const [diet, setDiet] = useState('standard');
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
   const resultsRef = useRef(null);
@@ -127,13 +298,16 @@ export default function ProteinCalculator() {
       min,
       max,
       midpoint,
-      plan: buildMealPlan(midpoint),
+      diet,
+      dietLabel: DIETS.find(d => d.key === diet)?.label || 'Standard',
+      plan: buildMealPlan(midpoint, diet),
     });
     setError('');
   };
 
   const handleReset = () => {
     setWeight('');
+    setDiet('standard');
     setError('');
     setResult(null);
   };
@@ -169,9 +343,10 @@ export default function ProteinCalculator() {
         <span class="date">${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
       </div>
       <table class="info-table">
-        <thead><tr><th>Patient Weight</th><th>Daily Protein Range</th><th>Meal Plan Target</th></tr></thead>
+        <thead><tr><th>Patient Weight</th><th>Diet Preference</th><th>Daily Protein Range</th><th>Meal Plan Target</th></tr></thead>
         <tbody><tr>
           <td>${formatNumber(result.weight, 0)} lbs</td>
+          <td>${result.dietLabel}</td>
           <td>${formatNumber(result.min)}g – ${formatNumber(result.max)}g <span style="color:#64748b;font-size:10px;">(0.8–1.0 g/lb)</span></td>
           <td><strong>${formatNumber(result.midpoint)}g</strong> <span style="color:#64748b;font-size:10px;">(0.9 g/lb)</span></td>
         </tr></tbody>
@@ -211,9 +386,9 @@ export default function ProteinCalculator() {
 
       <Card className="border-slate-200">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base text-slate-900">Patient Weight</CardTitle>
+          <CardTitle className="text-base text-slate-900">Patient Info</CardTitle>
         </CardHeader>
-        <CardContent className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
+        <CardContent className="grid gap-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
           <div>
             <Label className="text-slate-700">Weight (lbs)</Label>
             <Input
@@ -229,6 +404,18 @@ export default function ProteinCalculator() {
               }}
             />
             {error && <p className="text-sm text-rose-600 mt-2">{error}</p>}
+          </div>
+          <div>
+            <Label className="text-slate-700">Diet Preference</Label>
+            <select
+              value={diet}
+              onChange={(event) => setDiet(event.target.value)}
+              className="mt-1 w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+            >
+              {DIETS.map(d => (
+                <option key={d.key} value={d.key}>{d.label}</option>
+              ))}
+            </select>
           </div>
           <div className="flex flex-wrap gap-2">
             <Button onClick={handleCalculate} className="bg-blue-600 hover:bg-blue-700">
