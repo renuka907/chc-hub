@@ -157,11 +157,9 @@ export default function ProteinCalculator() {
         .header { display: flex; align-items: baseline; justify-content: space-between; border-bottom: 2px solid #3a6b8c; padding-bottom: 6px; margin-bottom: 8px; }
         .header h1 { font-size: 18px; color: #3a6b8c; }
         .header .date { font-size: 11px; color: #64748b; }
-        .summary-row { display: flex; gap: 16px; margin-bottom: 10px; padding: 8px 12px; background: #f0f7ff; border-radius: 6px; border: 1px solid #dbeafe; }
-        .summary-item { flex: 1; }
-        .summary-item .label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 600; }
-        .summary-item .value { font-size: 16px; font-weight: 700; color: #1e293b; }
-        .summary-item .sub { font-size: 10px; color: #64748b; }
+        .info-table { margin-bottom: 12px; border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden; }
+        .info-table th { background: #3a6b8c; color: #fff; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; padding: 6px 12px; border-bottom: none; text-align: center; }
+        .info-table td { text-align: center; padding: 8px 12px; font-size: 15px; font-weight: 600; background: #f0f7ff; border-bottom: none; }
         table { width: 100%; border-collapse: collapse; margin-bottom: 4px; }
         th, td { text-align: left; padding: 3px 6px; border-bottom: 1px solid #e2e8f0; font-size: 12px; }
         th { background: #f8fafc; text-transform: uppercase; letter-spacing: 0.04em; font-size: 10px; color: #64748b; }
@@ -170,20 +168,14 @@ export default function ProteinCalculator() {
         <h1>Protein Intake Meal Plan</h1>
         <span class="date">${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
       </div>
-      <div class="summary-row">
-        <div class="summary-item">
-          <div class="label">Patient Weight</div>
-          <div class="value">${formatNumber(result.weight, 0)} lbs</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">Daily Range (0.8–1.0 g/lb)</div>
-          <div class="value">${formatNumber(result.min)}g – ${formatNumber(result.max)}g</div>
-        </div>
-        <div class="summary-item">
-          <div class="label">Meal Plan Target (0.9 g/lb)</div>
-          <div class="value">${formatNumber(result.midpoint)}g</div>
-        </div>
-      </div>
+      <table class="info-table">
+        <thead><tr><th>Patient Weight</th><th>Daily Protein Range</th><th>Meal Plan Target</th></tr></thead>
+        <tbody><tr>
+          <td>${formatNumber(result.weight, 0)} lbs</td>
+          <td>${formatNumber(result.min)}g – ${formatNumber(result.max)}g <span style="color:#64748b;font-size:10px;">(0.8–1.0 g/lb)</span></td>
+          <td><strong>${formatNumber(result.midpoint)}g</strong> <span style="color:#64748b;font-size:10px;">(0.9 g/lb)</span></td>
+        </tr></tbody>
+      </table>
       ${planHtml}
     </body></html>`);
     win.document.close();
