@@ -13,19 +13,39 @@ const PATIENT_FIELDS = [
   { key: 'age', label: 'Age', type: 'number', step: '1', placeholder: 'e.g. 45' },
 ];
 
-const ENCOURAGEMENT_MESSAGES = [
+const ENCOURAGEMENT_GOOD = [
   "Every step forward counts — you're doing amazing!",
-  "Progress isn't always a straight line. Keep showing up!",
-  "Your commitment to tracking your health is already a win!",
-  "Small changes lead to big transformations. Keep going!",
+  "Your hard work is paying off. Keep it up!",
+  "Small changes lead to big transformations. Look at your progress!",
   "You're investing in yourself — that's the best investment there is!",
-  "Remember: the scale doesn't measure your worth or your effort!",
-  "Consistency beats perfection. You're on the right track!",
-  "Your body is changing — trust the process!",
-  "Health is a journey, not a destination. You're doing great!",
-  "Be proud of yourself for showing up today!",
-  "You showed up, and that takes courage. Keep it going!",
+  "Your body is responding to your effort — keep going!",
+  "Health is a journey, and you're crushing it!",
+  "These results speak for themselves. Be proud!",
   "You're stronger than you think — the data proves it!",
+  "Consistency wins, and you're proof of that!",
+  "Your commitment to tracking your health is already a win!",
+];
+
+const ENCOURAGEMENT_MIXED = [
+  "Progress isn't always a straight line. Keep showing up!",
+  "Some metrics improved, some shifted — that's normal. Stay the course!",
+  "Your body is adjusting. Trust the process and stay consistent!",
+  "Remember: the scale doesn't measure your worth or your effort!",
+  "Every check-in is a chance to learn and adjust. You've got this!",
+  "Mixed results are still results — they tell us what to focus on next.",
+  "Be proud of yourself for showing up today — that's half the battle!",
+  "Rome wasn't built in a day. Small adjustments lead to big wins!",
+];
+
+const ENCOURAGEMENT_NEEDS_WORK = [
+  "This is just one snapshot in time — not the whole story. You've got this!",
+  "Knowing where you stand is the first step to making changes. Let's go!",
+  "Today's numbers are tomorrow's motivation. Small changes start now!",
+  "Every expert was once a beginner. Let's use this as fuel!",
+  "This check-in gives you a clear game plan. Knowledge is power!",
+  "A setback is a setup for a comeback. Let's make a plan!",
+  "The fact that you're tracking means you care — and that matters more than any number.",
+  "Don't be discouraged — use this data to make your next move. You're not alone in this!",
 ];
 
 const INPUT_FIELDS = [
@@ -190,7 +210,19 @@ export default function TanitaCalculator() {
       return { ...metric, v1, v2, change, pctChange, status, explanation };
     });
 
-    const encouragement = ENCOURAGEMENT_MESSAGES[Math.floor(Math.random() * ENCOURAGEMENT_MESSAGES.length)];
+    // Pick encouragement based on results
+    const goodCount = metrics.filter(m => m.status === 'good').length;
+    const badCount = metrics.filter(m => m.status === 'bad').length;
+    const fatGained = metrics.find(m => m.key === 'fatMass')?.status === 'bad';
+    let encouragementPool;
+    if (fatGained || badCount > goodCount) {
+      encouragementPool = ENCOURAGEMENT_NEEDS_WORK;
+    } else if (goodCount > badCount) {
+      encouragementPool = ENCOURAGEMENT_GOOD;
+    } else {
+      encouragementPool = ENCOURAGEMENT_MIXED;
+    }
+    const encouragement = encouragementPool[Math.floor(Math.random() * encouragementPool.length)];
 
     setComparison({ daysBetween, metrics, age, height, encouragement });
   }
