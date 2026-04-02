@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import Announcements from "@/components/Announcements";
@@ -227,8 +227,62 @@ export default function Home() {
     const todayJoke = DAILY_JOKES[dayOfYear % DAILY_JOKES.length];
     const todayTip = WELLNESS_TIPS[dayOfYear % WELLNESS_TIPS.length];
 
+    // Floating medical emoji rain
+    const canvasRef = useRef(null);
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let animId;
+        const emojis = ['💊', '🩺', '❤️', '💉', '🩹', '✨', '🌡️', '💗', '🧬', '🫀'];
+        const resize = () => {
+            const parent = canvas.parentElement;
+            canvas.width = parent.offsetWidth;
+            canvas.height = parent.offsetHeight;
+        };
+        resize();
+        const ro = new ResizeObserver(resize);
+        ro.observe(canvas.parentElement);
+
+        const particles = Array.from({ length: 20 }, () => ({
+            x: Math.random() * 2000,
+            y: Math.random() * -2000 - 40,
+            speed: 0.3 + Math.random() * 0.8,
+            size: 14 + Math.random() * 14,
+            opacity: 0.06 + Math.random() * 0.1,
+            wobble: Math.random() * Math.PI * 2,
+            wobbleSpeed: 0.003 + Math.random() * 0.01,
+            emoji: emojis[Math.floor(Math.random() * emojis.length)],
+        }));
+
+        const animate = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (const p of particles) {
+                p.y += p.speed;
+                p.wobble += p.wobbleSpeed;
+                const wx = p.x + Math.sin(p.wobble) * 25;
+                if (p.y > canvas.height + 40) {
+                    p.y = -40 - Math.random() * 150;
+                    p.x = Math.random() * canvas.width;
+                    p.emoji = emojis[Math.floor(Math.random() * emojis.length)];
+                }
+                ctx.save();
+                ctx.globalAlpha = p.opacity;
+                ctx.font = `${p.size}px serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(p.emoji, wx, p.y);
+                ctx.restore();
+            }
+            animId = requestAnimationFrame(animate);
+        };
+        animId = requestAnimationFrame(animate);
+        return () => { cancelAnimationFrame(animId); ro.disconnect(); };
+    }, []);
+
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 relative">
+            <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }} />
             {/* Hero Banner with Resource Cards */}
             <div className="bg-gradient-to-r from-[#6B9FCC] via-[#7BAFD4] to-[#E8A0B5] rounded-3xl p-8 md:p-10 shadow-lg">
                 <div className="flex items-center justify-between mb-6">
