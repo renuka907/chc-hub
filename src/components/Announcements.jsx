@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { entities } from "@/api/supabaseHelpers";
 import { useAuth } from "@/lib/AuthContext";
@@ -47,11 +47,11 @@ function CreateAnnouncementForm({ onClose }) {
     });
 
     return (
-        <Card className="border-2 border-purple-200 shadow-lg mb-4">
+        <Card className="border-2 border-[#B8D4E8] shadow-lg mb-4">
             <CardContent className="p-4 space-y-3">
                 <div className="flex items-center justify-between">
                     <h3 className="font-bold text-gray-900 flex items-center gap-2">
-                        <Send className="w-4 h-4 text-purple-600" /> New Announcement
+                        <Send className="w-4 h-4 text-[#6B9FCC]" /> New Announcement
                     </h3>
                     <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
                         <X className="w-5 h-5" />
@@ -62,14 +62,14 @@ function CreateAnnouncementForm({ onClose }) {
                     placeholder="Title"
                     value={title}
                     onChange={e => setTitle(e.target.value)}
-                    className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-300 focus:border-purple-400 outline-none"
+                    className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#6B9FCC] focus:border-[#6B9FCC] outline-none"
                 />
                 <textarea
                     placeholder="Message..."
                     value={message}
                     onChange={e => setMessage(e.target.value)}
                     rows={3}
-                    className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-300 focus:border-purple-400 outline-none resize-none"
+                    className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#6B9FCC] focus:border-[#6B9FCC] outline-none resize-none"
                 />
                 <div className="flex items-center gap-2">
                     <span className="text-xs text-gray-500">Priority:</span>
@@ -81,7 +81,7 @@ function CreateAnnouncementForm({ onClose }) {
                                 priority === p
                                     ? p === 'urgent' ? 'bg-red-500 text-white'
                                     : p === 'important' ? 'bg-amber-500 text-white'
-                                    : 'bg-purple-500 text-white'
+                                    : 'bg-[#6B9FCC] text-white'
                                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                             }`}
                         >
@@ -93,7 +93,7 @@ function CreateAnnouncementForm({ onClose }) {
                     <Button
                         onClick={() => create.mutate({ title, message, priority, is_active: true })}
                         disabled={!title.trim() || !message.trim() || create.isPending}
-                        className="bg-purple-600 hover:bg-purple-700 text-white"
+                        className="bg-[#6B9FCC] hover:bg-[#5889B5] text-white"
                         size="sm"
                     >
                         {create.isPending ? 'Posting...' : 'Post Announcement'}
@@ -140,6 +140,21 @@ export default function Announcements() {
     });
 
     const myAckIds = new Set(myAcks.map(a => a.announcement_id));
+    const unackCount = announcements.filter(a => !myAckIds.has(a.id)).length;
+
+    // Auto-archive announcements older than 30 days (admin/manager only)
+    useEffect(() => {
+        if (!isAdminOrManager || announcements.length === 0) return;
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        announcements.forEach(ann => {
+            if (new Date(ann.created_at) < thirtyDaysAgo) {
+                entities.Announcement.update(ann.id, { is_active: false }).then(() => {
+                    queryClient.invalidateQueries({ queryKey: ['announcements'] });
+                });
+            }
+        });
+    }, [announcements, isAdminOrManager]);
 
     if (isLoading) return null;
     if (announcements.length === 0 && !isAdminOrManager) return null;
@@ -147,31 +162,31 @@ export default function Announcements() {
     const priorityStyles = {
         urgent: 'border-red-300 bg-red-50',
         important: 'border-amber-300 bg-amber-50',
-        normal: 'border-purple-200 bg-white',
+        normal: 'border-[#B8D4E8] bg-white',
     };
     const priorityBadge = {
         urgent: 'bg-red-500 text-white',
         important: 'bg-amber-500 text-white',
-        normal: 'bg-purple-100 text-purple-700',
+        normal: 'bg-[#E8F0FA] text-[#3A6B8C]',
     };
 
     return (
         <div className="space-y-3">
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                        <Megaphone className="w-4 h-4 text-purple-600" />
+                    <div className="w-8 h-8 bg-[#E8F0FA] rounded-lg flex items-center justify-center">
+                        <Megaphone className="w-4 h-4 text-[#6B9FCC]" />
                     </div>
                     <h2 className="text-lg font-bold text-gray-900">Announcements</h2>
-                    {announcements.length > 0 && (
-                        <Badge className="bg-purple-600 text-white text-xs">{announcements.length}</Badge>
+                    {unackCount > 0 && (
+                        <Badge className="bg-[#6B9FCC] text-white text-xs">{unackCount}</Badge>
                     )}
                 </div>
                 {isAdminOrManager && (
                     <Button
                         onClick={() => setShowForm(!showForm)}
                         size="sm"
-                        className="bg-purple-600 hover:bg-purple-700 text-white"
+                        className="bg-[#6B9FCC] hover:bg-[#5889B5] text-white"
                     >
                         <Plus className="w-4 h-4 mr-1" /> New
                     </Button>
@@ -223,7 +238,7 @@ export default function Announcements() {
                                         <div className="flex items-center gap-1">
                                             <button
                                                 onClick={() => setExpandedAck(expandedAck === ann.id ? null : ann.id)}
-                                                className="text-xs text-purple-600 hover:text-purple-800 flex items-center gap-1"
+                                                className="text-xs text-[#6B9FCC] hover:text-[#3A6B8C] flex items-center gap-1"
                                             >
                                                 <Users className="w-3 h-3" />
                                                 {expandedAck === ann.id ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
