@@ -20,7 +20,8 @@ import {
     Smile,
     Quote,
     Send,
-    MessageCircle
+    MessageCircle,
+    Scale
 } from "lucide-react";
 
 const MOTIVATIONAL_QUOTES = [
@@ -315,6 +316,7 @@ export default function Home() {
                         { title: "Lab Tests", desc: "Quest Diagnostics directory", icon: TestTube, path: "LabTestDirectory" },
                         { title: "FAQs & Questions", desc: "Browse FAQs or submit questions", icon: MessageSquare, path: "FAQ" },
                         { title: "Skin Analysis", desc: "AI-powered skin assessment", icon: Camera, path: "SkinAnalysis", ai: true },
+                        { title: "Tanita Analysis", desc: "Body composition comparison", icon: Scale, path: "TanitaCalculator" },
                     ].map((item) => {
                         const Icon = item.icon;
                         return (
