@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import Announcements from "@/components/Announcements";
-import { useState } from "react";
+import { supabase } from "@/api/supabaseClient";
 import { 
     BookOpen, 
     FileText, 
@@ -104,25 +104,56 @@ function getDayOfYear() {
 }
 
 function ShoutOutBoard() {
-    const [shoutOuts, setShoutOuts] = useState(() => {
-        try {
-            return JSON.parse(localStorage.getItem('chc_shoutouts') || '[]');
-        } catch { return []; }
-    });
+    const [shoutOuts, setShoutOuts] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const [authorName, setAuthorName] = useState('');
+    const [useDb, setUseDb] = useState(true);
 
-    const addShoutOut = () => {
+    const loadShoutOuts = useCallback(async () => {
+        try {
+            const { data, error } = await supabase
+                .from('shout_outs')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .limit(20);
+            if (error) throw error;
+            setShoutOuts(data || []);
+            setUseDb(true);
+        } catch {
+            // Table doesn't exist yet — fall back to localStorage
+            setUseDb(false);
+            try {
+                setShoutOuts(JSON.parse(localStorage.getItem('chc_shoutouts') || '[]'));
+            } catch { setShoutOuts([]); }
+        }
+    }, []);
+
+    useEffect(() => { loadShoutOuts(); }, [loadShoutOuts]);
+
+    const addShoutOut = async () => {
         if (!newMessage.trim()) return;
         const entry = {
-            id: Date.now(),
             message: newMessage.trim(),
             author: authorName.trim() || 'Anonymous',
-            date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
         };
-        const updated = [entry, ...shoutOuts].slice(0, 20);
-        setShoutOuts(updated);
-        localStorage.setItem('chc_shoutouts', JSON.stringify(updated));
+        if (useDb) {
+            try {
+                const { error } = await supabase.from('shout_outs').insert(entry);
+                if (error) throw error;
+                await loadShoutOuts();
+            } catch {
+                // fallback
+                const local = { ...entry, id: Date.now(), created_at: new Date().toISOString() };
+                const updated = [local, ...shoutOuts].slice(0, 20);
+                setShoutOuts(updated);
+                localStorage.setItem('chc_shoutouts', JSON.stringify(updated));
+            }
+        } else {
+            const local = { ...entry, id: Date.now(), created_at: new Date().toISOString() };
+            const updated = [local, ...shoutOuts].slice(0, 20);
+            setShoutOuts(updated);
+            localStorage.setItem('chc_shoutouts', JSON.stringify(updated));
+        }
         setNewMessage('');
         setAuthorName('');
     };
@@ -180,7 +211,7 @@ function ShoutOutBoard() {
                             <MessageCircle className="w-5 h-5 text-[#E8A0B5] flex-shrink-0 mt-0.5" />
                             <div className="flex-1">
                                 <p className="text-sm text-[#3A6B8C]">{s.message}</p>
-                                <p className="text-xs text-gray-400 mt-1">— {s.author} · {s.date}</p>
+                                <p className="text-xs text-gray-400 mt-1">— {s.author} · {s.created_at ? new Date(s.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''}</p>
                             </div>
                         </div>
                     ))
