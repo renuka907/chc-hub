@@ -265,7 +265,7 @@ export default function ConsentFormDetail() {
                     <img src={CHC_LOGO} alt="CHC Logo" style={{ height: '44px' }} />
                     <div style={{ textAlign: 'right' }}>
                         <div style={{ fontSize: '14pt', fontWeight: '700', color: '#5b21b6', fontFamily: 'Arial, sans-serif', lineHeight: '1.2' }}>{form.form_name}</div>
-                        <div style={{ fontSize: '8pt', color: '#6b7280', fontFamily: 'Arial, sans-serif', marginTop: '2px' }}>Contemporary Health Center</div>
+                        <div style={{ fontSize: '8pt', color: '#6b7280', fontFamily: 'Arial, sans-serif', marginTop: '2px' }}>Contemporary Health Center | Fort Myers, FL</div>
                     </div>
                 </div>
 
@@ -331,7 +331,7 @@ export default function ConsentFormDetail() {
 
                 {/* Footer */}
                 <div style={{ marginTop: '14px', borderTop: '1px solid #e5e7eb', paddingTop: '5px', fontSize: '7.5pt', color: '#9ca3af', textAlign: 'center', fontFamily: 'Arial, sans-serif' }}>
-                    Contemporary Health Center &nbsp;|&nbsp; A copy of this signed form shall be retained in the patient's medical record.
+                    Contemporary Health Center &nbsp;|&nbsp; 6150 Diamond Center Court #400, Fort Myers, FL 33912 &nbsp;|&nbsp; Ph: 239-561-9191 &nbsp;|&nbsp; Fx: 239-561-9188
                 </div>
             </div>
 

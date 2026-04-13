@@ -90,8 +90,32 @@ export default function AftercareDetail() {
         } catch (error) { toast.error("Failed to duplicate"); }
     };
 
+    const handlePrint = () => {
+        const docEl = document.querySelector('.doc-page');
+        if (!docEl) return;
+        const content = docEl.innerHTML;
+        const css = `
+            @page { size: letter; margin: 0; }
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            html, body { width: 8.5in; height: 11in; overflow: hidden; background: white; font-family: Arial, sans-serif; font-size: 10pt; color: #1a1a1a; line-height: 1.4; }
+            .page { width: 8.5in; min-height: 11in; padding: 0.4in 0.55in; overflow: hidden; }
+            h1, h2, h3 { font-family: Arial, sans-serif; font-weight: 700; color: #5b21b6; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #ede9fe; padding-bottom: 3px; margin: 12px 0 7px; }
+            h1 { font-size: 11pt; } h2 { font-size: 10pt; } h3 { font-size: 9pt; }
+            p { margin-bottom: 6px; }
+            ul, ol { margin: 3px 0 7px 18px; } li { margin-bottom: 3px; }
+            strong { font-weight: 700; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        `;
+        const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + (instruction.procedure_name || 'Print') + '</title><style>' + css + '</style></head><body><div class="page">' + content + '</div></body></html>';
+        const win = window.open('', '', 'width=850,height=1100,menubar=no,toolbar=no,location=no,status=no,scrollbars=no');
+        win.document.write(html);
+        win.document.close();
+        win.focus();
+        setTimeout(function(){ win.print(); }, 600);
+    };
+
     React.useEffect(() => {
-        if (instruction && autoPrint) { setTimeout(() => window.print(), 500); }
+        if (instruction && autoPrint) { setTimeout(() => handlePrint(), 500); }
     }, [instruction, autoPrint]);
 
     if (!instruction) {
@@ -129,57 +153,50 @@ export default function AftercareDetail() {
                             </Button>
                         </>
                     )}
-                    <Button size="sm" onClick={() => window.print()} className="bg-blue-600 hover:bg-blue-700 text-white">
+                    <Button size="sm" onClick={handlePrint} className="bg-purple-600 hover:bg-purple-700 text-white">
                         <Printer className="w-4 h-4 mr-1.5" /> Print
                     </Button>
                 </div>
             </div>
 
             {/* Document Page */}
-            <div className="doc-page bg-white rounded-lg shadow-lg border border-gray-200 px-12 py-10" style={{ fontFamily: "'Times New Roman', Georgia, serif", fontSize: '12pt', lineHeight: '1.7', color: '#1a1a1a' }}>
+            <div className="doc-page bg-white rounded-lg shadow-lg border border-gray-200" style={{ fontFamily: 'Arial, sans-serif', fontSize: '10pt', lineHeight: '1.4', color: '#1a1a1a', padding: '0.4in 0.55in' }}>
 
-                {/* Logo */}
-                <div className="text-center mb-2">
-                    <img src={CHC_LOGO} alt="Contemporary Health Center" className="h-14 mx-auto" />
+                {/* Header: logo left, title right, purple border */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '2px solid #5b21b6', paddingBottom: '8px', marginBottom: '14px' }}>
+                    <img src={CHC_LOGO} alt="CHC Logo" style={{ height: '44px' }} />
+                    <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontSize: '14pt', fontWeight: '700', color: '#5b21b6', fontFamily: 'Arial, sans-serif', lineHeight: '1.2' }}>Aftercare: {instruction.procedure_name}</div>
+                        <div style={{ fontSize: '8pt', color: '#6b7280', fontFamily: 'Arial, sans-serif', marginTop: '2px' }}>Contemporary Health Center | Fort Myers, FL</div>
+                    </div>
                 </div>
-
-                {/* Contact Info */}
-                <div className="text-center text-xs text-gray-600 mb-3 pb-3 border-b border-gray-300">
-                    <div className="font-semibold">6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
-                    <div>Phone: 239-561-9191 | Fax: 239-561-9188 | contemporaryhealthcenter.com</div>
-                </div>
-
-                {/* Title */}
-                <h1 className="text-center text-xl font-bold uppercase tracking-wide my-4 pb-3 border-b-2 border-gray-900">
-                    Aftercare Instructions: {instruction.procedure_name}
-                </h1>
 
                 {/* Category, Version & Tags */}
-                <div className="flex items-center justify-center gap-3 mb-6 text-xs text-gray-500 flex-wrap">
-                    {instruction.category && <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded">{instruction.category}</span>}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', marginBottom: '12px', fontSize: '8pt', color: '#6b7280', fontFamily: 'Arial, sans-serif', flexWrap: 'wrap' }}>
+                    {instruction.category && <span style={{ background: '#f3f4f6', color: '#374151', padding: '1px 6px', borderRadius: '3px' }}>{instruction.category}</span>}
                     {instruction.version && <span>Version {instruction.version}</span>}
                     {instruction.updated_date && <span>Updated {new Date(instruction.updated_date).toLocaleDateString()}</span>}
-                    {tags.length > 0 && tags.map(tag => <span key={tag} className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded">{tag}</span>)}
+                    {tags.length > 0 && tags.map(tag => <span key={tag} style={{ background: '#ede9fe', color: '#5b21b6', padding: '1px 6px', borderRadius: '3px' }}>{tag}</span>)}
                 </div>
 
                 {/* Recovery Duration */}
                 {instruction.duration && (
-                    <div className="bg-blue-50 border border-blue-200 rounded px-5 py-3 mb-6 flex items-center gap-3 print-section">
-                        <Clock className="w-5 h-5 text-blue-600 flex-shrink-0" />
-                        <div>
-                            <span className="font-bold">Expected Recovery:</span> {instruction.duration}
+                    <div style={{ border: '1px solid #ede9fe', borderRadius: '4px', padding: '6px 12px', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }} className="print-section">
+                        <Clock className="w-4 h-4" style={{ color: '#5b21b6', flexShrink: 0 }} />
+                        <div style={{ fontSize: '10pt' }}>
+                            <strong>Expected Recovery:</strong> {instruction.duration}
                         </div>
                     </div>
                 )}
 
                 {/* Main Instructions */}
-                <div className="mb-6">
-                    <h2 className="text-base font-bold uppercase tracking-wider mb-3 pb-2 border-b border-gray-300">
+                <div style={{ marginBottom: '12px' }}>
+                    <div style={{ fontSize: '10pt', fontWeight: '700', color: '#5b21b6', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '1px solid #ede9fe', paddingBottom: '3px', marginBottom: '7px', fontFamily: 'Arial, sans-serif' }}>
                         Post-Procedure Instructions
-                    </h2>
+                    </div>
                     <div
                         className="aftercare-content"
-                        style={{ fontSize: '11pt', lineHeight: '1.8' }}
+                        style={{ fontSize: '10pt', lineHeight: '1.4' }}
                         dangerouslySetInnerHTML={{ __html: instruction.instructions }}
                     />
                 </div>
@@ -187,28 +204,29 @@ export default function AftercareDetail() {
                 {/* Content Styling */}
                 <style>{`
                     .aftercare-content h2, .aftercare-content h3 {
-                        font-size: 14pt; font-weight: bold; margin-top: 18pt; margin-bottom: 8pt;
-                        padding-bottom: 4pt; border-bottom: 1px solid #ddd;
+                        font-family: Arial, sans-serif; font-weight: 700; color: #5b21b6; text-transform: uppercase;
+                        letter-spacing: 0.5px; border-bottom: 1px solid #ede9fe; padding-bottom: 3px; margin: 12px 0 7px;
                     }
-                    .aftercare-content h3 { font-size: 13pt; }
+                    .aftercare-content h2 { font-size: 10pt; }
+                    .aftercare-content h3 { font-size: 9pt; }
                     .aftercare-content ul, .aftercare-content ol {
-                        margin: 8pt 0; padding-left: 24pt;
+                        margin: 3px 0 7px 18px; padding-left: 0;
                     }
-                    .aftercare-content li { margin-bottom: 6pt; line-height: 1.8; }
-                    .aftercare-content p { margin-bottom: 8pt; }
+                    .aftercare-content li { margin-bottom: 3px; line-height: 1.4; }
+                    .aftercare-content p { margin-bottom: 6px; }
                     .aftercare-content strong { font-weight: 700; }
                 `}</style>
 
                 {/* Warning Signs */}
                 {instruction.warning_signs && (
-                    <div className="bg-amber-50 border-2 border-amber-400 rounded px-5 py-4 mb-6 print-warning">
-                        <h2 className="text-base font-bold uppercase tracking-wider mb-2 text-amber-900 flex items-center gap-2">
-                            <AlertTriangle className="w-5 h-5 text-amber-600" />
+                    <div style={{ border: '1.5px solid #d97706', borderRadius: '4px', padding: '8px 12px', marginBottom: '12px' }} className="print-warning">
+                        <div style={{ fontSize: '10pt', fontWeight: '700', color: '#92400e', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px', fontFamily: 'Arial, sans-serif', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <AlertTriangle className="w-4 h-4" style={{ color: '#d97706' }} />
                             Warning Signs — Contact Us Immediately
-                        </h2>
+                        </div>
                         <div
-                            className="aftercare-content text-amber-900 font-medium"
-                            style={{ fontSize: '11pt', lineHeight: '1.8' }}
+                            className="aftercare-content"
+                            style={{ fontSize: '10pt', lineHeight: '1.4', color: '#92400e', fontWeight: '500' }}
                             dangerouslySetInnerHTML={{ __html: instruction.warning_signs }}
                         />
                     </div>
@@ -216,14 +234,14 @@ export default function AftercareDetail() {
 
                 {/* Follow-up */}
                 {instruction.follow_up && (
-                    <div className="bg-emerald-50 border border-emerald-200 rounded px-5 py-4 mb-6 print-section">
-                        <h2 className="text-base font-bold uppercase tracking-wider mb-2 text-emerald-900 flex items-center gap-2">
-                            <CalendarIcon className="w-5 h-5 text-emerald-600" />
+                    <div style={{ border: '1px solid #ede9fe', borderRadius: '4px', padding: '8px 12px', marginBottom: '12px' }} className="print-section">
+                        <div style={{ fontSize: '10pt', fontWeight: '700', color: '#5b21b6', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px', fontFamily: 'Arial, sans-serif', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <CalendarIcon className="w-4 h-4" style={{ color: '#5b21b6' }} />
                             Follow-Up Appointment
-                        </h2>
+                        </div>
                         <div
                             className="aftercare-content"
-                            style={{ fontSize: '11pt', lineHeight: '1.8' }}
+                            style={{ fontSize: '10pt', lineHeight: '1.4' }}
                             dangerouslySetInnerHTML={{ __html: instruction.follow_up }}
                         />
                     </div>
@@ -251,21 +269,15 @@ export default function AftercareDetail() {
                 )}
 
                 {/* Disclaimer */}
-                <div className="border-t border-gray-300 pt-4 mb-6 print-avoid">
-                    <p className="text-xs text-gray-500 italic leading-relaxed">
+                <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: '8px', marginBottom: '10px' }} className="print-avoid">
+                    <p style={{ fontSize: '8pt', color: '#9ca3af', fontStyle: 'italic', lineHeight: '1.4', marginBottom: '0' }}>
                         <strong>Disclaimer:</strong> These aftercare instructions are general guidelines. Your provider may give you specific instructions that differ. Always follow your provider's personalized recommendations.
                     </p>
                 </div>
 
-                {/* Contact Section */}
-                <div className="bg-slate-50 border border-slate-200 rounded px-5 py-4 print-section">
-                    <h3 className="font-bold text-sm uppercase tracking-wider mb-2">Questions or Concerns?</h3>
-                    <p className="text-sm text-slate-600 mb-3">Please contact our office if you have any questions about your recovery or experience any concerning symptoms.</p>
-                    <div className="border-t border-slate-200 pt-3 space-y-1 text-sm font-semibold text-slate-700">
-                        <p>📞 Phone: 239-561-9191 (call or text)</p>
-                        <p>📧 Email: office@contemporaryhealthcenter.com</p>
-                        <p>🌐 Web: contemporaryhealthcenter.com</p>
-                    </div>
+                {/* Footer */}
+                <div style={{ marginTop: '14px', borderTop: '1px solid #e5e7eb', paddingTop: '5px', fontSize: '7.5pt', color: '#9ca3af', textAlign: 'center', fontFamily: 'Arial, sans-serif' }}>
+                    Contemporary Health Center &nbsp;|&nbsp; 6150 Diamond Center Court #400, Fort Myers, FL 33912 &nbsp;|&nbsp; Ph: 239-561-9191 &nbsp;|&nbsp; Fx: 239-561-9188
                 </div>
             </div>
 

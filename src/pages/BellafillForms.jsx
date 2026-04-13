@@ -22,7 +22,7 @@ function PrintHeader() {
       <img src={CHC_LOGO} alt="CHC Logo" style={{ height: "52px" }} />
       <div style={{ textAlign: "right" }}>
         <div id="form-title" style={{ fontSize: "17pt", fontWeight: "700", color: "#5b21b6", fontFamily: "Arial, sans-serif" }}></div>
-        <div style={{ fontSize: "9pt", color: "#6b7280", fontFamily: "Arial, sans-serif" }}>Contemporary Health Center</div>
+        <div style={{ fontSize: "9pt", color: "#6b7280", fontFamily: "Arial, sans-serif" }}>Contemporary Health Center | Fort Myers, FL</div>
       </div>
     </div>
   );
@@ -67,7 +67,7 @@ const FORMS = {
         ))}
         {/* Footer */}
         <div style={{ marginTop: "12px", borderTop: "1px solid #e5e7eb", paddingTop: "4px", fontSize: "7pt", color: "#9ca3af", textAlign: "center", fontFamily: "Arial, sans-serif" }}>
-          Contemporary Health Center &nbsp;|&nbsp; A copy of this signed form shall be retained in the patient's medical record.
+          Contemporary Health Center &nbsp;|&nbsp; 6150 Diamond Center Court #400, Fort Myers, FL 33912 &nbsp;|&nbsp; Ph: 239-561-9191 &nbsp;|&nbsp; Fx: 239-561-9188
         </div>
       </>
     )
@@ -186,7 +186,7 @@ const FORMS = {
 
         {/* Footer */}
         <div style={{ marginTop: "10px", borderTop: "1px solid #e5e7eb", paddingTop: "5px", fontSize: "7.5pt", color: "#9ca3af", textAlign: "center", fontFamily: "Arial, sans-serif" }}>
-          Contemporary Health Center &nbsp;|&nbsp; A copy of this signed consent shall be retained in the patient's medical record.
+          Contemporary Health Center &nbsp;|&nbsp; 6150 Diamond Center Court #400, Fort Myers, FL 33912 &nbsp;|&nbsp; Ph: 239-561-9191 &nbsp;|&nbsp; Fx: 239-561-9188
         </div>
       </>
     )
@@ -219,7 +219,7 @@ function getStaticFormHtml(formKey, title) {
 
   if (formKey === 'waiver') {
     return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><style>${css}</style></head><body><div class="page">
-    <div class="hdr"><img src="${logo}" alt="CHC"><div class="hdr-r"><div class="hdr-title">Bellafill&reg; Skin Test Waiver</div><div class="hdr-sub">Contemporary Health Center</div></div></div>
+    <div class="hdr"><img src="${logo}" alt="CHC"><div class="hdr-r"><div class="hdr-title">Bellafill&reg; Skin Test Waiver</div><div class="hdr-sub">Contemporary Health Center | Fort Myers, FL</div></div></div>
     <div class="grid4">
       <div><div class="flabel">Patient Full Name</div><div class="fline"></div></div>
       <div><div class="flabel">Date of Birth</div><div class="fline"></div></div>
@@ -235,7 +235,7 @@ function getStaticFormHtml(formKey, title) {
     </div>
     <div class="sig"><div><div class="sline"></div><div class="slabel">Patient Signature</div></div><div><div class="sline"></div><div class="slabel">Date</div></div></div>
     <div class="sig"><div><div class="sline"></div><div class="slabel">Witness Signature</div></div><div><div class="sline"></div><div class="slabel">Date</div></div></div>
-    <div class="footer">Contemporary Health Center &nbsp;|&nbsp; A copy of this signed form shall be retained in the patient&#39;s medical record.</div>
+    <div class="footer">Contemporary Health Center &nbsp;|&nbsp; 6150 Diamond Center Court #400, Fort Myers, FL 33912 &nbsp;|&nbsp; Ph: 239-561-9191 &nbsp;|&nbsp; Fx: 239-561-9188</div>
     </div></body></html>`;
   }
 
@@ -247,7 +247,7 @@ function getStaticFormHtml(formKey, title) {
     .box { width: 12px; height: 12px; border: 1.5px solid #374151; flex-shrink: 0; margin-top: 1px; }
     ul { margin: 3px 0 5px 16px; } li { margin-bottom: 2px; font-size: 9.5pt; }
   </style></head><body><div class="page">
-    <div class="hdr"><img src="${logo}" alt="CHC"><div class="hdr-r"><div class="hdr-title">Bellafill&reg; Informed Consent</div><div class="hdr-sub">Contemporary Health Center</div></div></div>
+    <div class="hdr"><img src="${logo}" alt="CHC"><div class="hdr-r"><div class="hdr-title">Bellafill&reg; Informed Consent</div><div class="hdr-sub">Contemporary Health Center | Fort Myers, FL</div></div></div>
     <div class="grid4" style="margin-bottom:8px">
       <div><div class="flabel">Patient Full Name</div><div class="fline"></div></div>
       <div><div class="flabel">Date of Birth</div><div class="fline"></div></div>
@@ -281,7 +281,7 @@ function getStaticFormHtml(formKey, title) {
     <div class="sect">Signatures</div>
     <div class="sig" style="margin-bottom:8px"><div><div class="sline"></div><div class="slabel">Patient Signature</div></div><div><div class="sline"></div><div class="slabel">Date</div></div></div>
     <div class="sig"><div><div class="sline"></div><div class="slabel">Provider / Clinician Signature</div></div><div><div class="sline"></div><div class="slabel">Date</div></div></div>
-    <div class="footer">Contemporary Health Center &nbsp;|&nbsp; A copy of this signed consent shall be retained in the patient&#39;s medical record.</div>
+    <div class="footer">Contemporary Health Center &nbsp;|&nbsp; 6150 Diamond Center Court #400, Fort Myers, FL 33912 &nbsp;|&nbsp; Ph: 239-561-9191 &nbsp;|&nbsp; Fx: 239-561-9188</div>
     </div></body></html>`;
 }
 
@@ -337,7 +337,7 @@ export default function BellafillForms() {
           <img src={CHC_LOGO} alt="CHC Logo" style={{ height: "44px" }} />
           <div style={{ textAlign: "right" }}>
             <div style={{ fontSize: "15pt", fontWeight: "700", color: "#5b21b6", fontFamily: "Arial, sans-serif", lineHeight: "1.2" }}>{form.title}</div>
-            <div style={{ fontSize: "8.5pt", color: "#6b7280", fontFamily: "Arial, sans-serif", marginTop: "2px" }}>Contemporary Health Center</div>
+            <div style={{ fontSize: "8.5pt", color: "#6b7280", fontFamily: "Arial, sans-serif", marginTop: "2px" }}>Contemporary Health Center | Fort Myers, FL</div>
           </div>
         </div>
 
