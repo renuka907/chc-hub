@@ -57,18 +57,18 @@ export default function PricingManagement() {
     });
 
     const getItemCats = (item) => {
-        // category field is the primary source of truth (set by bulk edit and single edit)
-        if (item.category) return [item.category];
-        // fallback to categories JSON array for legacy data
+        // categories array is the primary source (set by PricingForm save)
         if (item.categories) {
             const parsed = safeParse(item.categories);
             if (parsed.length > 0) return parsed;
         }
+        // fallback to legacy singular category field
+        if (item.category) return [item.category];
         return [];
     };
 
     const availableCategories = useMemo(() => {
-        const cats = new Set();
+        const cats = new Set(["Peptides"]);
         pricingItems.forEach(item => getItemCats(item).forEach(c => cats.add(c)));
         return Array.from(cats).sort();
     }, [pricingItems]);
@@ -212,6 +212,7 @@ export default function PricingManagement() {
         "Syringes": "bg-orange-100 text-orange-700",
         "Treatments": "bg-teal-100 text-teal-700",
         "Product": "bg-emerald-100 text-emerald-700",
+        "Peptides": "bg-amber-100 text-amber-700",
         "Uncategorized": "bg-gray-100 text-gray-700",
     };
 

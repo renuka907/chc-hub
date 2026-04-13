@@ -42,6 +42,7 @@ export default function CategoryManagement({ open, onOpenChange }) {
         "Injectable Treatments",
         "Laser Treatments",
         "Lab Tests",
+        "Peptides",
         "Supplements",
         "Medical Devices"
     ];

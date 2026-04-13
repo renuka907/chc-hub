@@ -127,7 +127,7 @@ export default function SendQuoteDialog({ open, onOpenChange, preselectedItems =
                 Copy the link above to text to {recipientPhone}
               </p>
             )}
-            <Button onClick={handleClose} className="w-full">Done</Button>
+            <Button onClick={handleClose} className="w-full bg-green-600 hover:bg-green-700 text-white">Done</Button>
           </div>
         ) : (
           <div className="space-y-4 py-2">

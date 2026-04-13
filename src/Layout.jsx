@@ -28,7 +28,8 @@ import {
                         Upload,
                         BarChart3,
                         Activity,
-                        Beef
+                        Beef,
+                        Calculator
                     } from "lucide-react";
 
 export default function Layout({ children, currentPageName }) {
@@ -116,16 +117,22 @@ export default function Layout({ children, currentPageName }) {
                 { name: "Procedures", path: "ProceduresManagement", icon: Stethoscope },
                 { name: "Lab Tests", path: "LabTestDirectory", icon: Stethoscope },
                 { name: "Pap Ordering Wizard", path: "PapOrderingWizard", icon: FileText },
-                { name: "Medication Calculator", path: "MedicationCalculator", icon: Stethoscope },
-                { name: "Protein Calculator", path: "ProteinCalculator", icon: Beef },
-                { name: "PREVENT Calculator", path: "RiskCalculator", icon: Activity },
                 { name: "Medication Reference", path: "MedicationReference", icon: Stethoscope },
                 { name: "Provider Directory", path: "ProviderReferral", icon: Users },
                 { name: "Skin Analysis", path: "SkinAnalysis", icon: Sparkles },
-                { name: "Tanita Calculator", path: "TanitaCalculator", icon: Activity },
                 { name: "Provider Education", path: "ProviderEducation", icon: GraduationCap },
                 { name: "MA Education", path: "MAEducation", icon: Stethoscope },
                 { name: "Front Office Education", path: "FrontOfficeEducation", icon: Building2 },
+            ]
+        },
+        {
+            name: "Calculators",
+            icon: Calculator,
+            items: [
+                { name: "Medication Calculator", path: "MedicationCalculator", icon: Calculator },
+                { name: "Protein Calculator", path: "ProteinCalculator", icon: Beef },
+                { name: "PREVENT Calculator", path: "RiskCalculator", icon: Activity },
+                { name: "Tanita Calculator", path: "TanitaCalculator", icon: Activity },
             ]
         },
         {
@@ -134,6 +141,7 @@ export default function Layout({ children, currentPageName }) {
             items: [
                 { name: "Resource Library", path: "Library", icon: BookOpen },
                 { name: "Form Templates", path: "FormTemplates", icon: Layers },
+                { name: "Bellafill Forms", path: "BellafillForms", icon: FileText },
             ]
         },
         {

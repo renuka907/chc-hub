@@ -84,7 +84,7 @@ export default function PricingForm({ open, onOpenChange, onSuccess, editItem = 
     });
 
     React.useEffect(() => {
-        const cats = new Set();
+        const cats = new Set(["Peptides"]);
         allItems.forEach(item => {
             if (item.categories) safeParse(item.categories).forEach(c => cats.add(c));
             if (item.category) cats.add(item.category);
@@ -152,6 +152,7 @@ export default function PricingForm({ open, onOpenChange, onSuccess, editItem = 
             taxable: formData.taxable,
             status: formData.status || 'active',
             categories: selectedCategories,
+            category: null,
             pricing_tiers: tiers,
             price: tiers.length > 0 ? tiers[0].price : null,
         };
@@ -368,6 +369,13 @@ export default function PricingForm({ open, onOpenChange, onSuccess, editItem = 
                                                 <SelectItem value="bottles">Bottles</SelectItem>
                                                 <SelectItem value="items">Items</SelectItem>
                                                 <SelectItem value="treatments">Treatments</SelectItem>
+                                                <SelectItem value="troches">Troches</SelectItem>
+                                                <SelectItem value="tablets">Tablets</SelectItem>
+                                                <SelectItem value="nasal sprays">Nasal Sprays</SelectItem>
+                                                <SelectItem value="capsules">Capsules</SelectItem>
+                                                <SelectItem value="patches">Patches</SelectItem>
+                                                <SelectItem value="creams">Creams</SelectItem>
+                                                <SelectItem value="drops">Drops</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
