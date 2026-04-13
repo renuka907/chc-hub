@@ -6,13 +6,13 @@ const CHC_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/pub
 
 const PRINT_STYLES = `
 @media print {
-  @page { size: letter; margin: 0.45in 0.6in; }
-  nav, header, .no-print, .sidebar, [data-sidebar], aside, footer { display: none !important; height: 0 !important; overflow: hidden !important; }
-  body, html { margin: 0 !important; padding: 0 !important; background: white !important; height: auto !important; overflow: visible !important; }
-  #root, #root > div, main { min-height: auto !important; height: auto !important; padding: 0 !important; overflow: visible !important; }
-  .print-area { display: block !important; box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 !important; border-radius: 0 !important; }
-  .print-area * { overflow: visible !important; }
-  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  @page { size: letter; margin: 0.35in 0.5in; }
+  * { box-sizing: border-box; }
+  nav, header, aside, footer, .no-print, [class*="sidebar"], [class*="Sidebar"] { display: none !important; height: 0 !important; max-height: 0 !important; overflow: hidden !important; padding: 0 !important; margin: 0 !important; }
+  html, body { margin: 0 !important; padding: 0 !important; height: auto !important; min-height: 0 !important; overflow: visible !important; background: white !important; }
+  #root, #root > *, main, [class*="layout"], [class*="Layout"], [class*="container"], [class*="Container"] { all: unset !important; display: block !important; }
+  .print-area { display: block !important; box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 auto !important; border-radius: 0 !important; max-width: 100% !important; background: white !important; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 }
 `;
 
@@ -36,37 +36,37 @@ const FORMS = {
       <>
         <style>{PRINT_STYLES}</style>
         {/* Patient Info */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "8px 20px", marginBottom: "20px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "6px 16px", marginBottom: "14px" }}>
           {["Patient Full Name", "Date of Birth", "Date", "Provider"].map(label => (
             <div key={label}>
-              <div style={{ fontSize: "7.5pt", fontWeight: "700", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.3px", marginBottom: "3px", fontFamily: "Arial, sans-serif" }}>{label}</div>
-              <div style={{ borderBottom: "1.5px solid #374151", minHeight: "20px" }}>&nbsp;</div>
+              <div style={{ fontSize: "7pt", fontWeight: "700", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.3px", marginBottom: "2px", fontFamily: "Arial, sans-serif" }}>{label}</div>
+              <div style={{ borderBottom: "1.5px solid #374151", minHeight: "18px" }}>&nbsp;</div>
             </div>
           ))}
         </div>
         {/* Body */}
-        <div style={{ fontSize: "11pt", lineHeight: "1.65", marginBottom: "24px", fontFamily: "Arial, sans-serif" }}>
-          <p style={{ marginBottom: "10px" }}>In many cases it may be appropriate to waive the skin test for Bellafill&reg; even though a 28 day test is recommended by the FDA and the manufacturer. We do not recommend that a patient waive the test if they have a history of multiple allergies or if they have had a past reaction to bovine products or lidocaine.</p>
-          <p style={{ marginBottom: "10px" }}>The rationale for waiving of the skin test is as follows:</p>
-          <p style={{ marginBottom: "10px" }}>Allergic reactions to Bellafill&reg; are rare (less than 1%). If symptoms do occur they are generally mild, of short duration, treatable, and not related to the long acting component of Bellafill.</p>
-          <p style={{ marginBottom: "10px" }}>Even with a single negative skin test a future positive reaction may occur.</p>
-          <p style={{ marginBottom: "10px" }}>By signing below you are indicating that you are waiving the skin test in order to be treated at this time.</p>
+        <div style={{ fontSize: "10.5pt", lineHeight: "1.55", marginBottom: "16px", fontFamily: "Arial, sans-serif" }}>
+          <p style={{ marginBottom: "8px" }}>In many cases it may be appropriate to waive the skin test for Bellafill&reg; even though a 28 day test is recommended by the FDA and the manufacturer. We do not recommend that a patient waive the test if they have a history of multiple allergies or if they have had a past reaction to bovine products or lidocaine.</p>
+          <p style={{ marginBottom: "8px" }}>The rationale for waiving of the skin test is as follows:</p>
+          <p style={{ marginBottom: "8px" }}>Allergic reactions to Bellafill&reg; are rare (less than 1%). If symptoms do occur they are generally mild, of short duration, treatable, and not related to the long acting component of Bellafill.</p>
+          <p style={{ marginBottom: "8px" }}>Even with a single negative skin test a future positive reaction may occur.</p>
+          <p style={{ marginBottom: "8px" }}>By signing below you are indicating that you are waiving the skin test in order to be treated at this time.</p>
         </div>
         {/* Signatures */}
         {[["Patient Signature", "Date"], ["Witness Signature", "Date"]].map(([left, right], i) => (
-          <div key={i} style={{ display: "grid", gridTemplateColumns: "2.5fr 1fr", gap: "10px 24px", marginBottom: "20px", alignItems: "end" }}>
+          <div key={i} style={{ display: "grid", gridTemplateColumns: "2.5fr 1fr", gap: "8px 20px", marginBottom: "14px", alignItems: "end" }}>
             <div>
-              <div style={{ borderBottom: "1.5px solid #374151", minHeight: "30px", marginBottom: "3px" }}>&nbsp;</div>
-              <div style={{ fontSize: "9pt", color: "#374151", fontWeight: "600", fontFamily: "Arial, sans-serif" }}>{left}</div>
+              <div style={{ borderBottom: "1.5px solid #374151", minHeight: "26px", marginBottom: "3px" }}>&nbsp;</div>
+              <div style={{ fontSize: "8.5pt", color: "#374151", fontWeight: "600", fontFamily: "Arial, sans-serif" }}>{left}</div>
             </div>
             <div>
-              <div style={{ borderBottom: "1.5px solid #374151", minHeight: "30px", marginBottom: "3px" }}>&nbsp;</div>
-              <div style={{ fontSize: "9pt", color: "#374151", fontWeight: "600", fontFamily: "Arial, sans-serif" }}>{right}</div>
+              <div style={{ borderBottom: "1.5px solid #374151", minHeight: "26px", marginBottom: "3px" }}>&nbsp;</div>
+              <div style={{ fontSize: "8.5pt", color: "#374151", fontWeight: "600", fontFamily: "Arial, sans-serif" }}>{right}</div>
             </div>
           </div>
         ))}
         {/* Footer */}
-        <div style={{ marginTop: "18px", borderTop: "1px solid #e5e7eb", paddingTop: "5px", fontSize: "7.5pt", color: "#9ca3af", textAlign: "center", fontFamily: "Arial, sans-serif" }}>
+        <div style={{ marginTop: "12px", borderTop: "1px solid #e5e7eb", paddingTop: "4px", fontSize: "7pt", color: "#9ca3af", textAlign: "center", fontFamily: "Arial, sans-serif" }}>
           Contemporary Health Center &nbsp;|&nbsp; A copy of this signed form shall be retained in the patient's medical record.
         </div>
       </>
