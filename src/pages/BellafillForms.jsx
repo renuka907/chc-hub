@@ -198,7 +198,29 @@ export default function BellafillForms() {
   const form = FORMS[activeForm];
 
   const handlePrint = () => {
-    window.print();
+    const printArea = document.getElementById('print-area');
+    if (!printArea) return;
+    const html = printArea.innerHTML;
+    const win = window.open('', '_blank', 'width=900,height=700');
+    win.document.write(`
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>${form.title}</title>
+<style>
+  @page { size: letter; margin: 0.45in 0.6in; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: white; color: #1a1a1a; }
+  img { max-height: 52px; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+</style>
+</head>
+<body>${html}</body>
+</html>`);
+    win.document.close();
+    win.focus();
+    setTimeout(() => { win.print(); win.close(); }, 500);
   };
 
   return (
