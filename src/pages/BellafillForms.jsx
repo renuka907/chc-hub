@@ -201,29 +201,12 @@ export default function BellafillForms() {
     const printArea = document.getElementById('print-area');
     if (!printArea) return;
     const html = printArea.innerHTML;
-    const win = window.open('', '_blank', 'width=850,height=1100');
-    // Strip invisible chars that add height
     const cleanHtml = html.replace(/&nbsp;/g, '').replace(/\s+/g, ' ');
-    win.document.write(`
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>${form.title}</title>
-<style>
-  @page { size: letter; margin: 0.3in 0.45in; }
-  *, *::before, *::after { box-sizing: border-box; }
-  html, body { margin: 0 !important; padding: 0 !important; }
-  body { background: white; color: #1a1a1a; font-family: Arial, sans-serif; font-size: 9.5pt; line-height: 1.4; }
-  img { max-height: 40px !important; height: 40px !important; }
-  p { margin-top: 0 !important; margin-bottom: 6px !important; font-size: 9.5pt !important; line-height: 1.4 !important; }
-  div[style*="minHeight"], div[style*="min-height"] { min-height: 0 !important; height: 18px !important; }
-  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-</style>
-</head>
-<body>${cleanHtml}<script>window.onload=function(){window.print();window.close();}<\/script></body>
-</html>`);
+    const win = window.open('', '', 'width=850,height=1100,menubar=no,toolbar=no,location=no,status=no,scrollbars=no');
+    win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + form.title + '</title><style>@page{size:letter;margin:0.3in 0.45in;}*{box-sizing:border-box;}html,body{margin:0!important;padding:0!important;background:white;color:#1a1a1a;font-family:Arial,sans-serif;font-size:9.5pt;line-height:1.4;}img{max-height:40px!important;}p{margin:0 0 6px 0!important;font-size:9.5pt!important;line-height:1.4!important;}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}</style></head><body>' + cleanHtml + '</body></html>');
     win.document.close();
+    win.focus();
+    setTimeout(function(){ win.print(); }, 600);
   };
 
   return (
