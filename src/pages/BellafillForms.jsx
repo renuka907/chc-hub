@@ -45,12 +45,12 @@ const FORMS = {
           ))}
         </div>
         {/* Body */}
-        <div style={{ fontSize: "10.5pt", lineHeight: "1.55", marginBottom: "16px", fontFamily: "Arial, sans-serif" }}>
-          <p style={{ marginBottom: "8px" }}>In many cases it may be appropriate to waive the skin test for Bellafill&reg; even though a 28 day test is recommended by the FDA and the manufacturer. We do not recommend that a patient waive the test if they have a history of multiple allergies or if they have had a past reaction to bovine products or lidocaine.</p>
-          <p style={{ marginBottom: "8px" }}>The rationale for waiving of the skin test is as follows:</p>
-          <p style={{ marginBottom: "8px" }}>Allergic reactions to Bellafill&reg; are rare (less than 1%). If symptoms do occur they are generally mild, of short duration, treatable, and not related to the long acting component of Bellafill.</p>
-          <p style={{ marginBottom: "8px" }}>Even with a single negative skin test a future positive reaction may occur.</p>
-          <p style={{ marginBottom: "8px" }}>By signing below you are indicating that you are waiving the skin test in order to be treated at this time.</p>
+        <div style={{ fontSize: "10pt", lineHeight: "1.5", marginBottom: "14px", fontFamily: "Arial, sans-serif" }}>
+          <p style={{ marginBottom: "7px" }}>In many cases it may be appropriate to waive the skin test for Bellafill&reg; even though a 28 day test is recommended by the FDA and the manufacturer. We do not recommend that a patient waive the test if they have a history of multiple allergies or if they have had a past reaction to bovine products or lidocaine.</p>
+          <p style={{ marginBottom: "7px" }}>The rationale for waiving of the skin test is as follows:</p>
+          <p style={{ marginBottom: "7px" }}>Allergic reactions to Bellafill&reg; are rare (less than 1%). If symptoms do occur they are generally mild, of short duration, treatable, and not related to the long acting component of Bellafill.</p>
+          <p style={{ marginBottom: "7px" }}>Even with a single negative skin test a future positive reaction may occur.</p>
+          <p style={{ marginBottom: "7px" }}>By signing below you are indicating that you are waiving the skin test in order to be treated at this time.</p>
         </div>
         {/* Signatures */}
         {[["Patient Signature", "Date"], ["Witness Signature", "Date"]].map(([left, right], i) => (
@@ -209,10 +209,12 @@ export default function BellafillForms() {
 <meta charset="UTF-8">
 <title>${form.title}</title>
 <style>
-  @page { size: letter; margin: 0.45in 0.6in; }
+  @page { size: letter; margin: 0.4in 0.55in; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: Arial, sans-serif; background: white; color: #1a1a1a; }
-  img { max-height: 52px; }
+  body { font-family: Arial, sans-serif; background: white; color: #1a1a1a; font-size: 10pt; }
+  img { max-height: 48px; }
+  p { margin-bottom: 7px !important; font-size: 10pt !important; line-height: 1.5 !important; }
+  div[style] { line-height: 1.5 !important; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 </style>
 </head>
@@ -258,11 +260,11 @@ export default function BellafillForms() {
       {/* Printable form */}
       <div className="bg-white rounded-xl shadow border border-gray-100 p-8 print-area" id="print-area">
         {/* Header with logo */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "2px solid #5b21b6", paddingBottom: "10px", marginBottom: "16px" }}>
-          <img src={CHC_LOGO} alt="CHC Logo" style={{ height: "52px" }} />
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "2px solid #5b21b6", paddingBottom: "8px", marginBottom: "12px" }}>
+          <img src={CHC_LOGO} alt="CHC Logo" style={{ height: "44px" }} />
           <div style={{ textAlign: "right" }}>
-            <div style={{ fontSize: "17pt", fontWeight: "700", color: "#5b21b6", fontFamily: "Arial, sans-serif", lineHeight: "1.2" }}>{form.title}</div>
-            <div style={{ fontSize: "9pt", color: "#6b7280", fontFamily: "Arial, sans-serif", marginTop: "2px" }}>Contemporary Health Center</div>
+            <div style={{ fontSize: "15pt", fontWeight: "700", color: "#5b21b6", fontFamily: "Arial, sans-serif", lineHeight: "1.2" }}>{form.title}</div>
+            <div style={{ fontSize: "8.5pt", color: "#6b7280", fontFamily: "Arial, sans-serif", marginTop: "2px" }}>Contemporary Health Center</div>
           </div>
         </div>
 
