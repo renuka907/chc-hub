@@ -193,19 +193,106 @@ const FORMS = {
   }
 };
 
+function getStaticFormHtml(formKey, title) {
+  const logo = CHC_LOGO;
+  const css = `
+    @page { size: letter; margin: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 8.5in; height: 11in; overflow: hidden; background: white; font-family: Arial, sans-serif; font-size: 9.5pt; color: #1a1a1a; line-height: 1.4; }
+    .page { width: 8.5in; height: 11in; padding: 0.4in 0.55in; overflow: hidden; }
+    .hdr { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #5b21b6; padding-bottom: 8px; margin-bottom: 12px; }
+    .hdr img { height: 40px; }
+    .hdr-r { text-align: right; }
+    .hdr-title { font-size: 14pt; font-weight: bold; color: #5b21b6; line-height: 1.2; }
+    .hdr-sub { font-size: 8pt; color: #6b7280; }
+    .grid4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 4px 14px; margin-bottom: 10px; }
+    .flabel { font-size: 7pt; font-weight: bold; color: #6b7280; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 2px; }
+    .fline { border-bottom: 1.5px solid #374151; height: 16px; }
+    .body { font-size: 9.5pt; line-height: 1.4; margin-bottom: 12px; }
+    .body p { margin-bottom: 6px; }
+    .sig { display: grid; grid-template-columns: 2.5fr 1fr; gap: 6px 16px; margin-bottom: 10px; align-items: end; }
+    .sline { border-bottom: 1.5px solid #374151; height: 22px; margin-bottom: 2px; }
+    .slabel { font-size: 8pt; color: #374151; font-weight: bold; }
+    .footer { margin-top: 10px; border-top: 1px solid #e5e7eb; padding-top: 4px; font-size: 7pt; color: #9ca3af; text-align: center; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  `;
+
+  if (formKey === 'waiver') {
+    return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><style>${css}</style></head><body><div class="page">
+    <div class="hdr"><img src="${logo}" alt="CHC"><div class="hdr-r"><div class="hdr-title">Bellafill&reg; Skin Test Waiver</div><div class="hdr-sub">Contemporary Health Center</div></div></div>
+    <div class="grid4">
+      <div><div class="flabel">Patient Full Name</div><div class="fline"></div></div>
+      <div><div class="flabel">Date of Birth</div><div class="fline"></div></div>
+      <div><div class="flabel">Date</div><div class="fline"></div></div>
+      <div><div class="flabel">Provider</div><div class="fline"></div></div>
+    </div>
+    <div class="body">
+      <p>In many cases it may be appropriate to waive the skin test for Bellafill&reg; even though a 28 day test is recommended by the FDA and the manufacturer. We do not recommend that a patient waive the test if they have a history of multiple allergies or if they have had a past reaction to bovine products or lidocaine.</p>
+      <p>The rationale for waiving of the skin test is as follows:</p>
+      <p>Allergic reactions to Bellafill&reg; are rare (less than 1%). If symptoms do occur they are generally mild, of short duration, treatable, and not related to the long acting component of Bellafill.</p>
+      <p>Even with a single negative skin test a future positive reaction may occur.</p>
+      <p>By signing below you are indicating that you are waiving the skin test in order to be treated at this time.</p>
+    </div>
+    <div class="sig"><div><div class="sline"></div><div class="slabel">Patient Signature</div></div><div><div class="sline"></div><div class="slabel">Date</div></div></div>
+    <div class="sig"><div><div class="sline"></div><div class="slabel">Witness Signature</div></div><div><div class="sline"></div><div class="slabel">Date</div></div></div>
+    <div class="footer">Contemporary Health Center &nbsp;|&nbsp; A copy of this signed form shall be retained in the patient&#39;s medical record.</div>
+    </div></body></html>`;
+  }
+
+  // consent form - returns similar static HTML
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><style>${css}
+    .sect { font-size: 9pt; font-weight: bold; color: #5b21b6; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #ede9fe; padding-bottom: 2px; margin: 9px 0 5px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+    .chk { display: flex; align-items: flex-start; gap: 6px; margin: 3px 0; font-size: 9.5pt; }
+    .box { width: 12px; height: 12px; border: 1.5px solid #374151; flex-shrink: 0; margin-top: 1px; }
+    ul { margin: 3px 0 5px 16px; } li { margin-bottom: 2px; font-size: 9.5pt; }
+  </style></head><body><div class="page">
+    <div class="hdr"><img src="${logo}" alt="CHC"><div class="hdr-r"><div class="hdr-title">Bellafill&reg; Informed Consent</div><div class="hdr-sub">Contemporary Health Center</div></div></div>
+    <div class="grid4" style="margin-bottom:8px">
+      <div><div class="flabel">Patient Full Name</div><div class="fline"></div></div>
+      <div><div class="flabel">Date of Birth</div><div class="fline"></div></div>
+      <div><div class="flabel">Date</div><div class="fline"></div></div>
+      <div><div class="flabel">Provider</div><div class="fline"></div></div>
+    </div>
+    <div class="sect">What is Bellafill?</div>
+    <p style="font-size:9.5pt;margin-bottom:5px">Bellafill is an FDA-approved long-lasting dermal filler for nasolabial folds and acne scars. It contains bovine collagen and PMMA microspheres in a lidocaine gel.</p>
+    <div class="sect">Treatment Area(s)</div>
+    <div class="flabel" style="margin-bottom:2px">Planned treatment area(s)</div><div class="fline" style="margin-bottom:7px"></div>
+    <div class="sect">Risks &amp; Side Effects</div>
+    <div class="grid2">
+      <ul><li>Bruising, swelling, redness</li><li>Tenderness or discomfort</li><li>Lumps, nodules, granuloma</li><li>Asymmetry or uneven result</li><li>Infection (rare)</li></ul>
+      <ul><li>Allergic reaction</li><li>Prolonged swelling or firmness</li><li>Skin discoloration</li><li>Tyndall effect (bluish tint)</li><li>Vascular occlusion (rare)</li></ul>
+    </div>
+    <div class="sect">Skin Test</div>
+    <p style="font-size:9.5pt;margin-bottom:4px">Bellafill requires a skin test at least 28 days before treatment. A positive result means treatment cannot proceed.</p>
+    <div class="chk"><div class="box"></div><span>I completed the skin test and received a negative (cleared) result.</span></div>
+    <div class="chk"><div class="box"></div><span>I signed a Skin Test Waiver and understand the risks of proceeding without testing.</span></div>
+    <div class="sect">Pre &amp; Post Instructions</div>
+    <div class="grid2">
+      <div><strong style="font-size:8.5pt">Before:</strong><ul><li>Avoid blood thinners/aspirin 7 days prior</li><li>No alcohol 24 hours before</li><li>Arrive with clean skin, no makeup</li><li>Disclose all medications</li></ul></div>
+      <div><strong style="font-size:8.5pt">After:</strong><ul><li>Do not touch area for 6 hours</li><li>No strenuous exercise 24 hours</li><li>Avoid heat (sauna, hot yoga) 48 hours</li><li>Ice for swelling; avoid pressure</li></ul></div>
+    </div>
+    <div class="sect">Patient Acknowledgment</div>
+    <div class="chk"><div class="box"></div><span>I understand Bellafill is long-lasting and may not be immediately reversible.</span></div>
+    <div class="chk"><div class="box"></div><span>I have disclosed all medical conditions, medications, allergies, and prior fillers.</span></div>
+    <div class="chk"><div class="box"></div><span>I understand the risks and benefits and have had the opportunity to ask questions.</span></div>
+    <div class="chk"><div class="box"></div><span>I understand individual results vary and no specific outcome is guaranteed.</span></div>
+    <div class="chk"><div class="box"></div><span>I am not pregnant or breastfeeding. I voluntarily consent to Bellafill treatment today.</span></div>
+    <div class="sect">Signatures</div>
+    <div class="sig" style="margin-bottom:8px"><div><div class="sline"></div><div class="slabel">Patient Signature</div></div><div><div class="sline"></div><div class="slabel">Date</div></div></div>
+    <div class="sig"><div><div class="sline"></div><div class="slabel">Provider / Clinician Signature</div></div><div><div class="sline"></div><div class="slabel">Date</div></div></div>
+    <div class="footer">Contemporary Health Center &nbsp;|&nbsp; A copy of this signed consent shall be retained in the patient&#39;s medical record.</div>
+    </div></body></html>`;
+}
+
 export default function BellafillForms() {
   const [activeForm, setActiveForm] = useState("waiver");
   const form = FORMS[activeForm];
 
   const handlePrint = () => {
-    const printArea = document.getElementById('print-area');
-    if (!printArea) return;
-    const html = printArea.innerHTML;
-    const cleanHtml = html.replace(/&nbsp;/g, '').replace(/\s+/g, ' ');
     const win = window.open('', '', 'width=850,height=1100,menubar=no,toolbar=no,location=no,status=no,scrollbars=no');
-    // Letter page at 96dpi = 816x1056px. Margins 0.3in top/bottom = 57.6px each. Usable = 940px.
-    // We cap the body to exactly one page height so browser cannot generate page 2.
-    win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + form.title + '</title><style>@page{size:letter;margin:0.3in 0.45in;}*{box-sizing:border-box;}html{margin:0;padding:0;}body{margin:0!important;padding:0!important;background:white;color:#1a1a1a;font-family:Arial,sans-serif;font-size:9pt;line-height:1.35;max-height:940px;overflow:hidden;}img{max-height:38px!important;height:38px!important;}p{margin:0 0 5px 0!important;font-size:9pt!important;line-height:1.35!important;}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}</style></head><body>' + cleanHtml + '</body></html>');
+    const staticHtml = getStaticFormHtml(activeForm, form.title);
+    win.document.write(staticHtml);
     win.document.close();
     win.focus();
     setTimeout(function(){ win.print(); }, 600);
