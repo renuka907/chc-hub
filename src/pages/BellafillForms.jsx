@@ -203,7 +203,9 @@ export default function BellafillForms() {
     const html = printArea.innerHTML;
     const cleanHtml = html.replace(/&nbsp;/g, '').replace(/\s+/g, ' ');
     const win = window.open('', '', 'width=850,height=1100,menubar=no,toolbar=no,location=no,status=no,scrollbars=no');
-    win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + form.title + '</title><style>@page{size:letter;margin:0.3in 0.45in;}*{box-sizing:border-box;}html,body{margin:0!important;padding:0!important;background:white;color:#1a1a1a;font-family:Arial,sans-serif;font-size:9.5pt;line-height:1.4;}img{max-height:40px!important;}p{margin:0 0 6px 0!important;font-size:9.5pt!important;line-height:1.4!important;}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}</style></head><body>' + cleanHtml + '</body></html>');
+    // Letter page at 96dpi = 816x1056px. Margins 0.3in top/bottom = 57.6px each. Usable = 940px.
+    // We cap the body to exactly one page height so browser cannot generate page 2.
+    win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + form.title + '</title><style>@page{size:letter;margin:0.3in 0.45in;}*{box-sizing:border-box;}html{margin:0;padding:0;}body{margin:0!important;padding:0!important;background:white;color:#1a1a1a;font-family:Arial,sans-serif;font-size:9pt;line-height:1.35;max-height:940px;overflow:hidden;}img{max-height:38px!important;height:38px!important;}p{margin:0 0 5px 0!important;font-size:9pt!important;line-height:1.35!important;}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}</style></head><body>' + cleanHtml + '</body></html>');
     win.document.close();
     win.focus();
     setTimeout(function(){ win.print(); }, 600);
