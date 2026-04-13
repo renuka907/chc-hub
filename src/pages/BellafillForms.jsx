@@ -36,7 +36,7 @@ const FORMS = {
       <>
         <style>{PRINT_STYLES}</style>
         {/* Patient Info */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "6px 16px", marginBottom: "14px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "4px 14px", marginBottom: "10px" }}>
           {["Patient Full Name", "Date of Birth", "Date", "Provider"].map(label => (
             <div key={label}>
               <div style={{ fontSize: "7pt", fontWeight: "700", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.3px", marginBottom: "2px", fontFamily: "Arial, sans-serif" }}>{label}</div>
@@ -45,23 +45,23 @@ const FORMS = {
           ))}
         </div>
         {/* Body */}
-        <div style={{ fontSize: "10pt", lineHeight: "1.5", marginBottom: "14px", fontFamily: "Arial, sans-serif" }}>
-          <p style={{ marginBottom: "7px" }}>In many cases it may be appropriate to waive the skin test for Bellafill&reg; even though a 28 day test is recommended by the FDA and the manufacturer. We do not recommend that a patient waive the test if they have a history of multiple allergies or if they have had a past reaction to bovine products or lidocaine.</p>
-          <p style={{ marginBottom: "7px" }}>The rationale for waiving of the skin test is as follows:</p>
-          <p style={{ marginBottom: "7px" }}>Allergic reactions to Bellafill&reg; are rare (less than 1%). If symptoms do occur they are generally mild, of short duration, treatable, and not related to the long acting component of Bellafill.</p>
-          <p style={{ marginBottom: "7px" }}>Even with a single negative skin test a future positive reaction may occur.</p>
-          <p style={{ marginBottom: "7px" }}>By signing below you are indicating that you are waiving the skin test in order to be treated at this time.</p>
+        <div style={{ fontSize: "9.5pt", lineHeight: "1.45", marginBottom: "12px", fontFamily: "Arial, sans-serif" }}>
+          <p style={{ marginBottom: "6px" }}>In many cases it may be appropriate to waive the skin test for Bellafill&reg; even though a 28 day test is recommended by the FDA and the manufacturer. We do not recommend that a patient waive the test if they have a history of multiple allergies or if they have had a past reaction to bovine products or lidocaine.</p>
+          <p style={{ marginBottom: "6px" }}>The rationale for waiving of the skin test is as follows:</p>
+          <p style={{ marginBottom: "6px" }}>Allergic reactions to Bellafill&reg; are rare (less than 1%). If symptoms do occur they are generally mild, of short duration, treatable, and not related to the long acting component of Bellafill.</p>
+          <p style={{ marginBottom: "6px" }}>Even with a single negative skin test a future positive reaction may occur.</p>
+          <p style={{ marginBottom: "6px" }}>By signing below you are indicating that you are waiving the skin test in order to be treated at this time.</p>
         </div>
         {/* Signatures */}
         {[["Patient Signature", "Date"], ["Witness Signature", "Date"]].map(([left, right], i) => (
-          <div key={i} style={{ display: "grid", gridTemplateColumns: "2.5fr 1fr", gap: "8px 20px", marginBottom: "14px", alignItems: "end" }}>
+          <div key={i} style={{ display: "grid", gridTemplateColumns: "2.5fr 1fr", gap: "6px 16px", marginBottom: "10px", alignItems: "end" }}>
             <div>
-              <div style={{ borderBottom: "1.5px solid #374151", minHeight: "26px", marginBottom: "3px" }}>&nbsp;</div>
-              <div style={{ fontSize: "8.5pt", color: "#374151", fontWeight: "600", fontFamily: "Arial, sans-serif" }}>{left}</div>
+              <div style={{ borderBottom: "1.5px solid #374151", minHeight: "22px", marginBottom: "2px" }}>&nbsp;</div>
+              <div style={{ fontSize: "8pt", color: "#374151", fontWeight: "600", fontFamily: "Arial, sans-serif" }}>{left}</div>
             </div>
             <div>
-              <div style={{ borderBottom: "1.5px solid #374151", minHeight: "26px", marginBottom: "3px" }}>&nbsp;</div>
-              <div style={{ fontSize: "8.5pt", color: "#374151", fontWeight: "600", fontFamily: "Arial, sans-serif" }}>{right}</div>
+              <div style={{ borderBottom: "1.5px solid #374151", minHeight: "22px", marginBottom: "2px" }}>&nbsp;</div>
+              <div style={{ fontSize: "8pt", color: "#374151", fontWeight: "600", fontFamily: "Arial, sans-serif" }}>{right}</div>
             </div>
           </div>
         ))}
@@ -201,7 +201,7 @@ export default function BellafillForms() {
     const printArea = document.getElementById('print-area');
     if (!printArea) return;
     const html = printArea.innerHTML;
-    const win = window.open('', '_blank', 'width=900,height=700');
+    const win = window.open('', '_blank', 'width=850,height=1100');
     win.document.write(`
 <!DOCTYPE html>
 <html>
@@ -209,20 +209,21 @@ export default function BellafillForms() {
 <meta charset="UTF-8">
 <title>${form.title}</title>
 <style>
-  @page { size: letter; margin: 0.4in 0.55in; }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: Arial, sans-serif; background: white; color: #1a1a1a; font-size: 10pt; }
-  img { max-height: 48px; }
-  p { margin-bottom: 7px !important; font-size: 10pt !important; line-height: 1.5 !important; }
-  div[style] { line-height: 1.5 !important; }
-  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  @page { size: letter; margin: 0.3in 0.45in; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: white; color: #1a1a1a; font-family: Arial, sans-serif; font-size: 9.5pt; line-height: 1.4; }
+  img { max-height: 40px !important; height: 40px !important; }
+  p { margin-top: 0 !important; margin-bottom: 6px !important; font-size: 9.5pt !important; line-height: 1.4 !important; }
+  div { line-height: 1.4; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  @media print {
+    html, body { height: auto !important; overflow: visible !important; }
+  }
 </style>
 </head>
-<body>${html}</body>
+<body>${html}<script>window.onload=function(){window.print();window.close();}<\/script></body>
 </html>`);
     win.document.close();
-    win.focus();
-    setTimeout(() => { win.print(); win.close(); }, 500);
   };
 
   return (
