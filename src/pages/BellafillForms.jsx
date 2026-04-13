@@ -6,13 +6,12 @@ const CHC_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/pub
 
 const PRINT_STYLES = `
 @media print {
-  @page { size: letter; margin: 0.5in 0.65in; }
-  nav, header, .no-print, .sidebar, [data-sidebar], aside { display: none !important; }
-  body, html { margin: 0 !important; padding: 0 !important; background: white !important; }
-  #root > div { min-height: auto !important; padding: 0 !important; }
-  .print-area { display: block !important; }
-  .form-selector { display: none !important; }
-  .print-form { page-break-after: avoid; }
+  @page { size: letter; margin: 0.45in 0.6in; }
+  nav, header, .no-print, .sidebar, [data-sidebar], aside, footer { display: none !important; height: 0 !important; overflow: hidden !important; }
+  body, html { margin: 0 !important; padding: 0 !important; background: white !important; height: auto !important; overflow: visible !important; }
+  #root, #root > div, main { min-height: auto !important; height: auto !important; padding: 0 !important; overflow: visible !important; }
+  .print-area { display: block !important; box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 !important; border-radius: 0 !important; }
+  .print-area * { overflow: visible !important; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 `;
