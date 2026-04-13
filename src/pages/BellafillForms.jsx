@@ -202,6 +202,8 @@ export default function BellafillForms() {
     if (!printArea) return;
     const html = printArea.innerHTML;
     const win = window.open('', '_blank', 'width=850,height=1100');
+    // Strip invisible chars that add height
+    const cleanHtml = html.replace(/&nbsp;/g, '').replace(/\s+/g, ' ');
     win.document.write(`
 <!DOCTYPE html>
 <html>
@@ -210,18 +212,16 @@ export default function BellafillForms() {
 <title>${form.title}</title>
 <style>
   @page { size: letter; margin: 0.3in 0.45in; }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; background: white; color: #1a1a1a; font-family: Arial, sans-serif; font-size: 9.5pt; line-height: 1.4; }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0 !important; padding: 0 !important; }
+  body { background: white; color: #1a1a1a; font-family: Arial, sans-serif; font-size: 9.5pt; line-height: 1.4; }
   img { max-height: 40px !important; height: 40px !important; }
   p { margin-top: 0 !important; margin-bottom: 6px !important; font-size: 9.5pt !important; line-height: 1.4 !important; }
-  div { line-height: 1.4; }
+  div[style*="minHeight"], div[style*="min-height"] { min-height: 0 !important; height: 18px !important; }
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  @media print {
-    html, body { height: auto !important; overflow: visible !important; }
-  }
 </style>
 </head>
-<body>${html}<script>window.onload=function(){window.print();window.close();}<\/script></body>
+<body>${cleanHtml}<script>window.onload=function(){window.print();window.close();}<\/script></body>
 </html>`);
     win.document.close();
   };
@@ -259,7 +259,7 @@ export default function BellafillForms() {
       </div>
 
       {/* Printable form */}
-      <div className="bg-white rounded-xl shadow border border-gray-100 p-8 print-area" id="print-area">
+      <div className="bg-white rounded-xl shadow border border-gray-100 p-6 print-area" id="print-area">
         {/* Header with logo */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "2px solid #5b21b6", paddingBottom: "8px", marginBottom: "12px" }}>
           <img src={CHC_LOGO} alt="CHC Logo" style={{ height: "44px" }} />
