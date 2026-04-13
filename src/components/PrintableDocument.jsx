@@ -1,53 +1,61 @@
 import React from "react";
 
-export default function PrintableDocument({ title, children, showLogo = true, logoUrl = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png" }) {
+const CHC_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png";
+
+export default function PrintableDocument({ title, children, showLogo = true, logoUrl = CHC_LOGO }) {
     return (
-        <div className="printable-document w-full max-w-[8.5in] mx-auto bg-white p-8" style={{fontFamily: 'Times New Roman, serif'}}>
+        <div className="printable-document w-full max-w-[8.5in] mx-auto bg-white" style={{fontFamily: 'Arial, sans-serif', fontSize: '10pt', lineHeight: '1.4', color: '#1a1a1a', padding: '0.4in 0.55in'}}>
             <style>
                 {`
                     @page {
                         size: letter;
-                        margin: 0.5in;
+                        margin: 0.4in 0.55in;
                     }
 
                     .printable-document input[type="text"],
                     .printable-document .form-field {
                         border: none;
-                        border-bottom: 1px solid black;
+                        border-bottom: 1.5px solid #374151;
                         background: transparent;
                         width: 100%;
                         padding: 2px 4px;
-                        font-family: 'Times New Roman', serif;
-                        font-size: 11pt;
+                        font-family: Arial, sans-serif;
+                        font-size: 10pt;
                     }
 
                     .printable-document .field-row {
                         display: flex;
-                        gap: 20px;
-                        margin-bottom: 12px;
+                        gap: 14px;
+                        margin-bottom: 8px;
                     }
 
                     .printable-document .field-label {
                         white-space: nowrap;
-                        padding-right: 8px;
+                        padding-right: 4px;
+                        font-size: 7pt;
+                        font-weight: 700;
+                        color: #6b7280;
+                        text-transform: uppercase;
+                        letter-spacing: 0.3px;
                     }
 
                     .printable-document .field-input {
                         flex: 1;
-                        border-bottom: 1px solid black;
-                        min-width: 200px;
+                        border-bottom: 1.5px solid #374151;
+                        min-width: 150px;
                     }
 
                     .printable-document input[type="checkbox"] {
                         appearance: none;
                         -webkit-appearance: none;
-                        width: 14px;
-                        height: 14px;
-                        border: 1px solid black;
+                        width: 13px;
+                        height: 13px;
+                        border: 1.5px solid #374151;
                         background: white;
-                        margin-right: 8px;
+                        margin-right: 7px;
                         vertical-align: middle;
                         cursor: pointer;
+                        flex-shrink: 0;
                     }
 
                     .printable-document input[type="checkbox"]:checked {
@@ -57,14 +65,29 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                     .printable-document input[type="checkbox"]:checked::after {
                         content: '';
                         display: block;
-                        width: 8px;
-                        height: 8px;
+                        width: 7px;
+                        height: 7px;
                         margin: 2px;
-                        background: black;
+                        background: #374151;
                     }
 
+                    .printable-document h1, .printable-document h2, .printable-document h3 {
+                        font-family: Arial, sans-serif;
+                        font-weight: 700;
+                        color: #5b21b6;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                        border-bottom: 1px solid #ede9fe;
+                        padding-bottom: 3px;
+                        margin: 12px 0 7px;
+                    }
+
+                    .printable-document h1 { font-size: 11pt; }
+                    .printable-document h2 { font-size: 10pt; }
+                    .printable-document h3 { font-size: 9pt; }
+
                     .printable-document p {
-                        margin: 8px 0;
+                        margin: 0 0 6px;
                         line-height: 1.4;
                     }
 
@@ -73,48 +96,38 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                     }
 
                     .printable-document ul, .printable-document ol {
-                        margin: 10px 0;
-                        padding-left: 30px;
+                        margin: 3px 0 7px 18px;
+                        padding-left: 0;
                     }
 
                     .printable-document li {
-                        margin: 5px 0;
+                        margin: 0 0 3px;
+                        line-height: 1.4;
                     }
 
                     /* Quill alignment classes */
-                    .printable-document .ql-align-left {
-                        text-align: left;
-                    }
-
-                    .printable-document .ql-align-center {
-                        text-align: center;
-                    }
-
-                    .printable-document .ql-align-right {
-                        text-align: right;
-                    }
-
-                    .printable-document .ql-align-justify {
-                        text-align: justify;
-                    }
+                    .printable-document .ql-align-left { text-align: left; }
+                    .printable-document .ql-align-center { text-align: center; }
+                    .printable-document .ql-align-right { text-align: right; }
+                    .printable-document .ql-align-justify { text-align: justify; }
 
                     /* Box styles */
                     .printable-document .text-box {
-                        border: 2px solid black;
-                        padding: 12px;
-                        margin: 12px 0;
+                        border: 1.5px solid #374151;
+                        padding: 10px;
+                        margin: 8px 0;
                     }
 
                     .printable-document .text-box-thin {
-                        border: 1px solid black;
-                        padding: 10px;
-                        margin: 10px 0;
+                        border: 1px solid #374151;
+                        padding: 8px;
+                        margin: 8px 0;
                     }
 
                     .printable-document .text-box-dashed {
-                        border: 2px dashed black;
-                        padding: 12px;
-                        margin: 12px 0;
+                        border: 1.5px dashed #374151;
+                        padding: 10px;
+                        margin: 8px 0;
                     }
 
                     @media print {
@@ -130,7 +143,7 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                             top: 0;
                             width: 100%;
                             background: white;
-                            padding: 0.5in;
+                            padding: 0;
                             max-width: 100%;
                         }
                         .no-print {
@@ -148,45 +161,43 @@ export default function PrintableDocument({ title, children, showLogo = true, lo
                 `}
             </style>
 
-            {/* Yellow Logo at top */}
-            <div className="mb-4 text-center">
-                <img 
-                    src={logoUrl}
-                    alt="Logo"
-                    className="h-16 mx-auto logo-img"
-                    loading="eager"
-                    decoding="sync"
-                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                />
-            </div>
-
-            {/* Header with contact info */}
+            {/* Header: logo left, title right, purple border */}
             {showLogo && (
-                <div className="mb-6 pb-3 border-b border-gray-400 text-center">
-                    <div className="text-xs text-gray-800 leading-relaxed">
-                        <div className="font-semibold">6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
-                        <div className="mt-0.5">Phone: 239-561-9191 | Fax: 239-561-9188</div>
-                        <div className="mt-0.5">contemporaryhealthcenter.com</div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '2px solid #5b21b6', paddingBottom: '8px', marginBottom: '14px' }}>
+                    <img
+                        src={logoUrl}
+                        alt="CHC Logo"
+                        style={{ height: '44px' }}
+                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                    />
+                    <div style={{ textAlign: 'right' }}>
+                        {title && (
+                            <div style={{ fontSize: '14pt', fontWeight: '700', color: '#5b21b6', fontFamily: 'Arial, sans-serif', lineHeight: '1.2' }}>
+                                {title}
+                            </div>
+                        )}
+                        <div style={{ fontSize: '8pt', color: '#6b7280', fontFamily: 'Arial, sans-serif', marginTop: '2px' }}>
+                            Contemporary Health Center
+                        </div>
                     </div>
                 </div>
             )}
 
-            {/* Title */}
-            {title && (
-                <h1 className="text-xl font-bold text-gray-900 mb-4 text-center uppercase tracking-wide border-b pb-2">
+            {/* Title fallback if no logo */}
+            {!showLogo && title && (
+                <div style={{ fontSize: '14pt', fontWeight: '700', color: '#5b21b6', textAlign: 'center', marginBottom: '14px', paddingBottom: '8px', borderBottom: '2px solid #5b21b6', fontFamily: 'Arial, sans-serif' }}>
                     {title}
-                </h1>
+                </div>
             )}
 
             {/* Content */}
-            <div className="text-gray-900">
+            <div style={{ color: '#1a1a1a' }}>
                 {children}
             </div>
 
-            {/* Footer with date */}
-            <div className="text-center text-xs text-gray-600 mt-8 pt-3 border-t border-gray-300">
-                <p className="font-medium">Contemporary Health Center | Phone: 239-561-9191 | Email: office@contemporaryhealthcenter.com</p>
-                <p className="mt-0.5">Document Generated: {new Date().toLocaleDateString()}</p>
+            {/* Footer */}
+            <div style={{ marginTop: '14px', borderTop: '1px solid #e5e7eb', paddingTop: '5px', fontSize: '7.5pt', color: '#9ca3af', textAlign: 'center', fontFamily: 'Arial, sans-serif' }}>
+                Contemporary Health Center &nbsp;|&nbsp; A copy of this signed form shall be retained in the patient's medical record.
             </div>
         </div>
     );

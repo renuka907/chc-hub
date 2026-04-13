@@ -282,11 +282,12 @@ ${result.contraindications.length > 0 ? `Contraindications:\n${result.contraindi
                 </DialogHeader>
                 
                 <Tabs defaultValue="details" className="w-full">
-                    <TabsList className="grid w-full grid-cols-4">
+                    <TabsList className="grid w-full grid-cols-5">
                         <TabsTrigger value="details">Details</TabsTrigger>
                         <TabsTrigger value="builder">Form Builder</TabsTrigger>
                         <TabsTrigger value="content">Content</TabsTrigger>
                         <TabsTrigger value="media">Media & Files</TabsTrigger>
+                        <TabsTrigger value="preview">Preview</TabsTrigger>
                     </TabsList>
                     
                     <TabsContent value="details" className="space-y-4 mt-4">
@@ -530,6 +531,56 @@ ${result.contraindications.length > 0 ? `Contraindications:\n${result.contraindi
                                     style={{ height: '60vh', marginBottom: '50px' }}
                                 />
                             )}
+                        </div>
+                    </TabsContent>
+
+                    <TabsContent value="preview" className="mt-4">
+                        <div className="border rounded-lg bg-white shadow-inner overflow-y-auto" style={{ maxHeight: '70vh' }}>
+                            <div style={{ fontFamily: 'Arial, sans-serif', fontSize: '10pt', lineHeight: '1.4', color: '#1a1a1a', padding: '0.4in 0.55in' }}>
+                                {/* Header: logo left, title right, purple border */}
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '2px solid #5b21b6', paddingBottom: '8px', marginBottom: '14px' }}>
+                                    <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png" alt="CHC Logo" style={{ height: '44px' }} />
+                                    <div style={{ textAlign: 'right' }}>
+                                        <div style={{ fontSize: '14pt', fontWeight: '700', color: '#5b21b6', fontFamily: 'Arial, sans-serif', lineHeight: '1.2' }}>
+                                            {formData.form_name || 'Form Title'}
+                                        </div>
+                                        <div style={{ fontSize: '8pt', color: '#6b7280', fontFamily: 'Arial, sans-serif', marginTop: '2px' }}>
+                                            Contemporary Health Center
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <style>{`
+                                    .form-preview-content h1, .form-preview-content h2, .form-preview-content h3 {
+                                        font-family: Arial, sans-serif;
+                                        font-weight: 700; color: #5b21b6; text-transform: uppercase;
+                                        letter-spacing: 0.5px; border-bottom: 1px solid #ede9fe;
+                                        padding-bottom: 3px; margin: 12px 0 7px;
+                                    }
+                                    .form-preview-content h1 { font-size: 11pt; }
+                                    .form-preview-content h2 { font-size: 10pt; }
+                                    .form-preview-content h3 { font-size: 9pt; }
+                                    .form-preview-content p { margin-bottom: 6px; }
+                                    .form-preview-content ul, .form-preview-content ol { margin: 3px 0 7px 18px; }
+                                    .form-preview-content li { margin-bottom: 3px; }
+                                    .form-preview-content strong { font-weight: 700; }
+                                    .form-preview-content table { width: 100%; border-collapse: collapse; margin: 4pt 0; }
+                                    .form-preview-content td, .form-preview-content th { border: 1px solid #ede9fe; padding: 3pt 6pt; }
+                                `}</style>
+
+                                {formData.content ? (
+                                    <div className="form-preview-content" dangerouslySetInnerHTML={{ __html: formData.content }} />
+                                ) : (
+                                    <div style={{ textAlign: 'center', color: '#9ca3af', padding: '40px 0', fontSize: '11pt' }}>
+                                        Start typing content to see a live preview here
+                                    </div>
+                                )}
+
+                                {/* Footer */}
+                                <div style={{ marginTop: '14px', borderTop: '1px solid #e5e7eb', paddingTop: '5px', fontSize: '7.5pt', color: '#9ca3af', textAlign: 'center', fontFamily: 'Arial, sans-serif' }}>
+                                    Contemporary Health Center &nbsp;|&nbsp; A copy of this signed form shall be retained in the patient's medical record.
+                                </div>
+                            </div>
                         </div>
                     </TabsContent>
 

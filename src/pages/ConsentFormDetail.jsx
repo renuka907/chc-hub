@@ -161,7 +161,20 @@ export default function ConsentFormDetail() {
     };
 
     React.useEffect(() => {
-        if (form && autoPrint) { setTimeout(() => window.print(), 500); }
+        if (form && autoPrint) {
+            setTimeout(() => {
+                const docEl = document.querySelector('.doc-page');
+                if (!docEl) return;
+                const content = docEl.innerHTML;
+                const css = `@page { size: letter; margin: 0; } * { box-sizing: border-box; margin: 0; padding: 0; } html, body { width: 8.5in; height: 11in; overflow: hidden; background: white; font-family: Arial, sans-serif; font-size: 10pt; color: #1a1a1a; line-height: 1.4; } .page { width: 8.5in; min-height: 11in; padding: 0.4in 0.55in; overflow: hidden; } h1, h2, h3 { font-weight: 700; color: #5b21b6; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #ede9fe; padding-bottom: 3px; margin: 12px 0 7px; } p { margin-bottom: 6px; } ul, ol { margin: 3px 0 7px 18px; } li { margin-bottom: 3px; } * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }`;
+                const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + (form.form_name || 'Print') + '</title><style>' + css + '</style></head><body><div class="page">' + content + '</div></body></html>';
+                const win = window.open('', '', 'width=850,height=1100,menubar=no,toolbar=no,location=no,status=no,scrollbars=no');
+                win.document.write(html);
+                win.document.close();
+                win.focus();
+                setTimeout(function(){ win.print(); }, 600);
+            }, 500);
+        }
     }, [form, autoPrint]);
 
     if (!form) {
@@ -213,30 +226,48 @@ export default function ConsentFormDetail() {
                             <Trash2 className="w-4 h-4 mr-1.5" />
                         </Button>
                     )}
-                    <Button size="sm" onClick={() => window.print()} className="bg-blue-600 hover:bg-blue-700 text-white">
+                    <Button size="sm" onClick={() => {
+                        const docEl = document.querySelector('.doc-page');
+                        if (!docEl) return;
+                        const content = docEl.innerHTML;
+                        const css = `
+                            @page { size: letter; margin: 0; }
+                            * { box-sizing: border-box; margin: 0; padding: 0; }
+                            html, body { width: 8.5in; height: 11in; overflow: hidden; background: white; font-family: Arial, sans-serif; font-size: 10pt; color: #1a1a1a; line-height: 1.4; }
+                            .page { width: 8.5in; min-height: 11in; padding: 0.4in 0.55in; overflow: hidden; }
+                            h1, h2, h3 { font-family: Arial, sans-serif; font-weight: 700; color: #5b21b6; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #ede9fe; padding-bottom: 3px; margin: 12px 0 7px; }
+                            h1 { font-size: 11pt; } h2 { font-size: 10pt; } h3 { font-size: 9pt; }
+                            p { margin-bottom: 6px; }
+                            ul, ol { margin: 3px 0 7px 18px; } li { margin-bottom: 3px; }
+                            strong { font-weight: 700; }
+                            table { width: 100%; border-collapse: collapse; margin: 4pt 0; }
+                            td, th { border: 1px solid #ede9fe; padding: 3pt 6pt; }
+                            mark { background-color: #fef08a !important; }
+                            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                        `;
+                        const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + (form.form_name || 'Print') + '</title><style>' + css + '</style></head><body><div class="page">' + content + '</div></body></html>';
+                        const win = window.open('', '', 'width=850,height=1100,menubar=no,toolbar=no,location=no,status=no,scrollbars=no');
+                        win.document.write(html);
+                        win.document.close();
+                        win.focus();
+                        setTimeout(function(){ win.print(); }, 600);
+                    }} className="bg-purple-600 hover:bg-purple-700 text-white">
                         <Printer className="w-4 h-4 mr-1.5" /> Print
                     </Button>
                 </div>
             </div>
 
             {/* Document Page */}
-            <div className="doc-page bg-white rounded-lg shadow-lg border border-gray-200 px-10 py-6" style={{ fontFamily: "'Times New Roman', Georgia, serif", fontSize: '10pt', lineHeight: '1.35', color: '#1a1a1a' }}>
+            <div className="doc-page bg-white rounded-lg shadow-lg border border-gray-200" style={{ fontFamily: 'Arial, sans-serif', fontSize: '10pt', lineHeight: '1.4', color: '#1a1a1a', padding: '0.4in 0.55in' }}>
 
-                {/* Logo */}
-                <div className="text-center mb-1">
-                    <img src={CHC_LOGO} alt="Contemporary Health Center" className="h-10 mx-auto" />
+                {/* Header: logo left, title right, purple border */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '2px solid #5b21b6', paddingBottom: '8px', marginBottom: '14px' }}>
+                    <img src={CHC_LOGO} alt="CHC Logo" style={{ height: '44px' }} />
+                    <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontSize: '14pt', fontWeight: '700', color: '#5b21b6', fontFamily: 'Arial, sans-serif', lineHeight: '1.2' }}>{form.form_name}</div>
+                        <div style={{ fontSize: '8pt', color: '#6b7280', fontFamily: 'Arial, sans-serif', marginTop: '2px' }}>Contemporary Health Center</div>
+                    </div>
                 </div>
-
-                {/* Contact Info */}
-                <div className="text-center text-xs text-gray-600 mb-1 pb-1 border-b border-gray-300">
-                    <div className="font-semibold">6150 Diamond Center Court #400, Fort Myers, FL 33912</div>
-                    <div>Phone: 239-561-9191 | Fax: 239-561-9188 | contemporaryhealthcenter.com</div>
-                </div>
-
-                {/* Title */}
-                <h1 className="text-center text-base font-bold uppercase tracking-wide my-2 pb-2 border-b-2 border-gray-900">
-                    {form.form_name}
-                </h1>
 
                 {/* Metadata - hidden from view/print */}
 
@@ -261,37 +292,47 @@ export default function ConsentFormDetail() {
                 {/* Content Styling */}
                 <style>{`
                     .consent-content h1, .consent-content h2, .consent-content h3 {
-                        font-weight: bold; margin-top: 8pt; margin-bottom: 4pt;
-                        padding-bottom: 2pt; border-bottom: 1px solid #ddd;
+                        font-family: Arial, sans-serif;
+                        font-weight: 700; color: #5b21b6; text-transform: uppercase;
+                        letter-spacing: 0.5px; border-bottom: 1px solid #ede9fe;
+                        padding-bottom: 3px; margin: 12px 0 7px;
                     }
-                    .consent-content h1 { font-size: 13pt; }
-                    .consent-content h2 { font-size: 12pt; }
-                    .consent-content h3 { font-size: 11pt; }
+                    .consent-content h1 { font-size: 11pt; }
+                    .consent-content h2 { font-size: 10pt; }
+                    .consent-content h3 { font-size: 9pt; }
                     .consent-content ul, .consent-content ol {
-                        margin: 2pt 0; padding-left: 20pt;
+                        margin: 3px 0 7px 18px; padding-left: 0;
                     }
-                    .consent-content li { margin-bottom: 1pt; line-height: 1.4; }
-                    .consent-content p { margin-bottom: 4pt; }
+                    .consent-content li { margin-bottom: 3px; line-height: 1.4; }
+                    .consent-content p { margin-bottom: 6px; }
                     .consent-content strong { font-weight: 700; }
                     .consent-content table { width: 100%; border-collapse: collapse; margin: 4pt 0; }
-                    .consent-content td, .consent-content th { border: 1px solid #ccc; padding: 3pt 6pt; }
+                    .consent-content td, .consent-content th { border: 1px solid #ede9fe; padding: 3pt 6pt; }
                 `}</style>
 
                 {/* Signature Lines - only show if content doesn't already have them */}
                 {!/(signature|sign here|patient.*date|printed name)/i.test(form.content || '') && (
-                <div className="mt-10 pt-6 border-t border-gray-300 print-avoid">
-                    <div className="grid grid-cols-2 gap-8 mt-6">
-                        <div>
-                            <div className="border-b border-gray-900 mb-1" style={{ height: '1px', marginTop: '40px' }}></div>
-                            <p className="text-xs text-gray-600">Patient Signature / Date</p>
+                <div style={{ marginTop: '16px' }} className="print-avoid">
+                    <div style={{ fontSize: '10pt', fontWeight: '700', color: '#5b21b6', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '1px solid #ede9fe', paddingBottom: '3px', marginBottom: '10px', fontFamily: 'Arial, sans-serif' }}>Signatures</div>
+                    {[["Patient Signature", "Date"], ["Witness Signature", "Date"]].map(([left, right], i) => (
+                        <div key={i} style={{ display: 'grid', gridTemplateColumns: '2.5fr 1fr', gap: '6px 16px', marginBottom: '12px', alignItems: 'end' }}>
+                            <div>
+                                <div style={{ borderBottom: '1.5px solid #374151', minHeight: '24px', marginBottom: '2px' }}>&nbsp;</div>
+                                <div style={{ fontSize: '8pt', color: '#374151', fontWeight: '600', fontFamily: 'Arial, sans-serif' }}>{left}</div>
+                            </div>
+                            <div>
+                                <div style={{ borderBottom: '1.5px solid #374151', minHeight: '24px', marginBottom: '2px' }}>&nbsp;</div>
+                                <div style={{ fontSize: '8pt', color: '#374151', fontWeight: '600', fontFamily: 'Arial, sans-serif' }}>{right}</div>
+                            </div>
                         </div>
-                        <div>
-                            <div className="border-b border-gray-900 mb-1" style={{ height: '1px', marginTop: '40px' }}></div>
-                            <p className="text-xs text-gray-600">Witness Signature / Date</p>
-                        </div>
-                    </div>
+                    ))}
                 </div>
                 )}
+
+                {/* Footer */}
+                <div style={{ marginTop: '14px', borderTop: '1px solid #e5e7eb', paddingTop: '5px', fontSize: '7.5pt', color: '#9ca3af', textAlign: 'center', fontFamily: 'Arial, sans-serif' }}>
+                    Contemporary Health Center &nbsp;|&nbsp; A copy of this signed form shall be retained in the patient's medical record.
+                </div>
             </div>
 
             {/* Print page number footer - shows on every printed page via position:fixed */}
