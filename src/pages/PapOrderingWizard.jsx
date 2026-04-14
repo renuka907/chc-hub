@@ -56,6 +56,9 @@ export default function PapOrderingWizard() {
         const needsSTI = formData.stiPanel === "yes";
         const isMedicare = formData.insurance === "medicare";
         const isHighRisk = formData.reason === "high-risk";
+        const isHIV = formData.reason === "hiv";
+        const isImmunocompromised = formData.reason === "immunocompromised";
+        const isSpecialPopulation = isHIV || isImmunocompromised;
         const hadRecentPap = formData.recentPapHPV === "yes";
         const hasDysplasiaHistory = formData.postHystHistory === "dysplasia" || formData.postHystHistory === "cin" || formData.postHystHistory === "cancer";
 
@@ -68,7 +71,10 @@ export default function PapOrderingWizard() {
         let specimenSource = "";
         let warnings = [];
         let medicareWarnings = [];
+        let denialWarnings = [];
         let requiresHPV = true;
+        let questCodeName = "";
+        let frequencyReminder = "";
 
         // Under 21 logic
         if (isUnder21) {
@@ -87,16 +93,20 @@ export default function PapOrderingWizard() {
                     specimenSource: "",
                     warnings,
                     medicareWarnings: [],
+                    denialWarnings: [],
                     requiresHPV: false,
-                    requiredFields: []
+                    requiredFields: [],
+                    questCodeName: "",
+                    frequencyReminder: ""
                 };
             }
 
             // Diagnostic under 21
             labName = hasLeeHealth ? "AmeriPath" : "Quest Diagnostics";
-            testCodes = hasLeeHealth ? ["Q0091"] : ["58315"];
+            testCodes = hasLeeHealth ? ["Q0091"] : ["92087"];
             cptCodes = ["88175"];
             specimenSource = hasCervix ? "Cervix" : "Vaginal cuff";
+            questCodeName = "ThinPrep Pap w/ Reflex to HPV DNA";
 
             switch (formData.under21Indication) {
                 case "symptomatic":
@@ -105,15 +115,15 @@ export default function PapOrderingWizard() {
                     break;
                 case "hiv":
                     primaryICD10 = "B20";
-                    secondaryICD10 = ["Z01.419"];
+                    secondaryICD10 = ["Z12.4"];
                     break;
                 case "immunocompromised":
                     primaryICD10 = "D89.9";
-                    secondaryICD10 = ["Z01.419"];
+                    secondaryICD10 = ["Z12.4"];
                     break;
                 case "des":
                     primaryICD10 = "Z77.9";
-                    secondaryICD10 = ["Z01.419"];
+                    secondaryICD10 = ["Z12.4"];
                     break;
                 case "visible-lesion":
                     primaryICD10 = "N88.8";
@@ -124,18 +134,20 @@ export default function PapOrderingWizard() {
                     secondaryICD10 = ["N89.8"];
             }
 
-            warnings.push("🔵 Use 58315 (Pap only) - NO HPV testing");
+            warnings.push("🔵 Use 92087 (Pap w/ reflex HPV) - HPV only bills if ASCUS");
             warnings.push("🔵 Use DIAGNOSTIC codes, not screening");
             warnings.push("🔵 Document clinical indication");
-        } 
+            denialWarnings.push("⚠️ HPV test NOT covered for ages <30 unless reflex from ASCUS — use 92087 NOT 92094");
+        }
         // Post-hysterectomy NO cervix
         else if (!hasCervix) {
             requiresHPV = false;
             labName = hasLeeHealth ? "AmeriPath" : "Quest Diagnostics";
-            testCodes = hasLeeHealth ? ["Q0091"] : ["58315"];
+            testCodes = hasLeeHealth ? ["Q0091"] : ["92087"];
             cptCodes = ["88175"];
             specimenSource = "Vaginal cuff";
             secondaryICD10 = ["Z90.710"];
+            questCodeName = "ThinPrep Pap w/ Reflex to HPV DNA";
 
             if (formData.postHystHistory === "no-history") {
                 warnings.push("⚠️ Pap NOT typically indicated per USPSTF (no history of dysplasia/cancer)");
@@ -148,7 +160,7 @@ export default function PapOrderingWizard() {
                 primaryICD10 = "Z87.410";
                 if (isMedicare) {
                     medicareWarnings.push("🔵 MEDICARE: Post-hysterectomy with dysplasia history — Pap may be covered as DIAGNOSTIC (not screening). Use diagnostic ICD-10 codes.");
-                    medicareWarnings.push("🔵 Use Z87.410 as primary diagnosis. Do NOT use screening codes (Z01.419).");
+                    medicareWarnings.push("🔵 Use Z87.410 as primary diagnosis. Do NOT use screening codes (Z12.4).");
                 }
             } else if (formData.postHystHistory === "cin") {
                 primaryICD10 = "Z86.001";
@@ -165,7 +177,7 @@ export default function PapOrderingWizard() {
         // Standard screening with cervix
         else {
             specimenSource = formData.hysterectomyStatus === "supracervical" ? "Cervical stump" : "Cervix";
-            
+
             if (formData.hysterectomyStatus === "supracervical") {
                 secondaryICD10.push("Z90.711");
             }
@@ -173,11 +185,11 @@ export default function PapOrderingWizard() {
             // Lee Health
             if (hasLeeHealth) {
                 labName = "AmeriPath";
-                
+
                 if (formData.reason === "followup") {
                     testCodes = ["Q0091", "87625"];
                     cptCodes = ["88175", "87624", "87625"];
-                    
+
                     if (formData.previousAbnormal === "asc-us") {
                         primaryICD10 = "R87.610";
                     } else if (formData.previousAbnormal === "lsil") {
@@ -189,16 +201,30 @@ export default function PapOrderingWizard() {
                     } else {
                         primaryICD10 = "R87.610";
                     }
-                } else if (isHighRisk) {
+                } else if (isHighRisk || isSpecialPopulation) {
                     testCodes = ["Q0091", "87625"];
                     cptCodes = ["88175", "87624", "87625"];
-                    primaryICD10 = "Z91.89";
+                    if (isHIV) {
+                        primaryICD10 = "Z12.4";
+                        secondaryICD10.push("B20");
+                    } else if (isImmunocompromised) {
+                        primaryICD10 = "Z12.4";
+                        secondaryICD10.push("D89.9");
+                    } else {
+                        primaryICD10 = "Z91.89";
+                    }
                     secondaryICD10.push("Z11.51");
+                    frequencyReminder = "Screen annually (special population / high-risk)";
                 } else {
                     testCodes = ["Q0091", "87625"];
                     cptCodes = ["88175", "87624", "87625"];
-                    primaryICD10 = "Z01.419";
+                    primaryICD10 = "Z12.4";
                     secondaryICD10.push("Z11.51");
+                    if (age >= 21 && age <= 29) {
+                        frequencyReminder = "Pap alone every 3 years (ages 21-29)";
+                    } else if (age >= 30 && age <= 65) {
+                        frequencyReminder = "Pap + HPV co-test every 5 years (ages 30-65)";
+                    }
                 }
 
                 if (needsSTI) {
@@ -211,18 +237,23 @@ export default function PapOrderingWizard() {
 
                 // Medicare frequency check
                 if (hadRecentPap && formData.reason !== "followup") {
-                    if (isHighRisk) {
+                    if (isHighRisk || isSpecialPopulation) {
                         medicareWarnings.push("⚠️ MEDICARE HIGH-RISK: Pap covered every 12 months. Verify last Pap was >12 months ago.");
                     } else {
                         medicareWarnings.push("🚨 MEDICARE FREQUENCY: Screening Pap is covered once every 24 months. Patient had Pap/HPV in the last 24 months — this order will likely be DENIED. Patient will be responsible for full cost.");
                     }
                 }
 
+                // Medicare specimen collection
+                hcpcsCodes.push("Q0091");
+                warnings.push("📋 Medicare: Use Q0091 for specimen collection");
+
                 if (formData.reason === "followup") {
                     // Follow-up is diagnostic, not screening — standard codes apply
-                    testCodes = needsSTI ? ["91386"] : ["91414"];
-                    cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624", "87625"];
-                    
+                    testCodes = needsSTI ? ["91386"] : ["92094"];
+                    cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624"];
+                    questCodeName = needsSTI ? "ThinPrep Pap+HPV+STI combo" : "ThinPrep Pap + HPV DNA Co-test w/ Reflex 16/18";
+
                     if (formData.previousAbnormal === "asc-us") {
                         primaryICD10 = "R87.610";
                     } else if (formData.previousAbnormal === "lsil") {
@@ -238,56 +269,91 @@ export default function PapOrderingWizard() {
                 }
                 // Medicare OVER 65 with cervix
                 else if (age > 65) {
-                    requiresHPV = false;
-                    // Pap-only for over 65
-                    testCodes = ["58315"];
-                    cptCodes = ["88175"];
+                    // Check if adequate prior screening
+                    if (!isHighRisk && !isSpecialPopulation && !hasDysplasiaHistory) {
+                        warnings.push("⚠️ OVER 65: Consider stopping screening IF adequate prior screening AND no hx CIN2+ in last 25 years");
+                        warnings.push("📋 Document medical necessity for continued screening");
+                        denialWarnings.push("⚠️ Document medical necessity for continued screening after age 65");
+                    }
 
-                    if (isHighRisk) {
-                        primaryICD10 = "Z91.89";
-                        secondaryICD10.push("Z01.411");
-                        medicareWarnings.push("⚠️ MEDICARE DOES NOT COVER HPV SCREENING FOR PATIENTS OVER 65. HPV testing will be patient responsibility (~$150+). Consider Pap-only order.");
-                        medicareWarnings.push("🔵 MEDICARE HIGH-RISK OVER 65: Pap covered every 12 months. HPV is NOT covered even for high-risk patients over 65.");
-                        warnings.push("📋 Medicare high-risk: Pap every 12 months (no HPV)");
+                    if (isHighRisk || isSpecialPopulation) {
+                        // High-risk/special population over 65: follow 30-65 protocol
+                        testCodes = needsSTI ? ["91386"] : ["92094"];
+                        cptCodes = ["88175"];
+                        hcpcsCodes.push("G0476");
+                        questCodeName = "ThinPrep Pap + HPV DNA Co-test w/ Reflex 16/18";
+                        if (isHIV) {
+                            primaryICD10 = "Z12.4";
+                            secondaryICD10.push("B20");
+                        } else if (isImmunocompromised) {
+                            primaryICD10 = "Z12.4";
+                            secondaryICD10.push("D89.9");
+                        } else {
+                            primaryICD10 = "Z91.89";
+                        }
+                        secondaryICD10.push("Z11.51");
+                        medicareWarnings.push("🔵 MEDICARE HIGH-RISK OVER 65: Following 30-65 co-test protocol. Pap+HPV covered every 12 months.");
+                        medicareWarnings.push("🔵 MEDICARE: Use G0476 for HPV screening. Do NOT bill 88175 + 87624 separately.");
+                        medicareWarnings.push("📋 Document medical necessity for continued screening past 65");
+                        frequencyReminder = "Screen annually (high-risk / special population)";
                     } else {
-                        primaryICD10 = "Z01.419";
+                        requiresHPV = false;
+                        // Pap-only for over 65, standard risk
+                        testCodes = ["92087"];
+                        cptCodes = ["88175"];
+                        questCodeName = "ThinPrep Pap w/ Reflex to HPV DNA";
+                        primaryICD10 = "Z12.4";
                         secondaryICD10.push("Z11.51");
                         medicareWarnings.push("⚠️ MEDICARE DOES NOT COVER HPV SCREENING FOR PATIENTS OVER 65. HPV testing will be patient responsibility (~$150+). Consider Pap-only order.");
-                        medicareWarnings.push("🔵 MEDICARE OVER 65: Use Quest code 58315 (Pap only). Do NOT use 91414 (Pap+HPV combo) — HPV portion will be denied.");
+                        medicareWarnings.push("🔵 MEDICARE OVER 65: Use Quest code 92087 (Pap w/ reflex). Do NOT use 92094 (Pap+HPV combo) — HPV portion will be denied.");
                         warnings.push("📋 Medicare screening: Pap covered every 24 months");
+                        frequencyReminder = "Pap every 24 months (Medicare standard risk)";
                     }
                 }
                 // Medicare age 30-65 with cervix — HPV covered with G0476
                 else if (age >= 30 && age <= 65) {
-                    if (isHighRisk) {
-                        testCodes = needsSTI ? ["91386"] : ["91414"];
-                        cptCodes = ["88175"];
-                        hcpcsCodes = ["G0476"];
-                        primaryICD10 = "Z91.89";
+                    testCodes = needsSTI ? ["91386"] : ["92094"];
+                    cptCodes = ["88175"];
+                    hcpcsCodes.push("G0476");
+                    questCodeName = needsSTI ? "ThinPrep Pap+HPV+STI combo" : "ThinPrep Pap + HPV DNA Co-test w/ Reflex 16/18";
+
+                    if (isHighRisk || isSpecialPopulation) {
+                        if (isHIV) {
+                            primaryICD10 = "Z12.4";
+                            secondaryICD10.push("B20");
+                        } else if (isImmunocompromised) {
+                            primaryICD10 = "Z12.4";
+                            secondaryICD10.push("D89.9");
+                        } else {
+                            primaryICD10 = "Z91.89";
+                        }
                         secondaryICD10.push("Z11.51");
-                        secondaryICD10.push("Z01.411");
-                        medicareWarnings.push("🔵 MEDICARE: Use G0476 for HPV screening. Do NOT use 87624/87625 (will be denied).");
+                        medicareWarnings.push("🔵 MEDICARE: Use G0476 for HPV screening. Do NOT bill 88175 + 87624 separately.");
                         medicareWarnings.push("🔵 MEDICARE HIGH-RISK: Pap+HPV covered every 12 months.");
-                        warnings.push("📋 Dual diagnosis required: Z11.51 (HPV screening) + Z01.411 (Pap encounter)");
+                        warnings.push("📋 Dual diagnosis required: Z11.51 (HPV screening) + Z12.4 (cervical cancer screening)");
+                        frequencyReminder = "Screen annually (high-risk / special population)";
                     } else {
-                        testCodes = needsSTI ? ["91386"] : ["91414"];
-                        cptCodes = ["88175"];
-                        hcpcsCodes = ["G0476"];
-                        primaryICD10 = "Z11.51";
-                        secondaryICD10.push("Z01.419");
-                        medicareWarnings.push("🔵 MEDICARE: Use G0476 for HPV screening. Do NOT use 87624/87625 (will be denied).");
+                        primaryICD10 = "Z12.4";
+                        secondaryICD10.push("Z11.51");
+                        medicareWarnings.push("🔵 MEDICARE: Use G0476 for HPV screening. Do NOT bill 88175 + 87624 separately.");
                         medicareWarnings.push("📋 MEDICARE SCREENING: Pap+HPV covered once every 24 months. Ensure >24 months since last screening.");
-                        warnings.push("📋 Medicare dual diagnosis: Primary Z11.51 + Secondary Z01.419");
+                        warnings.push("📋 Medicare dual diagnosis: Primary Z12.4 + Secondary Z11.51");
+                        frequencyReminder = "Pap + HPV co-test every 24 months (Medicare)";
                     }
+
+                    denialWarnings.push("🚨 Do NOT bill 88175 + 87624 separately for Medicare — use G0476");
                 }
                 // Medicare under 30 with cervix — no HPV screening (not indicated <30)
                 else {
                     requiresHPV = false;
-                    testCodes = ["58315"];
+                    testCodes = ["92087"];
                     cptCodes = ["88175"];
-                    primaryICD10 = "Z01.419";
+                    primaryICD10 = "Z12.4";
+                    questCodeName = "ThinPrep Pap w/ Reflex to HPV DNA";
                     warnings.push("🔵 Patient under 30: HPV co-testing not recommended per guidelines");
                     medicareWarnings.push("📋 MEDICARE: Pap-only for patients under 30. Covered every 24 months (12 months if high-risk).");
+                    denialWarnings.push("⚠️ HPV test NOT covered for ages <30 unless reflex from ASCUS — use 92087 NOT 92094");
+                    frequencyReminder = "Pap alone every 3 years (ages 21-29)";
                 }
 
                 if (needsSTI) {
@@ -299,9 +365,16 @@ export default function PapOrderingWizard() {
                 labName = "Quest Diagnostics";
 
                 if (formData.reason === "followup") {
-                    testCodes = needsSTI ? ["91386"] : ["91414"];
-                    cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624", "87625"];
-                    
+                    if (age >= 30) {
+                        testCodes = needsSTI ? ["91386"] : ["92094"];
+                        cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624"];
+                        questCodeName = needsSTI ? "ThinPrep Pap+HPV+STI combo" : "ThinPrep Pap + HPV DNA Co-test w/ Reflex 16/18";
+                    } else {
+                        testCodes = needsSTI ? ["91386"] : ["92087"];
+                        cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175"];
+                        questCodeName = needsSTI ? "ThinPrep Pap+HPV+STI combo" : "ThinPrep Pap w/ Reflex to HPV DNA";
+                    }
+
                     if (formData.previousAbnormal === "asc-us") {
                         primaryICD10 = "R87.610";
                     } else if (formData.previousAbnormal === "lsil") {
@@ -313,17 +386,79 @@ export default function PapOrderingWizard() {
                     } else {
                         primaryICD10 = "R87.610";
                     }
-                } else {
-                    testCodes = needsSTI ? ["91386"] : ["91414"];
-                    cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624", "87625"];
-                    primaryICD10 = "Z01.419";
+                } else if (isSpecialPopulation) {
+                    // HIV+ or immunocompromised — annual screening regardless of age
+                    if (age >= 30) {
+                        testCodes = needsSTI ? ["91386"] : ["92094"];
+                        cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624"];
+                        questCodeName = needsSTI ? "ThinPrep Pap+HPV+STI combo" : "ThinPrep Pap + HPV DNA Co-test w/ Reflex 16/18";
+                    } else {
+                        testCodes = needsSTI ? ["91386"] : ["92087"];
+                        cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175"];
+                        questCodeName = needsSTI ? "ThinPrep Pap+HPV+STI combo" : "ThinPrep Pap w/ Reflex to HPV DNA";
+                    }
+                    if (isHIV) {
+                        primaryICD10 = "Z12.4";
+                        secondaryICD10.push("B20");
+                    } else {
+                        primaryICD10 = "Z12.4";
+                        secondaryICD10.push("D89.9");
+                    }
                     secondaryICD10.push("Z11.51");
+                    frequencyReminder = "Screen annually (special population)";
+                } else if (age > 65) {
+                    // Over 65 non-Medicare
+                    if (isHighRisk || hasDysplasiaHistory) {
+                        // Continue 30-65 protocol
+                        testCodes = needsSTI ? ["91386"] : ["92094"];
+                        cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624"];
+                        primaryICD10 = "Z12.4";
+                        secondaryICD10.push("Z11.51");
+                        questCodeName = "ThinPrep Pap + HPV DNA Co-test w/ Reflex 16/18";
+                        frequencyReminder = "Follow 30-65 co-test protocol (high-risk / hx CIN2+)";
+                    } else {
+                        warnings.push("⚠️ OVER 65: Consider stopping screening IF adequate prior screening AND no hx CIN2+ in last 25 years");
+                        warnings.push("📋 Document medical necessity for continued screening");
+                        testCodes = needsSTI ? ["91386"] : ["92094"];
+                        cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624"];
+                        primaryICD10 = "Z12.4";
+                        secondaryICD10.push("Z11.51");
+                        questCodeName = "ThinPrep Pap + HPV DNA Co-test w/ Reflex 16/18";
+                        frequencyReminder = "Pap + HPV co-test every 5 years (if continuing)";
+                        denialWarnings.push("⚠️ Document medical necessity for continued screening after age 65");
+                    }
+                } else if (age >= 30 && age <= 65) {
+                    // Ages 30-65: co-test with 92094
+                    testCodes = needsSTI ? ["91386"] : ["92094"];
+                    cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624"];
+                    primaryICD10 = "Z12.4";
+                    secondaryICD10.push("Z11.51");
+                    questCodeName = "ThinPrep Pap + HPV DNA Co-test w/ Reflex 16/18";
+                    frequencyReminder = "Pap + HPV co-test every 5 years (ages 30-65)";
+                } else {
+                    // Ages 21-29: Pap only with reflex HPV
+                    requiresHPV = false;
+                    testCodes = needsSTI ? ["91386"] : ["92087"];
+                    cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175"];
+                    primaryICD10 = "Z12.4";
+                    questCodeName = "ThinPrep Pap w/ Reflex to HPV DNA";
+                    frequencyReminder = "Pap alone every 3 years (ages 21-29)";
+                    warnings.push("🔵 Ages 21-29: HPV only bills if reflex triggered by ASCUS result");
+                    denialWarnings.push("⚠️ HPV test NOT covered for ages <30 unless reflex from ASCUS — use 92087 NOT 92094");
                 }
 
                 if (needsSTI) {
                     warnings.push("🟣 Quest code includes STI panel (CT/GC/Trich) - ALL IN ONE");
                 }
             }
+        }
+
+        // Universal denial prevention warnings
+        if (primaryICD10 === "Z12.4") {
+            denialWarnings.push("🔵 Use Z12.4 (not Z01.419) to trigger preventive coverage — without it claim may process as diagnostic");
+        }
+        if (frequencyReminder) {
+            denialWarnings.push("⚠️ Early screening before guideline interval = likely denial. Document medical necessity.");
         }
 
         const requiredFields = [
@@ -344,8 +479,11 @@ export default function PapOrderingWizard() {
             specimenSource,
             warnings,
             medicareWarnings,
+            denialWarnings,
             requiresHPV,
-            requiredFields
+            requiredFields,
+            questCodeName,
+            frequencyReminder
         };
     };
 
@@ -451,7 +589,7 @@ export default function PapOrderingWizard() {
             <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-8">
                     <h1 className="text-4xl font-bold text-gray-900 mb-2">Pap Smear Ordering Wizard</h1>
-                    <p className="text-gray-600">Contemporary Health Center | ICD-10 & CPT Code Helper</p>
+                    <p className="text-gray-600">Contemporary Health Center | USPSTF Guidelines | Quest Codes 92087/92094</p>
                 </div>
 
                 <Card className="shadow-xl">
@@ -680,12 +818,27 @@ export default function PapOrderingWizard() {
                                         <RadioGroupItem value="followup" id="followup" />
                                         <Label htmlFor="followup" className="cursor-pointer flex-1">Follow-up for previous abnormal result</Label>
                                     </div>
-                                    {formData.insurance === "medicare" && (
-                                        <div className="flex items-center space-x-2 p-3 border rounded hover:bg-purple-50">
-                                            <RadioGroupItem value="high-risk" id="high-risk" />
-                                            <Label htmlFor="high-risk" className="cursor-pointer flex-1">Medicare high-risk patient (annual coverage)</Label>
-                                        </div>
-                                    )}
+                                    <div className="flex items-center space-x-2 p-3 border rounded hover:bg-purple-50">
+                                        <RadioGroupItem value="high-risk" id="high-risk" />
+                                        <Label htmlFor="high-risk" className="cursor-pointer flex-1">
+                                            <div>High-risk patient (annual coverage)</div>
+                                            <div className="text-xs text-gray-600 mt-1">DES exposure, history of CIN2+, etc.</div>
+                                        </Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2 p-3 border rounded hover:bg-red-50">
+                                        <RadioGroupItem value="hiv" id="hiv-reason" />
+                                        <Label htmlFor="hiv-reason" className="cursor-pointer flex-1">
+                                            <div>HIV positive — screen annually regardless of age</div>
+                                            <div className="text-xs text-gray-600 mt-1">Uses Z12.4 + B20</div>
+                                        </Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2 p-3 border rounded hover:bg-red-50">
+                                        <RadioGroupItem value="immunocompromised" id="immunocompromised-reason" />
+                                        <Label htmlFor="immunocompromised-reason" className="cursor-pointer flex-1">
+                                            <div>Immunocompromised — screen annually regardless of age</div>
+                                            <div className="text-xs text-gray-600 mt-1">Same protocol as HIV+</div>
+                                        </Label>
+                                    </div>
                                 </RadioGroup>
                             </div>
                         )}
@@ -805,6 +958,22 @@ export default function PapOrderingWizard() {
                                     </div>
                                 )}
 
+                                {/* Denial Prevention Warnings */}
+                                {result.denialWarnings && result.denialWarnings.length > 0 && (
+                                    <div className="space-y-2 p-4 bg-amber-50 border-2 border-amber-400 rounded-lg">
+                                        <h3 className="text-lg font-bold text-amber-800 flex items-center gap-2">
+                                            <AlertCircle className="h-5 w-5" />
+                                            Denial Prevention — Insurance Golden Rules
+                                        </h3>
+                                        {result.denialWarnings.map((warning, idx) => (
+                                            <Alert key={`dw-${idx}`} className="bg-amber-100 border-amber-300">
+                                                <AlertCircle className="h-4 w-4" />
+                                                <AlertDescription className="font-medium text-sm text-amber-900">{warning}</AlertDescription>
+                                            </Alert>
+                                        ))}
+                                    </div>
+                                )}
+
                                 {result.warnings.length > 0 && (
                                     <div className="space-y-2">
                                         {result.warnings.map((warning, idx) => (
@@ -822,6 +991,24 @@ export default function PapOrderingWizard() {
                                             <h3 className="text-2xl font-bold mb-2">Laboratory</h3>
                                             <p className="text-3xl font-bold">{result.labName}</p>
                                         </div>
+
+                                        {/* Recommended Quest Code — prominent display */}
+                                        {result.questCodeName && (
+                                            <Card className="bg-gradient-to-r from-purple-100 to-blue-100 border-2 border-purple-300">
+                                                <CardContent className="p-6">
+                                                    <div className="text-center">
+                                                        <p className="text-sm font-semibold text-purple-700 uppercase tracking-wide mb-1">Recommended Quest Order Code</p>
+                                                        <p className="text-4xl font-bold text-purple-900 mb-1">{result.testCodes[0]}</p>
+                                                        <p className="text-lg text-purple-700">{result.questCodeName}</p>
+                                                        {result.frequencyReminder && (
+                                                            <p className="text-sm font-semibold text-blue-700 mt-3 bg-blue-50 inline-block px-3 py-1 rounded-full">
+                                                                {result.frequencyReminder}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        )}
 
                                         <div className="grid md:grid-cols-2 gap-4">
                                             <Card className="bg-purple-50">
@@ -852,13 +1039,16 @@ export default function PapOrderingWizard() {
                                         {result.hcpcsCodes && result.hcpcsCodes.length > 0 && (
                                             <Card className="bg-amber-50 border-amber-300">
                                                 <CardHeader>
-                                                    <CardTitle className="text-amber-900">⚕️ HCPCS Codes (Medicare)</CardTitle>
+                                                    <CardTitle className="text-amber-900">HCPCS Codes (Medicare)</CardTitle>
                                                 </CardHeader>
                                                 <CardContent>
                                                     {result.hcpcsCodes.map((code, idx) => (
                                                         <div key={idx} className="text-2xl font-bold text-amber-700 mb-1">{code}</div>
                                                     ))}
-                                                    <p className="text-sm text-amber-800 mt-2 font-medium">Use HCPCS G0476 instead of CPT 87624/87625 for Medicare HPV screening</p>
+                                                    <p className="text-sm text-amber-800 mt-2 font-medium">
+                                                        {result.hcpcsCodes.includes("G0476") && "G0476 = bundled HPV co-test for Medicare (NOT 88175 + 87624 separately)"}
+                                                        {result.hcpcsCodes.includes("Q0091") && " | Q0091 = specimen collection"}
+                                                    </p>
                                                 </CardContent>
                                             </Card>
                                         )}
@@ -872,6 +1062,9 @@ export default function PapOrderingWizard() {
                                                     <div>
                                                         <span className="font-semibold text-green-900">Primary:</span>
                                                         <span className="ml-2 text-xl font-bold text-green-700">{result.primaryICD10}</span>
+                                                        {result.primaryICD10 === "Z12.4" && (
+                                                            <span className="ml-2 text-sm text-green-600">(Screening for malignant neoplasm of cervix)</span>
+                                                        )}
                                                     </div>
                                                     {result.secondaryICD10.length > 0 && (
                                                         <div>
@@ -932,8 +1125,8 @@ export default function PapOrderingWizard() {
                             )}
                             <div className="ml-auto">
                                 {step < 8 && (
-                                    <Button 
-                                        onClick={handleNext} 
+                                    <Button
+                                        onClick={handleNext}
                                         className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 gap-2"
                                     >
                                         {step === 7 ? "Generate Results" : "Next"} <ArrowRight className="w-4 h-4" />
@@ -945,7 +1138,7 @@ export default function PapOrderingWizard() {
                 </Card>
 
                 <div className="mt-6 text-center text-sm text-gray-600">
-                    <p>Reference Guide | Quest & AmeriPath Codes | Updated 2026</p>
+                    <p>Reference Guide | USPSTF Guidelines | Quest Codes 92087/92094 | Updated 2026</p>
                     <p className="mt-1">This reference guide is for educational purposes only. Always verify codes with current CMS guidelines.</p>
                 </div>
             </div>
