@@ -6,7 +6,36 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, CheckCircle2, ArrowRight, ArrowLeft, RotateCcw, FileText } from "lucide-react";
+import { AlertCircle, CheckCircle2, ArrowRight, ArrowLeft, RotateCcw, FileText, Stethoscope } from "lucide-react";
+
+// ICD-10 code descriptions
+const ICD10_DESCRIPTIONS = {
+    "Z12.4": "Encounter for screening for malignant neoplasm of cervix",
+    "Z11.51": "Encounter for screening for human papillomavirus (HPV)",
+    "Z77.22": "Contact with and (suspected) exposure to environmental tobacco smoke (acute) (chronic)",
+    "Z12.72": "Encounter for screening for malignant neoplasm of vagina",
+    "R87.611": "Atypical squamous cells of undetermined significance on cytological smear of cervix (ASC-US)",
+    "R87.610": "Atypical squamous cells cannot exclude high grade squamous intraepithelial lesion on cytological smear of cervix (ASC-H)",
+    "R87.612": "Low grade squamous intraepithelial lesion on cytological smear of cervix (LSIL)",
+    "R87.613": "High grade squamous intraepithelial lesion on cytological smear of cervix (HSIL)",
+    "R87.620": "Atypical cells on cytological smear of cervix — favor neoplastic (AGC)",
+    "R87.810": "Cervical high risk human papillomavirus (HPV) DNA test positive",
+    "R87.820": "Cervical high risk HPV DNA test positive — HPV 16/18 genotype",
+    "Z86.001": "Personal history of in-situ neoplasm of cervix uteri (CIN history)",
+    "Z85.41": "Personal history of malignant neoplasm of cervix uteri",
+    "Z87.410": "Personal history of cervical dysplasia",
+    "Z90.710": "Acquired absence of uterus and cervix",
+    "Z90.711": "Acquired absence of uterus with remaining cervical stump",
+    "Z01.419": "Encounter for gynecological examination (general) (routine) without abnormal findings",
+    "N93.9": "Abnormal uterine and vaginal bleeding, unspecified",
+    "N89.8": "Other specified noninflammatory disorders of vagina",
+    "B20": "Human immunodeficiency virus [HIV] disease",
+    "D89.9": "Disorder involving the immune mechanism, unspecified",
+    "Z77.9": "Other contact with and (suspected) exposures hazardous to health",
+    "N88.8": "Other specified noninflammatory disorders of cervix uteri",
+    "N87.9": "Dysplasia of cervix uteri, unspecified",
+    "Z91.89": "Other specified personal risk factors, not elsewhere classified"
+};
 
 export default function PapOrderingWizard() {
     const [step, setStep] = useState(1);
@@ -23,7 +52,8 @@ export default function PapOrderingWizard() {
         iudType: "",
         ovariesStatus: "",
         previousAbnormal: "",
-        recentPapHPV: ""
+        recentPapHPV: "",
+        hadAbnormalResult: ""
     });
 
     const [result, setResult] = useState(null);
@@ -43,7 +73,8 @@ export default function PapOrderingWizard() {
             iudType: "",
             ovariesStatus: "",
             previousAbnormal: "",
-            recentPapHPV: ""
+            recentPapHPV: "",
+            hadAbnormalResult: ""
         });
         setResult(null);
     };
@@ -68,6 +99,7 @@ export default function PapOrderingWizard() {
         let hcpcsCodes = [];
         let primaryICD10 = "";
         let secondaryICD10 = [];
+        let optionalICD10 = [];
         let specimenSource = "";
         let warnings = [];
         let medicareWarnings = [];
@@ -77,6 +109,8 @@ export default function PapOrderingWizard() {
         let smartCodeNote = "";
         let cptReferenceNote = "";
         let frequencyReminder = "";
+        let abnormalGuidance = null;
+        let icd10Category = "screening"; // "screening" or "diagnostic"
 
         // Under 21 logic
         if (isUnder21) {
@@ -193,18 +227,52 @@ export default function PapOrderingWizard() {
                 if (formData.reason === "followup") {
                     testCodes = ["Q0091", "87625"];
                     cptCodes = ["88175", "87624", "87625"];
+                    icd10Category = "diagnostic";
 
-                    if (formData.previousAbnormal === "asc-us") {
-                        primaryICD10 = "R87.610";
-                    } else if (formData.previousAbnormal === "lsil") {
-                        primaryICD10 = "R87.612";
-                    } else if (formData.previousAbnormal === "hsil") {
-                        primaryICD10 = "R87.613";
-                    } else if (formData.previousAbnormal === "hpv") {
-                        primaryICD10 = "R87.810";
-                    } else {
-                        primaryICD10 = "R87.610";
+                    switch (formData.previousAbnormal) {
+                        case "asc-us-normal-hpv":
+                            primaryICD10 = "R87.611";
+                            abnormalGuidance = { recommendation: "Repeat co-test in 3 years (no immediate colposcopy needed)", note: "This is a DIAGNOSTIC visit — use R87.611, NOT Z12.4" };
+                            break;
+                        case "asc-us-hpv-pos":
+                            primaryICD10 = "R87.611";
+                            secondaryICD10.push("R87.810");
+                            abnormalGuidance = { recommendation: "Colposcopy recommended", note: "Refer for colposcopy per ASCCP guidelines" };
+                            break;
+                        case "asc-us":
+                            primaryICD10 = "R87.611";
+                            abnormalGuidance = { recommendation: "Follow-up based on HPV status", note: "This is a DIAGNOSTIC visit — use R87.611, NOT Z12.4" };
+                            break;
+                        case "asc-h":
+                            primaryICD10 = "R87.610";
+                            abnormalGuidance = { recommendation: "Colposcopy recommended regardless of HPV", note: "ASC-H requires colposcopy — do not wait for HPV" };
+                            break;
+                        case "lsil":
+                            primaryICD10 = "R87.612";
+                            abnormalGuidance = { recommendation: "Co-test or colposcopy depending on age/HPV status", note: "Ages 21-24: Repeat Pap in 12mo. Ages 25+: Colposcopy preferred" };
+                            break;
+                        case "hsil":
+                            primaryICD10 = "R87.613";
+                            abnormalGuidance = { recommendation: "Colposcopy required", note: "HSIL → Colposcopy required. If post-treatment surveillance: Z86.001", alternateCode: "Z86.001" };
+                            break;
+                        case "agc":
+                            primaryICD10 = "R87.620";
+                            abnormalGuidance = { recommendation: "Colposcopy + endocervical sampling", note: "AGC requires colposcopy AND endocervical sampling" };
+                            break;
+                        case "hpv":
+                            primaryICD10 = "R87.810";
+                            abnormalGuidance = { recommendation: "Repeat co-test in 1 year", note: "HPV+ with normal cytology: repeat in 12 months. If still HPV+, colposcopy" };
+                            break;
+                        case "hpv-16-18":
+                            primaryICD10 = "R87.810";
+                            secondaryICD10.push("R87.820");
+                            abnormalGuidance = { recommendation: "Colposcopy recommended regardless of Pap", note: "HPV 16/18 → Colposcopy regardless of Pap result" };
+                            break;
+                        default:
+                            primaryICD10 = "R87.611";
+                            abnormalGuidance = { recommendation: "Follow ASCCP guidelines for management", note: "This is a DIAGNOSTIC visit — use diagnostic ICD-10 code, NOT Z12.4" };
                     }
+                    denialWarnings.push("🚨 When following up an abnormal result: ALWAYS use the diagnostic ICD-10 code (R87.xxx or Z86.001), NOT Z12.4. Using Z12.4 for a diagnostic visit causes denials.");
                 } else if (isHighRisk || isSpecialPopulation) {
                     testCodes = ["Q0091", "87625"];
                     cptCodes = ["88175", "87624", "87625"];
@@ -257,19 +325,53 @@ export default function PapOrderingWizard() {
                     testCodes = needsSTI ? ["91386"] : ["92094"];
                     cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624"];
                     questCodeName = needsSTI ? "ThinPrep Pap+HPV+STI combo" : "ThinPrep Pap + HPV DNA Co-test w/ Reflex 16/18";
+                    icd10Category = "diagnostic";
 
-                    if (formData.previousAbnormal === "asc-us") {
-                        primaryICD10 = "R87.610";
-                    } else if (formData.previousAbnormal === "lsil") {
-                        primaryICD10 = "R87.612";
-                    } else if (formData.previousAbnormal === "hsil") {
-                        primaryICD10 = "R87.613";
-                    } else if (formData.previousAbnormal === "hpv") {
-                        primaryICD10 = "R87.810";
-                    } else {
-                        primaryICD10 = "R87.610";
+                    switch (formData.previousAbnormal) {
+                        case "asc-us-normal-hpv":
+                            primaryICD10 = "R87.611";
+                            abnormalGuidance = { recommendation: "Repeat co-test in 3 years (no immediate colposcopy needed)", note: "This is a DIAGNOSTIC visit — use R87.611, NOT Z12.4" };
+                            break;
+                        case "asc-us-hpv-pos":
+                            primaryICD10 = "R87.611";
+                            secondaryICD10.push("R87.810");
+                            abnormalGuidance = { recommendation: "Colposcopy recommended", note: "Refer for colposcopy per ASCCP guidelines" };
+                            break;
+                        case "asc-us":
+                            primaryICD10 = "R87.611";
+                            abnormalGuidance = { recommendation: "Follow-up based on HPV status", note: "This is a DIAGNOSTIC visit — use R87.611, NOT Z12.4" };
+                            break;
+                        case "asc-h":
+                            primaryICD10 = "R87.610";
+                            abnormalGuidance = { recommendation: "Colposcopy recommended regardless of HPV", note: "ASC-H requires colposcopy — do not wait for HPV" };
+                            break;
+                        case "lsil":
+                            primaryICD10 = "R87.612";
+                            abnormalGuidance = { recommendation: "Co-test or colposcopy depending on age/HPV status", note: "Ages 21-24: Repeat Pap in 12mo. Ages 25+: Colposcopy preferred" };
+                            break;
+                        case "hsil":
+                            primaryICD10 = "R87.613";
+                            abnormalGuidance = { recommendation: "Colposcopy required", note: "HSIL → Colposcopy required. If post-treatment surveillance: Z86.001", alternateCode: "Z86.001" };
+                            break;
+                        case "agc":
+                            primaryICD10 = "R87.620";
+                            abnormalGuidance = { recommendation: "Colposcopy + endocervical sampling", note: "AGC requires colposcopy AND endocervical sampling" };
+                            break;
+                        case "hpv":
+                            primaryICD10 = "R87.810";
+                            abnormalGuidance = { recommendation: "Repeat co-test in 1 year", note: "HPV+ with normal cytology: repeat in 12 months. If still HPV+, colposcopy" };
+                            break;
+                        case "hpv-16-18":
+                            primaryICD10 = "R87.810";
+                            secondaryICD10.push("R87.820");
+                            abnormalGuidance = { recommendation: "Colposcopy recommended regardless of Pap", note: "HPV 16/18 → Colposcopy regardless of Pap result" };
+                            break;
+                        default:
+                            primaryICD10 = "R87.611";
+                            abnormalGuidance = { recommendation: "Follow ASCCP guidelines for management", note: "This is a DIAGNOSTIC visit — use diagnostic ICD-10 code, NOT Z12.4" };
                     }
                     warnings.push("🔵 MEDICARE: Follow-up is DIAGNOSTIC — standard CPT codes apply (not G0476).");
+                    denialWarnings.push("🚨 When following up an abnormal result: ALWAYS use the diagnostic ICD-10 code (R87.xxx or Z86.001), NOT Z12.4. Using Z12.4 for a diagnostic visit causes denials.");
                 }
                 // Medicare OVER 65 with cervix
                 else if (age > 65) {
@@ -378,25 +480,57 @@ export default function PapOrderingWizard() {
 
                 if (formData.reason === "followup") {
                     // Follow-up is DIAGNOSTIC — use specific codes, not Smart Codes
-                    if (age >= 30) {
-                        testCodes = needsSTI ? ["91386"] : ["92094"];
-                        cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624"];
-                        questCodeName = needsSTI ? "ThinPrep Pap+HPV+STI combo" : "ThinPrep Pap + HPV DNA Co-test w/ Reflex 16/18";
-                    } else {
-                        testCodes = needsSTI ? ["91386"] : ["92087"];
-                        cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175"];
-                        questCodeName = needsSTI ? "ThinPrep Pap+HPV+STI combo" : "ThinPrep Pap w/ Reflex to HPV DNA";
-                    }
+                    testCodes = ["91384"];
+                    questCodeName = "Image-Guided Pap + Age-Based Screening";
+                    cptCodes = age >= 30 ? ["88175", "87624", "87625"] : ["88175"];
+                    icd10Category = "diagnostic";
 
-                    if (formData.previousAbnormal === "asc-us") {
-                        primaryICD10 = "R87.610";
-                    } else if (formData.previousAbnormal === "lsil") {
-                        primaryICD10 = "R87.612";
-                    } else if (formData.previousAbnormal === "hsil") {
-                        primaryICD10 = "R87.613";
-                    } else if (formData.previousAbnormal === "hpv") {
-                        primaryICD10 = "R87.810";
-                    } else {
+                    switch (formData.previousAbnormal) {
+                        case "asc-us-normal-hpv":
+                            primaryICD10 = "R87.611";
+                            abnormalGuidance = { recommendation: "Repeat co-test in 3 years (no immediate colposcopy needed)", note: "This is a DIAGNOSTIC visit — use R87.611, NOT Z12.4" };
+                            break;
+                        case "asc-us-hpv-pos":
+                            primaryICD10 = "R87.611";
+                            secondaryICD10.push("R87.810");
+                            abnormalGuidance = { recommendation: "Colposcopy recommended", note: "Refer for colposcopy per ASCCP guidelines" };
+                            break;
+                        case "asc-us":
+                            primaryICD10 = "R87.611";
+                            abnormalGuidance = { recommendation: "Follow-up based on HPV status", note: "This is a DIAGNOSTIC visit — use R87.611, NOT Z12.4" };
+                            break;
+                        case "asc-h":
+                            primaryICD10 = "R87.610";
+                            abnormalGuidance = { recommendation: "Colposcopy recommended regardless of HPV", note: "ASC-H requires colposcopy — do not wait for HPV" };
+                            break;
+                        case "lsil":
+                            primaryICD10 = "R87.612";
+                            abnormalGuidance = { recommendation: "Co-test or colposcopy depending on age/HPV status", note: "Ages 21-24: Repeat Pap in 12mo. Ages 25+: Colposcopy preferred" };
+                            break;
+                        case "hsil":
+                            primaryICD10 = "R87.613";
+                            abnormalGuidance = { recommendation: "Colposcopy required", note: "HSIL → Colposcopy required. If post-treatment surveillance: Z86.001", alternateCode: "Z86.001" };
+                            break;
+                        case "agc":
+                            primaryICD10 = "R87.620";
+                            abnormalGuidance = { recommendation: "Colposcopy + endocervical sampling", note: "AGC requires colposcopy AND endocervical sampling" };
+                            break;
+                        case "hpv":
+                            primaryICD10 = "R87.810";
+                            abnormalGuidance = { recommendation: "Repeat co-test in 1 year", note: "HPV+ with normal cytology: repeat in 12 months. If still HPV+, colposcopy" };
+                            break;
+                        case "hpv-16-18":
+                            primaryICD10 = "R87.810";
+                            secondaryICD10.push("R87.820");
+                            abnormalGuidance = { recommendation: "Colposcopy recommended regardless of Pap", note: "HPV 16/18 → Colposcopy regardless of Pap result" };
+                            break;
+                        default:
+                            primaryICD10 = "R87.611";
+                            abnormalGuidance = { recommendation: "Follow ASCCP guidelines for management", note: "This is a DIAGNOSTIC visit — use diagnostic ICD-10 code, NOT Z12.4" };
+                    }
+                    denialWarnings.push("🚨 When following up an abnormal result: ALWAYS use the diagnostic ICD-10 code (R87.xxx or Z86.001), NOT Z12.4. Using Z12.4 for a diagnostic visit causes denials.");
+
+                    if (false) {
                         primaryICD10 = "R87.610";
                     }
                 } else if (isSpecialPopulation) {
@@ -466,6 +600,11 @@ export default function PapOrderingWizard() {
             }
         }
 
+        // Add optional tobacco exposure code for screening visits
+        if (icd10Category === "screening" && primaryICD10 === "Z12.4") {
+            optionalICD10.push({ code: "Z77.22", description: ICD10_DESCRIPTIONS["Z77.22"], note: "Add if patient has tobacco smoke exposure" });
+        }
+
         // Universal denial prevention warnings
         if (primaryICD10 === "Z12.4") {
             denialWarnings.push("🔵 Use Z12.4 (not Z01.419) to trigger preventive coverage — without it claim may process as diagnostic");
@@ -489,6 +628,7 @@ export default function PapOrderingWizard() {
             hcpcsCodes,
             primaryICD10,
             secondaryICD10,
+            optionalICD10,
             specimenSource,
             warnings,
             medicareWarnings,
@@ -498,7 +638,9 @@ export default function PapOrderingWizard() {
             questCodeName,
             smartCodeNote,
             cptReferenceNote,
-            frequencyReminder
+            frequencyReminder,
+            abnormalGuidance,
+            icd10Category
         };
     };
 
@@ -858,26 +1000,72 @@ export default function PapOrderingWizard() {
                             </div>
                         )}
 
-                        {/* Step 5.5: Previous Abnormal */}
+                        {/* Step 5.5: Previous Abnormal Result */}
                         {step === 5.5 && (
                             <div className="space-y-4">
-                                <Label className="text-lg font-semibold">Previous Abnormal Finding</Label>
+                                <Label className="text-lg font-semibold">What was the previous abnormal result?</Label>
+                                <Alert className="bg-amber-50 border-amber-300">
+                                    <AlertCircle className="h-4 w-4 text-amber-600" />
+                                    <AlertDescription className="text-amber-800 font-medium">
+                                        This determines the correct diagnostic ICD-10 code. Do NOT use screening code Z12.4 for follow-up of abnormal results.
+                                    </AlertDescription>
+                                </Alert>
                                 <RadioGroup value={formData.previousAbnormal} onValueChange={(val) => updateFormData("previousAbnormal", val)}>
                                     <div className="flex items-center space-x-2 p-3 border rounded hover:bg-yellow-50">
-                                        <RadioGroupItem value="asc-us" id="asc-us" />
-                                        <Label htmlFor="asc-us" className="cursor-pointer flex-1">ASC-US (R87.610)</Label>
+                                        <RadioGroupItem value="asc-us-normal-hpv" id="asc-us-normal-hpv" />
+                                        <Label htmlFor="asc-us-normal-hpv" className="cursor-pointer flex-1">
+                                            <div>ASC-US with normal HPV</div>
+                                            <div className="text-xs text-gray-600 mt-1">R87.611 — Repeat co-test in 3 years</div>
+                                        </Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2 p-3 border rounded hover:bg-orange-50">
+                                        <RadioGroupItem value="asc-us-hpv-pos" id="asc-us-hpv-pos" />
+                                        <Label htmlFor="asc-us-hpv-pos" className="cursor-pointer flex-1">
+                                            <div>ASC-US with HPV positive</div>
+                                            <div className="text-xs text-gray-600 mt-1">R87.611 + R87.810 — Colposcopy recommended</div>
+                                        </Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2 p-3 border rounded hover:bg-orange-50">
+                                        <RadioGroupItem value="asc-h" id="asc-h" />
+                                        <Label htmlFor="asc-h" className="cursor-pointer flex-1">
+                                            <div>ASC-H (atypical squamous cells, cannot exclude HSIL)</div>
+                                            <div className="text-xs text-gray-600 mt-1">R87.610 — Colposcopy required regardless of HPV</div>
+                                        </Label>
                                     </div>
                                     <div className="flex items-center space-x-2 p-3 border rounded hover:bg-orange-50">
                                         <RadioGroupItem value="lsil" id="lsil" />
-                                        <Label htmlFor="lsil" className="cursor-pointer flex-1">LSIL (R87.612)</Label>
+                                        <Label htmlFor="lsil" className="cursor-pointer flex-1">
+                                            <div>LSIL (low-grade squamous intraepithelial lesion)</div>
+                                            <div className="text-xs text-gray-600 mt-1">R87.612 — Co-test or colposcopy based on age</div>
+                                        </Label>
                                     </div>
                                     <div className="flex items-center space-x-2 p-3 border rounded hover:bg-red-50">
                                         <RadioGroupItem value="hsil" id="hsil" />
-                                        <Label htmlFor="hsil" className="cursor-pointer flex-1">HSIL (R87.613)</Label>
+                                        <Label htmlFor="hsil" className="cursor-pointer flex-1">
+                                            <div>HSIL / CIN2+ (high-grade squamous intraepithelial lesion)</div>
+                                            <div className="text-xs text-gray-600 mt-1">R87.613 — Colposcopy required</div>
+                                        </Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2 p-3 border rounded hover:bg-red-50">
+                                        <RadioGroupItem value="agc" id="agc" />
+                                        <Label htmlFor="agc" className="cursor-pointer flex-1">
+                                            <div>AGC (atypical glandular cells)</div>
+                                            <div className="text-xs text-gray-600 mt-1">R87.620 — Colposcopy + endocervical sampling required</div>
+                                        </Label>
                                     </div>
                                     <div className="flex items-center space-x-2 p-3 border rounded hover:bg-purple-50">
                                         <RadioGroupItem value="hpv" id="hpv-positive" />
-                                        <Label htmlFor="hpv-positive" className="cursor-pointer flex-1">HPV Positive (R87.810)</Label>
+                                        <Label htmlFor="hpv-positive" className="cursor-pointer flex-1">
+                                            <div>HPV positive only (Pap was normal)</div>
+                                            <div className="text-xs text-gray-600 mt-1">R87.810 — Repeat co-test in 12 months</div>
+                                        </Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2 p-3 border rounded hover:bg-red-50">
+                                        <RadioGroupItem value="hpv-16-18" id="hpv-16-18" />
+                                        <Label htmlFor="hpv-16-18" className="cursor-pointer flex-1">
+                                            <div>HPV 16 or 18 positive</div>
+                                            <div className="text-xs text-gray-600 mt-1">R87.810 + R87.820 — Colposcopy regardless of Pap</div>
+                                        </Label>
                                     </div>
                                 </RadioGroup>
                             </div>
@@ -1104,28 +1292,79 @@ export default function PapOrderingWizard() {
                                             </Card>
                                         )}
 
-                                        <Card className="bg-green-50">
+                                        <Card className={result.icd10Category === "diagnostic" ? "bg-orange-50 border-2 border-orange-300" : "bg-green-50 border-2 border-green-300"}>
                                             <CardHeader>
-                                                <CardTitle className="text-green-900">ICD-10 Diagnosis Codes</CardTitle>
+                                                <CardTitle className={result.icd10Category === "diagnostic" ? "text-orange-900 flex items-center gap-2" : "text-green-900 flex items-center gap-2"}>
+                                                    <Stethoscope className="w-5 h-5" />
+                                                    ICD-10 Diagnosis Codes
+                                                    <span className={`text-xs font-medium px-2 py-1 rounded-full ${result.icd10Category === "diagnostic" ? "bg-orange-200 text-orange-800" : "bg-green-200 text-green-800"}`}>
+                                                        {result.icd10Category === "diagnostic" ? "DIAGNOSTIC" : "SCREENING"}
+                                                    </span>
+                                                </CardTitle>
                                             </CardHeader>
                                             <CardContent>
-                                                <div className="space-y-2">
-                                                    <div>
-                                                        <span className="font-semibold text-green-900">Primary:</span>
-                                                        <span className="ml-2 text-xl font-bold text-green-700">{result.primaryICD10}</span>
-                                                        {result.primaryICD10 === "Z12.4" && (
-                                                            <span className="ml-2 text-sm text-green-600">(Screening for malignant neoplasm of cervix)</span>
-                                                        )}
+                                                <div className="space-y-3">
+                                                    <div className="p-3 bg-white rounded-lg border">
+                                                        <div className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">Primary Diagnosis</div>
+                                                        <div className="text-2xl font-bold text-gray-900">{result.primaryICD10}</div>
+                                                        <div className="text-sm text-gray-700 mt-1">{ICD10_DESCRIPTIONS[result.primaryICD10] || ""}</div>
                                                     </div>
-                                                    {result.secondaryICD10.length > 0 && (
-                                                        <div>
-                                                            <span className="font-semibold text-green-900">Secondary:</span>
-                                                            <span className="ml-2 text-lg text-green-700">{result.secondaryICD10.join(", ")}</span>
+                                                    {result.secondaryICD10.length > 0 && result.secondaryICD10.map((code, idx) => (
+                                                        <div key={idx} className="p-3 bg-white rounded-lg border">
+                                                            <div className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">Secondary Diagnosis {result.secondaryICD10.length > 1 ? `#${idx + 1}` : ""}</div>
+                                                            <div className="text-xl font-bold text-gray-800">{code}</div>
+                                                            <div className="text-sm text-gray-700 mt-1">{ICD10_DESCRIPTIONS[code] || ""}</div>
+                                                        </div>
+                                                    ))}
+                                                    {result.optionalICD10 && result.optionalICD10.length > 0 && result.optionalICD10.map((item, idx) => (
+                                                        <div key={`opt-${idx}`} className="p-3 bg-gray-50 rounded-lg border border-dashed">
+                                                            <div className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">Optional — Add If Applicable</div>
+                                                            <div className="text-lg font-bold text-gray-700">{item.code}</div>
+                                                            <div className="text-sm text-gray-600 mt-1">{item.description}</div>
+                                                            <div className="text-xs text-gray-500 mt-1 italic">{item.note}</div>
+                                                        </div>
+                                                    ))}
+                                                    {result.abnormalGuidance && result.abnormalGuidance.alternateCode && (
+                                                        <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-300">
+                                                            <div className="text-xs font-semibold uppercase tracking-wide text-yellow-700 mb-1">Alternate Code (Post-Treatment)</div>
+                                                            <div className="text-lg font-bold text-yellow-800">{result.abnormalGuidance.alternateCode}</div>
+                                                            <div className="text-sm text-yellow-700 mt-1">{ICD10_DESCRIPTIONS[result.abnormalGuidance.alternateCode] || ""}</div>
                                                         </div>
                                                     )}
                                                 </div>
+                                                <div className={`mt-4 p-3 rounded-lg text-sm font-medium ${result.icd10Category === "diagnostic" ? "bg-orange-100 text-orange-900" : "bg-green-100 text-green-900"}`}>
+                                                    {result.icd10Category === "diagnostic"
+                                                        ? "CRITICAL: This is a DIAGNOSTIC visit. Use diagnostic codes (R87.xxx / Z86.001). Do NOT use Z12.4 — it will cause denials."
+                                                        : "CRITICAL: Screening codes (Z12.4) = preventive, $0 cost-share. Diagnostic codes = may have cost-sharing. Do NOT mix them."}
+                                                </div>
                                             </CardContent>
                                         </Card>
+
+                                        {/* Abnormal Follow-Up Clinical Guidance */}
+                                        {result.abnormalGuidance && (
+                                            <Card className="bg-indigo-50 border-2 border-indigo-300">
+                                                <CardHeader>
+                                                    <CardTitle className="text-indigo-900 flex items-center gap-2">
+                                                        <Stethoscope className="w-5 h-5" />
+                                                        Clinical Guidance — Abnormal Follow-Up
+                                                    </CardTitle>
+                                                </CardHeader>
+                                                <CardContent className="space-y-3">
+                                                    <div className="p-4 bg-white rounded-lg border">
+                                                        <div className="text-xs font-semibold uppercase tracking-wide text-indigo-600 mb-2">Recommended Action</div>
+                                                        <div className="text-lg font-bold text-indigo-900">{result.abnormalGuidance.recommendation}</div>
+                                                    </div>
+                                                    <div className="p-4 bg-white rounded-lg border">
+                                                        <div className="text-xs font-semibold uppercase tracking-wide text-indigo-600 mb-2">Clinical Note</div>
+                                                        <div className="text-sm font-medium text-gray-800">{result.abnormalGuidance.note}</div>
+                                                    </div>
+                                                    <div className="p-3 bg-indigo-100 rounded-lg text-sm">
+                                                        <span className="font-bold text-indigo-900">Quest Code:</span>
+                                                        <span className="ml-2 text-indigo-800">91384 (Smart Code)</span>
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        )}
 
                                         <Card>
                                             <CardHeader>
