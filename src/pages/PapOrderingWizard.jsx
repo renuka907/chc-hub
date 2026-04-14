@@ -141,7 +141,7 @@ export default function PapOrderingWizard() {
 
             // Diagnostic under 21
             labName = hasLeeHealth ? "AmeriPath" : "Quest Diagnostics";
-            testCodes = hasLeeHealth ? ["Q0091"] : ["92087"];
+            testCodes = hasLeeHealth ? ["Q0091"] : ["91384"];
             cptCodes = ["88175"];
             specimenSource = hasCervix ? "Cervix" : "Vaginal cuff";
             questCodeName = "ThinPrep Pap w/ Reflex to HPV DNA";
@@ -172,16 +172,16 @@ export default function PapOrderingWizard() {
                     secondaryICD10 = ["N89.8"];
             }
 
-            warnings.push("🔵 Use 92087 (Pap w/ reflex HPV) - HPV only bills if ASCUS");
+            warnings.push("🔵 Use Quest Smart Code 91384 (age-based protocol built in) - HPV only bills if ASCUS");
             warnings.push("🔵 Use DIAGNOSTIC codes, not screening");
             warnings.push("🔵 Document clinical indication");
-            denialWarnings.push("⚠️ HPV test NOT covered for ages <30 unless reflex from ASCUS — use 92087 NOT 92094");
+            denialWarnings.push("⚠️ HPV test NOT covered for ages <30 unless reflex from ASCUS — use Quest Smart Code 91384 — age-based logic is built in");
         }
         // Post-hysterectomy NO cervix
         else if (!hasCervix) {
             requiresHPV = false;
             labName = hasLeeHealth ? "AmeriPath" : "Quest Diagnostics";
-            testCodes = hasLeeHealth ? ["Q0091"] : ["92087"];
+            testCodes = hasLeeHealth ? ["Q0091"] : ["91384"];
             cptCodes = ["88175"];
             specimenSource = "Vaginal cuff";
             secondaryICD10 = ["Z90.710"];
@@ -322,7 +322,7 @@ export default function PapOrderingWizard() {
 
                 if (formData.reason === "followup") {
                     // Follow-up is diagnostic, not screening — standard codes apply
-                    testCodes = needsSTI ? ["91386"] : ["92094"];
+                    testCodes = needsSTI ? ["91386"] : ["91384"];
                     cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624"];
                     questCodeName = needsSTI ? "ThinPrep Pap+HPV+STI combo" : "ThinPrep Pap + HPV DNA Co-test w/ Reflex 16/18";
                     icd10Category = "diagnostic";
@@ -384,7 +384,7 @@ export default function PapOrderingWizard() {
 
                     if (isHighRisk || isSpecialPopulation) {
                         // High-risk/special population over 65: follow 30-65 protocol
-                        testCodes = needsSTI ? ["91386"] : ["92094"];
+                        testCodes = needsSTI ? ["91386"] : ["91384"];
                         cptCodes = ["88175"];
                         hcpcsCodes.push("G0476");
                         questCodeName = "ThinPrep Pap + HPV DNA Co-test w/ Reflex 16/18";
@@ -405,20 +405,20 @@ export default function PapOrderingWizard() {
                     } else {
                         requiresHPV = false;
                         // Pap-only for over 65, standard risk
-                        testCodes = ["92087"];
+                        testCodes = ["91384"];
                         cptCodes = ["88175"];
                         questCodeName = "ThinPrep Pap w/ Reflex to HPV DNA";
                         primaryICD10 = "Z12.4";
                         secondaryICD10.push("Z11.51");
                         medicareWarnings.push("⚠️ MEDICARE DOES NOT COVER HPV SCREENING FOR PATIENTS OVER 65. HPV testing will be patient responsibility (~$150+). Consider Pap-only order.");
-                        medicareWarnings.push("🔵 MEDICARE OVER 65: Use Quest code 92087 (Pap w/ reflex). Do NOT use 92094 (Pap+HPV combo) — HPV portion will be denied.");
+                        medicareWarnings.push("🔵 MEDICARE OVER 65: Use Quest Smart Code 91384 (age-based protocol built in). Do NOT use 92094 (Pap+HPV combo) — HPV portion will be denied.");
                         warnings.push("📋 Medicare screening: Pap covered every 24 months");
                         frequencyReminder = "Pap every 24 months (Medicare standard risk)";
                     }
                 }
                 // Medicare age 30-65 with cervix — HPV covered with G0476
                 else if (age >= 30 && age <= 65) {
-                    testCodes = needsSTI ? ["91386"] : ["92094"];
+                    testCodes = needsSTI ? ["91386"] : ["91384"];
                     cptCodes = ["88175"];
                     hcpcsCodes.push("G0476");
                     questCodeName = needsSTI ? "ThinPrep Pap+HPV+STI combo" : "ThinPrep Pap + HPV DNA Co-test w/ Reflex 16/18";
@@ -452,13 +452,13 @@ export default function PapOrderingWizard() {
                 // Medicare under 30 with cervix — no HPV screening (not indicated <30)
                 else {
                     requiresHPV = false;
-                    testCodes = ["92087"];
+                    testCodes = ["91384"];
                     cptCodes = ["88175"];
                     primaryICD10 = "Z12.4";
                     questCodeName = "ThinPrep Pap w/ Reflex to HPV DNA";
                     warnings.push("🔵 Patient under 30: HPV co-testing not recommended per guidelines");
                     medicareWarnings.push("📋 MEDICARE: Pap-only for patients under 30. Covered every 24 months (12 months if high-risk).");
-                    denialWarnings.push("⚠️ HPV test NOT covered for ages <30 unless reflex from ASCUS — use 92087 NOT 92094");
+                    denialWarnings.push("⚠️ HPV test NOT covered for ages <30 unless reflex from ASCUS — use Quest Smart Code 91384 — age-based logic is built in");
                     frequencyReminder = "Pap alone every 3 years (ages 21-29)";
                 }
 
