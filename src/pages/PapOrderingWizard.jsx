@@ -53,7 +53,7 @@ export default function PapOrderingWizard() {
         const isUnder21 = age < 21;
         const hasLeeHealth = formData.insurance === "lee";
         const hasCervix = formData.hysterectomyStatus === "none" || formData.hysterectomyStatus === "supracervical";
-        const needsSTI = formData.stiPanel === "yes";
+        const needsSTI = formData.stiPanel === "full" || formData.stiPanel === "ctng";
         const isMedicare = formData.insurance === "medicare";
         const isHighRisk = formData.reason === "high-risk";
         const isHIV = formData.reason === "hiv";
@@ -74,6 +74,8 @@ export default function PapOrderingWizard() {
         let denialWarnings = [];
         let requiresHPV = true;
         let questCodeName = "";
+        let smartCodeNote = "";
+        let cptReferenceNote = "";
         let frequencyReminder = "";
 
         // Under 21 logic
@@ -97,6 +99,8 @@ export default function PapOrderingWizard() {
                     requiresHPV: false,
                     requiredFields: [],
                     questCodeName: "",
+                    smartCodeNote: "",
+                    cptReferenceNote: "",
                     frequencyReminder: ""
                 };
             }
@@ -364,7 +368,16 @@ export default function PapOrderingWizard() {
             else {
                 labName = "Quest Diagnostics";
 
+                // Smart Code selection based on STI panel choice
+                const smartCode = formData.stiPanel === "full" ? "91386" : formData.stiPanel === "ctng" ? "91385" : "91384";
+                const smartCodeNames = {
+                    "91384": "Image-Guided Pap + Age-Based Screening",
+                    "91385": "Image-Guided Pap + Age-Based Screening + CT/NG",
+                    "91386": "Image-Guided Pap + Age-Based Screening + CT/NG + Trich"
+                };
+
                 if (formData.reason === "followup") {
+                    // Follow-up is DIAGNOSTIC — use specific codes, not Smart Codes
                     if (age >= 30) {
                         testCodes = needsSTI ? ["91386"] : ["92094"];
                         cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624"];
@@ -387,16 +400,13 @@ export default function PapOrderingWizard() {
                         primaryICD10 = "R87.610";
                     }
                 } else if (isSpecialPopulation) {
-                    // HIV+ or immunocompromised — annual screening regardless of age
-                    if (age >= 30) {
-                        testCodes = needsSTI ? ["91386"] : ["92094"];
-                        cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624"];
-                        questCodeName = needsSTI ? "ThinPrep Pap+HPV+STI combo" : "ThinPrep Pap + HPV DNA Co-test w/ Reflex 16/18";
-                    } else {
-                        testCodes = needsSTI ? ["91386"] : ["92087"];
-                        cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175"];
-                        questCodeName = needsSTI ? "ThinPrep Pap+HPV+STI combo" : "ThinPrep Pap w/ Reflex to HPV DNA";
-                    }
+                    // HIV+ or immunocompromised — annual screening, Smart Code
+                    testCodes = [smartCode];
+                    questCodeName = smartCodeNames[smartCode];
+                    cptCodes = age >= 30 ? ["88175", "87624", "87625"] : ["88175"];
+                    cptReferenceNote = age >= 30
+                        ? "Quest will bill: 88175 + 87624 + 87625 (if reflex genotyping triggered)"
+                        : "Quest will bill: 88175 (+ HPV reflex if ASCUS)";
                     if (isHIV) {
                         primaryICD10 = "Z12.4";
                         secondaryICD10.push("B20");
@@ -406,49 +416,52 @@ export default function PapOrderingWizard() {
                     }
                     secondaryICD10.push("Z11.51");
                     frequencyReminder = "Screen annually (special population)";
+                    smartCodeNote = `Tell MA to order ${smartCode} — no age-specific selection needed`;
                 } else if (age > 65) {
-                    // Over 65 non-Medicare
+                    // Over 65 non-Medicare — Smart Code
+                    testCodes = [smartCode];
+                    questCodeName = smartCodeNames[smartCode];
+                    cptCodes = ["88175", "87624", "87625"];
+                    cptReferenceNote = "Quest will bill: 88175 + 87624 + 87625 (if reflex genotyping triggered)";
+                    primaryICD10 = "Z12.4";
+                    secondaryICD10.push("Z11.51");
+                    smartCodeNote = `Tell MA to order ${smartCode} — no age-specific selection needed`;
+
                     if (isHighRisk || hasDysplasiaHistory) {
-                        // Continue 30-65 protocol
-                        testCodes = needsSTI ? ["91386"] : ["92094"];
-                        cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624"];
-                        primaryICD10 = "Z12.4";
-                        secondaryICD10.push("Z11.51");
-                        questCodeName = "ThinPrep Pap + HPV DNA Co-test w/ Reflex 16/18";
                         frequencyReminder = "Follow 30-65 co-test protocol (high-risk / hx CIN2+)";
                     } else {
                         warnings.push("⚠️ OVER 65: Consider stopping screening IF adequate prior screening AND no hx CIN2+ in last 25 years");
                         warnings.push("📋 Document medical necessity for continued screening");
-                        testCodes = needsSTI ? ["91386"] : ["92094"];
-                        cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624"];
-                        primaryICD10 = "Z12.4";
-                        secondaryICD10.push("Z11.51");
-                        questCodeName = "ThinPrep Pap + HPV DNA Co-test w/ Reflex 16/18";
                         frequencyReminder = "Pap + HPV co-test every 5 years (if continuing)";
                         denialWarnings.push("⚠️ Document medical necessity for continued screening after age 65");
                     }
                 } else if (age >= 30 && age <= 65) {
-                    // Ages 30-65: co-test with 92094
-                    testCodes = needsSTI ? ["91386"] : ["92094"];
-                    cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175", "87624"];
+                    // Ages 30-65: Smart Code handles co-test automatically
+                    testCodes = [smartCode];
+                    questCodeName = smartCodeNames[smartCode];
+                    cptCodes = ["88175", "87624", "87625"];
+                    cptReferenceNote = "Quest will bill: 88175 + 87624 + 87625 (if reflex genotyping triggered)";
                     primaryICD10 = "Z12.4";
                     secondaryICD10.push("Z11.51");
-                    questCodeName = "ThinPrep Pap + HPV DNA Co-test w/ Reflex 16/18";
                     frequencyReminder = "Pap + HPV co-test every 5 years (ages 30-65)";
+                    smartCodeNote = `Tell MA to order ${smartCode} — no age-specific selection needed`;
                 } else {
-                    // Ages 21-29: Pap only with reflex HPV
+                    // Ages 21-29: Smart Code handles Pap + reflex HPV automatically
                     requiresHPV = false;
-                    testCodes = needsSTI ? ["91386"] : ["92087"];
-                    cptCodes = needsSTI ? ["88175", "87624", "87625", "87494", "87661"] : ["88175"];
+                    testCodes = [smartCode];
+                    questCodeName = smartCodeNames[smartCode];
+                    cptCodes = ["88175"];
+                    cptReferenceNote = "Quest will bill: 88175 (+ HPV reflex if ASCUS triggered)";
                     primaryICD10 = "Z12.4";
-                    questCodeName = "ThinPrep Pap w/ Reflex to HPV DNA";
                     frequencyReminder = "Pap alone every 3 years (ages 21-29)";
+                    smartCodeNote = `Tell MA to order ${smartCode} — no age-specific selection needed`;
                     warnings.push("🔵 Ages 21-29: HPV only bills if reflex triggered by ASCUS result");
-                    denialWarnings.push("⚠️ HPV test NOT covered for ages <30 unless reflex from ASCUS — use 92087 NOT 92094");
                 }
 
-                if (needsSTI) {
-                    warnings.push("🟣 Quest code includes STI panel (CT/GC/Trich) - ALL IN ONE");
+                if (formData.stiPanel === "full") {
+                    warnings.push("🟣 Quest code includes full STI panel (CT/GC/Trich) — ALL IN ONE");
+                } else if (formData.stiPanel === "ctng") {
+                    warnings.push("🟣 Quest code includes CT/NG screening");
                 }
             }
         }
@@ -483,6 +496,8 @@ export default function PapOrderingWizard() {
             requiresHPV,
             requiredFields,
             questCodeName,
+            smartCodeNote,
+            cptReferenceNote,
             frequencyReminder
         };
     };
@@ -589,7 +604,7 @@ export default function PapOrderingWizard() {
             <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-8">
                     <h1 className="text-4xl font-bold text-gray-900 mb-2">Pap Smear Ordering Wizard</h1>
-                    <p className="text-gray-600">Contemporary Health Center | USPSTF Guidelines | Quest Codes 92087/92094</p>
+                    <p className="text-gray-600">Contemporary Health Center | USPSTF Guidelines | Quest Smart Codes 91384/91385/91386</p>
                 </div>
 
                 <Card className="shadow-xl">
@@ -871,20 +886,34 @@ export default function PapOrderingWizard() {
                         {/* Step 6: STI Panel */}
                         {step === 6 && (
                             <div className="space-y-4">
-                                <Label className="text-lg font-semibold">Add STI Panel? (CT/GC/Trichomonas)</Label>
+                                <Label className="text-lg font-semibold">Add STI Screening?</Label>
                                 <RadioGroup value={formData.stiPanel} onValueChange={(val) => updateFormData("stiPanel", val)}>
-                                    <div className="flex items-center space-x-2 p-3 border rounded hover:bg-green-50">
-                                        <RadioGroupItem value="yes" id="sti-yes" />
-                                        <Label htmlFor="sti-yes" className="cursor-pointer flex-1">
-                                            <div>Yes - Add STI screening</div>
+                                    <div className="flex items-center space-x-2 p-3 border rounded hover:bg-gray-50">
+                                        <RadioGroupItem value="no" id="sti-no" />
+                                        <Label htmlFor="sti-no" className="cursor-pointer flex-1">
+                                            <div>No STI — Pap/HPV only</div>
                                             <div className="text-xs text-gray-600 mt-1">
-                                                {formData.insurance === "lee" ? "AmeriPath: Add 'STI panel' to instructions" : "Quest: Use code 91386 (includes all)"}
+                                                {formData.insurance === "lee" ? "AmeriPath standard order" : "Quest Smart Code 91384"}
                                             </div>
                                         </Label>
                                     </div>
-                                    <div className="flex items-center space-x-2 p-3 border rounded hover:bg-gray-50">
-                                        <RadioGroupItem value="no" id="sti-no" />
-                                        <Label htmlFor="sti-no" className="cursor-pointer flex-1">No - Pap/HPV only</Label>
+                                    <div className="flex items-center space-x-2 p-3 border rounded hover:bg-green-50">
+                                        <RadioGroupItem value="full" id="sti-full" />
+                                        <Label htmlFor="sti-full" className="cursor-pointer flex-1">
+                                            <div>Full STI panel — CT/NG + Trichomonas</div>
+                                            <div className="text-xs text-gray-600 mt-1">
+                                                {formData.insurance === "lee" ? "AmeriPath: Add 'STI panel' to instructions" : "Quest Smart Code 91386 (includes all)"}
+                                            </div>
+                                        </Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2 p-3 border rounded hover:bg-blue-50">
+                                        <RadioGroupItem value="ctng" id="sti-ctng" />
+                                        <Label htmlFor="sti-ctng" className="cursor-pointer flex-1">
+                                            <div>CT/NG only — no Trichomonas</div>
+                                            <div className="text-xs text-gray-600 mt-1">
+                                                {formData.insurance === "lee" ? "AmeriPath: Add 'CT/NG' to instructions" : "Quest Smart Code 91385"}
+                                            </div>
+                                        </Label>
                                     </div>
                                 </RadioGroup>
                             </div>
@@ -997,15 +1026,37 @@ export default function PapOrderingWizard() {
                                             <Card className="bg-gradient-to-r from-purple-100 to-blue-100 border-2 border-purple-300">
                                                 <CardContent className="p-6">
                                                     <div className="text-center">
-                                                        <p className="text-sm font-semibold text-purple-700 uppercase tracking-wide mb-1">Recommended Quest Order Code</p>
+                                                        <p className="text-sm font-semibold text-purple-700 uppercase tracking-wide mb-1">
+                                                            {result.smartCodeNote ? "Quest Smart Code — Primary Order" : "Recommended Quest Order Code"}
+                                                        </p>
                                                         <p className="text-4xl font-bold text-purple-900 mb-1">{result.testCodes[0]}</p>
                                                         <p className="text-lg text-purple-700">{result.questCodeName}</p>
+                                                        {result.smartCodeNote && (
+                                                            <p className="text-sm font-semibold text-green-700 mt-2">
+                                                                ✅ Age-based logic built in — Quest handles the rest
+                                                            </p>
+                                                        )}
                                                         {result.frequencyReminder && (
                                                             <p className="text-sm font-semibold text-blue-700 mt-3 bg-blue-50 inline-block px-3 py-1 rounded-full">
                                                                 {result.frequencyReminder}
                                                             </p>
                                                         )}
                                                     </div>
+                                                </CardContent>
+                                            </Card>
+                                        )}
+
+                                        {/* Smart Code MA instruction + USPSTF note */}
+                                        {result.smartCodeNote && (
+                                            <Card className="bg-green-50 border-2 border-green-300">
+                                                <CardContent className="p-4 space-y-2">
+                                                    <p className="font-bold text-green-900 text-lg">📋 {result.smartCodeNote}</p>
+                                                    {result.cptReferenceNote && (
+                                                        <p className="text-sm text-green-800">📊 {result.cptReferenceNote}</p>
+                                                    )}
+                                                    <p className="text-sm text-green-800 italic">
+                                                        Quest Smart Codes automatically apply the correct USPSTF protocol based on patient age entered on the requisition.
+                                                    </p>
                                                 </CardContent>
                                             </Card>
                                         )}
@@ -1025,7 +1076,7 @@ export default function PapOrderingWizard() {
 
                                             <Card className="bg-blue-50">
                                                 <CardHeader>
-                                                    <CardTitle className="text-blue-900">CPT Codes</CardTitle>
+                                                    <CardTitle className="text-blue-900">{result.smartCodeNote ? "CPT Codes Quest Will Bill" : "CPT Codes"}</CardTitle>
                                                 </CardHeader>
                                                 <CardContent>
                                                     <div className="text-sm text-blue-700">
@@ -1138,7 +1189,7 @@ export default function PapOrderingWizard() {
                 </Card>
 
                 <div className="mt-6 text-center text-sm text-gray-600">
-                    <p>Reference Guide | USPSTF Guidelines | Quest Codes 92087/92094 | Updated 2026</p>
+                    <p>Reference Guide | USPSTF Guidelines | Quest Smart Codes 91384/91385/91386 | Updated 2026</p>
                     <p className="mt-1">This reference guide is for educational purposes only. Always verify codes with current CMS guidelines.</p>
                 </div>
             </div>
