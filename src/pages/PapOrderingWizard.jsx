@@ -189,26 +189,32 @@ export default function PapOrderingWizard() {
 
             if (formData.postHystHistory === "no-history") {
                 warnings.push("⚠️ Pap NOT typically indicated per USPSTF (no history of dysplasia/cancer)");
+                warnings.push("💡 If ordering anyway, use Z12.72 — NOT Z01.419. Z12.72 = vaginal cancer screening (correct for vaginal cuff Pap).");
                 if (isMedicare) {
                     medicareWarnings.push("🚨 MEDICARE WILL NOT COVER screening Pap or HPV for post-hysterectomy patients without cervix and no history of dysplasia/cancer. Patient will be responsible for full cost.");
                     medicareWarnings.push("⚠️ Recommend NOT ordering — or obtain signed ABN (Advance Beneficiary Notice) before proceeding.");
                 }
-                primaryICD10 = "Z01.419";
+                primaryICD10 = "Z12.72";
             } else if (formData.postHystHistory === "dysplasia") {
-                primaryICD10 = "Z87.410";
+                primaryICD10 = "Z12.72";
+                secondaryICD10 = ["Z90.710", "Z87.410"];
+                warnings.push("🔵 Z12.72 = screening for vaginal neoplasm (correct primary for vaginal cuff Pap). Z87.410 added as secondary for dysplasia history.");
                 if (isMedicare) {
-                    medicareWarnings.push("🔵 MEDICARE: Post-hysterectomy with dysplasia history — Pap may be covered as DIAGNOSTIC (not screening). Use diagnostic ICD-10 codes.");
-                    medicareWarnings.push("🔵 Use Z87.410 as primary diagnosis. Do NOT use screening codes (Z12.4).");
+                    medicareWarnings.push("🔵 MEDICARE: Post-hysterectomy with dysplasia history — use Z12.72 as primary + Z87.410 secondary.");
                 }
             } else if (formData.postHystHistory === "cin") {
-                primaryICD10 = "Z86.001";
+                primaryICD10 = "Z12.72";
+                secondaryICD10 = ["Z90.710", "Z86.001"];
+                warnings.push("🔵 Z12.72 = screening for vaginal neoplasm. Z86.001 added as secondary for CIN history.");
                 if (isMedicare) {
-                    medicareWarnings.push("🔵 MEDICARE: Post-hysterectomy with CIN history — Pap may be covered as DIAGNOSTIC. Use Z86.001 as primary.");
+                    medicareWarnings.push("🔵 MEDICARE: Post-hysterectomy with CIN history — use Z12.72 as primary + Z86.001 secondary.");
                 }
             } else {
-                primaryICD10 = "Z85.41";
+                primaryICD10 = "Z12.72";
+                secondaryICD10 = ["Z90.710", "Z85.41"];
+                warnings.push("🔵 Z12.72 = screening for vaginal neoplasm. Z85.41 added as secondary for cervical cancer history.");
                 if (isMedicare) {
-                    medicareWarnings.push("🔵 MEDICARE: Post-hysterectomy with cervical cancer history — Pap covered as DIAGNOSTIC. Use Z85.41 as primary.");
+                    medicareWarnings.push("🔵 MEDICARE: Post-hysterectomy with cervical cancer history — use Z12.72 as primary + Z85.41 secondary.");
                 }
             }
         }
