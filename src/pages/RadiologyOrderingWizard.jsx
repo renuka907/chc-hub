@@ -397,9 +397,147 @@ const CHC = {
   fax: "239-561-9188",
 };
 
+// ── Breast Imaging Decision Logic ─────────────────────────────────────────
+const BREAST_QUESTIONS = [
+  { id: "symptoms", q: "Does the patient have any breast symptoms?", options: [
+    { label: "Yes — lump, pain, nipple discharge, skin changes, or asymmetry", value: "yes" },
+    { label: "No — routine/preventive visit only", value: "no" },
+  ]},
+  { id: "prior_mammo", q: "Has the patient had a prior mammogram?", options: [
+    { label: "Yes", value: "yes" },
+    { label: "No — first mammogram", value: "no" },
+    { label: "Unsure", value: "unsure" },
+  ]},
+  { id: "prior_abnormal", q: "Was the prior mammogram abnormal or incomplete?", options: [
+    { label: "Yes — BI-RADS 0, 3, 4, or 5 / callback", value: "yes" },
+    { label: "No — normal (BI-RADS 1 or 2)", value: "no" },
+    { label: "N/A — no prior mammogram", value: "na" },
+  ]},
+  { id: "age", q: "Patient age?", options: [
+    { label: "Under 30", value: "under30" },
+    { label: "30–39", value: "30_39" },
+    { label: "40 or older", value: "40plus" },
+  ]},
+  { id: "density", q: "Known breast density (if available from prior report)?", options: [
+    { label: "Dense breasts (C or D — heterogeneously or extremely dense)", value: "dense" },
+    { label: "Non-dense (A or B — almost entirely fatty or scattered)", value: "not_dense" },
+    { label: "Unknown / first mammogram", value: "unknown" },
+  ]},
+  { id: "implants", q: "Does the patient have breast implants?", options: [
+    { label: "Yes", value: "yes" },
+    { label: "No", value: "no" },
+  ]},
+  { id: "hx_cancer", q: "Personal or strong family history of breast cancer?", options: [
+    { label: "Yes — personal history or first-degree relative (BRCA, etc.)", value: "yes" },
+    { label: "No", value: "no" },
+  ]},
+];
+
+function getBreastRecommendation(answers) {
+  const { symptoms, prior_abnormal, age, density, implants, hx_cancer } = answers;
+  const recs = [];
+
+  // DIAGNOSTIC pathway
+  if (symptoms === "yes") {
+    recs.push({
+      study: "mammo_diagnostic",
+      label: "Diagnostic Mammogram",
+      reason: "Patient has active breast symptoms. Diagnostic mammogram is indicated regardless of age or prior history.",
+      urgent: true,
+    });
+    recs.push({
+      study: "breast_us",
+      label: "Breast Ultrasound",
+      reason: "Ultrasound should accompany diagnostic mammogram for symptomatic patients — especially for a palpable lump, focal pain, or nipple discharge. Targeted US can characterize a lesion not seen on mammogram.",
+      urgent: false,
+    });
+    return recs;
+  }
+
+  // CALLBACK / ABNORMAL PRIOR
+  if (prior_abnormal === "yes") {
+    recs.push({
+      study: "mammo_diagnostic",
+      label: "Diagnostic Mammogram",
+      reason: "Prior mammogram was abnormal or incomplete (BI-RADS 0/3/4/5). Diagnostic follow-up is required.",
+      urgent: true,
+    });
+    recs.push({
+      study: "breast_us",
+      label: "Breast Ultrasound (if applicable)",
+      reason: "If the callback involved a mass, asymmetry, or the patient has dense breasts, add targeted ultrasound.",
+      urgent: false,
+    });
+    return recs;
+  }
+
+  // UNDER 30 — mammogram rarely indicated
+  if (age === "under30" && symptoms !== "yes") {
+    recs.push({
+      study: "breast_us",
+      label: "Breast Ultrasound",
+      reason: "For patients under 30, ultrasound is the preferred first-line imaging. Mammogram is generally not recommended unless there is a strong clinical concern or high-risk genetics.",
+      urgent: false,
+    });
+    return recs;
+  }
+
+  // SCREENING pathway (no symptoms, age 30+)
+  recs.push({
+    study: "mammo_screening",
+    label: "Screening Mammogram",
+    reason: age === "30_39"
+      ? "Annual screening mammogram is recommended starting at 40. For age 30–39 with average risk, begin screening if there is family history or patient/provider preference."
+      : "Annual screening mammogram is recommended for all average-risk women age 40 and older.",
+    urgent: false,
+  });
+
+  // Dense breasts — add US supplement
+  if (density === "dense") {
+    recs.push({
+      study: "breast_us",
+      label: "Supplemental Screening Ultrasound",
+      reason: "Dense breast tissue (BI-RADS C or D) reduces mammogram sensitivity. Supplemental whole-breast ultrasound increases cancer detection. Florida law requires notification of dense breasts.",
+      urgent: false,
+    });
+  }
+
+  // Implants — needs implant displacement views
+  if (implants === "yes") {
+    recs[0] = {
+      ...recs[0],
+      label: "Screening Mammogram (with implant displacement views)",
+      reason: recs[0].reason + " Patient has implants — order specifically requires implant displacement (Eklund) views. Notify facility at time of scheduling.",
+    };
+    recs.push({
+      study: "breast_us",
+      label: "Breast Ultrasound",
+      reason: "Ultrasound is strongly recommended alongside mammogram for patients with implants to evaluate peri-implant tissue and assess for rupture or silicone leak.",
+      urgent: false,
+    });
+  }
+
+  // High risk
+  if (hx_cancer === "yes") {
+    recs.push({
+      study: null,
+      label: "Consider MRI Breast (refer to radiology)",
+      reason: "Personal history of breast cancer or high-risk genetics (BRCA1/2, first-degree relative) — annual breast MRI with contrast is recommended in addition to mammogram per ACR guidelines.",
+      urgent: false,
+      isMRI: true,
+    });
+  }
+
+  return recs;
+}
+
 // ── Component ──────────────────────────────────────────────────────────────
 export default function RadiologyOrderingWizard() {
-  const [step, setStep] = useState(1); // 1=select study, 2=patient+indications, 3=review+print
+  const [step, setStep] = useState(1); // 0=breast guide, 1=select study, 2=patient+indications, 3=review+print
+  const [showBreastGuide, setShowBreastGuide] = useState(false);
+  const [breastAnswers, setBreastAnswers] = useState({});
+  const [breastQStep, setBreastQStep] = useState(0);
+  const [breastRecs, setBreastRecs] = useState(null);
   const [selectedStudy, setSelectedStudy] = useState(null);
   const [selectedICD10, setSelectedICD10] = useState([]);
   const [customICD10, setCustomICD10] = useState("");
@@ -474,6 +612,115 @@ export default function RadiologyOrderingWizard() {
     setCategoryFilter("All");
   };
 
+  // ── BREAST GUIDE ───────────────────────────────────────────────────────
+  if (showBreastGuide) {
+    const currentQ = BREAST_QUESTIONS[breastQStep];
+    const allAnswered = breastQStep >= BREAST_QUESTIONS.length;
+
+    if (allAnswered && !breastRecs) {
+      setBreastRecs(getBreastRecommendation(breastAnswers));
+    }
+
+    if (allAnswered && breastRecs) {
+      return (
+        <div className="p-4 max-w-2xl mx-auto">
+          <div className="flex items-center gap-3 mb-6">
+            <button onClick={() => { setShowBreastGuide(false); setBreastAnswers({}); setBreastQStep(0); setBreastRecs(null); }} className="text-gray-400 hover:text-gray-600"><ArrowLeft className="h-5 w-5" /></button>
+            <div>
+              <h1 className="text-xl font-bold text-gray-800">Breast Imaging Recommendation</h1>
+              <p className="text-sm text-gray-500">Based on your clinical responses</p>
+            </div>
+          </div>
+
+          <div className="space-y-3 mb-6">
+            {breastRecs.map((rec, i) => (
+              <div key={i} className={`rounded-xl border-2 p-4 ${rec.isMRI ? "border-purple-300 bg-purple-50" : rec.urgent ? "border-red-300 bg-red-50" : "border-blue-300 bg-blue-50"}`}>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1">
+                    <p className={`font-bold text-sm ${rec.isMRI ? "text-purple-800" : rec.urgent ? "text-red-800" : "text-blue-800"}`}>
+                      {rec.urgent && <span className="mr-1">⚠️</span>}{rec.label}
+                    </p>
+                    <p className="text-xs text-gray-700 mt-1 leading-relaxed">{rec.reason}</p>
+                  </div>
+                  {rec.study && (
+                    <Button
+                      size="sm"
+                      className="flex-shrink-0 bg-blue-600 hover:bg-blue-700 text-white text-xs"
+                      onClick={() => {
+                        const study = STUDIES.find(s => s.id === rec.study);
+                        if (study) { setSelectedStudy(study); setSelectedICD10([]); setStep(2); setShowBreastGuide(false); }
+                      }}
+                    >
+                      Order This <ArrowRight className="h-3 w-3 ml-1" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => { setBreastAnswers({}); setBreastQStep(0); setBreastRecs(null); }}>
+              <RotateCcw className="h-4 w-4 mr-1" /> Start Over
+            </Button>
+            <Button variant="outline" onClick={() => { setShowBreastGuide(false); setBreastAnswers({}); setBreastQStep(0); setBreastRecs(null); }}>
+              Back to All Studies
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="p-4 max-w-xl mx-auto">
+        <div className="flex items-center gap-3 mb-6">
+          <button onClick={() => { setShowBreastGuide(false); setBreastAnswers({}); setBreastQStep(0); }} className="text-gray-400 hover:text-gray-600"><ArrowLeft className="h-5 w-5" /></button>
+          <div>
+            <h1 className="text-xl font-bold text-gray-800">Breast Imaging Guide</h1>
+            <p className="text-sm text-gray-500">Question {breastQStep + 1} of {BREAST_QUESTIONS.length}</p>
+          </div>
+        </div>
+
+        {/* Progress bar */}
+        <div className="w-full bg-gray-100 rounded-full h-1.5 mb-6">
+          <div className="bg-blue-500 h-1.5 rounded-full transition-all" style={{ width: `${((breastQStep) / BREAST_QUESTIONS.length) * 100}%` }} />
+        </div>
+
+        <Card>
+          <CardContent className="p-5">
+            <p className="font-semibold text-gray-800 mb-4">{currentQ.q}</p>
+            <div className="space-y-2">
+              {currentQ.options.map(opt => (
+                <button
+                  key={opt.value}
+                  onClick={() => {
+                    const newAnswers = { ...breastAnswers, [currentQ.id]: opt.value };
+                    setBreastAnswers(newAnswers);
+                    if (breastQStep + 1 >= BREAST_QUESTIONS.length) {
+                      setBreastRecs(getBreastRecommendation(newAnswers));
+                      setBreastQStep(breastQStep + 1);
+                    } else {
+                      setBreastQStep(breastQStep + 1);
+                    }
+                  }}
+                  className="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-sm transition-all"
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {breastQStep > 0 && (
+          <button onClick={() => setBreastQStep(q => q - 1)} className="mt-3 text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1">
+            <ArrowLeft className="h-3 w-3" /> Back to previous question
+          </button>
+        )}
+      </div>
+    );
+  }
+
   // ── STEP 1: Select Study ───────────────────────────────────────────────
   if (step === 1) {
     return (
@@ -486,6 +733,21 @@ export default function RadiologyOrderingWizard() {
             <h1 className="text-xl font-bold text-gray-800">Radiology Ordering Wizard</h1>
             <p className="text-sm text-gray-500">Step 1 of 3 — Select imaging study</p>
           </div>
+        </div>
+
+        {/* Breast Guide Banner */}
+        <div className="mb-4 rounded-xl border-2 border-pink-200 bg-pink-50 p-4 flex items-center justify-between gap-3">
+          <div>
+            <p className="font-bold text-sm text-pink-800">🩺 Not sure which breast imaging to order?</p>
+            <p className="text-xs text-pink-700 mt-0.5">Answer 7 quick questions and get an evidence-based recommendation (screening vs. diagnostic vs. ultrasound).</p>
+          </div>
+          <Button
+            size="sm"
+            className="flex-shrink-0 bg-pink-600 hover:bg-pink-700 text-white"
+            onClick={() => { setShowBreastGuide(true); setBreastAnswers({}); setBreastQStep(0); setBreastRecs(null); }}
+          >
+            Start Guide →
+          </Button>
         </div>
 
         {/* Search + Filter */}
