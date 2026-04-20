@@ -233,11 +233,60 @@ export default function SyringeVisualization({ result }) {
         );
     };
 
+    const renderTBSyringeForInsulin = () => {
+        const percentage = (volumeMl / 1) * 100;
+        const majorMarks = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
+        const minorMarks = [];
+        for (let i = 0; i <= 100; i += 2) {
+            const mark = i / 100;
+            if (!majorMarks.find(m => Math.abs(m - mark) < 0.01)) minorMarks.push(mark);
+        }
+        return (
+            <div className="space-y-2">
+                <p className="text-sm font-semibold text-gray-700">1 cc TB Syringe</p>
+                <div className="relative h-24 bg-gradient-to-r from-amber-50 to-amber-100 rounded-full border-2 border-amber-400">
+                    {minorMarks.map((mark) => {
+                        const markPercentage = (mark / 1) * 100;
+                        return (
+                            <div key={`minor-${mark.toFixed(2)}`} className="absolute top-0 flex flex-col items-center z-10" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
+                                <div className="w-0.5 bg-gray-400" style={{ height: "6px" }} />
+                            </div>
+                        );
+                    })}
+                    {majorMarks.map((mark) => {
+                        const markPercentage = (mark / 1) * 100;
+                        return (
+                            <div key={mark.toFixed(1)} className="absolute top-0 flex flex-col items-center z-10" style={{ left: `${markPercentage}%`, transform: "translateX(-50%)" }}>
+                                <div className="w-1 bg-gray-800" style={{ height: "16px" }} />
+                                <span className="text-xs font-semibold text-gray-700 mt-1">{mark.toFixed(1)}</span>
+                            </div>
+                        );
+                    })}
+                    <div
+                        className="absolute top-1/2 h-10 bg-red-500 rounded transition-all"
+                        style={{
+                            left: `${percentage}%`,
+                            transform: "translateX(-50%) translateY(-50%)",
+                            width: "4px"
+                        }}
+                    />
+                </div>
+                <p className="text-sm text-gray-600">Draw to <span className="font-bold text-red-600">{volumeMl.toFixed(2)} cc</span></p>
+            </div>
+        );
+    };
+
     return (
         <div className="bg-white rounded-lg p-6 border border-gray-200 space-y-4">
-            <p className="text-sm font-semibold text-gray-700">Recommended Syringe</p>
+            <p className="text-sm font-semibold text-gray-700">Syringe Examples</p>
             {syringeType === "insulin30" && renderInsulin30Syringe()}
             {syringeType === "insulin100" && renderInsulin100Syringe()}
+            {(syringeType === "insulin30" || syringeType === "insulin100") && (
+                <div className="border-t border-gray-200 pt-4">
+                    <p className="text-xs text-gray-500 mb-2 italic">Same dose shown on a 1 ml TB syringe (in cc's)</p>
+                    {renderTBSyringeForInsulin()}
+                </div>
+            )}
             {syringeType === "tb1" && renderTB1Syringe()}
             {syringeType === "syringe3" && renderSyringe3ml()}
             {syringeType === "syringe5" && renderSyringe5ml()}

@@ -76,6 +76,7 @@ import MedicationCalculator from './pages/MedicationCalculator';
 import MedicationReference from './pages/MedicationReference';
 import Messaging from './pages/Messaging';
 import PapOrderingWizard from './pages/PapOrderingWizard';
+import RadiologyOrderingWizard from './pages/RadiologyOrderingWizard';
 import PricingManagement from './pages/PricingManagement';
 import ProcedureDetail from './pages/ProcedureDetail';
 import ProceduresManagement from './pages/ProceduresManagement';
@@ -126,6 +127,7 @@ export const PAGES = {
     "MedicationReference": MedicationReference,
     "Messaging": Messaging,
     "PapOrderingWizard": PapOrderingWizard,
+    "RadiologyOrderingWizard": RadiologyOrderingWizard,
     "PricingManagement": PricingManagement,
     "ProcedureDetail": ProcedureDetail,
     "ProceduresManagement": ProceduresManagement,

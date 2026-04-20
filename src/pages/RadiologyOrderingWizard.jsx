@@ -1,0 +1,734 @@
+import React, { useState, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ArrowLeft, ArrowRight, RotateCcw, Printer, Search, X, CheckCircle2 } from "lucide-react";
+
+// ── Radiology Studies ──────────────────────────────────────────────────────
+const STUDIES = [
+  {
+    id: "dexa",
+    category: "Bone & Body Composition",
+    name: "DEXA Scan — Bone Density",
+    cptHint: "77080 (axial), 77081 (appendicular)",
+    icd10Suggestions: [
+      { code: "Z13.820", desc: "Encounter for screening for osteoporosis" },
+      { code: "M81.0", desc: "Age-related osteoporosis without pathological fracture" },
+      { code: "M85.80", desc: "Osteopenia / low bone density, unspecified site" },
+      { code: "Z79.891", desc: "Long-term (current) use of corticosteroids" },
+      { code: "E28.310", desc: "Symptomatic premature menopause (estrogen deficiency)" },
+      { code: "Z90.710", desc: "Acquired absence of uterus and cervix (post-hysterectomy)" },
+      { code: "M80.08XA", desc: "Age-related osteoporosis with pathological fracture, vertebra" },
+      { code: "Z79.899", desc: "Long-term use of other medication (aromatase inhibitor)" },
+    ],
+    prepInstructions: [
+      "Do NOT take calcium supplements for 24 hours before the scan.",
+      "Avoid barium contrast studies or nuclear medicine tests within 7 days.",
+      "Wear comfortable, loose-fitting clothing without metal zippers, buttons, or underwire bras.",
+      "Remove all jewelry, piercings, and metal objects before the scan.",
+      "Inform the technologist if you are pregnant or think you may be pregnant.",
+      "The scan takes approximately 10–20 minutes. You will lie still on a padded table.",
+      "No fasting required.",
+    ],
+    patientNote: "This is a low-radiation X-ray test that measures bone strength. It is painless and non-invasive.",
+  },
+  {
+    id: "mammo_screening",
+    category: "Breast Imaging",
+    name: "Mammogram — Screening",
+    cptHint: "77067 (bilateral screening)",
+    icd10Suggestions: [
+      { code: "Z12.31", desc: "Encounter for screening mammogram for malignant neoplasm of breast" },
+      { code: "Z80.3", desc: "Family history of malignant neoplasm of breast" },
+      { code: "Z85.3", desc: "Personal history of malignant neoplasm of breast" },
+      { code: "Z79.890", desc: "Long-term use of hormone replacement therapy" },
+    ],
+    prepInstructions: [
+      "Do NOT apply deodorant, antiperspirant, powder, lotion, or perfume to your underarms or breasts on the day of the exam.",
+      "Wear a two-piece outfit — you will need to undress from the waist up.",
+      "If you have had previous mammograms at a different facility, bring those images or request records transfer.",
+      "Inform the technologist of any breast symptoms, surgeries, implants, or hormone use.",
+      "Schedule your mammogram 1 week after your menstrual period to minimize breast tenderness.",
+      "The exam takes approximately 15–20 minutes.",
+    ],
+    patientNote: "A screening mammogram is a routine X-ray to check for early signs of breast cancer before symptoms develop.",
+  },
+  {
+    id: "mammo_diagnostic",
+    category: "Breast Imaging",
+    name: "Mammogram — Diagnostic",
+    cptHint: "77066 (bilateral diagnostic), 77065 (unilateral)",
+    icd10Suggestions: [
+      { code: "N63.10", desc: "Unspecified lump in the right breast, unspecified quadrant" },
+      { code: "N63.20", desc: "Unspecified lump in the left breast, unspecified quadrant" },
+      { code: "N64.4", desc: "Mastodynia (breast pain)" },
+      { code: "N64.51", desc: "Induration of breast" },
+      { code: "N64.52", desc: "Nipple discharge" },
+      { code: "Z85.3", desc: "Personal history of malignant neoplasm of breast" },
+      { code: "R92.8", desc: "Other abnormal and inconclusive findings on diagnostic imaging of breast" },
+    ],
+    prepInstructions: [
+      "Do NOT apply deodorant, antiperspirant, powder, lotion, or perfume to your underarms or breasts on the day of the exam.",
+      "Wear a two-piece outfit — you will need to undress from the waist up.",
+      "Bring any prior mammogram images or request records transfer from previous facilities.",
+      "Inform the technologist of your specific symptoms, when they started, and which side is affected.",
+      "A diagnostic mammogram is a more detailed exam that may take longer — plan for 30–60 minutes.",
+    ],
+    patientNote: "A diagnostic mammogram is ordered to evaluate a specific breast concern such as a lump, pain, nipple discharge, or follow-up on an abnormal screening result.",
+  },
+  {
+    id: "breast_us",
+    category: "Breast Imaging",
+    name: "Breast Ultrasound",
+    cptHint: "76641 (complete), 76642 (limited/targeted)",
+    icd10Suggestions: [
+      { code: "N63.10", desc: "Unspecified lump in the right breast, unspecified quadrant" },
+      { code: "N63.20", desc: "Unspecified lump in the left breast, unspecified quadrant" },
+      { code: "N64.4", desc: "Mastodynia (breast pain)" },
+      { code: "N64.51", desc: "Induration of breast" },
+      { code: "N64.52", desc: "Nipple discharge" },
+      { code: "R92.8", desc: "Other abnormal and inconclusive findings on diagnostic imaging" },
+      { code: "Z80.3", desc: "Family history of malignant neoplasm of breast" },
+      { code: "Q83.9", desc: "Dense breast tissue evaluation" },
+    ],
+    prepInstructions: [
+      "No special preparation is required for a breast ultrasound.",
+      "Wear comfortable, loose-fitting clothing.",
+      "Do NOT apply lotion or powder to the breast area on the day of the exam.",
+      "You will lie on your back and side while gel is applied to the breast for the ultrasound wand.",
+      "The exam is painless and takes approximately 15–30 minutes.",
+    ],
+    patientNote: "Breast ultrasound uses sound waves (no radiation) to evaluate breast tissue, especially useful for dense breasts or evaluating a lump found on physical exam or mammogram.",
+  },
+  {
+    id: "kidney_us",
+    category: "Abdominal / Urologic",
+    name: "Kidney Ultrasound (Renal)",
+    cptHint: "76770 (complete retroperitoneal), 76775 (limited)",
+    icd10Suggestions: [
+      { code: "N28.9", desc: "Kidney disorder, unspecified" },
+      { code: "R31.9", desc: "Hematuria, unspecified" },
+      { code: "N20.0", desc: "Calculus of kidney (kidney stone)" },
+      { code: "N13.30", desc: "Unilateral hydronephrosis without obstruction" },
+      { code: "R80.9", desc: "Proteinuria, unspecified" },
+      { code: "I10", desc: "Essential (primary) hypertension — renovascular evaluation" },
+      { code: "N18.9", desc: "Chronic kidney disease, unspecified" },
+      { code: "Z87.442", desc: "Personal history of urinary calculi" },
+    ],
+    prepInstructions: [
+      "Drink 32 oz (4 glasses) of water 1 hour before the exam and do NOT urinate until after the scan.",
+      "A full bladder helps provide better imaging of the kidneys and bladder.",
+      "Do NOT eat or drink anything other than water for 4 hours before the exam.",
+      "Wear comfortable, loose-fitting clothing.",
+      "The exam is painless and takes approximately 20–30 minutes.",
+      "Inform the technologist of any relevant symptoms (pain, blood in urine, frequent infections).",
+    ],
+    patientNote: "This is a painless ultrasound exam that uses sound waves to evaluate your kidneys and bladder for stones, cysts, or other abnormalities. No radiation is used.",
+  },
+  {
+    id: "thyroid_us",
+    category: "Head & Neck",
+    name: "Thyroid Ultrasound",
+    cptHint: "76536",
+    icd10Suggestions: [
+      { code: "E04.9", desc: "Nontoxic goiter, unspecified (thyroid enlargement)" },
+      { code: "E04.1", desc: "Nontoxic single thyroid nodule" },
+      { code: "E04.2", desc: "Nontoxic multinodular goiter" },
+      { code: "R22.1", desc: "Localized swelling, mass and lump, neck" },
+      { code: "E05.90", desc: "Thyrotoxicosis, unspecified, without thyrotoxic crisis" },
+      { code: "E06.3", desc: "Autoimmune thyroiditis (Hashimoto's)" },
+      { code: "E03.9", desc: "Hypothyroidism, unspecified" },
+      { code: "Z85.850", desc: "Personal history of malignant neoplasm of thyroid" },
+      { code: "D34", desc: "Benign neoplasm of thyroid gland" },
+    ],
+    prepInstructions: [
+      "No special preparation is required.",
+      "Wear comfortable, loose-fitting clothing with an open or low neckline.",
+      "Remove all necklaces and neck jewelry before the exam.",
+      "The exam involves lying on your back with a small pillow under your neck/shoulders.",
+      "Gel will be applied to your neck and a small wand will be moved across the area.",
+      "The exam is painless and takes approximately 15–30 minutes.",
+    ],
+    patientNote: "A thyroid ultrasound uses sound waves (no radiation) to evaluate the size, shape, and structure of your thyroid gland and detect nodules or abnormalities.",
+  },
+  {
+    id: "parathyroid_us",
+    category: "Head & Neck",
+    name: "Parathyroid Ultrasound",
+    cptHint: "76536 (same code, note parathyroid in order)",
+    icd10Suggestions: [
+      { code: "E21.0", desc: "Primary hyperparathyroidism" },
+      { code: "E21.1", desc: "Secondary hyperparathyroidism, not elsewhere classified" },
+      { code: "E83.52", desc: "Hypercalcemia (elevated calcium)" },
+      { code: "E21.3", desc: "Hyperparathyroidism, unspecified" },
+      { code: "D35.1", desc: "Benign neoplasm of parathyroid gland (adenoma)" },
+    ],
+    prepInstructions: [
+      "No special preparation is required.",
+      "Wear comfortable, loose-fitting clothing with an open or low neckline.",
+      "Remove all necklaces and neck jewelry before the exam.",
+      "Inform the technologist if you have had prior neck surgery or a known parathyroid adenoma.",
+      "The exam is painless and takes approximately 20–30 minutes.",
+      "Note: This study specifically evaluates for parathyroid gland enlargement — please indicate this on the requisition.",
+    ],
+    patientNote: "A parathyroid ultrasound looks for enlarged parathyroid glands that may be causing elevated calcium or parathyroid hormone (PTH) levels.",
+  },
+  {
+    id: "pelvic_us",
+    category: "Pelvic / GYN",
+    name: "Pelvic Ultrasound (Transabdominal)",
+    cptHint: "76856 (complete), 76857 (limited)",
+    icd10Suggestions: [
+      { code: "N93.9", desc: "Abnormal uterine bleeding, unspecified" },
+      { code: "D25.9", desc: "Leiomyoma of uterus, unspecified (fibroids)" },
+      { code: "N83.20", desc: "Unspecified ovarian cysts" },
+      { code: "N94.6", desc: "Dysmenorrhea, unspecified (pelvic pain)" },
+      { code: "N80.9", desc: "Endometriosis, unspecified" },
+      { code: "R10.2", desc: "Pelvic and perineal pain" },
+      { code: "Z12.72", desc: "Encounter for screening for malignant neoplasm of vagina" },
+    ],
+    prepInstructions: [
+      "Drink 32 oz (4 glasses) of water 1 hour before the exam and do NOT urinate until after the scan.",
+      "A full bladder is required for transabdominal pelvic ultrasound — this helps visualize the uterus and ovaries.",
+      "Do NOT eat or drink (other than water for bladder preparation) for 2 hours before the exam.",
+      "Wear comfortable, loose-fitting two-piece clothing.",
+      "The exam takes approximately 20–30 minutes.",
+    ],
+    patientNote: "A pelvic ultrasound uses sound waves (no radiation) to evaluate the uterus, ovaries, and pelvis. You must have a full bladder for this exam.",
+  },
+  {
+    id: "tv_us",
+    category: "Pelvic / GYN",
+    name: "Pelvic Ultrasound (Transvaginal)",
+    cptHint: "76830",
+    icd10Suggestions: [
+      { code: "N93.9", desc: "Abnormal uterine bleeding, unspecified" },
+      { code: "N83.20", desc: "Unspecified ovarian cysts" },
+      { code: "D25.9", desc: "Leiomyoma of uterus, unspecified (fibroids)" },
+      { code: "N80.9", desc: "Endometriosis, unspecified" },
+      { code: "R10.2", desc: "Pelvic and perineal pain" },
+      { code: "N85.00", desc: "Endometrial hyperplasia, unspecified" },
+    ],
+    prepInstructions: [
+      "Empty your bladder completely before the exam (opposite of transabdominal US).",
+      "You will be asked to undress from the waist down and covered with a drape.",
+      "A small, smooth ultrasound probe covered with a protective cover and gel will be gently inserted.",
+      "The exam is generally well tolerated and takes approximately 15–20 minutes.",
+      "Inform the technologist of any discomfort during the exam.",
+      "You may feel mild pressure but should not feel significant pain.",
+    ],
+    patientNote: "A transvaginal ultrasound provides a clearer, more detailed view of the uterus and ovaries from the inside. Please empty your bladder completely before arriving.",
+  },
+  {
+    id: "carotid_us",
+    category: "Vascular",
+    name: "Carotid Duplex Ultrasound",
+    cptHint: "93880 (complete bilateral), 93882 (unilateral/limited)",
+    icd10Suggestions: [
+      { code: "I65.29", desc: "Occlusion and stenosis of unspecified carotid artery" },
+      { code: "I73.9", desc: "Peripheral vascular disease, unspecified" },
+      { code: "I10", desc: "Essential hypertension with cardiovascular risk" },
+      { code: "E78.5", desc: "Hyperlipidemia, unspecified" },
+      { code: "Z82.49", desc: "Family history of ischemic heart disease and other diseases of the circulatory system" },
+      { code: "G45.9", desc: "Transient cerebral ischemic attack, unspecified (TIA)" },
+    ],
+    prepInstructions: [
+      "No special preparation is required.",
+      "Wear comfortable, loose-fitting clothing with an open or low neckline.",
+      "Remove all necklaces and neck jewelry.",
+      "Avoid smoking for at least 2 hours before the exam.",
+      "Continue taking all medications as prescribed unless your provider says otherwise.",
+      "The exam takes approximately 30–45 minutes.",
+    ],
+    patientNote: "A carotid duplex ultrasound checks blood flow through the arteries in your neck that supply blood to your brain. This test helps assess risk for stroke.",
+  },
+  {
+    id: "abdominal_us",
+    category: "Abdominal / Urologic",
+    name: "Abdominal Ultrasound (Complete)",
+    cptHint: "76700 (complete), 76705 (limited)",
+    icd10Suggestions: [
+      { code: "R10.9", desc: "Unspecified abdominal pain" },
+      { code: "K75.9", desc: "Inflammatory liver disease, unspecified" },
+      { code: "K76.0", desc: "Fatty (change of) liver, not elsewhere classified (fatty liver / NAFLD)" },
+      { code: "K80.20", desc: "Calculus of gallbladder without cholecystitis" },
+      { code: "R16.0", desc: "Hepatomegaly, not elsewhere classified" },
+      { code: "R16.1", desc: "Splenomegaly, not elsewhere classified" },
+      { code: "K86.1", desc: "Other chronic pancreatitis" },
+      { code: "E78.5", desc: "Hyperlipidemia (metabolic workup)" },
+    ],
+    prepInstructions: [
+      "Do NOT eat or drink anything (except water) for 6–8 hours before the exam (NPO).",
+      "You may take medications with a small sip of water.",
+      "Avoid gum, hard candy, and smoking before the exam.",
+      "Wear comfortable, loose-fitting two-piece clothing.",
+      "The exam takes approximately 20–45 minutes depending on complexity.",
+    ],
+    patientNote: "An abdominal ultrasound evaluates your liver, gallbladder, spleen, pancreas, and kidneys. Fasting is required for the best image quality.",
+  },
+  {
+    id: "echocardiogram",
+    category: "Cardiac",
+    name: "Echocardiogram (Transthoracic)",
+    cptHint: "93306 (complete with Doppler), 93307 (without Doppler)",
+    icd10Suggestions: [
+      { code: "I51.9", desc: "Heart disease, unspecified — cardiac evaluation" },
+      { code: "I10", desc: "Essential hypertension — cardiac monitoring" },
+      { code: "R00.8", desc: "Other abnormalities of heart beat (palpitations)" },
+      { code: "R06.09", desc: "Other forms of dyspnea (shortness of breath)" },
+      { code: "I42.9", desc: "Cardiomyopathy, unspecified" },
+      { code: "Z82.49", desc: "Family history of cardiovascular disease" },
+    ],
+    prepInstructions: [
+      "No special preparation is required in most cases.",
+      "Wear comfortable, loose-fitting clothing.",
+      "Continue taking all medications as prescribed.",
+      "You will lie on your left side on an exam table.",
+      "Electrodes (small stickers) will be placed on your chest to monitor your heart rhythm.",
+      "The exam takes approximately 30–60 minutes.",
+      "Avoid heavy meals just before the exam if possible.",
+    ],
+    patientNote: "An echocardiogram uses sound waves to create detailed images of your heart's structure and how it is pumping. It is painless and does not use radiation.",
+  },
+];
+
+const CATEGORIES = [...new Set(STUDIES.map(s => s.category))];
+
+const FACILITY = {
+  name: "Regional Radiology / RadNet",
+  address: "Fort Myers, FL",
+  phone: "(239) 000-0000",
+  fax: "(239) 000-0001",
+};
+
+const CHC = {
+  name: "Contemporary Health Center",
+  address: "6150 Diamond Center Court #400, Fort Myers, FL 33912",
+  phone: "239-561-9191",
+  fax: "239-561-9188",
+};
+
+// ── Component ──────────────────────────────────────────────────────────────
+export default function RadiologyOrderingWizard() {
+  const [step, setStep] = useState(1); // 1=select study, 2=patient+indications, 3=review+print
+  const [selectedStudy, setSelectedStudy] = useState(null);
+  const [selectedICD10, setSelectedICD10] = useState([]);
+  const [customICD10, setCustomICD10] = useState("");
+  const [icdSearch, setIcdSearch] = useState("");
+  const [patient, setPatient] = useState({ name: "", dob: "", mrn: "" });
+  const [provider, setProvider] = useState("Renuka Jackson, NP");
+  const [orderDate, setOrderDate] = useState(new Date().toLocaleDateString("en-US"));
+  const [priority, setPriority] = useState("routine");
+  const [clinicalNotes, setClinicalNotes] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("All");
+  const [studySearch, setStudySearch] = useState("");
+  const printRef = useRef();
+
+  const filteredStudies = STUDIES.filter(s =>
+    (categoryFilter === "All" || s.category === categoryFilter) &&
+    (s.name.toLowerCase().includes(studySearch.toLowerCase()) || s.category.toLowerCase().includes(studySearch.toLowerCase()))
+  );
+
+  const toggleICD10 = (code) => {
+    setSelectedICD10(prev =>
+      prev.includes(code) ? prev.filter(c => c !== code) : [...prev, code]
+    );
+  };
+
+  const addCustomICD10 = () => {
+    const val = customICD10.trim().toUpperCase();
+    if (val && !selectedICD10.includes(val)) {
+      setSelectedICD10(prev => [...prev, val]);
+      setCustomICD10("");
+    }
+  };
+
+  const handlePrint = () => {
+    const printContents = printRef.current.innerHTML;
+    const win = window.open("", "_blank", "width=850,height=1100");
+    win.document.write(`
+      <!DOCTYPE html><html><head><title>Radiology Order</title>
+      <style>
+        body { font-family: Arial, sans-serif; font-size: 11px; margin: 32px; color: #1a1a1a; }
+        h1 { font-size: 18px; color: #1a3a5c; margin: 0 0 2px; }
+        h2 { font-size: 13px; color: #1a3a5c; border-bottom: 2px solid #1a3a5c; padding-bottom: 4px; margin: 16px 0 8px; }
+        h3 { font-size: 11px; font-weight: 700; margin: 10px 0 4px; }
+        .header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .header-left p, .header-right p { margin: 1px 0; font-size: 10px; color: #555; }
+        .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 20px; }
+        .field { margin: 3px 0; }
+        .field b { display: inline-block; min-width: 90px; color: #444; }
+        .icd-pill { display: inline-block; background: #eef4fb; border: 1px solid #b0c8e8; padding: 2px 8px; border-radius: 4px; margin: 2px; font-size: 10px; }
+        .prep-item { margin: 3px 0; padding-left: 14px; position: relative; }
+        .prep-item::before { content: "•"; position: absolute; left: 0; color: #1a3a5c; }
+        .priority-badge { display: inline-block; padding: 2px 10px; border-radius: 4px; font-weight: 700; font-size: 10px; }
+        .urgent { background: #fee2e2; color: #b91c1c; }
+        .routine { background: #e0f2fe; color: #0369a1; }
+        .stat { background: #fef3c7; color: #b45309; }
+        .section { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px; margin-bottom: 10px; }
+        .signature-area { margin-top: 24px; border-top: 1px solid #ccc; padding-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .sig-line { border-bottom: 1px solid #888; height: 28px; margin-bottom: 4px; }
+        .sig-label { font-size: 9px; color: #666; }
+        .patient-note { background: #fffbeb; border-left: 3px solid #f59e0b; padding: 6px 10px; margin-top: 8px; font-style: italic; font-size: 10px; color: #78350f; }
+        @media print { body { margin: 20px; } }
+      </style></head><body>${printContents}</body></html>
+    `);
+    win.document.close();
+    win.focus();
+    setTimeout(() => { win.print(); }, 400);
+  };
+
+  const reset = () => {
+    setStep(1); setSelectedStudy(null); setSelectedICD10([]);
+    setCustomICD10(""); setPatient({ name: "", dob: "", mrn: "" });
+    setPriority("routine"); setClinicalNotes(""); setStudySearch("");
+    setCategoryFilter("All");
+  };
+
+  // ── STEP 1: Select Study ───────────────────────────────────────────────
+  if (step === 1) {
+    return (
+      <div className="p-4 max-w-4xl mx-auto">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+            <span className="text-blue-700 font-bold">1</span>
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-gray-800">Radiology Ordering Wizard</h1>
+            <p className="text-sm text-gray-500">Step 1 of 3 — Select imaging study</p>
+          </div>
+        </div>
+
+        {/* Search + Filter */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          <div className="relative flex-1 min-w-[200px]">
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+            <Input
+              className="pl-9"
+              placeholder="Search studies..."
+              value={studySearch}
+              onChange={e => setStudySearch(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-wrap gap-1">
+            {["All", ...CATEGORIES].map(cat => (
+              <button
+                key={cat}
+                onClick={() => setCategoryFilter(cat)}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+                  categoryFilter === cat
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "bg-white text-gray-600 border-gray-200 hover:border-blue-400"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {filteredStudies.map(study => (
+            <div
+              key={study.id}
+              onClick={() => { setSelectedStudy(study); setSelectedICD10([]); setStep(2); }}
+              className="cursor-pointer border rounded-xl p-4 hover:border-blue-500 hover:bg-blue-50 transition-all group"
+            >
+              <div className="flex justify-between items-start gap-2">
+                <div>
+                  <p className="font-semibold text-gray-800 text-sm group-hover:text-blue-700">{study.name}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{study.category}</p>
+                  <p className="text-xs text-gray-400 mt-1 font-mono">{study.cptHint}</p>
+                </div>
+                <ArrowRight className="h-4 w-4 text-gray-300 group-hover:text-blue-500 flex-shrink-0 mt-1" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // ── STEP 2: Patient + ICD-10 ──────────────────────────────────────────
+  if (step === 2) {
+    const filtered = selectedStudy.icd10Suggestions.filter(i =>
+      icdSearch === "" ||
+      i.code.toLowerCase().includes(icdSearch.toLowerCase()) ||
+      i.desc.toLowerCase().includes(icdSearch.toLowerCase())
+    );
+
+    return (
+      <div className="p-4 max-w-3xl mx-auto">
+        <div className="flex items-center gap-3 mb-6">
+          <button onClick={() => setStep(1)} className="text-gray-400 hover:text-gray-600">
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+          <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+            <span className="text-blue-700 font-bold">2</span>
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-gray-800">{selectedStudy.name}</h1>
+            <p className="text-sm text-gray-500">Step 2 of 3 — Patient info & indications</p>
+          </div>
+        </div>
+
+        {/* Patient Info */}
+        <Card className="mb-4">
+          <CardHeader className="pb-2 pt-4 px-4">
+            <CardTitle className="text-sm font-bold text-gray-700">Patient Information</CardTitle>
+          </CardHeader>
+          <CardContent className="px-4 pb-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <Label className="text-xs">Patient Name</Label>
+              <Input placeholder="Last, First" value={patient.name} onChange={e => setPatient(p => ({ ...p, name: e.target.value }))} />
+            </div>
+            <div>
+              <Label className="text-xs">Date of Birth</Label>
+              <Input placeholder="MM/DD/YYYY" value={patient.dob} onChange={e => setPatient(p => ({ ...p, dob: e.target.value }))} />
+            </div>
+            <div>
+              <Label className="text-xs">MRN (optional)</Label>
+              <Input placeholder="Patient MRN" value={patient.mrn} onChange={e => setPatient(p => ({ ...p, mrn: e.target.value }))} />
+            </div>
+            <div>
+              <Label className="text-xs">Ordering Provider</Label>
+              <Input value={provider} onChange={e => setProvider(e.target.value)} />
+            </div>
+            <div>
+              <Label className="text-xs">Order Date</Label>
+              <Input value={orderDate} onChange={e => setOrderDate(e.target.value)} />
+            </div>
+            <div>
+              <Label className="text-xs">Priority</Label>
+              <RadioGroup value={priority} onValueChange={setPriority} className="flex gap-3 mt-1">
+                {["routine", "urgent", "stat"].map(p => (
+                  <div key={p} className="flex items-center gap-1">
+                    <RadioGroupItem value={p} id={`pri-${p}`} />
+                    <label htmlFor={`pri-${p}`} className="text-xs capitalize cursor-pointer">{p}</label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* ICD-10 Selection */}
+        <Card className="mb-4">
+          <CardHeader className="pb-2 pt-4 px-4">
+            <CardTitle className="text-sm font-bold text-gray-700">ICD-10 Diagnosis Codes</CardTitle>
+          </CardHeader>
+          <CardContent className="px-4 pb-4">
+            <div className="relative mb-3">
+              <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-gray-400" />
+              <Input className="pl-8 h-8 text-xs" placeholder="Search codes..." value={icdSearch} onChange={e => setIcdSearch(e.target.value)} />
+            </div>
+            <div className="space-y-1.5 max-h-56 overflow-y-auto pr-1">
+              {filtered.map(({ code, desc }) => (
+                <div
+                  key={code}
+                  onClick={() => toggleICD10(code)}
+                  className={`flex items-start gap-2.5 p-2.5 rounded-lg cursor-pointer border transition-all text-xs ${
+                    selectedICD10.includes(code)
+                      ? "bg-blue-50 border-blue-400"
+                      : "border-gray-100 hover:bg-gray-50"
+                  }`}
+                >
+                  <Checkbox checked={selectedICD10.includes(code)} className="mt-0.5 flex-shrink-0" />
+                  <div>
+                    <span className="font-mono font-bold text-blue-700">{code}</span>
+                    <span className="text-gray-600 ml-2">{desc}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {/* Custom ICD-10 */}
+            <div className="flex gap-2 mt-3">
+              <Input
+                className="h-8 text-xs font-mono"
+                placeholder="Add custom ICD-10 code (e.g. M85.80)"
+                value={customICD10}
+                onChange={e => setCustomICD10(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && addCustomICD10()}
+              />
+              <Button size="sm" onClick={addCustomICD10} variant="outline">Add</Button>
+            </div>
+            {selectedICD10.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mt-3">
+                {selectedICD10.map(code => (
+                  <span key={code} className="flex items-center gap-1 bg-blue-100 text-blue-800 text-xs font-mono px-2 py-0.5 rounded">
+                    {code}
+                    <X className="h-3 w-3 cursor-pointer" onClick={() => toggleICD10(code)} />
+                  </span>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Clinical Notes */}
+        <Card className="mb-4">
+          <CardHeader className="pb-2 pt-4 px-4">
+            <CardTitle className="text-sm font-bold text-gray-700">Clinical Notes / Additional Instructions (optional)</CardTitle>
+          </CardHeader>
+          <CardContent className="px-4 pb-4">
+            <textarea
+              className="w-full border rounded-lg p-2.5 text-xs resize-none h-20 outline-none focus:border-blue-400"
+              placeholder="e.g. Right breast lump x 2 weeks, patient on HRT, compare to prior 2022 mammogram..."
+              value={clinicalNotes}
+              onChange={e => setClinicalNotes(e.target.value)}
+            />
+          </CardContent>
+        </Card>
+
+        <div className="flex justify-between">
+          <Button variant="outline" onClick={() => setStep(1)}>
+            <ArrowLeft className="h-4 w-4 mr-1" /> Back
+          </Button>
+          <Button onClick={() => setStep(3)} className="bg-blue-600 hover:bg-blue-700 text-white">
+            Review Order <ArrowRight className="h-4 w-4 ml-1" />
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── STEP 3: Review + Print ────────────────────────────────────────────
+  const prioStyle = {
+    routine: "bg-blue-100 text-blue-800",
+    urgent: "bg-red-100 text-red-800",
+    stat: "bg-yellow-100 text-yellow-800",
+  };
+
+  return (
+    <div className="p-4 max-w-3xl mx-auto">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <button onClick={() => setStep(2)} className="text-gray-400 hover:text-gray-600">
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+          <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+            <CheckCircle2 className="h-5 w-5 text-green-600" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-gray-800">Order Ready</h1>
+            <p className="text-sm text-gray-500">Step 3 of 3 — Review & print</p>
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={reset} size="sm">
+            <RotateCcw className="h-4 w-4 mr-1" /> New Order
+          </Button>
+          <Button onClick={handlePrint} className="bg-blue-600 hover:bg-blue-700 text-white" size="sm">
+            <Printer className="h-4 w-4 mr-1" /> Print Order
+          </Button>
+        </div>
+      </div>
+
+      {/* Printable area */}
+      <div ref={printRef}>
+        {/* Header */}
+        <div className="header" style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
+          <div>
+            <div style={{ fontWeight: 700, fontSize: 15, color: "#1a3a5c" }}>{CHC.name}</div>
+            <div style={{ fontSize: 10, color: "#555" }}>{CHC.address}</div>
+            <div style={{ fontSize: 10, color: "#555" }}>Ph: {CHC.phone} | Fx: {CHC.fax}</div>
+          </div>
+          <div style={{ textAlign: "right" }}>
+            <div style={{ fontWeight: 700, fontSize: 13, color: "#1a3a5c" }}>RADIOLOGY ORDER</div>
+            <div style={{ fontSize: 10, color: "#555" }}>Date: {orderDate}</div>
+            <span className={`text-xs font-bold px-2 py-0.5 rounded ${prioStyle[priority]}`}>{priority.toUpperCase()}</span>
+          </div>
+        </div>
+
+        <hr className="my-3 border-gray-300" />
+
+        {/* Patient + Study */}
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <Card>
+            <CardContent className="p-3">
+              <p className="text-xs font-bold text-gray-500 uppercase mb-2">Patient</p>
+              <p className="font-semibold text-sm">{patient.name || <span className="text-gray-400">_______________</span>}</p>
+              <p className="text-xs text-gray-600">DOB: {patient.dob || "___________"}</p>
+              {patient.mrn && <p className="text-xs text-gray-600">MRN: {patient.mrn}</p>}
+              <p className="text-xs text-gray-600 mt-1">Provider: {provider}</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-3">
+              <p className="text-xs font-bold text-gray-500 uppercase mb-2">Imaging Study</p>
+              <p className="font-semibold text-sm text-blue-700">{selectedStudy.name}</p>
+              <p className="text-xs text-gray-500">{selectedStudy.category}</p>
+              <p className="text-xs text-gray-400 font-mono mt-1">{selectedStudy.cptHint}</p>
+              <p className="text-xs text-gray-600 mt-1">Send to: {FACILITY.name}</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* ICD-10 */}
+        {selectedICD10.length > 0 && (
+          <Card className="mb-4">
+            <CardContent className="p-3">
+              <p className="text-xs font-bold text-gray-500 uppercase mb-2">ICD-10 Diagnosis Codes</p>
+              <div className="flex flex-wrap gap-1.5">
+                {selectedICD10.map(code => {
+                  const match = selectedStudy.icd10Suggestions.find(i => i.code === code);
+                  return (
+                    <span key={code} className="icd-pill bg-blue-50 border border-blue-200 text-xs px-2 py-0.5 rounded font-mono text-blue-800">
+                      {code}{match ? ` — ${match.desc}` : ""}
+                    </span>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Clinical notes */}
+        {clinicalNotes && (
+          <Card className="mb-4">
+            <CardContent className="p-3">
+              <p className="text-xs font-bold text-gray-500 uppercase mb-1">Clinical Notes</p>
+              <p className="text-xs text-gray-700">{clinicalNotes}</p>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Patient Instructions */}
+        <Card className="mb-4">
+          <CardContent className="p-3">
+            <p className="text-xs font-bold text-gray-500 uppercase mb-2">Patient Preparation Instructions</p>
+            <div className="space-y-1">
+              {selectedStudy.prepInstructions.map((inst, i) => (
+                <p key={i} className="text-xs text-gray-700 flex gap-2">
+                  <span className="text-blue-600 font-bold flex-shrink-0">{i + 1}.</span>
+                  {inst}
+                </p>
+              ))}
+            </div>
+            <div className="mt-2 bg-amber-50 border-l-2 border-amber-400 p-2 rounded text-xs text-amber-800 italic">
+              {selectedStudy.patientNote}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Signature */}
+        <div className="grid grid-cols-2 gap-6 mt-6 pt-4 border-t border-gray-200">
+          <div>
+            <div className="border-b border-gray-400 h-8 mb-1" />
+            <p className="text-xs text-gray-500">Provider Signature</p>
+            <p className="text-xs text-gray-700 font-medium mt-0.5">{provider}</p>
+          </div>
+          <div>
+            <div className="border-b border-gray-400 h-8 mb-1" />
+            <p className="text-xs text-gray-500">Date Signed</p>
+            <p className="text-xs text-gray-700 font-medium mt-0.5">{orderDate}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SWFL Mental Health &amp; Crisis Resources | Contemporary Health Center</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', Arial, sans-serif;
+    font-size: 9pt;
+    color: #1a1a1a;
+    background: white;
+    padding: 0.2in 0.4in;
+    max-width: 8.5in;
+    margin: 0 auto;
+    line-height: 1.3;
+  }
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #5b21b6;
+    padding-bottom: 5px;
+    margin-bottom: 6px;
+  }
+  .header img { height: 32px; }
+  .header-text { text-align: right; }
+  .header-text h1 { font-size: 12pt; font-weight: 800; color: #5b21b6; line-height: 1.2; }
+  .header-text p { font-size: 7.5pt; color: #6b7280; }
+
+  .crisis-banner {
+    background: #dc2626;
+    color: white;
+    border-radius: 6px;
+    padding: 6px 12px;
+    margin-bottom: 6px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4px 10px;
+    font-size: 8pt;
+  }
+  .crisis-item { display: flex; flex-direction: column; }
+  .crisis-item .c-name { font-weight: 700; font-size: 7.5pt; opacity: 0.9; }
+  .crisis-item .c-number { font-weight: 800; font-size: 11pt; letter-spacing: 0.5px; }
+  .crisis-item .c-detail { font-size: 6.5pt; opacity: 0.8; }
+
+  .section {
+    margin-bottom: 5px;
+    page-break-inside: avoid;
+  }
+  .section-title {
+    font-size: 8pt;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-bottom: 3px;
+    color: white;
+  }
+  .st-red { background: #dc2626; }
+  .st-blue { background: #2563eb; }
+  .st-green { background: #16a34a; }
+  .st-purple { background: #7c3aed; }
+  .st-amber { background: #d97706; }
+  .st-pink { background: #db2777; }
+
+  .resource-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px 8px;
+  }
+  .resource-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 3px 8px;
+  }
+  .r-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 5px;
+    padding: 4px 7px;
+    font-size: 8pt;
+    line-height: 1.25;
+  }
+  .r-card .r-name { font-weight: 700; color: #1e3a5f; font-size: 8pt; }
+  .r-card .r-phone { font-weight: 800; color: #dc2626; font-size: 9pt; }
+  .r-card .r-addr { color: #6b7280; font-size: 7pt; }
+  .r-card .r-info { color: #374151; font-size: 7pt; }
+  .r-card-highlight {
+    border: 1px solid #e5e7eb;
+    border-radius: 5px;
+    padding: 4px 7px;
+    font-size: 8pt;
+    line-height: 1.25;
+    background: #fefce8;
+    border-color: #fde047;
+  }
+  .r-card-highlight .r-name { font-weight: 700; color: #854d0e; font-size: 8pt; }
+  .r-card-highlight .r-phone { font-weight: 800; color: #dc2626; font-size: 9pt; }
+  .r-card-highlight .r-info { color: #374151; font-size: 7pt; }
+
+  .hotline-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 3px;
+  }
+  .h-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 5px;
+    padding: 3px 6px;
+    text-align: center;
+    font-size: 7.5pt;
+  }
+  .h-card .h-name { font-weight: 700; color: #1e40af; font-size: 7.5pt; }
+  .h-card .h-number { font-weight: 800; color: #dc2626; font-size: 10pt; }
+  .h-card .h-detail { color: #6b7280; font-size: 6.5pt; }
+
+  .footer {
+    margin-top: 4px;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 2px;
+    font-size: 6.5pt;
+    color: #9ca3af;
+    text-align: center;
+  }
+  @media print {
+    body { padding: 0.15in 0.35in; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAjAAAACMCAYAAABiZpNIAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDkuMS1jMDAzIDc5Ljk2OTBhODdmYywgMjAyNS8wMy8wNi0yMDo1MDoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIDI2LjcgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NzU0NTBBODczNDEyMTFGMDkxNjdGOTNFM0M1QkQ2RUUiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NzU0NTBBODgzNDEyMTFGMDkxNjdGOTNFM0M1QkQ2RUUiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo3NTQ1MEE4NTM0MTIxMUYwOTE2N0Y5M0UzQzVCRDZFRSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo3NTQ1MEE4NjM0MTIxMUYwOTE2N0Y5M0UzQzVCRDZFRSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PmEKZHAAADoVSURBVHja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" alt="CHC Logo">
+  <div class="header-text">
+    <h1>SWFL Mental Health &amp; Crisis Resources</h1>
+    <p>Lee, Collier &amp; Charlotte Counties &mdash; Provider &amp; Patient Reference</p>
+  </div>
+</div>
+
+<!-- CRISIS BANNER -->
+<div class="crisis-banner">
+  <div class="crisis-item">
+    <span class="c-name">Suicide &amp; Crisis Lifeline</span>
+    <span class="c-number">988</span>
+    <span class="c-detail">Call or text &bull; 24/7 &bull; Veterans press 1</span>
+  </div>
+  <div class="crisis-item">
+    <span class="c-name">SWFL Mobile Crisis Team (CPE)</span>
+    <span class="c-number">(844) 395-4432</span>
+    <span class="c-detail">24/7 &bull; FREE &bull; All 5 counties &bull; Adults &amp; children</span>
+  </div>
+  <div class="crisis-item">
+    <span class="c-name">Crisis Text Line</span>
+    <span class="c-number">Text HOME to 741741</span>
+    <span class="c-detail">24/7 &bull; Free &amp; confidential</span>
+  </div>
+</div>
+
+<!-- COUNTY CRISIS LINES -->
+<div class="section">
+  <div class="section-title st-red">24/7 County Crisis Lines &amp; Baker Act Receiving Facilities</div>
+  <div class="resource-grid-3">
+    <div class="r-card">
+      <div class="r-name">SalusCare (Lee County)</div>
+      <div class="r-phone">(239) 275-3222</div>
+      <div class="r-addr">10140 Deer Run Farms Rd, Fort Myers</div>
+      <div class="r-info">30 adult + 16 children&rsquo;s beds &bull; Baker Act &amp; Marchman Act receiving &bull; 24/7 walk-ins</div>
+    </div>
+    <div class="r-card">
+      <div class="r-name">David Lawrence Centers (Collier)</div>
+      <div class="r-phone">(239) 352-4357</div>
+      <div class="r-addr">Bathey Lane Campus, Naples</div>
+      <div class="r-info">36-bed adult CSU &bull; Baker Act receiving &bull; Care regardless of ability to pay</div>
+    </div>
+    <div class="r-card">
+      <div class="r-name">Charlotte Behavioral Health</div>
+      <div class="r-phone">(941) 639-8300</div>
+      <div class="r-addr">1700 Education Ave, Punta Gorda</div>
+      <div class="r-info">43 beds (adult + children&rsquo;s) &bull; Baker Act &amp; Marchman Act &bull; 24/7</div>
+    </div>
+  </div>
+</div>
+
+<!-- PSYCHIATRIC / INPATIENT -->
+<div class="section">
+  <div class="section-title st-blue">Psychiatric Hospital &amp; Inpatient</div>
+  <div class="resource-grid">
+    <div class="r-card">
+      <div class="r-name">Park Royal Hospital</div>
+      <div class="r-phone">(239) 204-2131</div>
+      <div class="r-addr">9241 Park Royal Dr, Fort Myers</div>
+      <div class="r-info">24/7 admissions &bull; Inpatient &amp; outpatient &bull; Adults 18+ &bull; Also has Naples outpatient</div>
+    </div>
+    <div class="r-card">
+      <div class="r-name">Lee Health Behavioral Health Center</div>
+      <div class="r-phone">Lee Health main line</div>
+      <div class="r-addr">12550 New Brittany Blvd, Ste 100, Fort Myers</div>
+      <div class="r-info">Outpatient psychiatry &bull; LCSWs, ARNPs on staff</div>
+    </div>
+  </div>
+</div>
+
+<!-- COMMUNITY MENTAL HEALTH -->
+<div class="section">
+  <div class="section-title st-green">Community Mental Health Centers (Sliding Scale)</div>
+  <div class="resource-grid-3">
+    <div class="r-card">
+      <div class="r-name">SalusCare (Lee County)</div>
+      <div class="r-phone">(239) 275-3222</div>
+      <div class="r-info">7 locations &bull; Sliding fee scale &bull; Crisis, outpatient, substance abuse, children&rsquo;s services</div>
+      <div class="r-addr">saluscareflorida.org</div>
+    </div>
+    <div class="r-card">
+      <div class="r-name">David Lawrence Centers (Collier)</div>
+      <div class="r-phone">(239) 455-8500</div>
+      <div class="r-info">Collier&rsquo;s only comprehensive nonprofit behavioral health &bull; All ages &bull; Substance abuse</div>
+      <div class="r-addr">davidlawrencecenters.org</div>
+    </div>
+    <div class="r-card">
+      <div class="r-name">Charlotte Behavioral Health</div>
+      <div class="r-phone">(941) 639-8300</div>
+      <div class="r-info">Full mental health &amp; substance use treatment &bull; Port Charlotte &amp; Punta Gorda</div>
+      <div class="r-addr">cbhcfl.org</div>
+    </div>
+  </div>
+</div>
+
+<!-- FREE / LOW-COST COUNSELING -->
+<div class="section">
+  <div class="section-title st-purple">Free &amp; Low-Cost Counseling</div>
+  <div class="resource-grid">
+    <div class="r-card-highlight">
+      <div class="r-name">FGCU Community Counseling Center</div>
+      <div class="r-info"><strong>$5&ndash;$25/session</strong> sliding scale &bull; All ages &bull; 10501 FGCU Blvd South, Fort Myers</div>
+    </div>
+    <div class="r-card-highlight">
+      <div class="r-name">Mental Health Association of SWFL</div>
+      <div class="r-info">Programs for adults, teens, families &bull; 2335 9th St N, Ste 404, Naples &bull; mhaswfl.org</div>
+    </div>
+  </div>
+</div>
+
+<!-- VETERANS -->
+<div class="section">
+  <div class="section-title st-amber">Veterans Mental Health</div>
+  <div class="resource-grid">
+    <div class="r-card">
+      <div class="r-name">Lee County VA Healthcare Center</div>
+      <div class="r-phone">(239) 652-1800</div>
+      <div class="r-addr">2489 Diplomat Pkwy E, Cape Coral</div>
+      <div class="r-info">MH, PTSD, substance abuse, IOP &bull; M&ndash;F 8am&ndash;4:30pm</div>
+    </div>
+    <div class="r-card">
+      <div class="r-name">Home Base SWFL (Lee Health)</div>
+      <div class="r-phone">(239) 338-9389</div>
+      <div class="r-info"><strong>FREE</strong> for all vets &amp; families &bull; Post-trauma, MST, anxiety, depression, substance use</div>
+    </div>
+    <div class="r-card">
+      <div class="r-name">Fort Myers Vet Center</div>
+      <div class="r-phone">(239) 652-1861</div>
+      <div class="r-addr">2891 Center Pointe Dr, Fort Myers</div>
+      <div class="r-info">Readjustment counseling &bull; In-person &amp; telehealth &bull; Naples satellite available</div>
+    </div>
+    <div class="r-card">
+      <div class="r-name">Veterans Crisis Line</div>
+      <div class="r-phone">988, press 1</div>
+      <div class="r-info">Or text 838255 &bull; 24/7 &bull; veteranscrisisline.net</div>
+    </div>
+  </div>
+</div>
+
+<!-- YOUTH & TEEN -->
+<div class="section">
+  <div class="section-title st-pink">Youth &amp; Teen Resources</div>
+  <div class="resource-grid">
+    <div class="r-card">
+      <div class="r-name">SalusCare Children&rsquo;s Crisis Unit</div>
+      <div class="r-phone">(239) 275-3222</div>
+      <div class="r-info">16 beds &bull; Baker Act receiving for ages &le;17 &bull; Lee County</div>
+    </div>
+    <div class="r-card">
+      <div class="r-name">David Lawrence &mdash; Teen Services</div>
+      <div class="r-phone">(239) 352-4357</div>
+      <div class="r-info">Adolescent DBT program (ages 13&ndash;17) &bull; Group therapy &bull; Collier County</div>
+    </div>
+    <div class="r-card">
+      <div class="r-name">Youth Haven (Collier)</div>
+      <div class="r-phone">(239) 774-2904</div>
+      <div class="r-info">Emergency shelter ages 6&ndash;21 &bull; 74-bed therapeutic campus &bull; youthhavenswfl.org</div>
+    </div>
+    <div class="r-card">
+      <div class="r-name">Trevor Project (LGBTQ+ Youth)</div>
+      <div class="r-phone">1-866-488-7386</div>
+      <div class="r-info">Text START to 678-678 &bull; Ages 13&ndash;24 &bull; 24/7</div>
+    </div>
+  </div>
+</div>
+
+<!-- SUPPORT GROUPS & SUBSTANCE ABUSE -->
+<div class="section">
+  <div class="hotline-grid">
+    <div class="h-card">
+      <div class="h-name">NAMI SWFL</div>
+      <div class="h-number" style="font-size: 8pt;">(239) 337-9024</div>
+      <div class="h-detail">namiswfl.org &bull; Lee, Charlotte</div>
+    </div>
+    <div class="h-card">
+      <div class="h-name">NAMI Collier</div>
+      <div class="h-number" style="font-size: 8pt;">(239) 260-7300</div>
+      <div class="h-detail">namicollier.org &bull; Support groups</div>
+    </div>
+    <div class="h-card">
+      <div class="h-name">SAMHSA Helpline</div>
+      <div class="h-number" style="font-size: 8pt;">1-800-662-4357</div>
+      <div class="h-detail">Treatment referrals &bull; 24/7 &bull; Free</div>
+    </div>
+    <div class="h-card">
+      <div class="h-name">United Way 211</div>
+      <div class="h-number">211</div>
+      <div class="h-detail">Info &amp; referral &bull; 24/7</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Contemporary Health Center &bull; SWFL Mental Health &amp; Crisis Resources &bull; Verify numbers periodically as community resources may change &bull; Rev. April 2026
+</div>
+
+</body>
+</html>

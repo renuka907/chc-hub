@@ -33,13 +33,13 @@ const tirzepatideChart = {
     headerBg: "bg-purple-50",
     accentColor: "text-purple-700",
     rows: [
-        { mg: "2 mg", units: "13 units", price: "$150" },
-        { mg: "3 mg", units: "20 units", price: "$150" },
-        { mg: "4 mg", units: "26 units", price: "$200" },
-        { mg: "6 mg", units: "40 units", price: "$200" },
-        { mg: "8.50 mg", units: "56 units", price: "$250" },
-        { mg: "11 mg", units: "73 units", price: "$250" },
-        { mg: "16 mg", units: "1.1 mL", price: "$250" },
+        { mg: "2 mg", units: "13 units", price: "$125" },
+        { mg: "3 mg", units: "20 units", price: "$125" },
+        { mg: "4 mg", units: "26 units", price: "$175" },
+        { mg: "6 mg", units: "40 units", price: "$175" },
+        { mg: "8.50 mg", units: "56 units", price: "$225" },
+        { mg: "11 mg", units: "73 units", price: "$225" },
+        { mg: "16 mg", units: "1.1 mL", price: "$225" },
     ],
 };
 

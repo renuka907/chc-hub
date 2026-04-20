@@ -729,6 +729,108 @@ function LibraryInner() {
 
                 {/* Documents Tab */}
                 <TabsContent value="documents" className="space-y-4">
+                    {/* Built-in Clinic Forms */}
+                    <div className="bg-white rounded-2xl p-6 shadow-md">
+                        <h3 className="text-xl font-bold mb-4 text-gray-900 flex items-center">
+                            <span className="px-3 py-1 rounded-lg text-sm mr-3 bg-purple-100 text-purple-800">
+                                Patient Forms
+                            </span>
+                        </h3>
+                        <div className="space-y-2">
+                            <a
+                                href="/phq9-form.html"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-3 p-3 rounded-lg hover:bg-purple-50 transition-colors group"
+                            >
+                                <FileText className="w-5 h-5 text-purple-500" />
+                                <div className="flex-1 min-w-0">
+                                    <p className="font-medium text-gray-900 group-hover:text-purple-700 transition-colors">PHQ-9 Patient Health Questionnaire</p>
+                                    <p className="text-sm text-gray-500">Depression screening — 9 questions, scoring guide, provider review section</p>
+                                </div>
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        const w = window.open("/phq9-form.html", "_blank");
+                                        setTimeout(() => { w.print(); }, 500);
+                                    }}
+                                    className="flex-shrink-0 w-6 h-6 flex items-center justify-center hover:scale-110 transition-transform"
+                                >
+                                    <Printer className="w-4 h-4 text-gray-400 group-hover:text-purple-600 transition-colors" />
+                                </button>
+                            </a>
+                            <a
+                                href="/phq9-provider-protocol.html"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-3 p-3 rounded-lg hover:bg-purple-50 transition-colors group"
+                            >
+                                <FileText className="w-5 h-5 text-purple-500" />
+                                <div className="flex-1 min-w-0">
+                                    <p className="font-medium text-gray-900 group-hover:text-purple-700 transition-colors">PHQ-9 Provider Protocol</p>
+                                    <p className="text-sm text-gray-500">Clinical action guide by severity level — treatment, referrals, follow-up timelines, safety protocol</p>
+                                </div>
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        const w = window.open("/phq9-provider-protocol.html", "_blank");
+                                        setTimeout(() => { w.print(); }, 500);
+                                    }}
+                                    className="flex-shrink-0 w-6 h-6 flex items-center justify-center hover:scale-110 transition-transform"
+                                >
+                                    <Printer className="w-4 h-4 text-gray-400 group-hover:text-purple-600 transition-colors" />
+                                </button>
+                            </a>
+                            <a
+                                href="/suicide-risk-protocol.html"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-3 p-3 rounded-lg hover:bg-purple-50 transition-colors group"
+                            >
+                                <FileText className="w-5 h-5 text-red-500" />
+                                <div className="flex-1 min-w-0">
+                                    <p className="font-medium text-gray-900 group-hover:text-purple-700 transition-colors">Suicide Risk Assessment &amp; Intervention Protocol</p>
+                                    <p className="text-sm text-gray-500">Risk stratification, intervention steps, crisis resources, safety plan template</p>
+                                </div>
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        const w = window.open("/suicide-risk-protocol.html", "_blank");
+                                        setTimeout(() => { w.print(); }, 500);
+                                    }}
+                                    className="flex-shrink-0 w-6 h-6 flex items-center justify-center hover:scale-110 transition-transform"
+                                >
+                                    <Printer className="w-4 h-4 text-gray-400 group-hover:text-red-600 transition-colors" />
+                                </button>
+                            </a>
+                            <a
+                                href="/swfl-crisis-resources.html"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-3 p-3 rounded-lg hover:bg-purple-50 transition-colors group"
+                            >
+                                <FileText className="w-5 h-5 text-blue-500" />
+                                <div className="flex-1 min-w-0">
+                                    <p className="font-medium text-gray-900 group-hover:text-purple-700 transition-colors">SWFL Mental Health &amp; Crisis Resources</p>
+                                    <p className="text-sm text-gray-500">Local crisis lines, Baker Act facilities, counseling, veterans, youth — Lee, Collier &amp; Charlotte counties</p>
+                                </div>
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        const w = window.open("/swfl-crisis-resources.html", "_blank");
+                                        setTimeout(() => { w.print(); }, 500);
+                                    }}
+                                    className="flex-shrink-0 w-6 h-6 flex items-center justify-center hover:scale-110 transition-transform"
+                                >
+                                    <Printer className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                                </button>
+                            </a>
+                        </div>
+                    </div>
                     {allDocumentTags.length > 0 && (
                         <Card className="bg-white">
                             <CardContent className="pt-6">

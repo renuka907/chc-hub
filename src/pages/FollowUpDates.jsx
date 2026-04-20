@@ -18,8 +18,11 @@ export default function FollowUpDates() {
 
   const weekItems = [
     { label: "2 weeks", date: addWeeks(today, 2) },
+    { label: "3 weeks", date: addWeeks(today, 3) },
     { label: "4 weeks", date: addWeeks(today, 4) },
+    { label: "5 weeks", date: addWeeks(today, 5) },
     { label: "6 weeks", date: addWeeks(today, 6) },
+    { label: "8 weeks", date: addWeeks(today, 8) },
     { label: "10 weeks", date: addWeeks(today, 10) },
     { label: "11 weeks", date: addWeeks(today, 11) },
     { label: "12 weeks", date: addWeeks(today, 12) },
