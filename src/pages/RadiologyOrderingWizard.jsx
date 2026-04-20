@@ -1205,6 +1205,10 @@ export default function RadiologyOrderingWizard() {
   const [breastRecs, setBreastRecs] = useState(null);
   const [showBiradsGuide, setShowBiradsGuide] = useState(false);
   const [selectedBirads, setSelectedBirads] = useState(null);
+  const [showPatientEd, setShowPatientEd] = useState(false);
+  const [patientEdStudy, setPatientEdStudy] = useState(null);
+  const [patientEdSearch, setPatientEdSearch] = useState('');
+  const [patientEdCategory, setPatientEdCategory] = useState('All');
   const [selectedStudy, setSelectedStudy] = useState(null);
   const [selectedICD10, setSelectedICD10] = useState([]);
   const [customICD10, setCustomICD10] = useState("");
@@ -1278,6 +1282,166 @@ export default function RadiologyOrderingWizard() {
     setPriority("routine"); setClinicalNotes(""); setStudySearch("");
     setCategoryFilter("All");
   };
+
+  // ── PATIENT EDUCATION ────────────────────────────────────────────────────
+  if (showPatientEd) {
+    const printHandout = (study) => {
+      const win = window.open('', '_blank', 'width=800,height=1000');
+      win.document.write(`
+        <!DOCTYPE html><html><head><title>Patient Education — ${study.name}</title>
+        <style>
+          body { font-family: Arial, sans-serif; font-size: 12px; margin: 40px; color: #1a1a1a; max-width: 680px; }
+          .header { border-bottom: 3px solid #1a3a5c; padding-bottom: 12px; margin-bottom: 20px; }
+          .clinic { font-size: 11px; color: #666; margin-top: 2px; }
+          h1 { font-size: 20px; color: #1a3a5c; margin: 0 0 4px; }
+          h2 { font-size: 13px; color: #1a3a5c; border-left: 4px solid #1a3a5c; padding-left: 10px; margin: 20px 0 10px; }
+          .intro { background: #eef4fb; border-radius: 8px; padding: 12px 16px; font-size: 12px; color: #1a3a5c; margin-bottom: 16px; font-style: italic; line-height: 1.6; }
+          .step { display: flex; gap: 10px; margin: 7px 0; }
+          .step-num { background: #1a3a5c; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; flex-shrink: 0; }
+          .step-text { font-size: 12px; line-height: 1.5; color: #333; padding-top: 2px; }
+          .questions { background: #fffbeb; border: 1px solid #f0d060; border-radius: 8px; padding: 12px 16px; margin-top: 20px; }
+          .questions h3 { margin: 0 0 8px; font-size: 12px; color: #7a5c00; }
+          .questions p { margin: 3px 0; font-size: 11px; color: #5a4000; }
+          .footer { margin-top: 28px; padding-top: 12px; border-top: 1px solid #ccc; font-size: 10px; color: #888; display: flex; justify-content: space-between; }
+          @media print { body { margin: 20px; } }
+        </style></head><body>
+        <div class="header">
+          <h1>Your Imaging Appointment</h1>
+          <div style="font-size:15px; font-weight:700; color:#1a3a5c; margin: 4px 0;">${study.name}</div>
+          <div class="clinic">Contemporary Health Center &nbsp;|&nbsp; 6150 Diamond Center Court #400, Fort Myers, FL 33912 &nbsp;|&nbsp; 239-561-9191</div>
+        </div>
+
+        <div class="intro">${study.patientNote}</div>
+
+        <h2>How to Prepare for Your Appointment</h2>
+        ${study.prepInstructions.map((inst, i) => `
+          <div class="step">
+            <div class="step-num">${i + 1}</div>
+            <div class="step-text">${inst}</div>
+          </div>`).join('')}
+
+        <div class="questions">
+          <h3>Questions? Contact Us:</h3>
+          <p>📞 Phone: 239-561-9191</p>
+          <p>📠 Fax: 239-561-9188</p>
+          <p>📍 6150 Diamond Center Court #400, Fort Myers, FL 33912</p>
+        </div>
+
+        <div class="footer">
+          <span>Contemporary Health Center</span>
+          <span>Patient Education Handout &nbsp;•&nbsp; ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+        </div>
+        </body></html>
+      `);
+      win.document.close();
+      win.focus();
+      setTimeout(() => win.print(), 400);
+    };
+
+    if (!patientEdStudy) {
+      const edFiltered = STUDIES.filter(s =>
+        (patientEdCategory === 'All' || s.category === patientEdCategory) &&
+        s.name.toLowerCase().includes(patientEdSearch.toLowerCase())
+      );
+      return (
+        <div className="p-4 max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 mb-6">
+            <button onClick={() => setShowPatientEd(false)} className="text-gray-400 hover:text-gray-600"><ArrowLeft className="h-5 w-5" /></button>
+            <div>
+              <h1 className="text-xl font-bold text-gray-800">Patient Education Handouts</h1>
+              <p className="text-sm text-gray-500">Select a study to preview and print a patient-friendly handout</p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2 mb-4">
+            <div className="relative flex-1 min-w-[200px]">
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+              <Input className="pl-9" placeholder="Search studies..." value={patientEdSearch} onChange={e => setPatientEdSearch(e.target.value)} />
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {['All', ...CATEGORIES].map(cat => (
+                <button key={cat} onClick={() => setPatientEdCategory(cat)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+                    patientEdCategory === cat ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-600 border-gray-200 hover:border-blue-400'
+                  }`}>{cat}</button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {edFiltered.map(study => (
+              <div key={study.id} className="border rounded-xl p-4 hover:border-blue-400 hover:bg-blue-50 transition-all group">
+                <div className="flex justify-between items-start gap-2">
+                  <div className="flex-1">
+                    <p className="font-semibold text-gray-800 text-sm">{study.name}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">{study.category}</p>
+                    <p className="text-xs text-gray-400 mt-1 line-clamp-2 italic">{study.patientNote.slice(0, 80)}...</p>
+                  </div>
+                </div>
+                <div className="flex gap-2 mt-3">
+                  <Button size="sm" variant="outline" className="text-xs flex-1"
+                    onClick={() => setPatientEdStudy(study)}>
+                    Preview
+                  </Button>
+                  <Button size="sm" className="text-xs flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                    onClick={() => printHandout(study)}>
+                    <Printer className="h-3 w-3 mr-1" /> Print
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // Preview mode
+    return (
+      <div className="p-4 max-w-2xl mx-auto">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <button onClick={() => setPatientEdStudy(null)} className="text-gray-400 hover:text-gray-600"><ArrowLeft className="h-5 w-5" /></button>
+            <div>
+              <h1 className="text-lg font-bold text-gray-800">{patientEdStudy.name}</h1>
+              <p className="text-sm text-gray-500">Patient handout preview</p>
+            </div>
+          </div>
+          <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={() => printHandout(patientEdStudy)}>
+            <Printer className="h-4 w-4 mr-1" /> Print Handout
+          </Button>
+        </div>
+
+        {/* Preview card */}
+        <div className="border-2 border-blue-100 rounded-xl p-5 bg-white shadow-sm">
+          <div className="border-b-2 border-blue-800 pb-3 mb-4">
+            <p className="text-lg font-bold text-blue-800">Your Imaging Appointment</p>
+            <p className="text-sm font-semibold text-blue-700 mt-1">{patientEdStudy.name}</p>
+            <p className="text-xs text-gray-500">Contemporary Health Center &nbsp;•&nbsp; 239-561-9191</p>
+          </div>
+
+          <div className="bg-blue-50 rounded-lg p-3 mb-4 italic text-sm text-blue-900">
+            {patientEdStudy.patientNote}
+          </div>
+
+          <p className="text-xs font-bold text-gray-500 uppercase mb-3">How to Prepare</p>
+          <div className="space-y-2">
+            {patientEdStudy.prepInstructions.map((inst, i) => (
+              <div key={i} className="flex gap-2.5">
+                <span className="w-5 h-5 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center flex-shrink-0 font-bold mt-0.5">{i + 1}</span>
+                <p className="text-sm text-gray-700">{inst}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-4 bg-amber-50 border border-amber-200 rounded-lg p-3">
+            <p className="text-xs font-bold text-amber-800 mb-1">Questions? Contact Us:</p>
+            <p className="text-xs text-amber-700">📞 239-561-9191 &nbsp;•&nbsp; 📠 Fax: 239-561-9188</p>
+            <p className="text-xs text-amber-700">📍 6150 Diamond Center Court #400, Fort Myers, FL 33912</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // ── BI-RADS GUIDE ─────────────────────────────────────────────────────
   if (showBiradsGuide) {
@@ -1501,6 +1665,18 @@ export default function RadiologyOrderingWizard() {
             <h1 className="text-xl font-bold text-gray-800">Radiology Ordering Wizard</h1>
             <p className="text-sm text-gray-500">Step 1 of 3 — Select imaging study</p>
           </div>
+        </div>
+
+        {/* Patient Education Banner */}
+        <div className="mb-3 rounded-xl border-2 border-teal-200 bg-teal-50 p-4 flex items-center justify-between gap-3">
+          <div>
+            <p className="font-bold text-sm text-teal-800">📌 Print patient education handout only?</p>
+            <p className="text-xs text-teal-700 mt-0.5">Browse all studies and print a clean patient-friendly prep sheet — no order form, no ICD-10 codes.</p>
+          </div>
+          <Button size="sm" className="flex-shrink-0 bg-teal-600 hover:bg-teal-700 text-white"
+            onClick={() => { setShowPatientEd(true); setPatientEdStudy(null); setPatientEdSearch(''); setPatientEdCategory('All'); }}>
+            Patient Handouts →
+          </Button>
         </div>
 
         {/* BI-RADS Follow-Up Banner */}
