@@ -397,6 +397,140 @@ const CHC = {
   fax: "239-561-9188",
 };
 
+// ── BI-RADS Follow-Up Logic ─────────────────────────────────────────
+const BIRADS_DATA = [
+  {
+    score: "0",
+    label: "BI-RADS 0 — Incomplete",
+    malignancy: "N/A",
+    color: "gray",
+    meaning: "The mammogram is incomplete. Additional imaging is needed before a final assessment can be made.",
+    nextSteps: [
+      "Order diagnostic mammogram with additional views (spot compression, magnification, or rolled views).",
+      "Add breast ultrasound if a mass, asymmetry, or architectural distortion is the concern.",
+      "Obtain prior mammograms for comparison if not already available.",
+      "Patient should be seen at a diagnostic breast imaging center — not a screening facility.",
+    ],
+    orderStudy: "mammo_diagnostic",
+    orderLabel: "Order Diagnostic Mammogram",
+    urgency: "Within 1–2 weeks",
+    urgencyColor: "orange",
+    patientMsg: "Your mammogram needs additional images to be completed. This is common and does not mean cancer was found. We are ordering a follow-up exam to get a clearer picture.",
+  },
+  {
+    score: "1",
+    label: "BI-RADS 1 — Negative",
+    malignancy: "Essentially 0%",
+    color: "green",
+    meaning: "The mammogram is completely normal. No masses, calcifications, or other abnormalities were found.",
+    nextSteps: [
+      "Continue routine annual screening mammogram.",
+      "No additional imaging or follow-up needed at this time.",
+      "Counsel patient on breast self-awareness and report any new symptoms promptly.",
+    ],
+    orderStudy: null,
+    urgency: "Routine annual screening",
+    urgencyColor: "green",
+    patientMsg: "Your mammogram is normal. Continue your annual screening mammogram as recommended.",
+  },
+  {
+    score: "2",
+    label: "BI-RADS 2 — Benign",
+    malignancy: "Essentially 0%",
+    color: "green",
+    meaning: "A benign (non-cancerous) finding was identified — such as a cyst, calcification, or lymph node. This is recorded for reference but requires no intervention.",
+    nextSteps: [
+      "Continue routine annual screening mammogram.",
+      "No biopsy or additional imaging needed.",
+      "Document the benign finding in the chart for future comparison.",
+      "Counsel patient on the benign nature of the finding.",
+    ],
+    orderStudy: null,
+    urgency: "Routine annual screening",
+    urgencyColor: "green",
+    patientMsg: "Your mammogram shows a benign (non-cancerous) finding. This is nothing to worry about. Continue your annual mammogram as scheduled.",
+  },
+  {
+    score: "3",
+    label: "BI-RADS 3 — Probably Benign",
+    malignancy: "< 2%",
+    color: "yellow",
+    meaning: "A probably benign finding requires short-interval follow-up to confirm stability. Biopsy is not recommended at this time unless the patient has high-risk features.",
+    nextSteps: [
+      "Order 6-month follow-up diagnostic mammogram (same side, targeted views).",
+      "If stable at 6 months → repeat at 12 months, then 24 months before returning to annual screening.",
+      "Consider biopsy if patient is high-risk (BRCA+, strong family history, prior breast cancer) or patient preference after shared decision-making.",
+      "Add breast ultrasound if a mass or asymmetry is the finding and dense breasts are present.",
+      "Do NOT delay follow-up — document clearly in chart and schedule patient before they leave.",
+    ],
+    orderStudy: "mammo_diagnostic",
+    orderLabel: "Order 6-Month Follow-Up Mammogram",
+    urgency: "6-month follow-up (do not delay)",
+    urgencyColor: "yellow",
+    patientMsg: "Your mammogram shows a finding that is probably benign (very likely not cancer). We need a follow-up mammogram in 6 months to confirm it hasn\'t changed. Please do not skip this appointment.",
+  },
+  {
+    score: "4",
+    label: "BI-RADS 4 — Suspicious",
+    malignancy: "2–95% (varies by 4A/4B/4C)",
+    color: "orange",
+    meaning: "A suspicious finding that requires tissue sampling (biopsy). BI-RADS 4 is subdivided:\n4A: Low suspicion (2–10%) | 4B: Moderate (10–50%) | 4C: High (50–95%)",
+    nextSteps: [
+      "Refer to breast surgery or interventional radiology for tissue biopsy — do not wait.",
+      "Stereotactic, ultrasound-guided, or MRI-guided core needle biopsy depending on lesion visibility.",
+      "If ultrasound-visible: order breast ultrasound to guide biopsy planning.",
+      "If mammogram-only finding: stereotactic core biopsy required — refer to breast center.",
+      "Discuss findings with patient using shared decision-making. Provide written materials.",
+      "Document referral and follow-up plan clearly. Set a 2-week callback if biopsy not scheduled.",
+      "4C findings: expedite referral — treat with same urgency as BI-RADS 5.",
+    ],
+    orderStudy: "breast_us",
+    orderLabel: "Order Breast Ultrasound (for biopsy planning)",
+    urgency: "Biopsy within 2–4 weeks",
+    urgencyColor: "red",
+    patientMsg: "Your mammogram shows a finding that needs to be evaluated further with a biopsy — a small tissue sample. Most biopsies are benign, but we need to be sure. We are referring you to a specialist who will guide you through next steps.",
+  },
+  {
+    score: "5",
+    label: "BI-RADS 5 — Highly Suggestive of Malignancy",
+    malignancy: "≥ 95%",
+    color: "red",
+    meaning: "The finding has a very high likelihood of being cancer. Tissue biopsy is required and treatment planning should begin.",
+    nextSteps: [
+      "URGENT: Refer immediately to breast surgery or breast oncology.",
+      "Core needle biopsy must be performed — do not delay.",
+      "Order breast ultrasound to assess full extent and axillary lymph nodes.",
+      "Consider MRI breast for surgical planning (tumor size, multifocality, contralateral breast).",
+      "Contact patient directly — do not leave a routine voicemail.",
+      "Document the urgent referral and conversation in the chart.",
+      "Offer patient navigation support or social work if available.",
+    ],
+    orderStudy: "breast_us",
+    orderLabel: "Order Breast Ultrasound (urgent)",
+    urgency: "URGENT — same week referral",
+    urgencyColor: "red",
+    patientMsg: "Your mammogram shows a finding that is highly concerning for cancer. I know this is frightening — we are here for you. We are referring you urgently to a breast specialist who will perform a biopsy and guide your care. You are not alone in this.",
+  },
+  {
+    score: "6",
+    label: "BI-RADS 6 — Known Malignancy",
+    malignancy: "100% (biopsy-proven)",
+    color: "red",
+    meaning: "Biopsy-proven cancer is present. This category is used for imaging performed after biopsy confirmation but before definitive treatment.",
+    nextSteps: [
+      "Patient should already be in active treatment or under breast oncology care.",
+      "Order MRI breast if not already done — pre-surgical staging and extent of disease.",
+      "Ensure surgical oncology, radiation oncology, and medical oncology referrals are in place.",
+      "Coordinate care with treatment team. Review pathology report in chart.",
+      "Screen contralateral breast per oncology protocol.",
+    ],
+    orderStudy: null,
+    urgency: "Active oncology coordination",
+    urgencyColor: "red",
+    patientMsg: "You have a confirmed breast cancer diagnosis. Your care team is coordinating your treatment plan. Please keep all your appointments and reach out with any questions — we are here to support you through this.",
+  },
+];
+
 // ── Breast Imaging Decision Logic ─────────────────────────────────────────
 const BREAST_QUESTIONS = [
   { id: "symptoms", q: "Does the patient have any breast symptoms?", options: [
@@ -538,6 +672,8 @@ export default function RadiologyOrderingWizard() {
   const [breastAnswers, setBreastAnswers] = useState({});
   const [breastQStep, setBreastQStep] = useState(0);
   const [breastRecs, setBreastRecs] = useState(null);
+  const [showBiradsGuide, setShowBiradsGuide] = useState(false);
+  const [selectedBirads, setSelectedBirads] = useState(null);
   const [selectedStudy, setSelectedStudy] = useState(null);
   const [selectedICD10, setSelectedICD10] = useState([]);
   const [customICD10, setCustomICD10] = useState("");
@@ -611,6 +747,107 @@ export default function RadiologyOrderingWizard() {
     setPriority("routine"); setClinicalNotes(""); setStudySearch("");
     setCategoryFilter("All");
   };
+
+  // ── BI-RADS GUIDE ─────────────────────────────────────────────────────
+  if (showBiradsGuide) {
+    const urgencyBg = { green: "bg-green-50 border-green-300", yellow: "bg-yellow-50 border-yellow-300", orange: "bg-orange-50 border-orange-300", red: "bg-red-50 border-red-300", gray: "bg-gray-50 border-gray-300" };
+    const urgencyText = { green: "text-green-800", yellow: "text-yellow-800", orange: "text-orange-800", red: "text-red-800", gray: "text-gray-700" };
+    const scoreBg = { green: "bg-green-100 text-green-800", yellow: "bg-yellow-100 text-yellow-800", orange: "bg-orange-100 text-orange-800", red: "bg-red-100 text-red-800", gray: "bg-gray-100 text-gray-700" };
+
+    if (!selectedBirads) {
+      return (
+        <div className="p-4 max-w-2xl mx-auto">
+          <div className="flex items-center gap-3 mb-6">
+            <button onClick={() => setShowBiradsGuide(false)} className="text-gray-400 hover:text-gray-600"><ArrowLeft className="h-5 w-5" /></button>
+            <div>
+              <h1 className="text-xl font-bold text-gray-800">BI-RADS Follow-Up Guide</h1>
+              <p className="text-sm text-gray-500">Select the BI-RADS score from the mammogram report</p>
+            </div>
+          </div>
+          <div className="space-y-2">
+            {BIRADS_DATA.map(b => (
+              <button key={b.score} onClick={() => setSelectedBirads(b)}
+                className={`w-full text-left p-4 rounded-xl border-2 hover:shadow-md transition-all ${urgencyBg[b.color]}`}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className={`inline-block font-bold text-sm px-2 py-0.5 rounded mr-2 ${scoreBg[b.color]}`}>BI-RADS {b.score}</span>
+                    <span className={`font-semibold text-sm ${urgencyText[b.color]}`}>{b.label.split('—')[1]?.trim()}</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-xs text-gray-500">Malignancy risk: </span>
+                    <span className={`text-xs font-bold ${urgencyText[b.color]}`}>{b.malignancy}</span>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // Detail view
+    const b = selectedBirads;
+    return (
+      <div className="p-4 max-w-2xl mx-auto">
+        <div className="flex items-center gap-3 mb-4">
+          <button onClick={() => setSelectedBirads(null)} className="text-gray-400 hover:text-gray-600"><ArrowLeft className="h-5 w-5" /></button>
+          <div>
+            <h1 className="text-xl font-bold text-gray-800">{b.label}</h1>
+            <p className="text-xs text-gray-500">Malignancy risk: <strong>{b.malignancy}</strong></p>
+          </div>
+        </div>
+
+        {/* Urgency banner */}
+        <div className={`rounded-xl border-2 p-3 mb-4 flex items-center gap-2 ${urgencyBg[b.urgencyColor]}`}>
+          <span className="text-lg">{b.urgencyColor === "green" ? "✅" : b.urgencyColor === "yellow" ? "⚠️" : "🚨"}</span>
+          <div>
+            <p className={`font-bold text-sm ${urgencyText[b.urgencyColor]}`}>Timeline: {b.urgency}</p>
+            <p className={`text-xs ${urgencyText[b.urgencyColor]}`}>{b.meaning}</p>
+          </div>
+        </div>
+
+        {/* Next Steps */}
+        <Card className="mb-4">
+          <CardContent className="p-4">
+            <p className="text-xs font-bold text-gray-500 uppercase mb-3">Recommended Next Steps</p>
+            <div className="space-y-2">
+              {b.nextSteps.map((step, i) => (
+                <div key={i} className="flex gap-2.5 text-sm">
+                  <span className="text-blue-600 font-bold flex-shrink-0 w-5">{i + 1}.</span>
+                  <span className="text-gray-700">{step}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Patient language */}
+        <Card className="mb-4">
+          <CardContent className="p-4">
+            <p className="text-xs font-bold text-gray-500 uppercase mb-2">🗣 What to Tell Your Patient</p>
+            <p className="text-sm text-gray-700 italic leading-relaxed">"{b.patientMsg}"</p>
+          </CardContent>
+        </Card>
+
+        {/* Order button */}
+        {b.orderStudy && (
+          <Button
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white mb-3"
+            onClick={() => {
+              const study = STUDIES.find(s => s.id === b.orderStudy);
+              if (study) { setSelectedStudy(study); setSelectedICD10([]); setStep(2); setShowBiradsGuide(false); setSelectedBirads(null); }
+            }}
+          >
+            {b.orderLabel} <ArrowRight className="h-4 w-4 ml-1" />
+          </Button>
+        )}
+
+        <Button variant="outline" className="w-full" onClick={() => setSelectedBirads(null)}>
+          ← Back to BI-RADS List
+        </Button>
+      </div>
+    );
+  }
 
   // ── BREAST GUIDE ───────────────────────────────────────────────────────
   if (showBreastGuide) {
@@ -733,6 +970,21 @@ export default function RadiologyOrderingWizard() {
             <h1 className="text-xl font-bold text-gray-800">Radiology Ordering Wizard</h1>
             <p className="text-sm text-gray-500">Step 1 of 3 — Select imaging study</p>
           </div>
+        </div>
+
+        {/* BI-RADS Follow-Up Banner */}
+        <div className="mb-3 rounded-xl border-2 border-orange-200 bg-orange-50 p-4 flex items-center justify-between gap-3">
+          <div>
+            <p className="font-bold text-sm text-orange-800">📊 Received an abnormal mammogram result?</p>
+            <p className="text-xs text-orange-700 mt-0.5">Look up BI-RADS 0–6 for next steps, biopsy guidance, timeline, and what to tell your patient.</p>
+          </div>
+          <Button
+            size="sm"
+            className="flex-shrink-0 bg-orange-600 hover:bg-orange-700 text-white"
+            onClick={() => { setShowBiradsGuide(true); setSelectedBirads(null); }}
+          >
+            BI-RADS Guide →
+          </Button>
         </div>
 
         {/* Breast Guide Banner */}
