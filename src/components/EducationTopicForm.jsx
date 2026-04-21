@@ -158,7 +158,9 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                     };
                     
                     // Create new version
-                    await entities.EducationTopic.create(newVersion);
+                    // Strip change_summary — not a DB column
+                    const { change_summary: _cs1, ...newVersionClean } = newVersion;
+                    await entities.EducationTopic.create(newVersionClean);
                     
                     // Update the original topic to mark it as having a newer version
                     await entities.EducationTopic.update(editTopic.id, {
@@ -166,14 +168,12 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                     });
                 } else {
                     // Update existing record in place
-                    await entities.EducationTopic.update(editTopic.id, formData);
+                    const { change_summary: _cs2, ...formDataClean } = formData;
+                    await entities.EducationTopic.update(editTopic.id, formDataClean);
                 }
             } else {
-                await entities.EducationTopic.create({
-                    ...formData,
-                    version: "1.0",
-                    change_summary: "Initial version"
-                });
+                const { change_summary: _cs3, ...createData } = { ...formData, version: "1.0" };
+                await entities.EducationTopic.create(createData);
             }
             onSuccess();
             onOpenChange(false);
