@@ -160,6 +160,8 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                     // Create new version
                     // Strip change_summary — not a DB column
                     const { change_summary: _cs1, ...newVersionClean } = newVersion;
+                    // version must be integer — increment by 1
+                    newVersionClean.version = (parseInt(editTopic.version) || 1) + 1;
                     await entities.EducationTopic.create(newVersionClean);
                     
                     // Update the original topic to mark it as having a newer version
@@ -172,7 +174,7 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                     await entities.EducationTopic.update(editTopic.id, formDataClean);
                 }
             } else {
-                const { change_summary: _cs3, ...createData } = { ...formData, version: "1.0" };
+                const { change_summary: _cs3, ...createData } = { ...formData, version: 1 };
                 await entities.EducationTopic.create(createData);
             }
             onSuccess();
