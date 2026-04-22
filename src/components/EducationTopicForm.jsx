@@ -139,6 +139,10 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
         setIsUploading(false);
     };
 
+    // Only send columns that exist in the DB
+    const DB_COLS = ['title','summary','content','category','image_url','medical_references','header','is_favorite','version','parent_id'];
+    const cleanRecord = (record) => Object.fromEntries(Object.entries(record).filter(([k]) => DB_COLS.includes(k)));
+
     const handleSave = async () => {
         if (!formData.title || !formData.category || !formData.content) {
             alert('Please fill in title, category, and content');
@@ -159,9 +163,11 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                     
                     // Create new version
                     // Strip change_summary — not a DB column
-                    const { change_summary: _cs1, ...newVersionClean } = newVersion;
-                    // version must be integer — increment by 1
-                    newVersionClean.version = (parseInt(editTopic.version) || 1) + 1;
+                    const newVersionClean = cleanRecord({
+                        ...formData,
+                        parent_id: editTopic.id,
+                        version: (parseInt(editTopic.version) || 1) + 1,
+                    });
                     await entities.EducationTopic.create(newVersionClean);
                     
                     // Update the original topic to mark it as having a newer version
@@ -170,19 +176,18 @@ export default function EducationTopicForm({ open, onOpenChange, onSuccess, edit
                     });
                 } else {
                     // Update existing record in place
-                    const { change_summary: _cs2, ...formDataClean } = formData;
-                    await entities.EducationTopic.update(editTopic.id, formDataClean);
+                    await entities.EducationTopic.update(editTopic.id, cleanRecord(formData));
                 }
             } else {
-                const { change_summary: _cs3, ...createData } = { ...formData, version: 1 };
-                await entities.EducationTopic.create(createData);
+                await entities.EducationTopic.create(cleanRecord({ ...formData, version: 1 }));
             }
             onSuccess();
             onOpenChange(false);
             setChangeSummary("");
             setSaveAsNewVersion(true);
         } catch (error) {
-            alert('Failed to save topic. Please try again.');
+            console.error('Education save error:', error);
+            alert('Failed to save topic: ' + (error?.message || error?.details || JSON.stringify(error)));
         }
         setIsSaving(false);
     };
