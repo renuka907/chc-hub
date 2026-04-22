@@ -94,6 +94,7 @@ import TanitaCalculator from './pages/TanitaCalculator';
 import UserManagement from './pages/UserManagement';
 import UserProfile from './pages/UserProfile';
 import ViewSharedForm from './pages/ViewSharedForm';
+import InsuranceCoverage from './pages/InsuranceCoverage';
 import __Layout from './Layout.jsx';
 
 
@@ -117,6 +118,7 @@ export const PAGES = {
     "FrontOfficeEducation": FrontOfficeEducation,
     "FormTemplates": FormTemplates,
     "Home": Home,
+    "InsuranceCoverage": InsuranceCoverage,
     "InventoryManagement": InventoryManagement,
     "InventoryReports": InventoryReports,
     "InventoryUsageTracking": InventoryUsageTracking,

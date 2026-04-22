@@ -118,6 +118,7 @@ export default function Layout({ children, currentPageName }) {
                 { name: "Lab Tests", path: "LabTestDirectory", icon: Stethoscope },
                 { name: "Pap Ordering Wizard", path: "PapOrderingWizard", icon: FileText },
                 { name: "Radiology Ordering", path: "RadiologyOrderingWizard", icon: FileText },
+                { name: "Insurance Coverage", path: "InsuranceCoverage", icon: FileText },
                 { name: "Medication Reference", path: "MedicationReference", icon: Stethoscope },
                 { name: "Provider Directory", path: "ProviderReferral", icon: Users },
                 { name: "Skin Analysis", path: "SkinAnalysis", icon: Sparkles },
