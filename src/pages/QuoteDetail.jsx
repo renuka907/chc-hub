@@ -100,6 +100,8 @@ export default function QuoteDetail() {
             <style dangerouslySetInnerHTML={{__html: `
                 @media print {
                     @page { margin: 0.25in 0.4in 0.2in 0.4in; size: letter; }
+                    html, body, #root, main { background: white !important; background-image: none !important; }
+                    body > div, #root > div { background: white !important; background-image: none !important; }
                     body * { visibility: hidden; }
                     .printable-document, .printable-document * { visibility: visible; color: #000 !important; }
                     .printable-document { position: absolute; left: 0; top: 0; width: 100%; padding: 0 !important; max-width: 100% !important; font-size: 11px !important; line-height: 1.3 !important; }
