@@ -270,6 +270,7 @@ export default function CheckoutQuote() {
             discount_id: selectedDiscountId || null,
             discount_amount: calculateDiscountAmount(),
             subtotal: calculateSubtotal(),
+            tax_amount: calculateTax(),
             total: calculateTotal(),
             notes: notes || null,
             show_totals: showTotals,

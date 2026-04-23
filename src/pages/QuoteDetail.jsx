@@ -256,7 +256,12 @@ export default function QuoteDetail() {
                                 )}
                                 <div className="flex justify-between pb-2">
                                     <span>Tax ({location?.tax_rate || 0}%):</span>
-                                    <span className="font-semibold">${((quote.tax_amount || quote.tax || 0)).toFixed(2)}</span>
+                                    <span className="font-semibold">${(() => {
+                                        const stored = quote.tax_amount ?? quote.tax;
+                                        if (stored && stored > 0) return stored.toFixed(2);
+                                        const derived = (quote.total || 0) - (quote.subtotal || 0) + (quote.discount_amount || 0);
+                                        return (derived > 0 ? derived : 0).toFixed(2);
+                                    })()}</span>
                                 </div>
                                 <div className="flex justify-between text-xl font-bold text-blue-900 pt-2 border-t-2">
                                     <span>Total:</span>

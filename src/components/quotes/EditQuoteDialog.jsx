@@ -153,6 +153,7 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
             discount_id: selectedDiscountId || null,
             discount_amount: calculateDiscountAmount(),
             subtotal: calculateSubtotal(),
+            tax_amount: calculateTax(),
             total: calculateTotal(),
             notes: notes || null
         };
