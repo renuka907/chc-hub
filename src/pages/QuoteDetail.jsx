@@ -130,6 +130,9 @@ export default function QuoteDetail() {
                     .printable-document .rounded-lg { border-radius: 4px !important; }
                     .printable-document .border-t { border-top-width: 1px !important; }
                     .printable-document .w-64 { width: 200px !important; }
+                    .printable-document thead,
+                    .printable-document [class*="bg-slate"],
+                    .printable-document [class*="bg-gray"] { background: white !important; background-color: white !important; }
                     .no-print { display: none !important; }
                     nav, header, aside, [class*="sidebar"], [class*="Sidebar"] { display: none !important; }
                 }
