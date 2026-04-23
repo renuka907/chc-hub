@@ -134,7 +134,7 @@ export default function QuoteDetail() {
                     .printable-document [class*="bg-slate"],
                     .printable-document [class*="bg-gray"] { background: white !important; background-color: white !important; }
                     .no-print { display: none !important; }
-                    nav, header, aside, [class*="sidebar"], [class*="Sidebar"] { display: none !important; }
+                    nav, header, aside, footer, [class*="sidebar"], [class*="Sidebar"] { display: none !important; }
                 }
             `}} />
             {/* Action Bar */}
