@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
       import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat, getCurrentUser } from "@/api/supabaseHelpers";
       import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
       import { Button } from "@/components/ui/button";
@@ -181,35 +181,6 @@ export default function LabTestDirectory() {
     });
 
     const handleSyncTube = (id) => syncTubeMutation.mutate({ id });
-
-    // Auto-sync tube types from Quest for saved tests with no tube_type (runs once per test id)
-    const syncedRef = useRef(new Set());
-    useEffect(() => {
-        const list = Array.isArray(savedTests) ? savedTests : [];
-        const toSync = list.filter(t => {
-            if (syncedRef.current.has(t.id)) return false;
-            if (!t?.test_code && !t?.quest_url) return false;
-            return !t.tube_type;
-        });
-        toSync.forEach(async t => {
-            syncedRef.current.add(t.id);
-            try {
-                const code = t.test_code || extractCodeFromQuestUrl(t.quest_url);
-                if (!code) return;
-                const detail = await fetchQuestDetails(code);
-                if (!detail) return;
-                const tubeType = parseTubeFromSpecimen(detail.PreferredSpecimen);
-                if (!tubeType) return;
-                await entities.LabTestInfo.update(t.id, {
-                    tube_type: tubeType,
-                    specimen_type: stripHtml(detail.PreferredSpecimen || '') || t.specimen_type,
-                });
-                queryClient.invalidateQueries({ queryKey: ['labTests'] });
-            } catch (e) {
-                // ignore per-item errors
-            }
-        });
-    }, [savedTests, queryClient]);
 
     // Common abbreviation mapping for search
     const abbreviations = {
