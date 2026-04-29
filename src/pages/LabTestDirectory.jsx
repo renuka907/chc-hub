@@ -502,8 +502,9 @@ export default function LabTestDirectory() {
         const tubeVolumes = {};
         panelTests.forEach(test => {
             const tube = normalizeTubeType(test.tube_type);
-            const volumeStr = test.volume_required || '0';
-            const volumeNeeded = parseFloat(volumeStr) || 0;
+            const volumeStr = test.volume_required || '';
+            const match = volumeStr.match(/(\d+\.?\d*)/);
+            const volumeNeeded = match ? parseFloat(match[1]) : 0;
             tubeVolumes[tube] = (tubeVolumes[tube] || 0) + volumeNeeded;
         });
 
