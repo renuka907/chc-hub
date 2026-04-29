@@ -499,19 +499,19 @@ export default function LabTestDirectory() {
         if (!tubeType) return 5;
         const lowerTube = tubeType.toLowerCase();
         const capacities = {
-            "lavender": 3,
-            "purple": 3,
-            "edta": 3,
-            "red": 7,
+            "lavender": 4,
+            "purple": 4,
+            "edta": 4,
+            "red": 6,
             "gold": 8,
+            "sst": 8,
             "yellow": 5,
             "green": 6,
             "blue": 2.7,
             "sodium citrate": 2.7,
             "gray": 4,
             "pink": 5,
-            "black": 2.7,
-            "sst": 8
+            "black": 2.7
         };
         for (const [color, capacity] of Object.entries(capacities)) {
             if (lowerTube.includes(color)) return capacity;
