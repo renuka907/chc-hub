@@ -11,6 +11,38 @@ import React, { useState, useEffect, useRef } from "react";
       import { Search, Loader2, TestTube, Star, ExternalLink, Plus, AlertCircle, RefreshCw, Trash2, Folder, Minus, Settings, Sparkles } from "lucide-react";
       import { toast } from "sonner";
 
+const stripHtml = (str) => str ? str.replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&#160;/g, ' ').replace(/\s+/g, ' ').trim() : '';
+
+const parseTubeFromSpecimen = (preferredSpec) => {
+    const spec = stripHtml(preferredSpec || '');
+    if (!spec) return '';
+    if (/green.top|lithium heparin|heparin.*green/i.test(spec)) return 'Green (Lithium Heparin)';
+    if (/lavender|edta(?!.*heparin)/i.test(spec)) return 'Lavender (EDTA)';
+    if (/light blue|sodium citrate|blue.*citrate|citrate.*blue/i.test(spec)) return 'Light Blue (Sodium Citrate)';
+    if (/gray.top|sodium fluoride|fluoride/i.test(spec)) return 'Gray (Sodium Fluoride)';
+    if (/red.top|red.*no.*gel|plain.*tube|no additive/i.test(spec)) return 'Red Top';
+    if (/gold.top|sst|serum separator|gel.*barrier/i.test(spec)) return 'Gold (SST)';
+    if (/yellow.top|acd/i.test(spec)) return 'Yellow (ACD)';
+    if (/royal blue/i.test(spec)) return 'Royal Blue (Trace Element)';
+    if (/urine/i.test(spec)) return 'Urine Container';
+    if (/serum/i.test(spec)) return 'Gold (SST)';
+    if (/plasma/i.test(spec)) return 'Green (Lithium Heparin)';
+    return '';
+};
+
+const fetchQuestDetails = async (testCode) => {
+    if (!testCode) return null;
+    const res = await fetch(`/api/quest-details?code=${encodeURIComponent(testCode)}`);
+    const json = await res.json();
+    return json?.response?.docs?.[0] || null;
+};
+
+const extractCodeFromQuestUrl = (questUrl) => {
+    if (!questUrl) return null;
+    const m = questUrl.match(/test-detail\/([^/?#]+)/i);
+    return m ? m[1] : null;
+};
+
 export default function LabTestDirectory() {
          const [searchQuery, setSearchQuery] = useState("");
          const [isSearching, setIsSearching] = useState(false);
@@ -57,13 +89,35 @@ export default function LabTestDirectory() {
 
     const syncTubeMutation = useMutation({
         mutationFn: async ({ id }) => {
-            const res = await /* TODO: Implement syncQuestTubeType as Supabase Edge Function */ Promise.resolve({ data: null });
-            return res.data;
+            const test = savedTests.find(t => t.id === id);
+            if (!test) return { success: false, error: 'Test not found' };
+            const code = test.test_code || extractCodeFromQuestUrl(test.quest_url);
+            if (!code) return { success: false, error: 'No Quest test code or URL' };
+            const detail = await fetchQuestDetails(code);
+            if (!detail) return { success: false, error: 'Quest returned no details' };
+            const tubeType = parseTubeFromSpecimen(detail.PreferredSpecimen);
+            const updates = {};
+            if (tubeType) updates.tube_type = tubeType;
+            const specimen = stripHtml(detail.PreferredSpecimen || '');
+            if (specimen) updates.specimen_type = specimen;
+            const volume = stripHtml(detail.MinimumVolume || '');
+            if (volume) updates.volume_required = volume;
+            const collection = stripHtml(detail.CollectionInstructions || '');
+            if (collection) updates.collection_instructions = collection;
+            const storage = stripHtml(detail.SpecimenStability || '');
+            if (storage) updates.storage_requirements = storage;
+            if (Object.keys(updates).length === 0) {
+                return { success: false, error: 'Could not find Preferred Specimen on Quest' };
+            }
+            await entities.LabTestInfo.update(id, updates);
+            return { success: true, tube_type: tubeType };
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['labTests'] });
             if (data?.success && data?.tube_type) {
                 toast.success(`Tube type updated: ${data.tube_type}`);
+            } else if (data?.success) {
+                toast.success('Test details refreshed from Quest');
             } else {
                 toast.error(data?.error || 'Could not find Preferred Specimen on Quest');
             }
@@ -85,13 +139,12 @@ export default function LabTestDirectory() {
     });
 
     const generateICD10Mutation = useMutation({
-        mutationFn: async ({ testId, testName, testCode, category }) => {
-            // TODO: Implement generateICD10Codes as Supabase Edge Function
-            const { data } = { data: null };
-            if (data?.codes && Array.isArray(data.codes)) {
-                await entities.LabTestInfo.update(testId, { diagnosis_codes: JSON.stringify(data.codes) });
+        mutationFn: async ({ testId, testName, category }) => {
+            const codes = getICD10Codes(testName, category);
+            if (codes && codes.length > 0) {
+                await entities.LabTestInfo.update(testId, { diagnosis_codes: JSON.stringify(codes) });
             }
-            return data;
+            return { codes };
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['labTests'] });
@@ -129,24 +182,34 @@ export default function LabTestDirectory() {
 
     const handleSyncTube = (id) => syncTubeMutation.mutate({ id });
 
-    // Auto-sync tube types from Quest for saved tests (runs once per test id)
+    // Auto-sync tube types from Quest for saved tests with no tube_type (runs once per test id)
     const syncedRef = useRef(new Set());
     useEffect(() => {
         const list = Array.isArray(savedTests) ? savedTests : [];
         const toSync = list.filter(t => {
-            if (!t?.quest_url || syncedRef.current.has(t.id)) return false;
-            const tube = (t.tube_type || '').toLowerCase();
-            const name = (t.test_name || '').toLowerCase();
-            // Sync if missing tube, looks like SST/Gold, or is a QuantiFERON test
-            return !tube || /\bsst\b|gold/.test(tube) || /quantiferon|tb gold/.test(name);
+            if (syncedRef.current.has(t.id)) return false;
+            if (!t?.test_code && !t?.quest_url) return false;
+            return !t.tube_type;
         });
-        toSync.forEach(t => {
+        toSync.forEach(async t => {
             syncedRef.current.add(t.id);
-            /* TODO: Implement syncQuestTubeType as Supabase Edge Function */ Promise.resolve({ data: null })
-                .then(() => queryClient.invalidateQueries({ queryKey: ['labTests'] }))
-                .catch(() => {/* ignore per-item errors */});
+            try {
+                const code = t.test_code || extractCodeFromQuestUrl(t.quest_url);
+                if (!code) return;
+                const detail = await fetchQuestDetails(code);
+                if (!detail) return;
+                const tubeType = parseTubeFromSpecimen(detail.PreferredSpecimen);
+                if (!tubeType) return;
+                await entities.LabTestInfo.update(t.id, {
+                    tube_type: tubeType,
+                    specimen_type: stripHtml(detail.PreferredSpecimen || '') || t.specimen_type,
+                });
+                queryClient.invalidateQueries({ queryKey: ['labTests'] });
+            } catch (e) {
+                // ignore per-item errors
+            }
         });
-    }, [savedTests]);
+    }, [savedTests, queryClient]);
 
     // Common abbreviation mapping for search
     const abbreviations = {
@@ -232,24 +295,7 @@ export default function LabTestDirectory() {
                         }
 
                         const detail = detailData || topResult;
-                        const stripHtml = (str) => str ? str.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() : '';
-                        
-                        // Parse tube type from PreferredSpecimen
-                        // Strip HTML first for cleaner matching
-                        const preferredSpec = stripHtml(detail.PreferredSpecimen || '');
-                        let tubeType = '';
-                        // Order matters! Check specific colors before generic terms
-                        if (/green.top|lithium heparin|heparin.*green/i.test(preferredSpec)) tubeType = 'Green (Lithium Heparin)';
-                        else if (/lavender|edta(?!.*heparin)/i.test(preferredSpec)) tubeType = 'Lavender (EDTA)';
-                        else if (/light blue|sodium citrate|blue.*citrate|citrate.*blue/i.test(preferredSpec)) tubeType = 'Light Blue (Sodium Citrate)';
-                        else if (/gray.top|sodium fluoride|fluoride/i.test(preferredSpec)) tubeType = 'Gray (Sodium Fluoride)';
-                        else if (/red.top|red.*no.*gel|plain.*tube|no additive/i.test(preferredSpec)) tubeType = 'Red Top';
-                        else if (/gold.top|sst|serum separator|gel.*barrier/i.test(preferredSpec)) tubeType = 'Gold (SST)';
-                        else if (/yellow.top|acd/i.test(preferredSpec)) tubeType = 'Yellow (ACD)';
-                        else if (/royal blue/i.test(preferredSpec)) tubeType = 'Royal Blue (Trace Element)';
-                        else if (/urine/i.test(preferredSpec)) tubeType = 'Urine Container';
-                        else if (/serum/i.test(preferredSpec)) tubeType = 'Gold (SST)';
-                        else if (/plasma/i.test(preferredSpec)) tubeType = 'Green (Lithium Heparin)';
+                        const tubeType = parseTubeFromSpecimen(detail.PreferredSpecimen);
 
                         // Build additional Quest results list
                         const questResults = searchData.response.docs.map(doc => ({
@@ -387,10 +433,8 @@ export default function LabTestDirectory() {
         };
         saveTestMutation.mutate(payload, {
             onSuccess: async (created) => {
-                // Also trigger tube sync if quest_url is present, and only if a new item was created
-                if (testData.quest_url && created?.id) {
-                    await /* TODO: Implement syncQuestTubeType as Supabase Edge Function */ Promise.resolve({ data: null });
-                    queryClient.invalidateQueries({ queryKey: ['labTests'] });
+                if (testData.quest_url && created?.id && !payload.tube_type) {
+                    syncTubeMutation.mutate({ id: created.id });
                 }
             }
         });
