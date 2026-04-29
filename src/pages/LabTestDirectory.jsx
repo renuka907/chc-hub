@@ -519,7 +519,7 @@ export default function LabTestDirectory() {
         return 5;
     };
 
-    const calculatePanelTubes = (panelId, panelName) => {
+    const calculatePanelTubes = (panelId) => {
         const panelTests = savedTests.filter(t => {
             try {
                 const panelIds = typeof t.panel_ids === 'string' ? JSON.parse(t.panel_ids) : t.panel_ids || [];
@@ -542,11 +542,6 @@ export default function LabTestDirectory() {
             const count = totalVolume > 0 ? Math.ceil(totalVolume / capacity) : (panelTests.length > 0 ? 1 : 0);
             tubeCount[tube] = count;
         });
-
-        // Override for Female HRT-Initial Panel - force red-top to 2
-        if (panelName?.trim() === "Female HRT-Initial") {
-            tubeCount["Red-top"] = 2;
-        }
 
         return tubeCount;
     };
@@ -874,7 +869,7 @@ export default function LabTestDirectory() {
                                      return false;
                                  }
                              });
-                             const tubeCount = calculatePanelTubes(panel.id, panel.panel_name);
+                             const tubeCount = calculatePanelTubes(panel.id);
                              const totalTubes = Object.values(tubeCount).reduce((a, b) => a + b, 0);
                             return (
                                 <Card key={panel.id} className="hover:shadow-md transition-shadow">
