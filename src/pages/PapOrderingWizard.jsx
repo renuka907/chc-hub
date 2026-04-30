@@ -27,6 +27,7 @@ const ICD10_DESCRIPTIONS = {
     "Z90.710": "Acquired absence of uterus and cervix",
     "Z90.711": "Acquired absence of uterus with remaining cervical stump",
     "Z01.419": "Encounter for gynecological examination (general) (routine) without abnormal findings",
+    "Z01.411": "Encounter for gynecological examination (general) (routine) with abnormal findings",
     "N93.9": "Abnormal uterine and vaginal bleeding, unspecified",
     "N89.8": "Other specified noninflammatory disorders of vagina",
     "B20": "Human immunodeficiency virus [HIV] disease",
@@ -379,51 +380,29 @@ export default function PapOrderingWizard() {
                     warnings.push("🔵 MEDICARE: Follow-up is DIAGNOSTIC — standard CPT codes apply (not G0476).");
                     denialWarnings.push("🚨 When following up an abnormal result: ALWAYS use the diagnostic ICD-10 code (R87.xxx or Z86.001), NOT Z12.4. Using Z12.4 for a diagnostic visit causes denials.");
                 }
-                // Medicare OVER 65 with cervix
-                else if (age > 65) {
-                    // Check if adequate prior screening
+                // Medicare 65 AND OLDER with cervix — Quest directive: use 58315
+                else if (age >= 65) {
+                    requiresHPV = false;
+                    testCodes = ["58315"];
+                    cptCodes = ["88175"];
+                    questCodeName = "ThinPrep Automated Pap";
+                    primaryICD10 = "Z11.51";
+                    secondaryICD10.push("Z01.419");
+                    medicareWarnings.push("🔵 QUEST 65+: Use test code 58315 (ThinPrep Automated Pap) per Quest directive.");
+                    medicareWarnings.push("⚠️ MEDICARE DOES NOT COVER HPV SCREENING FOR PATIENTS OVER 65. HPV testing will be patient responsibility (~$150+).");
+                    warnings.push("📋 ICD-10: Z11.51 (HPV screening) + Z01.419 (routine GYN exam, no abnormal findings). Use Z01.411 instead of Z01.419 if abnormal findings noted.");
                     if (!isHighRisk && !isSpecialPopulation && !hasDysplasiaHistory) {
-                        warnings.push("⚠️ OVER 65: Consider stopping screening IF adequate prior screening AND no hx CIN2+ in last 25 years");
+                        warnings.push("⚠️ 65+: Consider stopping screening IF adequate prior screening AND no hx CIN2+ in last 25 years");
                         warnings.push("📋 Document medical necessity for continued screening");
                         denialWarnings.push("⚠️ Document medical necessity for continued screening after age 65");
-                    }
-
-                    if (isHighRisk || isSpecialPopulation) {
-                        // High-risk/special population over 65: follow 30-65 protocol
-                        testCodes = needsSTI ? ["91386"] : ["91384"];
-                        cptCodes = ["88175"];
-                        hcpcsCodes.push("G0476");
-                        questCodeName = "ThinPrep Pap + HPV DNA Co-test w/ Reflex 16/18";
-                        if (isHIV) {
-                            primaryICD10 = "Z12.4";
-                            secondaryICD10.push("B20");
-                        } else if (isImmunocompromised) {
-                            primaryICD10 = "Z12.4";
-                            secondaryICD10.push("D89.9");
-                        } else {
-                            primaryICD10 = "Z91.89";
-                        }
-                        secondaryICD10.push("Z11.51");
-                        medicareWarnings.push("🔵 MEDICARE HIGH-RISK OVER 65: Following 30-65 co-test protocol. Pap+HPV covered every 12 months.");
-                        medicareWarnings.push("🔵 MEDICARE: Use G0476 for HPV screening. Do NOT bill 88175 + 87624 separately.");
-                        medicareWarnings.push("📋 Document medical necessity for continued screening past 65");
-                        frequencyReminder = "Screen annually (high-risk / special population)";
-                    } else {
-                        requiresHPV = false;
-                        // Pap-only for over 65, standard risk
-                        testCodes = ["91384"];
-                        cptCodes = ["88175"];
-                        questCodeName = "ThinPrep Pap w/ Reflex to HPV DNA";
-                        primaryICD10 = "Z12.4";
-                        secondaryICD10.push("Z11.51");
-                        medicareWarnings.push("⚠️ MEDICARE DOES NOT COVER HPV SCREENING FOR PATIENTS OVER 65. HPV testing will be patient responsibility (~$150+). Consider Pap-only order.");
-                        medicareWarnings.push("🔵 MEDICARE OVER 65: Use Quest Smart Code 91384 (age-based protocol built in). Do NOT use 92094 (Pap+HPV combo) — HPV portion will be denied.");
-                        warnings.push("📋 Medicare screening: Pap covered every 24 months");
                         frequencyReminder = "Pap every 24 months (Medicare standard risk)";
+                    } else {
+                        frequencyReminder = "Screen annually (high-risk / special population)";
+                        medicareWarnings.push("📋 Document medical necessity for continued screening past 65");
                     }
                 }
-                // Medicare age 30-65 with cervix — HPV covered with G0476
-                else if (age >= 30 && age <= 65) {
+                // Medicare age 30-64 with cervix — HPV covered with G0476
+                else if (age >= 30 && age < 65) {
                     testCodes = needsSTI ? ["91386"] : ["91384"];
                     cptCodes = ["88175"];
                     hcpcsCodes.push("G0476");
@@ -557,25 +536,27 @@ export default function PapOrderingWizard() {
                     secondaryICD10.push("Z11.51");
                     frequencyReminder = "Screen annually (special population)";
                     smartCodeNote = `Tell MA to order ${smartCode} — no age-specific selection needed`;
-                } else if (age > 65) {
-                    // Over 65 non-Medicare — Smart Code
-                    testCodes = [smartCode];
-                    questCodeName = smartCodeNames[smartCode];
-                    cptCodes = ["88175", "87624", "87625"];
-                    cptReferenceNote = "Quest will bill: 88175 + 87624 + 87625 (if reflex genotyping triggered)";
-                    primaryICD10 = "Z12.4";
-                    secondaryICD10.push("Z11.51");
-                    smartCodeNote = `Tell MA to order ${smartCode} — no age-specific selection needed`;
+                } else if (age >= 65) {
+                    // 65 AND OLDER non-Medicare — Quest directive: use 58315
+                    requiresHPV = false;
+                    testCodes = ["58315"];
+                    questCodeName = "ThinPrep Automated Pap";
+                    cptCodes = ["88175"];
+                    cptReferenceNote = "Quest will bill: 88175";
+                    primaryICD10 = "Z11.51";
+                    secondaryICD10.push("Z01.419");
+                    smartCodeNote = "Tell MA to order 58315 (ThinPrep Automated Pap) — Quest directive for 65+";
+                    warnings.push("📋 ICD-10: Z11.51 (HPV screening) + Z01.419 (routine GYN exam, no abnormal findings). Use Z01.411 instead of Z01.419 if abnormal findings noted.");
 
                     if (isHighRisk || hasDysplasiaHistory) {
-                        frequencyReminder = "Follow 30-65 co-test protocol (high-risk / hx CIN2+)";
+                        frequencyReminder = "Annual screening (high-risk / hx CIN2+)";
                     } else {
-                        warnings.push("⚠️ OVER 65: Consider stopping screening IF adequate prior screening AND no hx CIN2+ in last 25 years");
+                        warnings.push("⚠️ 65+: Consider stopping screening IF adequate prior screening AND no hx CIN2+ in last 25 years");
                         warnings.push("📋 Document medical necessity for continued screening");
-                        frequencyReminder = "Pap + HPV co-test every 5 years (if continuing)";
+                        frequencyReminder = "Pap every 5 years (if continuing)";
                         denialWarnings.push("⚠️ Document medical necessity for continued screening after age 65");
                     }
-                } else if (age >= 30 && age <= 65) {
+                } else if (age >= 30 && age < 65) {
                     // Ages 30-65: Smart Code handles co-test automatically
                     testCodes = [smartCode];
                     questCodeName = smartCodeNames[smartCode];
