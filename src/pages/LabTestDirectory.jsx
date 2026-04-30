@@ -63,7 +63,7 @@ export default function LabTestDirectory() {
 
     const { data: savedTests = [], isLoading } = useQuery({
         queryKey: ['labTests'],
-        queryFn: () => entities.LabTestInfo.list('-updated_at'),
+        queryFn: () => entities.LabTestInfo.list('test_name'),
     });
 
     const { data: panels = [] } = useQuery({
