@@ -42,7 +42,7 @@ export default function CheckoutQuote() {
 
     const { data: allPricingItems = [] } = useQuery({
         queryKey: ['pricingItems'],
-        queryFn: () => entities.PricingItem.filter({ status: 'active' }),
+        queryFn: () => entities.PricingItem.filter({}),
     });
 
     const { data: discounts = [] } = useQuery({
@@ -50,7 +50,8 @@ export default function CheckoutQuote() {
         queryFn: () => entities.Discount.filter({ status: 'active' }),
     });
 
-    const pricingItems = allPricingItems;
+    // Include items with no status set OR status === 'active' (matches PricingManagement page)
+    const pricingItems = allPricingItems.filter(item => !item.status || item.status === 'active');
 
     const buildPrintHtml = (quoteData, items, location) => {
         const logoUrl = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png";
