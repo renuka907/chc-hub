@@ -126,27 +126,25 @@ export default function CheckoutQuote() {
 
     const selectedLocation = locations.find(loc => loc.id === selectedLocationId);
 
-    // Helper: get item's category (category field is primary, categories JSON is fallback)
-    const getItemCat = (item) => {
-        if (item.category) return item.category;
+    // Helper: get ALL of an item's categories (categories JSON is primary, legacy category field is fallback)
+    // Matches PricingManagement.getItemCats so the two pages always agree.
+    const getItemCats = (item) => {
         if (item.categories) {
             const parsed = safeParse(item.categories);
-            if (parsed.length > 0) return parsed[0];
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
         }
-        return null;
+        if (item.category) return [item.category];
+        return [];
     };
 
-    // Get unique categories
+    // Get unique categories (an item can belong to multiple)
     const availableCategories = React.useMemo(() => {
         const cats = new Set();
-        pricingItems.forEach(item => {
-            const cat = getItemCat(item);
-            if (cat) cats.add(cat);
-        });
+        pricingItems.forEach(item => getItemCats(item).forEach(c => cats.add(c)));
         return ["all", ...Array.from(cats).sort()];
     }, [pricingItems]);
 
-    // Group items by category
+    // Group items by category — items with multiple categories appear under each
     const groupedItems = React.useMemo(() => {
         const groups = {};
         const filtered = pricingItems.filter(item => {
@@ -155,14 +153,17 @@ export default function CheckoutQuote() {
             const matchesSearch = normalizedQuery === '' || 
                                 normalizeText(item.name).includes(normalizedQuery) ||
                                 normalizeText(item.description || '').includes(normalizedQuery);
-            const itemCat = getItemCat(item);
-            const matchesCategory = selectedCategory === "all" || itemCat === selectedCategory;
+            const itemCats = getItemCats(item);
+            const matchesCategory = selectedCategory === "all" || itemCats.includes(selectedCategory);
             return matchesSearch && matchesCategory;
         });
         filtered.forEach(item => {
-            const cat = getItemCat(item) || 'Other';
-            if (!groups[cat]) groups[cat] = [];
-            groups[cat].push(item);
+            const cats = getItemCats(item);
+            const bucketCats = cats.length > 0 ? cats : ['Other'];
+            bucketCats.forEach(cat => {
+                if (!groups[cat]) groups[cat] = [];
+                groups[cat].push(item);
+            });
         });
         return groups;
     }, [pricingItems, searchQuery, selectedCategory]);
