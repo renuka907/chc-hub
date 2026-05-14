@@ -37,10 +37,12 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
         }
     }, [quote, open]);
 
-    const { data: allPricingItems = [] } = useQuery({
+    const { data: rawPricingItems = [] } = useQuery({
         queryKey: ['pricingItems'],
-        queryFn: () => entities.PricingItem.filter({ status: 'active' }),
+        queryFn: () => entities.PricingItem.filter({}),
     });
+    // Include items with no status set OR status === 'active' (matches PricingManagement page)
+    const allPricingItems = rawPricingItems.filter(item => !item.status || item.status === 'active');
 
     const { data: locations = [] } = useQuery({
         queryKey: ['clinicLocations'],
@@ -71,12 +73,21 @@ export default function EditQuoteDialog({ open, onOpenChange, quote, onSuccess }
                normalizeText(item.description || '').includes(normalizedQuery);
     });
 
+    // Resolve a display category from categories[] first, falling back to legacy category field
+    const resolveCategory = (item) => {
+        if (item.categories) {
+            const parsed = safeParse(item.categories);
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed[0];
+        }
+        return item.category || null;
+    };
+
     const addItem = (item, tier) => {
         setSelectedItems([...selectedItems, { 
             id: item.id,
             name: item.name,
             item_type: item.item_type,
-            category: item.category,
+            category: resolveCategory(item),
             taxable: item.taxable,
             tier_name: tier.tier_name,
             price: tier.price,

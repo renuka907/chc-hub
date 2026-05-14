@@ -174,12 +174,18 @@ export default function CheckoutQuote() {
         setExpandedCategories(prev => ({ ...prev, [cat]: !prev[cat] }));
     };
 
+    // Pick a single display category for the line item (categories[] first, legacy fallback)
+    const resolveCategory = (item) => {
+        const cats = getItemCats(item);
+        return cats.length > 0 ? cats[0] : null;
+    };
+
     const addItem = (item, tier) => {
         setSelectedItems([...selectedItems, { 
             id: item.id,
             name: item.name,
             item_type: item.item_type,
-            category: item.category,
+            category: resolveCategory(item),
             taxable: item.taxable,
             tier_name: tier.tier_name,
             price: tier.price,
@@ -194,7 +200,7 @@ export default function CheckoutQuote() {
             id: item.id,
             name: item.name,
             item_type: item.item_type,
-            category: item.category,
+            category: resolveCategory(item),
             taxable: item.taxable,
             tier_name: tier.tier_name,
             price: tier.price,
