@@ -70,6 +70,7 @@ import InventoryManagement from './pages/InventoryManagement';
 import InventoryReports from './pages/InventoryReports';
 import InventoryUsageTracking from './pages/InventoryUsageTracking';
 import LabTestDirectory from './pages/LabTestDirectory';
+import LabNetworkLookup from './pages/LabNetworkLookup';
 import Library from './pages/Library';
 import MAEducation from './pages/MAEducation';
 import MedicationCalculator from './pages/MedicationCalculator';
@@ -123,6 +124,7 @@ export const PAGES = {
     "InventoryReports": InventoryReports,
     "InventoryUsageTracking": InventoryUsageTracking,
     "LabTestDirectory": LabTestDirectory,
+    "LabNetworkLookup": LabNetworkLookup,
     "Library": Library,
     "MAEducation": MAEducation,
     "MedicationCalculator": MedicationCalculator,

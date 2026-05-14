@@ -113,6 +113,8 @@ const TABLE_MAP = {
   Procedure: 'procedures',
   Provider: 'providers',
   Quote: 'quotes',
+  InsuranceLabNetwork: 'insurance_lab_networks',
+  LabTestFrequency: 'lab_test_frequencies',
   Reminder: 'reminders',
   SharedFormLink: 'shared_form_links',
   Special: 'specials',

@@ -116,6 +116,7 @@ export default function Layout({ children, currentPageName }) {
             items: [
                 { name: "Procedures", path: "ProceduresManagement", icon: Stethoscope },
                 { name: "Lab Tests", path: "LabTestDirectory", icon: Stethoscope },
+                { name: "Lab Network Lookup", path: "LabNetworkLookup", icon: FileText },
                 { name: "Pap Ordering Wizard", path: "PapOrderingWizard", icon: FileText },
                 { name: "Radiology Ordering", path: "RadiologyOrderingWizard", icon: FileText },
                 { name: "Insurance Coverage", path: "InsuranceCoverage", icon: FileText },
