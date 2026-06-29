@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Printer, Pill, Search, Droplets, Zap, Sparkles } from "lucide-react";
+import { Printer, Pill, Search, Droplets, Zap, Sparkles, Syringe } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 // ─── GLP DOSING CHARTS ───
@@ -40,6 +40,32 @@ const tirzepatideChart = {
         { mg: "8.50 mg", units: "56 units", price: "$225" },
         { mg: "11 mg", units: "73 units", price: "$225" },
         { mg: "16 mg", units: "1.1 mL", price: "$225" },
+    ],
+};
+
+const testosteroneChart = {
+    title: "Testosterone Dosing Reference",
+    subtitle: "Doses 20 mg and higher use the 200 mg/mL vial",
+    color: "from-emerald-600 to-teal-600",
+    borderColor: "border-emerald-200",
+    headerBg: "bg-emerald-50",
+    accentColor: "text-emerald-800",
+    rows: [
+        { dose: "5 mg", concentration: "50 mg/mL", volume: "0.1 mL", units: "10 units" },
+        { dose: "10 mg", concentration: "50 mg/mL", volume: "0.2 mL", units: "20 units" },
+        { dose: "15 mg", concentration: "50 mg/mL", volume: "0.3 mL", units: "30 units" },
+        { dose: "20 mg", concentration: "200 mg/mL", volume: "0.1 mL", units: "10 units" },
+        { dose: "25 mg", concentration: "200 mg/mL", volume: "0.125 mL", units: "12.5 units" },
+        { dose: "30 mg", concentration: "200 mg/mL", volume: "0.15 mL", units: "15 units" },
+        { dose: "35 mg", concentration: "200 mg/mL", volume: "0.175 mL", units: "17.5 units" },
+        { dose: "40 mg", concentration: "200 mg/mL", volume: "0.2 mL", units: "20 units" },
+        { dose: "45 mg", concentration: "200 mg/mL", volume: "0.225 mL", units: "22.5 units" },
+        { dose: "50 mg", concentration: "200 mg/mL", volume: "0.25 mL", units: "25 units" },
+    ],
+    notes: [
+        "The 12.5, 17.5, and 22.5 unit values fall between unit marks on a standard insulin/TB syringe and cannot be measured exactly; round to the nearest half-unit by eye.",
+        "For cleaner whole-unit draws at 25 mg, 35 mg, and 45 mg targets, the 50 mg/mL vial is an alternative.",
+        "Doses under 20 mg remain on the 50 mg/mL vial because switching them to 200 mg/mL would fall below reliable measurability on the syringe.",
     ],
 };
 
@@ -322,6 +348,59 @@ function DosingChart({ chart }) {
     );
 }
 
+function HormoneDosingChart({ chart }) {
+    return (
+        <Card className={`overflow-hidden border-2 ${chart.borderColor} shadow-lg`}>
+            <div className={`bg-gradient-to-r ${chart.color} p-5 text-white`}>
+                <div className="flex items-center justify-between gap-4">
+                    <div>
+                        <h3 className="text-xl font-bold">{chart.title}</h3>
+                        <p className="text-white/85 text-sm mt-1">{chart.subtitle}</p>
+                    </div>
+                    <Syringe className="w-10 h-10 text-white/45 shrink-0" />
+                </div>
+            </div>
+            <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                    <table className="w-full min-w-[680px]">
+                        <thead>
+                            <tr className={chart.headerBg}>
+                                <th className={`text-left px-5 py-3 text-sm font-semibold ${chart.accentColor}`}>Target Dose</th>
+                                <th className={`text-left px-5 py-3 text-sm font-semibold ${chart.accentColor}`}>Vial Concentration</th>
+                                <th className={`text-left px-5 py-3 text-sm font-semibold ${chart.accentColor}`}>Volume to Draw Up</th>
+                                <th className={`text-left px-5 py-3 text-sm font-semibold ${chart.accentColor}`}>Syringe Units</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {chart.rows.map((row, i) => (
+                                <tr key={row.dose} className={`border-t ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-emerald-50/60 transition-colors`}>
+                                    <td className="px-5 py-3 font-semibold text-gray-900">{row.dose}</td>
+                                    <td className="px-5 py-3 text-gray-700">{row.concentration}</td>
+                                    <td className="px-5 py-3 text-gray-700">{row.volume}</td>
+                                    <td className="px-5 py-3 text-gray-700">
+                                        <Badge variant="outline" className="font-mono">{row.units}</Badge>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="border-t bg-emerald-50/70 p-5">
+                    <p className="text-sm font-semibold text-emerald-900 mb-2">Clinical measuring notes</p>
+                    <ul className="space-y-2">
+                        {chart.notes.map((note) => (
+                            <li key={note} className="text-sm text-emerald-900/85 flex gap-2">
+                                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" />
+                                <span>{note}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
+
 function FormulaCard({ formula }) {
     return (
         <Card className="overflow-hidden border hover:shadow-lg transition-shadow">
@@ -376,6 +455,12 @@ export default function MedicationReference() {
     const filteredGLP = searchQuery
         ? [semaglutideChart, tirzepatideChart].filter(c => c.title.toLowerCase().includes(searchQuery.toLowerCase()))
         : [semaglutideChart, tirzepatideChart];
+    const filteredHormoneCharts = searchQuery
+        ? [testosteroneChart].filter(c =>
+            c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            c.rows.some(r => Object.values(r).some(v => v.toLowerCase().includes(searchQuery.toLowerCase())))
+        )
+        : [testosteroneChart];
 
     return (
         <div className="space-y-6">
@@ -402,10 +487,14 @@ export default function MedicationReference() {
             </div>
 
             <Tabs defaultValue="glp" className="space-y-4">
-                <TabsList className="grid w-full md:w-auto md:inline-grid grid-cols-4 gap-2">
+                <TabsList className="grid w-full md:w-auto md:inline-grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 h-auto">
                     <TabsTrigger value="glp" className="text-base gap-2">
                         <Pill className="w-4 h-4" />
                         GLP Dosing
+                    </TabsTrigger>
+                    <TabsTrigger value="hormones" className="text-base gap-2">
+                        <Syringe className="w-4 h-4" />
+                        Hormone Dosing
                     </TabsTrigger>
                     <TabsTrigger value="iv" className="text-base gap-2">
                         <Droplets className="w-4 h-4" />
@@ -426,6 +515,13 @@ export default function MedicationReference() {
                         {filteredGLP.map((chart, i) => <DosingChart key={i} chart={chart} />)}
                     </div>
                     {filteredGLP.length === 0 && <EmptyState />}
+                </TabsContent>
+
+                <TabsContent value="hormones">
+                    <div className="grid grid-cols-1 gap-6 max-w-5xl">
+                        {filteredHormoneCharts.map((chart) => <HormoneDosingChart key={chart.title} chart={chart} />)}
+                    </div>
+                    {filteredHormoneCharts.length === 0 && <EmptyState />}
                 </TabsContent>
 
                 <TabsContent value="iv">
