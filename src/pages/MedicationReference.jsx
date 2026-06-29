@@ -45,28 +45,33 @@ const tirzepatideChart = {
 
 const testosteroneChart = {
     title: "Testosterone Dosing Reference",
-    subtitle: "Doses 20 mg and higher use the 200 mg/mL vial",
-    color: "from-emerald-600 to-teal-600",
-    borderColor: "border-emerald-200",
-    headerBg: "bg-emerald-50",
-    accentColor: "text-emerald-800",
-    rows: [
-        { dose: "5 mg", concentration: "50 mg/mL", volume: "0.1 mL", units: "10 units" },
-        { dose: "10 mg", concentration: "50 mg/mL", volume: "0.2 mL", units: "20 units" },
-        { dose: "15 mg", concentration: "50 mg/mL", volume: "0.3 mL", units: "30 units" },
-        { dose: "20 mg", concentration: "200 mg/mL", volume: "0.1 mL", units: "10 units" },
-        { dose: "25 mg", concentration: "200 mg/mL", volume: "0.125 mL", units: "12.5 units" },
-        { dose: "30 mg", concentration: "200 mg/mL", volume: "0.15 mL", units: "15 units" },
-        { dose: "35 mg", concentration: "200 mg/mL", volume: "0.175 mL", units: "17.5 units" },
-        { dose: "40 mg", concentration: "200 mg/mL", volume: "0.2 mL", units: "20 units" },
-        { dose: "45 mg", concentration: "200 mg/mL", volume: "0.225 mL", units: "22.5 units" },
-        { dose: "50 mg", concentration: "200 mg/mL", volume: "0.25 mL", units: "25 units" },
+    route: "INTRAMUSCULAR · SUBCUTANEOUS",
+    rule: "≥ 20 mg → 200 mg/mL vial",
+    groups: [
+        {
+            vial: "50 mg/mL vial",
+            subtitle: "Doses under 20 mg",
+            rows: [
+                { dose: "5 mg", volume: "0.1 mL", units: "10 u", mark: 0.1 },
+                { dose: "10 mg", volume: "0.2 mL", units: "20 u", mark: 0.2 },
+                { dose: "15 mg", volume: "0.3 mL", units: "30 u", mark: 0.3 },
+            ],
+        },
+        {
+            vial: "200 mg/mL vial",
+            subtitle: "Doses 20 mg and higher",
+            rows: [
+                { dose: "20 mg", volume: "0.1 mL", units: "10 u", mark: 0.1 },
+                { dose: "25 mg", volume: "0.125 mL", units: "12.5 *", mark: 0.125 },
+                { dose: "30 mg", volume: "0.15 mL", units: "15 u", mark: 0.15 },
+                { dose: "35 mg", volume: "0.175 mL", units: "17.5 *", mark: 0.175 },
+                { dose: "40 mg", volume: "0.2 mL", units: "20 u", mark: 0.2 },
+                { dose: "45 mg", volume: "0.225 mL", units: "22.5 *", mark: 0.225 },
+                { dose: "50 mg", volume: "0.25 mL", units: "25 u", mark: 0.25 },
+            ],
+        },
     ],
-    notes: [
-        "The 12.5, 17.5, and 22.5 unit values fall between unit marks on a standard insulin/TB syringe and cannot be measured exactly; round to the nearest half-unit by eye.",
-        "For cleaner whole-unit draws at 25 mg, 35 mg, and 45 mg targets, the 50 mg/mL vial is an alternative.",
-        "Doses under 20 mg remain on the 50 mg/mL vial because switching them to 200 mg/mL would fall below reliable measurability on the syringe.",
-    ],
+    note: "* The 12.5, 17.5 and 22.5 unit draws (25, 35, 45 mg) fall between marks on a 1 mL syringe and round by eye — use the 50 mg/mL vial for clean whole-unit draws. Doses under 20 mg stay on the 50 mg/mL vial, since 200 mg/mL would fall below reliable measurability.",
 };
 
 // ─── IV INFUSION FORMULAS ───
@@ -349,55 +354,93 @@ function DosingChart({ chart }) {
 }
 
 function HormoneDosingChart({ chart }) {
+    const allRows = chart.groups.flatMap(group =>
+        group.rows.map(row => ({ ...row, vial: group.vial }))
+    );
+
     return (
-        <Card className={`overflow-hidden border-2 ${chart.borderColor} shadow-lg`}>
-            <div className={`bg-gradient-to-r ${chart.color} p-5 text-white`}>
-                <div className="flex items-center justify-between gap-4">
+        <Card className="overflow-hidden border-2 border-slate-200 bg-[#f8f1e9] shadow-lg">
+            <div className="border-b border-slate-200 bg-[#ece0d2] px-5 py-4 sm:px-7">
+                <div className="flex items-start justify-between gap-4">
                     <div>
-                        <h3 className="text-xl font-bold">{chart.title}</h3>
-                        <p className="text-white/85 text-sm mt-1">{chart.subtitle}</p>
+                        <p className="text-[10px] sm:text-xs font-semibold tracking-[0.28em] text-slate-500">{chart.route}</p>
+                        <h3 className="mt-2 text-2xl sm:text-3xl font-bold text-slate-950">{chart.title}</h3>
                     </div>
-                    <Syringe className="w-10 h-10 text-white/45 shrink-0" />
+                    <div className="rounded-full border border-slate-300 bg-white/75 px-3 py-2 text-sm font-semibold text-slate-800 shadow-sm whitespace-nowrap">
+                        {chart.rule}
+                    </div>
                 </div>
             </div>
-            <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                    <table className="w-full min-w-[680px]">
-                        <thead>
-                            <tr className={chart.headerBg}>
-                                <th className={`text-left px-5 py-3 text-sm font-semibold ${chart.accentColor}`}>Target Dose</th>
-                                <th className={`text-left px-5 py-3 text-sm font-semibold ${chart.accentColor}`}>Vial Concentration</th>
-                                <th className={`text-left px-5 py-3 text-sm font-semibold ${chart.accentColor}`}>Volume to Draw Up</th>
-                                <th className={`text-left px-5 py-3 text-sm font-semibold ${chart.accentColor}`}>Syringe Units</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {chart.rows.map((row, i) => (
-                                <tr key={row.dose} className={`border-t ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-emerald-50/60 transition-colors`}>
-                                    <td className="px-5 py-3 font-semibold text-gray-900">{row.dose}</td>
-                                    <td className="px-5 py-3 text-gray-700">{row.concentration}</td>
-                                    <td className="px-5 py-3 text-gray-700">{row.volume}</td>
-                                    <td className="px-5 py-3 text-gray-700">
-                                        <Badge variant="outline" className="font-mono">{row.units}</Badge>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+            <CardContent className="p-5 sm:p-7">
+                <div className="grid grid-cols-[1fr_auto_1fr] gap-2 border-b border-slate-300 pb-2 text-[10px] sm:text-xs font-bold tracking-[0.18em] text-slate-500">
+                    <span>DOSE</span>
+                    <span className="px-2 text-center">DRAW UP</span>
+                    <span className="text-right">UNITS ON A 1 ML TB SYRINGE</span>
                 </div>
-                <div className="border-t bg-emerald-50/70 p-5">
-                    <p className="text-sm font-semibold text-emerald-900 mb-2">Clinical measuring notes</p>
-                    <ul className="space-y-2">
-                        {chart.notes.map((note) => (
-                            <li key={note} className="text-sm text-emerald-900/85 flex gap-2">
-                                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" />
-                                <span>{note}</span>
-                            </li>
-                        ))}
-                    </ul>
+
+                <div className="mt-4 space-y-6">
+                    {chart.groups.map((group) => (
+                        <div key={group.vial}>
+                            <div className="mb-2 flex items-baseline justify-between gap-3">
+                                <h4 className="text-lg font-bold text-slate-950">{group.vial}</h4>
+                                <p className="text-sm font-medium text-slate-500">{group.subtitle}</p>
+                            </div>
+                            <div className="divide-y divide-slate-200 border-y border-slate-200 bg-white/70">
+                                {group.rows.map((row) => (
+                                    <div key={row.dose} className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 py-2.5">
+                                        <span className="text-lg font-bold text-slate-950">{row.dose}</span>
+                                        <span className="rounded-md bg-slate-100 px-3 py-1 text-center text-sm font-semibold text-slate-800">{row.volume}</span>
+                                        <span className={`text-right text-lg font-bold ${row.units.includes('*') ? 'text-amber-700' : 'text-slate-950'}`}>{row.units}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <p className="mt-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-relaxed text-amber-950">
+                    {chart.note}
+                </p>
+
+                <div className="mt-6 grid gap-3">
+                    {allRows.map((row) => (
+                        <SyringeScale key={`${row.vial}-${row.dose}`} row={row} />
+                    ))}
                 </div>
             </CardContent>
         </Card>
+    );
+}
+
+function SyringeScale({ row }) {
+    const left = `${Math.min(row.mark, 1) * 100}%`;
+
+    return (
+        <div className="rounded-lg border border-slate-200 bg-white/80 p-3">
+            <div className="mb-2 flex items-center justify-between gap-3 text-xs text-slate-500">
+                <span className="font-semibold text-slate-700">{row.dose} · {row.volume}</span>
+                <span>{row.units}</span>
+            </div>
+            <div className="relative h-12 rounded-full border-2 border-slate-700 bg-white">
+                <div className="absolute inset-x-4 top-1/2 h-px -translate-y-1/2 bg-slate-300" />
+                <div className="absolute left-4 right-4 top-0 h-full">
+                    {Array.from({ length: 11 }).map((_, index) => (
+                        <div
+                            key={index}
+                            className="absolute top-2 flex h-8 -translate-x-1/2 flex-col items-center justify-between"
+                            style={{ left: `${index * 10}%` }}
+                        >
+                            <span className={`w-px bg-slate-800 ${index === 0 || index === 10 ? 'h-5' : 'h-3'}`} />
+                            <span className="text-[10px] font-medium text-slate-500">{(index / 10).toFixed(1).replace('0.0', '0')}</span>
+                        </div>
+                    ))}
+                    <div
+                        className="absolute top-1/2 h-7 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-600 shadow"
+                        style={{ left }}
+                    />
+                </div>
+            </div>
+        </div>
     );
 }
 
@@ -458,7 +501,10 @@ export default function MedicationReference() {
     const filteredHormoneCharts = searchQuery
         ? [testosteroneChart].filter(c =>
             c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            c.rows.some(r => Object.values(r).some(v => v.toLowerCase().includes(searchQuery.toLowerCase())))
+            c.groups.some(g =>
+                g.vial.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                g.rows.some(r => Object.values(r).some(v => String(v).toLowerCase().includes(searchQuery.toLowerCase())))
+            )
         )
         : [testosteroneChart];
 
