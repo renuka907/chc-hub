@@ -69,6 +69,41 @@ const testosteroneChart = {
     ],
 };
 
+const estradiolChart = {
+    title: "Estradiol Dosing Reference",
+    subtitle: "Volume to draw up by vial concentration",
+    color: "from-rose-600 to-pink-600",
+    borderColor: "border-rose-200",
+    headerBg: "bg-rose-50",
+    accentColor: "text-rose-800",
+    rows: [
+        { dose: "1 mg", concentration: "5 mg/mL", volume: "0.2 mL", units: "20 units" },
+        { dose: "1 mg", concentration: "10 mg/mL", volume: "0.1 mL", units: "10 units" },
+        { dose: "1 mg", concentration: "20 mg/mL", volume: "0.05 mL", units: "5 units" },
+        { dose: "1.5 mg", concentration: "5 mg/mL", volume: "0.3 mL", units: "30 units" },
+        { dose: "1.5 mg", concentration: "10 mg/mL", volume: "0.15 mL", units: "15 units" },
+        { dose: "1.5 mg", concentration: "20 mg/mL", volume: "0.075 mL", units: "7.5 units" },
+        { dose: "2 mg", concentration: "5 mg/mL", volume: "0.4 mL", units: "40 units" },
+        { dose: "2 mg", concentration: "10 mg/mL", volume: "0.2 mL", units: "20 units" },
+        { dose: "2 mg", concentration: "20 mg/mL", volume: "0.1 mL", units: "10 units" },
+        { dose: "2.5 mg", concentration: "5 mg/mL", volume: "0.5 mL", units: "50 units" },
+        { dose: "2.5 mg", concentration: "10 mg/mL", volume: "0.25 mL", units: "25 units" },
+        { dose: "2.5 mg", concentration: "20 mg/mL", volume: "0.125 mL", units: "12.5 units" },
+        { dose: "3 mg", concentration: "5 mg/mL", volume: "0.6 mL", units: "60 units" },
+        { dose: "3 mg", concentration: "10 mg/mL", volume: "0.3 mL", units: "30 units" },
+        { dose: "3 mg", concentration: "20 mg/mL", volume: "0.15 mL", units: "15 units" },
+        { dose: "3.5 mg", concentration: "5 mg/mL", volume: "0.7 mL", units: "70 units" },
+        { dose: "3.5 mg", concentration: "10 mg/mL", volume: "0.35 mL", units: "35 units" },
+        { dose: "3.5 mg", concentration: "20 mg/mL", volume: "0.175 mL", units: "17.5 units" },
+        { dose: "4 mg", concentration: "5 mg/mL", volume: "0.8 mL", units: "80 units" },
+        { dose: "4 mg", concentration: "10 mg/mL", volume: "0.4 mL", units: "40 units" },
+        { dose: "4 mg", concentration: "20 mg/mL", volume: "0.2 mL", units: "20 units" },
+    ],
+    notes: [
+        "For half-unit draws such as 7.5, 12.5, and 17.5 units, measure to the nearest half-unit by eye on a 1 mL TB or U-100 syringe.",
+    ],
+};
+
 // ─── IV INFUSION FORMULAS ───
 
 const ivFormulas = [
@@ -385,17 +420,19 @@ function HormoneDosingChart({ chart }) {
                         </tbody>
                     </table>
                 </div>
-                <div className="border-t bg-emerald-50/70 p-5">
-                    <p className="text-sm font-semibold text-emerald-900 mb-2">Clinical measuring notes</p>
-                    <ul className="space-y-2">
-                        {chart.notes.map((note) => (
-                            <li key={note} className="text-sm text-emerald-900/85 flex gap-2">
-                                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" />
-                                <span>{note}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                {chart.notes?.length > 0 && (
+                    <div className={`border-t ${chart.headerBg}/70 p-5`}>
+                        <p className={`text-sm font-semibold ${chart.accentColor} mb-2`}>Clinical measuring notes</p>
+                        <ul className="space-y-2">
+                            {chart.notes.map((note) => (
+                                <li key={note} className={`text-sm ${chart.accentColor}/85 flex gap-2`}>
+                                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-current shrink-0" />
+                                    <span>{note}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </CardContent>
         </Card>
     );
@@ -455,12 +492,13 @@ export default function MedicationReference() {
     const filteredGLP = searchQuery
         ? [semaglutideChart, tirzepatideChart].filter(c => c.title.toLowerCase().includes(searchQuery.toLowerCase()))
         : [semaglutideChart, tirzepatideChart];
+    const hormoneCharts = [testosteroneChart, estradiolChart];
     const filteredHormoneCharts = searchQuery
-        ? [testosteroneChart].filter(c =>
+        ? hormoneCharts.filter(c =>
             c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             c.rows.some(r => Object.values(r).some(v => v.toLowerCase().includes(searchQuery.toLowerCase())))
         )
-        : [testosteroneChart];
+        : hormoneCharts;
 
     return (
         <div className="space-y-6">
