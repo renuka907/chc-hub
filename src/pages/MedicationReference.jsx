@@ -136,7 +136,7 @@ const ivFormulas = [
         icon: "✨",
         sizes: [{
             size: "One Size",
-            ingredients: ["4ml / 2,000mg Ascorbic Acid C", "3ml Vita Complex", "2ml / 1mg Biotin"]
+            ingredients: ["4ml / 2,000mg Ascorbic Acid C", "3ml Vita Complex", "1ml / 0.5mg Biotin"]
         }]
     },
     {
@@ -244,8 +244,8 @@ const wellnessShots = [
         name: "B Complete — 7 B Vitamins",
         icon: "💊",
         sizes: [
-            { size: "Mid (1.5ml)", ingredients: ["0.5ml B12", "0.5ml / 0.25mg Biotin", "0.5ml Vita Complex"] },
-            { size: "Max (3ml)", ingredients: ["1ml B12", "1ml / 0.5mg Biotin", "1ml Vita Complex"] },
+            { size: "Mid (1.5ml)", ingredients: ["0.5ml B12", "0.25ml / 0.125mg Biotin", "0.5ml Vita Complex"] },
+            { size: "Max (3ml)", ingredients: ["1ml B12", "0.5ml / 0.25mg Biotin", "1ml Vita Complex"] },
         ]
     },
     {
@@ -277,7 +277,7 @@ const wellnessShots = [
         icon: "💅",
         sizes: [{
             size: "One Size",
-            ingredients: ["1ml / 0.5mg Biotin"]
+            ingredients: ["0.5ml / 0.25mg Biotin"]
         }]
     },
     {
