@@ -133,6 +133,7 @@ export default function Layout({ children, currentPageName }) {
             icon: Calculator,
             items: [
                 { name: "Medication Calculator", path: "MedicationCalculator", icon: Calculator },
+                { name: "Anastrozole Protocol", path: "AnastrozoleProtocolCalculator", icon: Calendar },
                 { name: "Protein Calculator", path: "ProteinCalculator", icon: Beef },
                 { name: "PREVENT Calculator", path: "RiskCalculator", icon: Activity },
                 { name: "Tanita Calculator", path: "TanitaCalculator", icon: Activity },
