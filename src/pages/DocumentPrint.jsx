@@ -119,10 +119,29 @@ body { background: white; }
 .page img { width: 100%; height: auto; display: block; }
 @media print {
     @page { margin: 0.35in 0.25in 0.25in 0.25in; size: letter; }
-    html, body { width: 100%; height: 100%; }
-    .page { page-break-after: always; width: 100%; height: 100vh; display: flex; justify-content: center; align-items: flex-start; overflow: hidden; }
-    .page:last-child { page-break-after: auto; }
-    .page img { max-width: 100%; max-height: 100vh; width: auto; height: auto; object-fit: contain; }
+    html, body { width: 100%; height: auto; background: white; overflow: visible; }
+    .page {
+        break-after: page;
+        page-break-after: always;
+        width: 100%;
+        height: auto;
+        max-height: 10.4in;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+    }
+    .page:last-child { break-after: auto; page-break-after: auto; }
+    .page img {
+        display: block;
+        max-width: 100%;
+        max-height: 10.4in;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+    }
 }
 </style></head><body>${imgTags}
 <script>
