@@ -9,6 +9,7 @@ import EducationVersionHistory from "../components/education/EducationVersionHis
 import { Printer, ArrowLeft, ExternalLink, Pencil, Star, History, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
+import { stripDuplicateChcBranding } from "../utils/printSanitizer";
 
 const CHC_LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695939a556b8082002a35a68/1e5584b38_goldwithlettersContemporary-health-center-logo-retina.png";
 
@@ -89,7 +90,7 @@ export default function EducationDetail() {
     const handlePrint = () => {
         const docEl = document.querySelector('.doc-page');
         if (!docEl) return;
-        const content = docEl.innerHTML;
+        const content = stripDuplicateChcBranding(docEl.innerHTML, { keepFirstLogo: true });
         const css = `
             @page { size: letter; margin: 0; }
             * { box-sizing: border-box; margin: 0; padding: 0; }
