@@ -10,6 +10,7 @@ import EducationTopicForm from "@/components/EducationTopicForm";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { entities, uploadFile, invokeLLM, generateImage, sendEmail, agentChat } from "@/api/supabaseHelpers";
 import jsPDF from "jspdf";
+import { stripDuplicateChcBranding } from "@/utils/printSanitizer";
 
 export default function EducationPrintDialog({ open, onOpenChange, topic, onSuccess }) {
     if (!topic) return null;
@@ -158,6 +159,7 @@ export default function EducationPrintDialog({ open, onOpenChange, topic, onSucc
         const isSimple = printTemplate === 'simple';
         const headerText = customHeader || topic.header || '';
         const footerText = customFooter || `${topic.title} | Contemporary Health Center | Page`;
+        const content = stripDuplicateChcBranding(topic.content || '');
         
         return `
 <!DOCTYPE html>
@@ -336,7 +338,7 @@ export default function EducationPrintDialog({ open, onOpenChange, topic, onSucc
     ` : ''}
     
     <div class="print-section content-section">
-        ${topic.content || ''}
+        ${content}
     </div>
     
     ${!isSimple && topic.medical_references ? `
