@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus, Printer, Pencil, Trash2, Package, FileText, BookOpen, Heart, ChevronDown, ChevronUp, Search } from "lucide-react";
 import { toast } from "sonner";
+import { stripDuplicateChcBranding } from "@/utils/printSanitizer";
 
 const STORAGE_KEY = "chc-procedure-bundles";
 
@@ -70,17 +71,16 @@ export default function ProcedureBundles() {
         const sections = [];
 
         consents.forEach(form => {
-            let html = form.content || '';
-            html = html.replace(/^<div[^>]*style="text-align:\s*center[^"]*"[^>]*>\s*<img[^>]*Contemporary[^>]*>[\s\S]*?<\/div>\s*/i, '');
+            const html = stripDuplicateChcBranding(form.content || '');
             sections.push({ title: form.form_name, type: 'Consent Form', content: html });
         });
 
         education.forEach(topic => {
-            sections.push({ title: topic.title, type: 'Patient Education', content: topic.content || '' });
+            sections.push({ title: topic.title, type: 'Patient Education', content: stripDuplicateChcBranding(topic.content || '') });
         });
 
         aftercare.forEach(inst => {
-            sections.push({ title: inst.procedure_name, type: 'Aftercare Instructions', content: inst.content || '' });
+            sections.push({ title: inst.procedure_name, type: 'Aftercare Instructions', content: stripDuplicateChcBranding(inst.content || inst.instructions || '') });
         });
 
         const printHtml = `<!DOCTYPE html><html><head>
