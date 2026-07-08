@@ -48,6 +48,7 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import ActivityDashboard from './pages/ActivityDashboard';
+import AnastrozoleProtocolCalculator from './pages/AnastrozoleProtocolCalculator';
 import BellafillForms from './pages/BellafillForms';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProfile from './pages/AdminProfile';
@@ -101,6 +102,7 @@ import __Layout from './Layout.jsx';
 
 export const PAGES = {
     "ActivityDashboard": ActivityDashboard,
+    "AnastrozoleProtocolCalculator": AnastrozoleProtocolCalculator,
     "AdminDashboard": AdminDashboard,
     "AdminProfile": AdminProfile,
     "AftercareDetail": AftercareDetail,
