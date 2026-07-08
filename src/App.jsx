@@ -33,6 +33,7 @@ const PAGE_PERMISSION_MAP = {
   'Procedures': 'procedures',
   'LabTestDirectory': 'labTests',
   'MedicationCalculator': 'medicationCalculator',
+  'AnastrozoleProtocolCalculator': 'medicationCalculator',
   'FollowUpDates': 'followUpDates',
   'Reminders': 'reminders',
   'UserManagement': 'users',
