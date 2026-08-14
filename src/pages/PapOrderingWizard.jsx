@@ -108,7 +108,6 @@ export default function PapOrderingWizard() {
     const calculateResult = () => {
         const age = parseInt(formData.age);
         const isUnder21 = age < 21;
-        const hasLeeHealth = formData.insurance === "lee";
         const hasCervix = formData.hysterectomyStatus === "none" || formData.hysterectomyStatus === "supracervical";
         const needsSTI = formData.stiPanel === "full" || formData.stiPanel === "ctng";
         const isMedicare = formData.insurance === "medicare";
@@ -167,13 +166,11 @@ export default function PapOrderingWizard() {
             }
 
             // Diagnostic under 21
-            labName = hasLeeHealth ? "AmeriPath" : "Quest Diagnostics";
-            testCodes = hasLeeHealth
-                ? ["Q0091"]
-                : [formData.under21Indication === "symptomatic" ? QUEST_PAP_CODES.fullSti : QUEST_PAP_CODES.explicitCoTest];
+            labName = "Quest Diagnostics";
+            testCodes = [formData.under21Indication === "symptomatic" ? QUEST_PAP_CODES.fullSti : QUEST_PAP_CODES.explicitCoTest];
             cptCodes = ["88175"];
             specimenSource = hasCervix ? "Cervix" : "Vaginal cuff";
-            questCodeName = hasLeeHealth ? "" : QUEST_PAP_CODE_NAMES[testCodes[0]];
+            questCodeName = QUEST_PAP_CODE_NAMES[testCodes[0]];
 
             switch (formData.under21Indication) {
                 case "symptomatic":
@@ -201,29 +198,27 @@ export default function PapOrderingWizard() {
                     secondaryICD10 = ["N89.8"];
             }
 
-            if (!hasLeeHealth && formData.under21Indication === "symptomatic") {
+            if (formData.under21Indication === "symptomatic") {
                 warnings.push("🔵 Symptomatic Pap with discharge/odor/itching/irritation: use Quest 20519 (Pap + CT/GC + Trich).");
-            } else if (!hasLeeHealth) {
+            } else {
                 warnings.push("🔵 Under 30 abnormal/diagnostic follow-up needs explicit Quest co-test 92094 so HPV runs even if Pap is normal");
             }
             warnings.push("🔵 Use DIAGNOSTIC codes, not screening");
             warnings.push("🔵 Document clinical indication");
-            if (!hasLeeHealth && formData.under21Indication !== "symptomatic") {
+            if (formData.under21Indication !== "symptomatic") {
                 denialWarnings.push("⚠️ Do not use automated Quest codes for under-30 abnormal follow-up; reflex logic can skip HPV if cytology is normal");
             }
         }
         // Post-hysterectomy NO cervix
         else if (!hasCervix) {
             requiresHPV = false;
-            labName = hasLeeHealth ? "AmeriPath" : "Quest Diagnostics";
-            testCodes = hasLeeHealth ? ["Q0091"] : [QUEST_PAP_CODES.papOnly];
+            labName = "Quest Diagnostics";
+            testCodes = [QUEST_PAP_CODES.papOnly];
             cptCodes = ["88175"];
             specimenSource = "Vaginal cuff";
             secondaryICD10 = ["Z90.710"];
             questCodeName = QUEST_PAP_CODE_NAMES[QUEST_PAP_CODES.papOnly];
-            if (!hasLeeHealth) {
-                warnings.push("📋 No cervix: order 58315 only. Do NOT use automated Quest codes 20453/20454/20519 for a vaginal cuff specimen.");
-            }
+            warnings.push("📋 No cervix: order 58315 only. Do NOT use automated Quest codes 20453/20454/20519 for a vaginal cuff specimen.");
 
             if (formData.postHystHistory === "no-history") {
                 warnings.push("⚠️ Pap NOT typically indicated per USPSTF (no history of dysplasia/cancer)");
@@ -264,91 +259,8 @@ export default function PapOrderingWizard() {
                 secondaryICD10.push("Z90.711");
             }
 
-            // Lee Health
-            if (hasLeeHealth) {
-                labName = "AmeriPath";
-
-                if (formData.reason === "followup") {
-                    testCodes = ["Q0091", "87625"];
-                    cptCodes = ["88175", "87624", "87625"];
-                    icd10Category = "diagnostic";
-
-                    switch (formData.previousAbnormal) {
-                        case "asc-us-normal-hpv":
-                            primaryICD10 = "R87.610";
-                            abnormalGuidance = { recommendation: "Repeat co-test in 3 years (no immediate colposcopy needed)", note: "This is a DIAGNOSTIC visit — use R87.610, NOT Z12.4" };
-                            break;
-                        case "asc-us-hpv-pos":
-                            primaryICD10 = "R87.610";
-                            secondaryICD10.push("R87.810");
-                            abnormalGuidance = { recommendation: "Colposcopy recommended", note: "Refer for colposcopy per ASCCP guidelines" };
-                            break;
-                        case "asc-us":
-                            primaryICD10 = "R87.610";
-                            abnormalGuidance = { recommendation: "Follow-up based on HPV status", note: "This is a DIAGNOSTIC visit — use R87.610, NOT Z12.4" };
-                            break;
-                        case "asc-h":
-                            primaryICD10 = "R87.611";
-                            abnormalGuidance = { recommendation: "Colposcopy recommended regardless of HPV", note: "ASC-H requires colposcopy — do not wait for HPV" };
-                            break;
-                        case "lsil":
-                            primaryICD10 = "R87.612";
-                            abnormalGuidance = { recommendation: "Co-test or colposcopy depending on age/HPV status", note: "Ages 21-24: Repeat Pap in 12mo. Ages 25+: Colposcopy preferred" };
-                            break;
-                        case "hsil":
-                            primaryICD10 = "R87.613";
-                            abnormalGuidance = { recommendation: "Colposcopy required", note: "HSIL → Colposcopy required. If post-treatment surveillance: Z86.001", alternateCode: "Z86.001" };
-                            break;
-                        case "agc":
-                            primaryICD10 = "R87.620";
-                            abnormalGuidance = { recommendation: "Colposcopy + endocervical sampling", note: "AGC requires colposcopy AND endocervical sampling" };
-                            break;
-                        case "hpv":
-                            primaryICD10 = "R87.810";
-                            abnormalGuidance = { recommendation: "Repeat co-test in 1 year", note: "HPV+ with normal cytology: repeat in 12 months. If still HPV+, colposcopy" };
-                            break;
-                        case "hpv-16-18":
-                            primaryICD10 = "R87.810";
-                            secondaryICD10.push("R87.820");
-                            abnormalGuidance = { recommendation: "Colposcopy recommended regardless of Pap", note: "HPV 16/18 → Colposcopy regardless of Pap result" };
-                            break;
-                        default:
-                            primaryICD10 = "R87.610";
-                            abnormalGuidance = { recommendation: "Follow ASCCP guidelines for management", note: "This is a DIAGNOSTIC visit — use diagnostic ICD-10 code, NOT Z12.4" };
-                    }
-                    denialWarnings.push("🚨 When following up an abnormal result: ALWAYS use the diagnostic ICD-10 code (R87.xxx or Z86.001), NOT Z12.4. Using Z12.4 for a diagnostic visit causes denials.");
-                } else if (isHighRisk || isSpecialPopulation) {
-                    testCodes = ["Q0091", "87625"];
-                    cptCodes = ["88175", "87624", "87625"];
-                    if (isHIV) {
-                        primaryICD10 = "Z12.4";
-                        secondaryICD10.push("B20");
-                    } else if (isImmunocompromised) {
-                        primaryICD10 = "Z12.4";
-                        secondaryICD10.push("D89.9");
-                    } else {
-                        primaryICD10 = "Z91.89";
-                    }
-                    secondaryICD10.push("Z11.51");
-                    frequencyReminder = "Screen annually (special population / high-risk)";
-                } else {
-                    testCodes = ["Q0091", "87625"];
-                    cptCodes = ["88175", "87624", "87625"];
-                    primaryICD10 = "Z12.4";
-                    secondaryICD10.push("Z11.51");
-                    if (age >= 21 && age <= 29) {
-                        frequencyReminder = "Pap alone every 3 years (ages 21-29)";
-                    } else if (age >= 30 && age <= 65) {
-                        frequencyReminder = "Pap + HPV co-test every 5 years (ages 30-65)";
-                    }
-                }
-
-                if (needsSTI) {
-                    warnings.push('🟢 Type "Add STI panel" in order instructions field');
-                }
-            }
             // Medicare with cervix — COMPREHENSIVE COVERAGE RULES (NCD 210.2.1)
-            else if (isMedicare) {
+            if (isMedicare) {
                 labName = "Quest Diagnostics";
 
                 // Medicare frequency check
@@ -789,7 +701,7 @@ export default function PapOrderingWizard() {
                             {step === 8 ? "Order Summary" : `Step ${Math.floor(step)}: ${
                                 step === 1 ? "Patient Age" :
                                 step === 1.5 ? "Clinical Indication (Under 21)" :
-                                step === 2 ? "Insurance Provider" :
+                                step === 2 ? "Coverage Type" :
                                 step === 2.5 ? "Medicare Screening Frequency" :
                                 step === 3 ? "Hysterectomy Status" :
                                 step === 4 ? "Post-Hysterectomy History" :
@@ -867,7 +779,7 @@ export default function PapOrderingWizard() {
                             </div>
                         )}
 
-                        {/* Step 2: Insurance */}
+                        {/* Step 2: Coverage Type */}
                         {step === 2 && formData.insurance === "medicare" && parseInt(formData.age) > 65 && (
                             <Alert className="bg-red-50 border-red-300 mb-4">
                                 <AlertCircle className="h-4 w-4 text-red-600" />
@@ -878,12 +790,8 @@ export default function PapOrderingWizard() {
                         )}
                         {step === 2 && (
                             <div className="space-y-4">
-                                <Label className="text-lg font-semibold">Patient's Insurance</Label>
+                                <Label className="text-lg font-semibold">Coverage Type</Label>
                                 <RadioGroup value={formData.insurance} onValueChange={(val) => updateFormData("insurance", val)}>
-                                    <div className="flex items-center space-x-2 p-3 border rounded hover:bg-green-50">
-                                        <RadioGroupItem value="lee" id="lee" />
-                                        <Label htmlFor="lee" className="cursor-pointer flex-1">Lee Health Insurance → AmeriPath Lab</Label>
-                                    </div>
                                     <div className="flex items-center space-x-2 p-3 border rounded hover:bg-blue-50">
                                         <RadioGroupItem value="medicare" id="medicare" />
                                         <Label htmlFor="medicare" className="cursor-pointer flex-1">Medicare → Quest Diagnostics</Label>
@@ -1114,27 +1022,21 @@ export default function PapOrderingWizard() {
                                         <RadioGroupItem value="no" id="sti-no" />
                                         <Label htmlFor="sti-no" className="cursor-pointer flex-1">
                                             <div>No STI — Pap/HPV only</div>
-                                            <div className="text-xs text-gray-600 mt-1">
-                                                {formData.insurance === "lee" ? "AmeriPath standard order" : "Quest 20453"}
-                                            </div>
+                                            <div className="text-xs text-gray-600 mt-1">Quest 20453</div>
                                         </Label>
                                     </div>
                                     <div className="flex items-center space-x-2 p-3 border rounded hover:bg-green-50">
                                         <RadioGroupItem value="full" id="sti-full" />
                                         <Label htmlFor="sti-full" className="cursor-pointer flex-1">
                                             <div>Full STI panel — CT/NG + Trichomonas</div>
-                                            <div className="text-xs text-gray-600 mt-1">
-                                                {formData.insurance === "lee" ? "AmeriPath: Add 'STI panel' to instructions" : "Quest 20519 (Pap + CT/GC + Trich)"}
-                                            </div>
+                                            <div className="text-xs text-gray-600 mt-1">Quest 20519 (Pap + CT/GC + Trich)</div>
                                         </Label>
                                     </div>
                                     <div className="flex items-center space-x-2 p-3 border rounded hover:bg-blue-50">
                                         <RadioGroupItem value="ctng" id="sti-ctng" />
                                         <Label htmlFor="sti-ctng" className="cursor-pointer flex-1">
                                             <div>CT/NG only — no Trichomonas</div>
-                                            <div className="text-xs text-gray-600 mt-1">
-                                                {formData.insurance === "lee" ? "AmeriPath: Add 'CT/NG' to instructions" : "Quest 20454 (Pap + CT/GC)"}
-                                            </div>
+                                            <div className="text-xs text-gray-600 mt-1">Quest 20454 (Pap + CT/GC)</div>
                                         </Label>
                                     </div>
                                 </RadioGroup>
