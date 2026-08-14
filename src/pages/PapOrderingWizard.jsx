@@ -57,8 +57,9 @@ const QUEST_PAP_CODE_NAMES = {
     [QUEST_PAP_CODES.papOnly]: "ThinPrep Automated Pap"
 };
 
-const getQuestAutomatedPapCode = (stiPanel) => {
+const getQuestAutomatedPapCode = (stiPanel, age) => {
     if (stiPanel === "full") return QUEST_PAP_CODES.fullSti;
+    if (stiPanel === "ctng" && age >= 21 && age <= 24) return QUEST_PAP_CODES.routine;
     if (stiPanel === "ctng") return QUEST_PAP_CODES.ctNg;
     return QUEST_PAP_CODES.routine;
 };
@@ -117,7 +118,7 @@ export default function PapOrderingWizard() {
         const isSpecialPopulation = isHIV || isImmunocompromised;
         const hadRecentPap = formData.recentPapHPV === "yes";
         const hasDysplasiaHistory = formData.postHystHistory === "dysplasia" || formData.postHystHistory === "cin" || formData.postHystHistory === "cancer";
-        const automatedQuestCode = getQuestAutomatedPapCode(formData.stiPanel);
+        const automatedQuestCode = getQuestAutomatedPapCode(formData.stiPanel, age);
 
         let labName = "";
         let testCodes = [];
@@ -530,7 +531,9 @@ export default function PapOrderingWizard() {
                 if (formData.stiPanel === "full") {
                     warnings.push("🟣 Quest code includes full STI panel (CT/GC/Trich) — ALL IN ONE");
                 } else if (formData.stiPanel === "ctng") {
-                    warnings.push("🟣 Quest code includes CT/NG screening");
+                    warnings.push(age >= 21 && age <= 24
+                        ? "🟣 CT/GC is automatically included with 20453 for ages 21-24; no separate 20454 needed."
+                        : "🟣 Quest code includes CT/NG screening");
                 }
             }
         }
@@ -1036,7 +1039,7 @@ export default function PapOrderingWizard() {
                                         <RadioGroupItem value="ctng" id="sti-ctng" />
                                         <Label htmlFor="sti-ctng" className="cursor-pointer flex-1">
                                             <div>CT/NG requested or indicated — no Trichomonas</div>
-                                            <div className="text-xs text-gray-600 mt-1">Quest 20454 (Pap + CT/GC), including ages 21-24 when CT/GC is specifically requested</div>
+                                            <div className="text-xs text-gray-600 mt-1">Ages 21-24: use Quest 20453 because CT/GC is automatic. Ages 25+: use Quest 20454.</div>
                                         </Label>
                                     </div>
                                 </RadioGroup>
