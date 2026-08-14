@@ -1021,8 +1021,8 @@ export default function PapOrderingWizard() {
                                     <div className="flex items-center space-x-2 p-3 border rounded hover:bg-gray-50">
                                         <RadioGroupItem value="no" id="sti-no" />
                                         <Label htmlFor="sti-no" className="cursor-pointer flex-1">
-                                            <div>No STI — Pap/HPV only</div>
-                                            <div className="text-xs text-gray-600 mt-1">Quest 20453 — ages 21-24 automatically include CT/GC</div>
+                                            <div>No STI request or concern — routine Pap</div>
+                                            <div className="text-xs text-gray-600 mt-1">Quest 20453 — ages 21-24 automatically include CT/GC even without a separate STI request</div>
                                         </Label>
                                     </div>
                                     <div className="flex items-center space-x-2 p-3 border rounded hover:bg-green-50">
@@ -1035,8 +1035,8 @@ export default function PapOrderingWizard() {
                                     <div className="flex items-center space-x-2 p-3 border rounded hover:bg-blue-50">
                                         <RadioGroupItem value="ctng" id="sti-ctng" />
                                         <Label htmlFor="sti-ctng" className="cursor-pointer flex-1">
-                                            <div>CT/NG only — no Trichomonas</div>
-                                            <div className="text-xs text-gray-600 mt-1">Quest 20454 (Pap + CT/GC)</div>
+                                            <div>CT/NG requested or indicated — no Trichomonas</div>
+                                            <div className="text-xs text-gray-600 mt-1">Quest 20454 (Pap + CT/GC), including ages 21-24 when CT/GC is specifically requested</div>
                                         </Label>
                                     </div>
                                 </RadioGroup>
