@@ -1022,7 +1022,7 @@ export default function PapOrderingWizard() {
                                         <RadioGroupItem value="no" id="sti-no" />
                                         <Label htmlFor="sti-no" className="cursor-pointer flex-1">
                                             <div>No STI — Pap/HPV only</div>
-                                            <div className="text-xs text-gray-600 mt-1">Quest 20453</div>
+                                            <div className="text-xs text-gray-600 mt-1">Quest 20453 — ages 21-24 automatically include CT/GC</div>
                                         </Label>
                                     </div>
                                     <div className="flex items-center space-x-2 p-3 border rounded hover:bg-green-50">
