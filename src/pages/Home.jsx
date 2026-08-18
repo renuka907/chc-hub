@@ -22,7 +22,8 @@ import {
     Send,
     MessageCircle,
     Scale,
-    Pill
+    Pill,
+    CalendarDays
 } from "lucide-react";
 
 const MOTIVATIONAL_QUOTES = [
@@ -313,6 +314,7 @@ export default function Home() {
                         { title: "Resource Library", desc: "Education, aftercare & consent forms", icon: BookOpen, path: "Library" },
                         { title: "Pricing", desc: "Procedures, products & packages", icon: DollarSign, path: "PricingManagement" },
                         { title: "Checkout Quote", desc: "Generate price quotes", icon: FileText, path: "CheckoutQuote" },
+                        { title: "Follow-up Dates", desc: "Calculate return visit dates", icon: CalendarDays, path: "FollowUpDates" },
                         { title: "Inventory", desc: "Supplies, meds & equipment", icon: Package, path: "InventoryManagement" },
                         { title: "Lab Tests", desc: "Quest Diagnostics directory", icon: TestTube, path: "LabTestDirectory" },
                         { title: "FAQs & Questions", desc: "Browse FAQs or submit questions", icon: MessageSquare, path: "FAQ" },
