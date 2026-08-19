@@ -1,0 +1,51 @@
+{
+  "name": "LibraryDocument",
+  "type": "object",
+  "properties": {
+    "document_name": {
+      "type": "string",
+      "description": "Name of the document"
+    },
+    "document_url": {
+      "type": "string",
+      "description": "URL to the primary uploaded document"
+    },
+    "file_urls": {
+      "type": "string",
+      "description": "JSON array of all uploaded file URLs"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "General",
+        "Forms",
+        "Policies",
+        "Training",
+        "Other"
+      ],
+      "default": "General",
+      "description": "Document category"
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of the document"
+    },
+    "file_type": {
+      "type": "string",
+      "description": "File type (PDF, JPG, PNG, etc.)"
+    },
+    "is_favorite": {
+      "type": "boolean",
+      "default": false,
+      "description": "Mark as favorite"
+    },
+    "tags": {
+      "type": "string",
+      "description": "JSON array of custom tags"
+    }
+  },
+  "required": [
+    "document_name",
+    "document_url"
+  ]
+}

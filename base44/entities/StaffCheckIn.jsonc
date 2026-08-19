@@ -1,0 +1,58 @@
+{
+  "name": "StaffCheckIn",
+  "type": "object",
+  "properties": {
+    "staff_email": {
+      "type": "string",
+      "description": "Email of the staff member"
+    },
+    "staff_name": {
+      "type": "string",
+      "description": "Name of the staff member"
+    },
+    "location_id": {
+      "type": "string",
+      "description": "Clinic location ID"
+    },
+    "area": {
+      "type": "string",
+      "enum": [
+        "Front Desk",
+        "Back Office",
+        "Lab",
+        "Treatment Room",
+        "Pharmacy",
+        "Other"
+      ],
+      "default": "Front Desk",
+      "description": "Area of the office"
+    },
+    "check_in_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the staff member checked in"
+    },
+    "check_out_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the staff member checked out"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of check-in"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    }
+  },
+  "required": [
+    "staff_email",
+    "staff_name",
+    "location_id",
+    "area",
+    "check_in_time",
+    "date"
+  ]
+}

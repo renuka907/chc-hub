@@ -1,0 +1,61 @@
+{
+  "name": "EducationTopic",
+  "type": "object",
+  "properties": {
+    "category": {
+      "type": "string",
+      "description": "Education category"
+    },
+    "title": {
+      "type": "string",
+      "description": "Topic title"
+    },
+    "header": {
+      "type": "string",
+      "description": "Custom header text that appears on every printed page"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Brief summary"
+    },
+    "content": {
+      "type": "string",
+      "description": "Detailed medical content"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "URL to topic image"
+    },
+    "medical_references": {
+      "type": "string",
+      "description": "Sources and references (e.g., Medscape, medical journals)"
+    },
+    "last_reviewed": {
+      "type": "string",
+      "format": "date",
+      "description": "Date content was last medically reviewed"
+    },
+    "is_favorite": {
+      "type": "boolean",
+      "default": false,
+      "description": "Mark as favorite"
+    },
+    "version": {
+      "type": "string",
+      "description": "Version number (e.g., 1.0, 1.1)"
+    },
+    "parent_id": {
+      "type": "string",
+      "description": "Reference to previous version if this is an update"
+    },
+    "change_summary": {
+      "type": "string",
+      "description": "Summary of changes made in this version"
+    }
+  },
+  "required": [
+    "category",
+    "title",
+    "content"
+  ]
+}

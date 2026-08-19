@@ -1,0 +1,36 @@
+{
+  "name": "PrintTemplate",
+  "type": "object",
+  "properties": {
+    "template_name": {
+      "type": "string",
+      "description": "Name of the print template"
+    },
+    "template_type": {
+      "type": "string",
+      "enum": [
+        "detailed",
+        "simple"
+      ],
+      "default": "detailed",
+      "description": "Type of print layout"
+    },
+    "custom_header": {
+      "type": "string",
+      "description": "Custom header text for print"
+    },
+    "custom_footer": {
+      "type": "string",
+      "description": "Custom footer text for print"
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is the default template"
+    }
+  },
+  "required": [
+    "template_name",
+    "template_type"
+  ]
+}

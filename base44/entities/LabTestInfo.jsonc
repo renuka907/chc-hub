@@ -1,0 +1,63 @@
+{
+  "name": "LabTestInfo",
+  "type": "object",
+  "properties": {
+    "test_name": {
+      "type": "string",
+      "description": "Name of the lab test"
+    },
+    "test_code": {
+      "type": "string",
+      "description": "Quest Diagnostics test code"
+    },
+    "tube_type": {
+      "type": "string",
+      "description": "Required tube type (e.g., Lavender-top EDTA, Red-top, SST)"
+    },
+    "specimen_type": {
+      "type": "string",
+      "description": "Type of specimen (e.g., Blood, Urine, Serum)"
+    },
+    "collection_instructions": {
+      "type": "string",
+      "description": "How to collect the specimen"
+    },
+    "storage_requirements": {
+      "type": "string",
+      "description": "How to store the specimen"
+    },
+    "volume_required": {
+      "type": "string",
+      "description": "Required specimen volume"
+    },
+    "quest_url": {
+      "type": "string",
+      "description": "Link to Quest Diagnostics test page"
+    },
+    "category": {
+      "type": "string",
+      "description": "Test category (e.g., Hematology, Chemistry, Hormone)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes or special instructions"
+    },
+    "diagnosis_codes": {
+      "type": "string",
+      "description": "JSON array of ICD-10 diagnosis codes that cover this test for insurance (e.g., [\"Z12.89\", \"R00.0\"])"
+    },
+    "panel_ids": {
+      "type": "string",
+      "description": "JSON array of panel IDs this test belongs to"
+    },
+    "is_favorite": {
+      "type": "boolean",
+      "default": false,
+      "description": "Mark as favorite for quick access"
+    }
+  },
+  "required": [
+    "test_name",
+    "tube_type"
+  ]
+}

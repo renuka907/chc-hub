@@ -1,0 +1,62 @@
+{
+  "name": "Procedure",
+  "type": "object",
+  "properties": {
+    "procedure_name": {
+      "type": "string",
+      "description": "Name of the procedure"
+    },
+    "category": {
+      "type": "string",
+      "description": "Procedure category (e.g., Laser, Injectable, Gynecology)"
+    },
+    "pre_procedure_prep": {
+      "type": "string",
+      "description": "Staff instructions for preparing the procedure (room setup, patient prep)"
+    },
+    "patient_education": {
+      "type": "string",
+      "description": "What to tell the patient about what to expect"
+    },
+    "required_supplies": {
+      "type": "string",
+      "description": "List of supplies needed (can reference inventory items)"
+    },
+    "required_tools": {
+      "type": "string",
+      "description": "Equipment and tools needed"
+    },
+    "procedure_steps": {
+      "type": "string",
+      "description": "Step-by-step procedure instructions"
+    },
+    "post_procedure_notes": {
+      "type": "string",
+      "description": "Immediate post-procedure care and cleanup"
+    },
+    "estimated_time": {
+      "type": "string",
+      "description": "Estimated duration (e.g., '30-45 minutes')"
+    },
+    "related_pricing_item_ids": {
+      "type": "string",
+      "description": "JSON array of pricing item IDs associated with this procedure"
+    },
+    "related_aftercare_id": {
+      "type": "string",
+      "description": "Reference to aftercare instruction ID if applicable"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes or tips"
+    },
+    "is_favorite": {
+      "type": "boolean",
+      "default": false,
+      "description": "Mark as favorite"
+    }
+  },
+  "required": [
+    "procedure_name"
+  ]
+}

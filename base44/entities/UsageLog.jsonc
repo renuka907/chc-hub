@@ -1,0 +1,62 @@
+{
+  "name": "UsageLog",
+  "type": "object",
+  "properties": {
+    "inventory_item_id": {
+      "type": "string",
+      "description": "Reference to the InventoryItem"
+    },
+    "item_name": {
+      "type": "string",
+      "description": "Name of the item used (for reference)"
+    },
+    "location_id": {
+      "type": "string",
+      "description": "Clinic location where item was used"
+    },
+    "quantity_used": {
+      "type": "number",
+      "description": "Quantity of item consumed"
+    },
+    "unit": {
+      "type": "string",
+      "description": "Unit of measurement (units, ml, boxes, etc.)"
+    },
+    "usage_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the item was used"
+    },
+    "usage_reason": {
+      "type": "string",
+      "enum": [
+        "procedure",
+        "waste",
+        "stock_adjustment",
+        "expired",
+        "other"
+      ],
+      "default": "procedure",
+      "description": "Reason for consumption"
+    },
+    "procedure_type": {
+      "type": "string",
+      "description": "Type of procedure if usage_reason is 'procedure'"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes about the usage"
+    },
+    "recorded_by": {
+      "type": "string",
+      "description": "Email of staff member who recorded the usage"
+    }
+  },
+  "required": [
+    "inventory_item_id",
+    "item_name",
+    "location_id",
+    "quantity_used",
+    "usage_date"
+  ]
+}

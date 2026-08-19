@@ -1,0 +1,74 @@
+{
+  "name": "Quote",
+  "type": "object",
+  "properties": {
+    "quote_number": {
+      "type": "string",
+      "description": "Unique quote identifier"
+    },
+    "clinic_location_id": {
+      "type": "string",
+      "description": "Reference to ClinicLocation"
+    },
+    "patient_name": {
+      "type": "string",
+      "description": "Patient name (optional)"
+    },
+    "items": {
+      "type": "string",
+      "description": "JSON string of quote items with prices"
+    },
+    "discount_id": {
+      "type": "string",
+      "description": "Applied discount ID"
+    },
+    "discount_amount": {
+      "type": "number",
+      "description": "Calculated discount amount"
+    },
+    "subtotal": {
+      "type": "number",
+      "description": "Subtotal before tax"
+    },
+    "tax_amount": {
+      "type": "number",
+      "description": "Calculated tax amount"
+    },
+    "total": {
+      "type": "number",
+      "description": "Total amount including tax"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "sent",
+        "accepted",
+        "expired"
+      ],
+      "default": "draft"
+    },
+    "show_totals": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to show totals on the quote"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "URL to quote image or diagram"
+    },
+    "document_url": {
+      "type": "string",
+      "description": "URL to uploaded PDF or document file"
+    }
+  },
+  "required": [
+    "items",
+    "subtotal",
+    "total"
+  ]
+}

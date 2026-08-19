@@ -1,0 +1,59 @@
+{
+  "name": "AftercareInstruction",
+  "type": "object",
+  "properties": {
+    "procedure_name": {
+      "type": "string",
+      "description": "Name of the procedure"
+    },
+    "category": {
+      "type": "string",
+      "description": "Category (can be custom or from suggestions)"
+    },
+    "instructions": {
+      "type": "string",
+      "description": "Detailed aftercare instructions"
+    },
+    "duration": {
+      "type": "string",
+      "description": "Expected recovery duration"
+    },
+    "warning_signs": {
+      "type": "string",
+      "description": "Warning signs to watch for"
+    },
+    "follow_up": {
+      "type": "string",
+      "description": "Follow-up appointment information"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "URL to instruction image"
+    },
+    "document_url": {
+      "type": "string",
+      "description": "URL to uploaded PDF or document file"
+    },
+    "is_favorite": {
+      "type": "boolean",
+      "default": false,
+      "description": "Mark as favorite"
+    },
+    "version": {
+      "type": "string",
+      "description": "Version number"
+    },
+    "parent_id": {
+      "type": "string",
+      "description": "Reference to previous version if this is an update"
+    },
+    "tags": {
+      "type": "string",
+      "description": "JSON array of custom tags"
+    }
+  },
+  "required": [
+    "procedure_name",
+    "instructions"
+  ]
+}

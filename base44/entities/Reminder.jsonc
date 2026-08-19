@@ -1,0 +1,72 @@
+{
+  "name": "Reminder",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Reminder title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Reminder details"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the reminder is due"
+    },
+    "completed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the reminder is completed"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Email of person the reminder is for"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium",
+      "description": "Priority level"
+    },
+    "recurrence_type": {
+      "type": "string",
+      "enum": [
+        "none",
+        "daily",
+        "weekly",
+        "monthly"
+      ],
+      "default": "none",
+      "description": "Recurrence frequency"
+    },
+    "recurrence_interval": {
+      "type": "number",
+      "default": 1,
+      "description": "Interval for recurrence (e.g., every 2 weeks)"
+    },
+    "next_trigger_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Next time a notification should be sent"
+    },
+    "last_notified_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time a notification was sent"
+    },
+    "show_after": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When to start showing this reminder (snooze until feature)"
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

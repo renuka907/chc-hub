@@ -1,0 +1,50 @@
+{
+  "name": "MathProblem",
+  "type": "object",
+  "properties": {
+    "problem": {
+      "type": "string",
+      "description": "The math problem to solve"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "elementary",
+        "middle_school",
+        "high_school",
+        "college"
+      ],
+      "description": "Difficulty level of the problem"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "arithmetic",
+        "algebra",
+        "geometry",
+        "trigonometry",
+        "calculus",
+        "statistics",
+        "word_problems"
+      ],
+      "description": "Category of math problem"
+    },
+    "solution": {
+      "type": "string",
+      "description": "Step-by-step solution"
+    },
+    "final_answer": {
+      "type": "string",
+      "description": "Final answer to the problem"
+    },
+    "explanation": {
+      "type": "string",
+      "description": "Detailed explanation of the solution process"
+    }
+  },
+  "required": [
+    "problem",
+    "difficulty",
+    "category"
+  ]
+}

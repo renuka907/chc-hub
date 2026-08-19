@@ -1,0 +1,87 @@
+{
+  "name": "Provider",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string",
+      "description": "Provider's full name"
+    },
+    "specialty": {
+      "type": "string",
+      "description": "Medical specialty (e.g., Dermatology, Gynecology, General Practice)"
+    },
+    "category": {
+      "type": "string",
+      "description": "Provider category for organizational purposes"
+    },
+    "clinic_location_id": {
+      "type": "string",
+      "description": "Associated clinic location ID"
+    },
+    "group_name": {
+      "type": "string",
+      "description": "Name of the provider group or practice"
+    },
+    "group_member_ids": {
+      "type": "string",
+      "description": "JSON array of provider IDs in the same group"
+    },
+    "email": {
+      "type": "string",
+      "description": "Provider's email address"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Provider's phone number"
+    },
+    "website": {
+      "type": "string",
+      "description": "Provider's website URL"
+    },
+    "address": {
+      "type": "string",
+      "description": "Provider's office address"
+    },
+    "addresses": {
+      "type": "string",
+      "description": "JSON array of address objects: [{location_name, address, phone, is_primary}]"
+    },
+    "credentials": {
+      "type": "string",
+      "description": "Professional credentials (e.g., MD, DO, NP)"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Short biography or professional summary"
+    },
+    "profile_image_url": {
+      "type": "string",
+      "description": "URL to provider's profile photo"
+    },
+    "languages": {
+      "type": "string",
+      "description": "JSON array of languages spoken"
+    },
+    "accepting_referrals": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether provider is accepting referrals"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes about the provider (for staff use only, not printed)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "full_name",
+    "specialty"
+  ]
+}

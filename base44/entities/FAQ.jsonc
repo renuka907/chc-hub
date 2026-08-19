@@ -1,0 +1,35 @@
+{
+  "name": "FAQ",
+  "type": "object",
+  "properties": {
+    "question": {
+      "type": "string",
+      "description": "The frequently asked question"
+    },
+    "answer": {
+      "type": "string",
+      "description": "The answer to the question"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "General",
+        "HR",
+        "Operations",
+        "Clinical",
+        "Benefits"
+      ],
+      "default": "General",
+      "description": "Question category"
+    },
+    "order": {
+      "type": "number",
+      "default": 0,
+      "description": "Display order"
+    }
+  },
+  "required": [
+    "question",
+    "answer"
+  ]
+}

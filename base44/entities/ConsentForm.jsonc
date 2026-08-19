@@ -1,0 +1,53 @@
+{
+  "name": "ConsentForm",
+  "type": "object",
+  "properties": {
+    "form_name": {
+      "type": "string",
+      "description": "Name of the consent form"
+    },
+    "form_type": {
+      "type": "string",
+      "description": "Form type (can be custom or from suggestions)"
+    },
+    "content": {
+      "type": "string",
+      "description": "Full consent form text"
+    },
+    "version": {
+      "type": "string",
+      "description": "Form version number"
+    },
+    "effective_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date form became effective"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "URL to form image or diagram"
+    },
+    "document_url": {
+      "type": "string",
+      "description": "URL to uploaded PDF or document file"
+    },
+    "is_favorite": {
+      "type": "boolean",
+      "default": false,
+      "description": "Mark as favorite"
+    },
+    "parent_id": {
+      "type": "string",
+      "description": "Reference to previous version if this is an update"
+    },
+    "tags": {
+      "type": "string",
+      "description": "JSON array of custom tags"
+    }
+  },
+  "required": [
+    "form_name",
+    "form_type",
+    "content"
+  ]
+}

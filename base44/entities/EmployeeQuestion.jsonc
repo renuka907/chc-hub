@@ -1,0 +1,48 @@
+{
+  "name": "EmployeeQuestion",
+  "type": "object",
+  "properties": {
+    "question": {
+      "type": "string",
+      "description": "The employee's question or concern"
+    },
+    "is_anonymous": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the question is posted anonymously"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "General",
+        "HR",
+        "Operations",
+        "Clinical",
+        "Suggestion"
+      ],
+      "default": "General",
+      "description": "Question category"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "answered",
+        "resolved"
+      ],
+      "default": "open",
+      "description": "Status of the question"
+    },
+    "response": {
+      "type": "string",
+      "description": "Management or staff response to the question"
+    },
+    "response_by": {
+      "type": "string",
+      "description": "Email of person who responded"
+    }
+  },
+  "required": [
+    "question"
+  ]
+}

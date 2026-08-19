@@ -1,0 +1,33 @@
+{
+  "name": "NotificationPreferences",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user (typically set to current user)"
+    },
+    "advance_hours": {
+      "type": "number",
+      "default": 24,
+      "description": "How many hours before due date to send notification (0 = only at due time)"
+    },
+    "notify_on_due": {
+      "type": "boolean",
+      "default": true,
+      "description": "Send notification when reminder is due"
+    },
+    "notify_on_overdue": {
+      "type": "boolean",
+      "default": true,
+      "description": "Send notification if reminder becomes overdue"
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether notifications are enabled"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

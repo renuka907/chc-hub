@@ -1,0 +1,45 @@
+{
+  "name": "ClinicLocation",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Clinic location name"
+    },
+    "address": {
+      "type": "string",
+      "description": "Full address"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact phone number"
+    },
+    "email": {
+      "type": "string",
+      "description": "Contact email"
+    },
+    "tax_rate": {
+      "type": "number",
+      "description": "Tax percentage for this location (e.g., 8.5 for 8.5%)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    },
+    "is_favorite": {
+      "type": "boolean",
+      "default": false,
+      "description": "Mark as favorite"
+    }
+  },
+  "required": [
+    "name",
+    "address",
+    "phone",
+    "tax_rate"
+  ]
+}

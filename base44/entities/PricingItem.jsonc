@@ -1,0 +1,63 @@
+{
+  "name": "PricingItem",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Procedure or product name (e.g., Body Sculpting Laser TXS)"
+    },
+    "item_type": {
+      "type": "string",
+      "enum": [
+        "Procedure",
+        "Product",
+        "Treatment Package"
+      ],
+      "description": "Type of pricing item"
+    },
+    "categories": {
+      "type": "string",
+      "description": "JSON array of category strings - can contain any custom values"
+    },
+    "clinic_location_ids": {
+      "type": "string",
+      "description": "JSON array of clinic location IDs"
+    },
+    "description": {
+      "type": "string",
+      "description": "Item description"
+    },
+    "pricing_tiers": {
+      "type": "string",
+      "description": "JSON array of pricing tiers: [{tier_name: string, price: number, sessions: number}]"
+    },
+    "area_based": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether pricing varies by treatment area"
+    },
+    "taxable": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this item is subject to tax"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    },
+    "is_favorite": {
+      "type": "boolean",
+      "default": false,
+      "description": "Mark as favorite"
+    }
+  },
+  "required": [
+    "name",
+    "item_type",
+    "pricing_tiers"
+  ]
+}

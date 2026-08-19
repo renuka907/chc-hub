@@ -1,0 +1,58 @@
+{
+  "name": "FormTemplate",
+  "type": "object",
+  "properties": {
+    "template_name": {
+      "type": "string",
+      "description": "Name of the template"
+    },
+    "template_type": {
+      "type": "string",
+      "enum": [
+        "ConsentForm",
+        "AftercareInstruction"
+      ],
+      "description": "Type of form this template is for"
+    },
+    "category": {
+      "type": "string",
+      "description": "Template category"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the template"
+    },
+    "content": {
+      "type": "string",
+      "description": "Template content/structure"
+    },
+    "metadata": {
+      "type": "string",
+      "description": "JSON object with form-specific fields"
+    },
+    "tags": {
+      "type": "string",
+      "description": "JSON array of tags"
+    },
+    "usage_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of times template has been used"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether template is available to all users"
+    },
+    "is_favorite": {
+      "type": "boolean",
+      "default": false,
+      "description": "Mark as favorite"
+    }
+  },
+  "required": [
+    "template_name",
+    "template_type",
+    "content"
+  ]
+}

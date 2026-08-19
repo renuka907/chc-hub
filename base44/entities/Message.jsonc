@@ -1,0 +1,28 @@
+{
+  "name": "Message",
+  "type": "object",
+  "properties": {
+    "message": {
+      "type": "string",
+      "description": "The message content"
+    },
+    "sender_name": {
+      "type": "string",
+      "description": "Name of the sender"
+    },
+    "sender_email": {
+      "type": "string",
+      "description": "Email of the sender"
+    },
+    "is_system": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is a system message"
+    }
+  },
+  "required": [
+    "message",
+    "sender_name",
+    "sender_email"
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "name": "InventoryItem",
+  "type": "object",
+  "properties": {
+    "item_name": {
+      "type": "string",
+      "description": "Name of the inventory item"
+    },
+    "item_type": {
+      "type": "string",
+      "enum": [
+        "Product",
+        "Supply",
+        "Equipment",
+        "Medication"
+      ],
+      "default": "Supply",
+      "description": "Type of inventory item"
+    },
+    "item_condition": {
+      "type": "string",
+      "enum": [
+        "unopened",
+        "opened",
+        "partial"
+      ],
+      "default": "unopened",
+      "description": "Whether item is unopened, opened, or partially used"
+    },
+    "sku": {
+      "type": "string",
+      "description": "Stock keeping unit or item code"
+    },
+    "quantity": {
+      "type": "number",
+      "default": 0,
+      "description": "Current stock quantity"
+    },
+    "unit": {
+      "type": "string",
+      "default": "units",
+      "description": "Unit of measurement (e.g., units, boxes, bottles, ml)"
+    },
+    "low_stock_threshold": {
+      "type": "number",
+      "default": 10,
+      "description": "Alert when quantity falls below this level"
+    },
+    "reorder_quantity": {
+      "type": "number",
+      "description": "Suggested quantity to reorder"
+    },
+    "cost_per_unit": {
+      "type": "number",
+      "description": "Cost per unit"
+    },
+    "location_id": {
+      "type": "string",
+      "description": "Associated clinic location ID"
+    },
+    "storage_location": {
+      "type": "string",
+      "description": "Specific storage location within clinic (e.g., fridge, lab, room 6, black cabinet)"
+    },
+    "associated_pricing_item_ids": {
+      "type": "string",
+      "description": "JSON array of pricing item IDs this inventory is used for"
+    },
+    "supplier": {
+      "type": "string",
+      "description": "Supplier name"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Expiration date if applicable"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "discontinued",
+        "archived"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "item_name",
+    "item_type",
+    "quantity"
+  ]
+}

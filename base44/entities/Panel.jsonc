@@ -1,0 +1,30 @@
+{
+  "name": "Panel",
+  "type": "object",
+  "properties": {
+    "panel_name": {
+      "type": "string",
+      "description": "Name of the panel"
+    },
+    "description": {
+      "type": "string",
+      "description": "Panel description"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    },
+    "is_favorite": {
+      "type": "boolean",
+      "default": false,
+      "description": "Mark as favorite"
+    }
+  },
+  "required": [
+    "panel_name"
+  ]
+}

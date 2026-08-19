@@ -1,0 +1,44 @@
+{
+  "name": "InjectionSchedule",
+  "type": "object",
+  "properties": {
+    "staff_email": {
+      "type": "string",
+      "description": "Email of the staff member"
+    },
+    "staff_name": {
+      "type": "string",
+      "description": "Name of the staff member"
+    },
+    "location_id": {
+      "type": "string",
+      "description": "Clinic location ID"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date scheduled for injections"
+    },
+    "shift": {
+      "type": "string",
+      "enum": [
+        "Morning",
+        "Afternoon",
+        "Evening",
+        "All Day"
+      ],
+      "default": "All Day",
+      "description": "Shift time"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes or special instructions"
+    }
+  },
+  "required": [
+    "staff_email",
+    "staff_name",
+    "location_id",
+    "date"
+  ]
+}

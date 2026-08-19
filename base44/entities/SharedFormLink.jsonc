@@ -1,0 +1,47 @@
+{
+  "name": "SharedFormLink",
+  "type": "object",
+  "properties": {
+    "entity_type": {
+      "type": "string",
+      "enum": [
+        "ConsentForm",
+        "AftercareInstruction",
+        "Quote"
+      ],
+      "description": "Type of form being shared"
+    },
+    "entity_id": {
+      "type": "string",
+      "description": "ID of the shared form"
+    },
+    "share_token": {
+      "type": "string",
+      "description": "Unique token for the shareable link"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Optional expiration date/time"
+    },
+    "password": {
+      "type": "string",
+      "description": "Optional password for access"
+    },
+    "view_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of times the link has been accessed"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the link is active"
+    }
+  },
+  "required": [
+    "entity_type",
+    "entity_id",
+    "share_token"
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "name": "Discount",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Discount name (e.g., Summer Sale 20% Off)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the discount"
+    },
+    "discount_type": {
+      "type": "string",
+      "enum": [
+        "percentage",
+        "fixed_amount",
+        "bogo"
+      ],
+      "description": "Type of discount"
+    },
+    "discount_value": {
+      "type": "number",
+      "description": "Discount value (percentage number or fixed amount)"
+    },
+    "applicable_to": {
+      "type": "string",
+      "enum": [
+        "all_items",
+        "specific_items",
+        "specific_categories"
+      ],
+      "default": "all_items",
+      "description": "What this discount applies to"
+    },
+    "applicable_item_ids": {
+      "type": "string",
+      "description": "JSON array of pricing item IDs this discount applies to"
+    },
+    "applicable_categories": {
+      "type": "string",
+      "description": "JSON array of categories this discount applies to"
+    },
+    "valid_from": {
+      "type": "string",
+      "format": "date",
+      "description": "Start date of discount validity"
+    },
+    "valid_to": {
+      "type": "string",
+      "format": "date",
+      "description": "End date of discount validity"
+    },
+    "max_uses": {
+      "type": "number",
+      "description": "Maximum number of times this discount can be used (null for unlimited)"
+    },
+    "current_uses": {
+      "type": "number",
+      "default": 0,
+      "description": "Current number of times this discount has been used"
+    },
+    "total_discount_amount": {
+      "type": "number",
+      "default": 0,
+      "description": "Total revenue impact from this discount"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "expired"
+      ],
+      "default": "active"
+    },
+    "code": {
+      "type": "string",
+      "description": "Optional discount code for customer use"
+    }
+  },
+  "required": [
+    "name",
+    "discount_type",
+    "discount_value"
+  ]
+}
